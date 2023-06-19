@@ -8,9 +8,33 @@
 import SwiftUI
 import SceneKit
 
+
+struct ContentView: View {
+    @State private var colorFull = true
+
+    var body: some View {
+        VStack {
+            ScenekitView(colorFull: colorFull)
+            Toggle("显示答案", isOn: $colorFull)
+        }
+        .padding()
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}
+
+
 struct ScenekitView : UIViewRepresentable {
 
-    @State var colorFull = true;
+    var colorFull = true;
+
+    init(colorFull: Bool = true) {
+        self.colorFull = colorFull
+    }
 
     let scene : SCNScene = {
         let ret = SCNScene();
@@ -55,12 +79,18 @@ struct ScenekitView : UIViewRepresentable {
     ] // bottom
 
     func makeUIView(context: Context) -> SCNView {
+
+        // retrieve the SCNView
+        let scnView = SCNView()
+        return scnView
+    }
+
+    func updateUIView(_ scnView: SCNView, context: Context) {
         let countOfRow = result.count
         let countOfLayer = result.first?.count ?? -1
         let countOfColum = result.first?.first?.count ?? -1
 
-        // retrieve the SCNView
-        let scnView = SCNView()
+
         // create and add a camera to the scene
         for z in 0..<countOfRow {
             for y in 0..<countOfLayer {
@@ -87,10 +117,7 @@ struct ScenekitView : UIViewRepresentable {
                 }
             }
         }
-        return scnView
-    }
 
-    func updateUIView(_ scnView: SCNView, context: Context) {
         scnView.scene = scene
         scnView.autoenablesDefaultLighting = true
         scnView.allowsCameraControl = true
@@ -99,10 +126,10 @@ struct ScenekitView : UIViewRepresentable {
 
 }
 
-#if DEBUG
-struct ScenekitView_Previews : PreviewProvider {
-    static var previews: some View {
-        ScenekitView()
-    }
-}
-#endif
+//#if DEBUG
+//struct ScenekitView_Previews : PreviewProvider {
+//    static var previews: some View {
+//        ScenekitView()
+//    }
+//}
+//#endif
