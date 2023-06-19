@@ -91,14 +91,14 @@ struct ScenekitView : UIViewRepresentable {
         let countOfRow = result.count
         let countOfLayer = result.first?.count ?? -1
         let countOfColum = result.first?.first?.count ?? -1
-
+        // print("count:\(scene.rootNode.childNodes.count)")
 
         // create and add a camera to the scene
         for z in 0..<countOfRow {
             for y in 0..<countOfLayer {
                 for x in 0..<countOfColum {
                     // 盒子
-                    let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.1)
+                    let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
                     let value = result[z][y][x];
                     if value == -1 {
                         continue
@@ -114,7 +114,7 @@ struct ScenekitView : UIViewRepresentable {
                     let boxNode2 = SCNNode()
                     boxNode2.geometry = box2
                     // 由于默认y朝向上的，所以要取负值
-                    boxNode2.position = SCNVector3Make(Float(x), Float(-y), Float(z))
+                    boxNode2.position = SCNVector3Make(Float(x), Float(-y+5), Float(z))
                     scene.rootNode.addChildNode(boxNode2)
                 }
             }
