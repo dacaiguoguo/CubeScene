@@ -11,7 +11,7 @@ import SwiftUI
 struct CubeSceneApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ScenekitView()
         }
     }
 }
