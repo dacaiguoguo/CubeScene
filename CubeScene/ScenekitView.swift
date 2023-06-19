@@ -11,9 +11,11 @@ import SceneKit
 
 struct ContentView: View {
     @State private var colorFull = true
-
+    let data:String = try! String(contentsOf: Bundle.main.url(forResource: "data", withExtension: "txt")!, encoding: .utf8)
     var body: some View {
         VStack {
+            Text(data)
+                .font(.custom("Menlo", size: 18))
             ScenekitView(colorFull: colorFull)
             Toggle("显示答案", isOn: $colorFull)
         }
@@ -125,11 +127,3 @@ struct ScenekitView : UIViewRepresentable {
     }
 
 }
-
-//#if DEBUG
-//struct ScenekitView_Previews : PreviewProvider {
-//    static var previews: some View {
-//        ScenekitView()
-//    }
-//}
-//#endif
