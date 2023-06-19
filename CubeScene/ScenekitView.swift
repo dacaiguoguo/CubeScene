@@ -74,7 +74,7 @@ struct ScenekitView : UIViewRepresentable {
         UIColor.systemCyan, // front
         UIColor.green, // right
         UIColor.red, // back
-        UIColor.systemPink, // left
+        UIColor.systemIndigo, // left
         UIColor.blue, // top
         UIColor.purple,
         UIColor.yellow,
