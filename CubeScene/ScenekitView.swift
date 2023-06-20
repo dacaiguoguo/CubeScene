@@ -87,12 +87,17 @@ struct ContentView: View {
                 .font(.custom("Menlo", size: 18))
             ScenekitView(colorFull: colorFull, result: result())
             HStack {
-                Button("上一个") {
+                ZStack{
+                    RoundedRectangle(cornerRadius: 10).foregroundColor(.blue)
+                    Text("上一个")
+                }.frame(width: 100,height: 60).onTapGesture {
                     dataIndex = (dataIndex - 1 + numberOfSoma) % numberOfSoma
-                    print(dataIndex)
                 }
                 Spacer()
-                Button("下一个") {
+                ZStack{
+                    RoundedRectangle(cornerRadius: 10).foregroundColor(.blue)
+                    Text("下一个")
+                }.frame(width: 100,height: 60).onTapGesture {
                     dataIndex = (dataIndex + 1) % numberOfSoma
                 }
             }
