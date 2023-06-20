@@ -12,7 +12,7 @@ import SceneKit
 extension UIColor {
     public convenience init(hex: String) {
         let r, g, b, a: CGFloat
-        let hex2 = "#\(hex)f0"
+        let hex2 = "#\(hex)ff"
         let start = hex2.index(hex2.startIndex, offsetBy: 1)
         let hexColor = String(hex2[start...])
 
@@ -39,7 +39,7 @@ extension UIColor {
 
 struct ContentView: View {
     @State private var colorFull = true
-    @State var dataIndex:Int = 0
+    @State var dataIndex:Int = 77
     let triSet:CharacterSet = {
         var triSet = CharacterSet.whitespacesAndNewlines
         triSet.insert("/")
@@ -143,13 +143,14 @@ struct ScenekitView : UIViewRepresentable {
 //        UIColor.purple,
 //        UIColor.yellow,
         UIColor(hex: "000000"),
-        UIColor(hex: "F55555"),
+        UIColor(hex: "FF8800"),
         UIColor(hex: "0396FF"),
         UIColor(hex: "EA5455"),
         UIColor(hex: "7367F0"),
         UIColor(hex: "32CCBC"),
         UIColor(hex: "28C76F"),
-        UIColor(hex: "360940"),
+//        UIColor(hex: "360940"),
+        UIColor.purple
     ] // bottom
 
     func makeUIView(context: Context) -> SCNView {
@@ -186,7 +187,7 @@ struct ScenekitView : UIViewRepresentable {
                     let boxNode2 = SCNNode()
                     boxNode2.geometry = box2
                     // 由于默认y朝向上的，所以要取负值
-                    boxNode2.position = SCNVector3Make(Float(x), Float(-y+5), Float(z))
+                    boxNode2.position = SCNVector3Make(Float(x), Float(-y+3), Float(z))
                     scene.rootNode.addChildNode(boxNode2)
                 }
             }
