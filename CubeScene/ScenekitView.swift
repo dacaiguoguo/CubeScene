@@ -39,6 +39,7 @@ extension UIColor {
 
 struct ContentView: View {
     @State private var colorFull = true
+    @State private var dataIndexInput = ""
     @State var dataIndex:Int = 77
     let triSet:CharacterSet = {
         var triSet = CharacterSet.whitespacesAndNewlines
@@ -93,6 +94,17 @@ struct ContentView: View {
                 }.frame(width: 100,height: 60).onTapGesture {
                     dataIndex = (dataIndex - 1 + numberOfSoma) % numberOfSoma
                 }
+                Spacer()
+                TextField("关卡", text: $dataIndexInput, prompt: Text("关卡号"))
+                    .onSubmit {
+                        if let inputIndex = Int(dataIndexInput) {
+                            dataIndex = (inputIndex) % numberOfSoma
+                            print("dataIndexInput22:\(dataIndex)")
+                        }
+                    }
+                    .textFieldStyle(.roundedBorder)
+                    .keyboardType(.numberPad)
+                    .padding()
                 Spacer()
                 ZStack{
                     RoundedRectangle(cornerRadius: 10).foregroundColor(.blue)
