@@ -47,9 +47,9 @@ struct ContentView: View {
         return triSet
     }()
 
-    let firstArray = {
+    let firstArray: [String] = {
         let stringContent = try! String(contentsOf: Bundle.main.url(forResource: "SOMA101", withExtension: "txt")!, encoding: .utf8)
-        let firstArray = stringContent.split(separator: "/SOMA")
+        let firstArray = (stringContent as NSString).components(separatedBy: "/SOMA")
         return firstArray
     }()
 
@@ -70,10 +70,11 @@ struct ContentView: View {
             item.trimmingCharacters(in: triSet)
         })
 
+        let charitem = Character("/")
         let result = data.map { item in
-            item.split(separator: "/").map { subItem in
-                subItem.split(separator: "").map { subSubItem in
-                    Int(subSubItem) ?? -1
+            item.split(separator: charitem).map { subItem in
+                subItem.map { subSubItem in
+                    Int(String(subSubItem)) ?? -1
                 }
             }
         }
@@ -170,6 +171,17 @@ struct ScenekitView : UIViewRepresentable {
         UIColor.purple
     ] // bottom
 
+    let colorImages:[UIImage] = [
+        UIImage(named: "1")!,
+        UIImage(named: "1")!,
+        UIImage(named: "2")!,
+        UIImage(named: "3")!,
+        UIImage(named: "4")!,
+        UIImage(named: "5")!,
+        UIImage(named: "6")!,
+        UIImage(named: "7")!,
+    ] // bottom
+
     func makeUIView(context: Context) -> SCNView {
 
         // retrieve the SCNView
@@ -195,7 +207,7 @@ struct ScenekitView : UIViewRepresentable {
                     }
                     let material = SCNMaterial()
                     if colorFull {
-                        material.diffuse.contents = colors[value]
+                        material.diffuse.contents = colorImages[value]
                     } else {
                         material.diffuse.contents = colors[1]
                     }
