@@ -98,10 +98,11 @@ public struct ContentView: View {
 
 
     public var body: some View {
-
         VStack {
-            Text(firstArray[dataIndex])
+            Text(firstArray[dataIndex].trimmingCharacters(in: trimmingSet))
                 .font(.custom("Menlo", size: 18))
+                .frame(maxWidth: .infinity)
+                .background(Color.white)
             ScenekitView(colorFull: colorFull, result: result())
             HStack {
                 ZStack{
