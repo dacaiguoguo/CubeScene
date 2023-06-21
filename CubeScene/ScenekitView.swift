@@ -42,7 +42,9 @@ enum ShowType: Hashable {
     case number
 }
 
-struct ContentView: View {
+public struct ContentView: View {
+    public init(){}
+
     @State private var colorFull:ShowType = .color
     @State private var dataIndexInput = ""
     @State var dataIndex:Int = 0
@@ -90,7 +92,7 @@ struct ContentView: View {
     }
 
 
-    var body: some View {
+    public var body: some View {
         VStack {
             Text(data(at: dataIndex))
                 .font(.custom("Menlo", size: 18))
