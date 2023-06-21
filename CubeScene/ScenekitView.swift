@@ -36,19 +36,22 @@ extension UIColor {
     }
 }
 
+/// 显示类型 单色、彩色、数字
 enum ShowType: Hashable {
-    case secret
-    case color
+    case singleColor
+    case colorFul
     case number
 }
+
+// public是为了Playgrounds代码通用
 
 public struct ContentView: View {
     public init(){}
 
-    @State private var colorFull:ShowType = .color
-    @State private var dataIndexInput = ""
+    @State private var colorFull:ShowType = .colorFul
     @State var dataIndex:Int = 0
-    let triSet:CharacterSet = {
+
+    let trimmingSet:CharacterSet = {
         var triSet = CharacterSet.whitespacesAndNewlines
         triSet.insert("/")
         return triSet
@@ -62,39 +65,41 @@ public struct ContentView: View {
         }
     }()
 
-    func data(at: Int) -> String {
-        return String(firstArray[at])
-    }
 
+    /// 用计算属性 不能使用 lazy var
     var numberOfSoma:Int {
         firstArray.count
     }
 
-    func result() -> [[[Int]]] {
-        let dataStr = data(at: dataIndex)
 
-        let data = dataStr.trimmingCharacters(in: triSet).split(separator: "\n").dropFirst().filter { item in
+    /// 解析结果
+    /// - Returns: 返回三位数组
+    func result() -> [[[Int]]] {
+        let currentData = firstArray[dataIndex]
+
+        let parsedData = currentData.trimmingCharacters(in: trimmingSet).split(separator: "\n").dropFirst().filter { item in
             item.hasPrefix("/")
         }.map({ item in
-            item.trimmingCharacters(in: triSet)
+            item.trimmingCharacters(in: trimmingSet)
         })
 
-        let charitem = Character("/")
-        let result = data.map { item in
-            item.split(separator: charitem).map { subItem in
+        let separatorItem = Character("/")
+        // 非数字都解析成-1
+        let result = parsedData.map { item in
+            item.split(separator: separatorItem).map { subItem in
                 subItem.map { subSubItem in
                     Int(String(subSubItem)) ?? -1
                 }
             }
         }
-         print(result)
+        // print(result)
         return result
     }
 
 
     public var body: some View {
         VStack {
-            Text(data(at: dataIndex))
+            Text(firstArray[dataIndex])
                 .font(.custom("Menlo", size: 18))
             ScenekitView(colorFull: colorFull, result: result())
             HStack {
@@ -106,13 +111,12 @@ public struct ContentView: View {
                     dataIndex = (dataIndex - 1 + numberOfSoma) % numberOfSoma
                 }
                 Spacer()
-                TextField("关卡", text: $dataIndexInput, prompt: Text("关卡号"))
-                    .onSubmit {
-                        if let inputIndex = Int(dataIndexInput) {
-                            dataIndex = (inputIndex) % numberOfSoma
-                            print("dataIndexInput22:\(dataIndex)")
-                        }
-                    }
+                TextField("关卡", text: Binding(get: {
+                    "\(dataIndex)"
+                }, set: {
+                    let intValue = Int($0) ?? 0
+                    self.dataIndex = intValue % numberOfSoma
+                }), prompt: Text("关卡号"))
                     .textFieldStyle(.roundedBorder)
                     .keyboardType(.numberPad)
                     .padding()
@@ -125,9 +129,9 @@ public struct ContentView: View {
                     dataIndex = (dataIndex + 1) % numberOfSoma
                 }
             }
-            Picker("What is your favorite color?", selection: $colorFull) {
-                Text("彩色").tag(ShowType.color)
-                Text("单色").tag(ShowType.secret)
+            Picker("显示模式", selection: $colorFull) {
+                Text("彩色").tag(ShowType.colorFul)
+                Text("单色").tag(ShowType.singleColor)
                 Text("数字").tag(ShowType.number)
             }
             .pickerStyle(.segmented)
@@ -150,7 +154,7 @@ struct ScenekitView : UIViewRepresentable {
     let colorFull:ShowType;
     let result: [[[Int]]]
 
-    init(colorFull: ShowType = .color, result: [[[Int]]] ) {
+    init(colorFull: ShowType = .colorFul, result: [[[Int]]] ) {
         self.colorFull = colorFull
         self.result = result
     }
@@ -168,14 +172,14 @@ struct ScenekitView : UIViewRepresentable {
 
 
     let colors:[UIColor] = [
-//        UIColor.black,
-//        UIColor.systemCyan, // front
-//        UIColor.green, // right
-//        UIColor.red, // back
-//        UIColor.systemIndigo, // left
-//        UIColor.blue, // top
-//        UIColor.purple,
-//        UIColor.yellow,
+        // UIColor.black,
+        // UIColor.systemCyan, // front
+        // UIColor.green, // right
+        // UIColor.red, // back
+        // UIColor.systemIndigo, // left
+        // UIColor.blue, // top
+        // UIColor.purple,
+        // UIColor.yellow,
         UIColor(hex: "000000"),
         UIColor(hex: "FF8800"),
         UIColor(hex: "0396FF"),
@@ -183,9 +187,8 @@ struct ScenekitView : UIViewRepresentable {
         UIColor(hex: "7367F0"),
         UIColor(hex: "32CCBC"),
         UIColor(hex: "28C76F"),
-//        UIColor(hex: "360940"),
         UIColor.purple
-    ] // bottom
+    ]
 
     let colorImages:[UIImage] = [
         UIImage(named: "1")!,
@@ -199,7 +202,6 @@ struct ScenekitView : UIViewRepresentable {
     ] // bottom
 
     func makeUIView(context: Context) -> SCNView {
-
         // retrieve the SCNView
         let scnView = SCNView()
         return scnView
@@ -209,9 +211,7 @@ struct ScenekitView : UIViewRepresentable {
         let countOfRow = result.count
         let countOfLayer = result.first?.count ?? -1
         let countOfColum = result.first?.first?.count ?? -1
-        // print("count:\(scene.rootNode.childNodes.count)")
 
-        // create and add a camera to the scene
         for z in 0..<countOfRow {
             for y in 0..<countOfLayer {
                 for x in 0..<countOfColum {
@@ -224,9 +224,9 @@ struct ScenekitView : UIViewRepresentable {
                     let material = SCNMaterial()
 
                     switch colorFull {
-                    case .secret:
+                    case .singleColor:
                         material.diffuse.contents = colors[1]
-                    case .color:
+                    case .colorFul:
                         material.diffuse.contents = colors[value]
                     case .number:
                         material.diffuse.contents = colorImages[value]
@@ -246,10 +246,6 @@ struct ScenekitView : UIViewRepresentable {
         scnView.autoenablesDefaultLighting = true
         scnView.allowsCameraControl = true
         scnView.backgroundColor = .lightGray
-//        let immm = UIImage(named: "wenli")!;
-//        let ccc = UIColor(patternImage: immm)
-//        scnView.backgroundColor = ccc
-
     }
 
 }
