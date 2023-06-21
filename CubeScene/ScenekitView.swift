@@ -119,6 +119,7 @@ public struct ContentView: View {
                 }), prompt: Text("关卡号"))
                     .textFieldStyle(.roundedBorder)
                     .keyboardType(.numberPad)
+                    .multilineTextAlignment(.center)
                     .padding()
                 Spacer()
                 ZStack{
