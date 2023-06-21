@@ -12,11 +12,7 @@ struct CubeSceneApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                ZStack{
-                    Image("wenli")
-                        .resizable(resizingMode: .tile)
-                    ContentView().navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
-                }
+                ContentView().navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
             }
         }
     }
