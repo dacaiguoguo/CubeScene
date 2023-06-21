@@ -98,6 +98,7 @@ public struct ContentView: View {
 
 
     public var body: some View {
+
         VStack {
             Text(firstArray[dataIndex])
                 .font(.custom("Menlo", size: 18))
@@ -117,10 +118,10 @@ public struct ContentView: View {
                     let intValue = Int($0) ?? 0
                     self.dataIndex = intValue % numberOfSoma
                 }), prompt: Text("关卡号"))
-                    .textFieldStyle(.roundedBorder)
-                    .keyboardType(.numberPad)
-                    .multilineTextAlignment(.center)
-                    .padding()
+                .textFieldStyle(.roundedBorder)
+                .keyboardType(.numberPad)
+                .multilineTextAlignment(.center)
+                .padding()
                 Spacer()
                 ZStack{
                     Rectangle().background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.green]), startPoint: .leading, endPoint: .trailing))
@@ -134,9 +135,10 @@ public struct ContentView: View {
                 Text("彩色").tag(ShowType.colorFul)
                 Text("单色").tag(ShowType.singleColor)
                 Text("数字").tag(ShowType.number)
-            }
+            }.background(Color.gray)
             .pickerStyle(.segmented)
         }
+
         .padding()
     }
 }
@@ -246,7 +248,7 @@ struct ScenekitView : UIViewRepresentable {
         scnView.scene = scene
         scnView.autoenablesDefaultLighting = true
         scnView.allowsCameraControl = true
-        scnView.backgroundColor = .lightGray
+        scnView.backgroundColor = .clear
     }
 
 }
