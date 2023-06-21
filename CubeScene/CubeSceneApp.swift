@@ -11,7 +11,9 @@ import SwiftUI
 struct CubeSceneApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack {
+                ContentView().navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
+            }
         }
     }
 }

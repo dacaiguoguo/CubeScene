@@ -36,11 +36,16 @@ extension UIColor {
     }
 }
 
+enum ShowType: Hashable {
+    case secret
+    case color
+    case number
+}
 
 struct ContentView: View {
-    @State private var colorFull = true
+    @State private var colorFull:ShowType = .color
     @State private var dataIndexInput = ""
-    @State var dataIndex:Int = 77
+    @State var dataIndex:Int = 0
     let triSet:CharacterSet = {
         var triSet = CharacterSet.whitespacesAndNewlines
         triSet.insert("/")
@@ -50,7 +55,9 @@ struct ContentView: View {
     let firstArray: [String] = {
         let stringContent = try! String(contentsOf: Bundle.main.url(forResource: "SOMA101", withExtension: "txt")!, encoding: .utf8)
         let firstArray = (stringContent as NSString).components(separatedBy: "/SOMA")
-        return firstArray
+        return firstArray.filter { item in
+            item.lengthOfBytes(using: .utf8) > 5
+        }
     }()
 
     func data(at: Int) -> String {
@@ -78,7 +85,7 @@ struct ContentView: View {
                 }
             }
         }
-        // print(result)
+         print(result)
         return result
     }
 
@@ -90,9 +97,10 @@ struct ContentView: View {
             ScenekitView(colorFull: colorFull, result: result())
             HStack {
                 ZStack{
-                    RoundedRectangle(cornerRadius: 10).foregroundColor(.blue)
-                    Text("上一个")
-                }.frame(width: 100,height: 60).onTapGesture {
+                    Rectangle().background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.green]), startPoint: .leading, endPoint: .trailing))
+                        .foregroundColor(.clear).cornerRadius(5)
+                    Text("上一个").foregroundColor(.white).font(.headline)
+                }.frame(height: 44).onTapGesture {
                     dataIndex = (dataIndex - 1 + numberOfSoma) % numberOfSoma
                 }
                 Spacer()
@@ -108,13 +116,19 @@ struct ContentView: View {
                     .padding()
                 Spacer()
                 ZStack{
-                    RoundedRectangle(cornerRadius: 10).foregroundColor(.blue)
-                    Text("下一个")
-                }.frame(width: 100,height: 60).onTapGesture {
+                    Rectangle().background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.green]), startPoint: .leading, endPoint: .trailing))
+                        .foregroundColor(.clear).cornerRadius(5)
+                    Text("下一个").foregroundColor(.white).font(.headline)
+                }.frame(height: 44).onTapGesture {
                     dataIndex = (dataIndex + 1) % numberOfSoma
                 }
             }
-            Toggle("显示答案", isOn: $colorFull)
+            Picker("What is your favorite color?", selection: $colorFull) {
+                Text("彩色").tag(ShowType.color)
+                Text("单色").tag(ShowType.secret)
+                Text("数字").tag(ShowType.number)
+            }
+            .pickerStyle(.segmented)
         }
         .padding()
     }
@@ -131,10 +145,10 @@ struct ContentView_Previews: PreviewProvider {
 
 struct ScenekitView : UIViewRepresentable {
 
-    let colorFull:Bool;
+    let colorFull:ShowType;
     let result: [[[Int]]]
 
-    init(colorFull: Bool = true, result: [[[Int]]] ) {
+    init(colorFull: ShowType = .color, result: [[[Int]]] ) {
         self.colorFull = colorFull
         self.result = result
     }
@@ -206,10 +220,14 @@ struct ScenekitView : UIViewRepresentable {
                         continue
                     }
                     let material = SCNMaterial()
-                    if colorFull {
-                        material.diffuse.contents = colorImages[value]
-                    } else {
+
+                    switch colorFull {
+                    case .secret:
                         material.diffuse.contents = colors[1]
+                    case .color:
+                        material.diffuse.contents = colors[value]
+                    case .number:
+                        material.diffuse.contents = colorImages[value]
                     }
                     material.locksAmbientWithDiffuse = true
                     box2.firstMaterial = material;
