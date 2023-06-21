@@ -99,7 +99,7 @@ public struct ContentView: View {
 
     public var body: some View {
         ZStack{
-            Image("wenli")
+            Image(uiImage: UIImage(named: "wenli")!)
                 .resizable(resizingMode: .tile)
             VStack {
                 Text(firstArray[dataIndex].trimmingCharacters(in: trimmingSet))
