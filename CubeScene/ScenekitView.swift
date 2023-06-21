@@ -54,7 +54,7 @@ struct ContentView: View {
 
     let firstArray: [String] = {
         let stringContent = try! String(contentsOf: Bundle.main.url(forResource: "SOMA101", withExtension: "txt")!, encoding: .utf8)
-        let firstArray = (stringContent as NSString).components(separatedBy: "/SOMA")
+        let firstArray = stringContent.components(separatedBy: "/SOMA")
         return firstArray.filter { item in
             item.lengthOfBytes(using: .utf8) > 5
         }
