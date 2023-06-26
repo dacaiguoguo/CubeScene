@@ -49,6 +49,7 @@ public struct ContentView: View {
     public init(){}
 
     @State private var colorFull:ShowType = .colorFul
+    @FocusState private var focusItem: Bool
     @State var dataIndex:Int = 0
 
     let trimmingSet:CharacterSet = {
@@ -113,6 +114,7 @@ public struct ContentView: View {
                             .foregroundColor(.clear).cornerRadius(5)
                         Text("上一个").foregroundColor(.white).font(.headline)
                     }.frame(height: 44).onTapGesture {
+                        focusItem = false
                         dataIndex = (dataIndex - 1 + numberOfSoma) % numberOfSoma
                     }
                     Spacer()
@@ -122,6 +124,7 @@ public struct ContentView: View {
                         let intValue = Int($0) ?? 0
                         self.dataIndex = intValue % numberOfSoma
                     }), prompt: Text("关卡号"))
+                    .focused($focusItem)
                     .textFieldStyle(.roundedBorder)
                     .keyboardType(.numberPad)
                     .multilineTextAlignment(.center)
@@ -132,6 +135,7 @@ public struct ContentView: View {
                             .foregroundColor(.clear).cornerRadius(5)
                         Text("下一个").foregroundColor(.white).font(.headline)
                     }.frame(height: 44).onTapGesture {
+                        focusItem = false
                         dataIndex = (dataIndex + 1) % numberOfSoma
                     }
                 }
