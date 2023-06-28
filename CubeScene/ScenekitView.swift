@@ -156,6 +156,34 @@ public struct ContentView: View {
 }
 
 
+struct Channel: Decodable {
+    var channelID:String = ""
+    var name:String = ""
+}
+
+extension Channel: Identifiable {
+    var id: String {
+        channelID
+    }
+}
+
+
+public struct SettingView: View {
+    public init(){}
+
+    let channelLocalDataList:[Channel] = [Channel(channelID: "1", name: "色彩"), Channel(channelID: "2", name: "难度"),  Channel(channelID: "3", name: "帮助")]
+
+    public var body: some View {
+        List {
+            ForEach(channelLocalDataList) { channel in
+                HStack {
+                    Text(channel.name)
+                }.padding()
+            }
+        }
+    }
+}
+
 
 struct ScenekitView : UIViewRepresentable {
 

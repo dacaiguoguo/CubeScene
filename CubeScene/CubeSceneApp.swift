@@ -16,8 +16,25 @@ struct CubeSceneApp: App {
                     ContentView().navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
                 }
             } else {
-                NavigationView {
-                    ContentView().navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
+                TabView {
+                    NavigationView {
+                        ContentView().navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
+                    }.tabItem {
+                        Image(systemName: "gamecontroller")
+                        Text("练习")
+                    }.tag(0)
+                    NavigationView {
+                        ContentView().navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
+                    }.tabItem {
+                        Image(systemName: "scribble.variable")
+                        Text("自定义")
+                    }.tag(0)
+                    NavigationView {
+                        SettingView().navigationTitle("设置").navigationBarTitleDisplayMode(.inline)
+                    }.tabItem {
+                        Image(systemName: "gear.circle")
+                        Text("设置")
+                    }.tag(0)
                 }
             }
         }
