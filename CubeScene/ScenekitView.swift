@@ -66,6 +66,7 @@ enum ShowType: Hashable {
 public struct ContentView: View {
     public init(){}
     @State private var isOn = false
+    @State private var showModal = false
 
     @State private var colorFull:ShowType = .colorFul
     enum Field: Hashable {
@@ -134,7 +135,7 @@ public struct ContentView: View {
             ZStack{
                 Image(uiImage: UIImage(named: "wenli")!)
                     .resizable(resizingMode: .tile)
-                ScenekitView(colorFull: colorFull, result: result())
+                ScenekitView(colorFull: colorFull, result: result(), colors: colorsDefault)
             }
             HStack {
                 ZStack{
