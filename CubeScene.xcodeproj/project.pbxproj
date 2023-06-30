@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9D1602BA2A4BDBF100C247A7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D1602B92A4BDBF100C247A7 /* LaunchScreen.storyboard */; };
+		9DC929A52A4ECB8500162BC6 /* ModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC929A42A4ECB8500162BC6 /* ModalView.swift */; };
 		9DF9206D2A404BBC001BD720 /* CubeSceneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */; };
 		9DF9206F2A404BBC001BD720 /* ScenekitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF9206E2A404BBC001BD720 /* ScenekitView.swift */; };
 		9DF920712A404BBF001BD720 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DF920702A404BBF001BD720 /* Assets.xcassets */; };
@@ -21,6 +22,7 @@
 /* Begin PBXFileReference section */
 		9D1602B92A4BDBF100C247A7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9DC576A92A419BF20012E272 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		9DC929A42A4ECB8500162BC6 /* ModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalView.swift; sourceTree = "<group>"; };
 		9DF920692A404BBC001BD720 /* 索玛立方体.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "索玛立方体.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeSceneApp.swift; sourceTree = "<group>"; };
 		9DF9206E2A404BBC001BD720 /* ScenekitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenekitView.swift; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 				9DF938102A417BAD001BD720 /* data3.txt */,
 				9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */,
 				9DF9206E2A404BBC001BD720 /* ScenekitView.swift */,
+				9DC929A42A4ECB8500162BC6 /* ModalView.swift */,
 				9D1602B92A4BDBF100C247A7 /* LaunchScreen.storyboard */,
 				9DF920702A404BBF001BD720 /* Assets.xcassets */,
 				9DF920722A404BBF001BD720 /* Preview Content */,
@@ -159,6 +162,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9DC929A52A4ECB8500162BC6 /* ModalView.swift in Sources */,
 				9DF9206F2A404BBC001BD720 /* ScenekitView.swift in Sources */,
 				9DF9206D2A404BBC001BD720 /* CubeSceneApp.swift in Sources */,
 			);
