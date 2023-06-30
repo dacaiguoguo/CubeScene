@@ -105,15 +105,13 @@ public struct ContentView: View {
 
     public var body: some View {
         VStack {
-            if colorFull == .colorFul {
-                Toggle("显示编码", isOn: $isOn)
-                    .padding()
-                if isOn {
-                    Text(firstArray[dataIndex].trimmingCharacters(in: trimmingSet))
-                        .font(.custom("Menlo", size: 18))
-                        .frame(maxWidth: .infinity)
-                        .background(Color.white)
-                }
+            Toggle("显示编码", isOn: $isOn)
+                .padding()
+            if isOn {
+                Text(firstArray[dataIndex].trimmingCharacters(in: trimmingSet))
+                    .font(.custom("Menlo", size: 18))
+                    .frame(maxWidth: .infinity)
+                    .background(Color.white)
             }
             ZStack{
                 Image(uiImage: UIImage(named: "wenli")!)
