@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SceneKit
 
 
 struct ItemColor: Decodable {
@@ -60,21 +61,33 @@ struct ModalView: View {
         ItemColor(index: 7, uicolor: UIColor.purple),
     ]
 
+    let result: [[[Int]]] = [[[2,4,3], [6,4,1], [6,6,1]],
+                             [[2,3,3], [6,4,1], [7,4,5]],
+                             [[2,2,3], [7,5,5], [7,7,5]]
+
+    ]
+
     var body: some View {
-        NavigationView {
-            List {
+        VStack {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
                 ForEach(colors) { index in
-                    HStack{
-                        Text("Item \(index.index)").foregroundColor(Color(index.uicolor))
-                        ColorPicker("Select a color", selection: Binding(get: {
+                    ZStack{
+                        Image(uiImage: UIImage(named: "c\(index.index)")!).resizable()
+                        ColorPicker("", selection: Binding(get: {
                             Color(index.uicolor)
-                        }, set: { colors[index.index] = ItemColor(index: index.index, color: $0)}))
-                        .padding()
+                        }, set: {
+                            colors[index.index] = ItemColor(index: index.index, color: $0)
+                            colorsDefault = colors.map({$0.uicolor})
+                        }))
                     }
+                    .background(Color.gray)
+                    .frame(width: 80, height: 80)
                 }
             }
-            .navigationBarTitle("List")
+            .padding()
+            ScenekitView(colorFull: ShowType.colorFul, result: result, colors: colors.map({$0.uicolor}))
         }
+        .padding()
     }
 }
 

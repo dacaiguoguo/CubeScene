@@ -8,6 +8,24 @@
 import SwiftUI
 import SceneKit
 
+var colorsDefault:[UIColor] = [
+    // UIColor.black,
+    // UIColor.systemCyan, // front
+    // UIColor.green, // right
+    // UIColor.red, // back
+    // UIColor.systemIndigo, // left
+    // UIColor.blue, // top
+    // UIColor.purple,
+    // UIColor.yellow,
+    UIColor(hex: "000000"),
+    UIColor(hex: "FF8800"),
+    UIColor(hex: "0396FF"),
+    UIColor(hex: "EA5455"),
+    UIColor(hex: "7367F0"),
+    UIColor(hex: "32CCBC"),
+    UIColor(hex: "28C76F"),
+    UIColor.purple
+]
 
 extension UIColor {
     public convenience init(hex: String) {
@@ -192,10 +210,11 @@ struct ScenekitView : UIViewRepresentable {
 
     let colorFull:ShowType;
     let result: [[[Int]]]
-
-    init(colorFull: ShowType = .colorFul, result: [[[Int]]] ) {
+    let colors:[UIColor]
+    init(colorFull: ShowType = .colorFul, result: [[[Int]]], colors:[UIColor] = colorsDefault ) {
         self.colorFull = colorFull
         self.result = result
+        self.colors = colors
     }
 
     let scene : SCNScene = {
@@ -209,25 +228,6 @@ struct ScenekitView : UIViewRepresentable {
         return ret;
     }()
 
-
-    let colors:[UIColor] = [
-        // UIColor.black,
-        // UIColor.systemCyan, // front
-        // UIColor.green, // right
-        // UIColor.red, // back
-        // UIColor.systemIndigo, // left
-        // UIColor.blue, // top
-        // UIColor.purple,
-        // UIColor.yellow,
-        UIColor(hex: "000000"),
-        UIColor(hex: "FF8800"),
-        UIColor(hex: "0396FF"),
-        UIColor(hex: "EA5455"),
-        UIColor(hex: "7367F0"),
-        UIColor(hex: "32CCBC"),
-        UIColor(hex: "28C76F"),
-        UIColor.purple
-    ]
 
     let colorImages:[UIImage] = [
         UIImage(named: "1")!,
