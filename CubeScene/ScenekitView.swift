@@ -47,6 +47,7 @@ enum ShowType: Hashable {
 
 public struct ContentView: View {
     public init(){}
+    @State private var isOn = false
 
     @State private var colorFull:ShowType = .colorFul
     enum Field: Hashable {
@@ -103,55 +104,59 @@ public struct ContentView: View {
 
 
     public var body: some View {
-        ZStack{
-            Image(uiImage: UIImage(named: "wenli")!)
-                .resizable(resizingMode: .tile)
-            VStack {
-                Text(firstArray[dataIndex].trimmingCharacters(in: trimmingSet))
-                    .font(.custom("Menlo", size: 18))
-                    .frame(maxWidth: .infinity)
-                    .background(Color.white)
-                ScenekitView(colorFull: colorFull, result: result())
-                HStack {
-                    ZStack{
-                        Rectangle().background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.green]), startPoint: .leading, endPoint: .trailing))
-                            .foregroundColor(.clear).cornerRadius(5)
-                        Text("上一个").foregroundColor(.white).font(.headline)
-                    }.frame(height: 44).onTapGesture {
-                        focusItem = nil
-                        dataIndex = (dataIndex - 1 + numberOfSoma) % numberOfSoma
-                    }
-                    Spacer()
-                    TextField("关卡", text: Binding(get: {
-                        "\(dataIndex)"
-                    }, set: {
-                        let intValue = Int($0) ?? 0
-                        self.dataIndex = intValue % numberOfSoma
-                    }), prompt: Text("关卡号"))
-                    .focused($focusItem, equals: .dataIndexField)
-                    .textFieldStyle(.roundedBorder)
-                    .keyboardType(.numberPad)
-                    .multilineTextAlignment(.center)
+        VStack {
+            if colorFull == .colorFul {
+                Toggle("显示编码", isOn: $isOn)
                     .padding()
-                    Spacer()
-                    ZStack{
-                        Rectangle().background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.green]), startPoint: .leading, endPoint: .trailing))
-                            .foregroundColor(.clear).cornerRadius(5)
-                        Text("下一个").foregroundColor(.white).font(.headline)
-                    }.frame(height: 44).onTapGesture {
-                        focusItem = nil
-                        dataIndex = (dataIndex + 1) % numberOfSoma
-                    }
+                if isOn {
+                    Text(firstArray[dataIndex].trimmingCharacters(in: trimmingSet))
+                        .font(.custom("Menlo", size: 18))
+                        .frame(maxWidth: .infinity)
+                        .background(Color.white)
                 }
-                Picker("显示模式", selection: $colorFull) {
-                    Text("彩色").tag(ShowType.colorFul)
-                    Text("单色").tag(ShowType.singleColor)
-                    Text("数字").tag(ShowType.number)
-                }.background(Color.gray)
-                    .pickerStyle(.segmented)
             }
-        }
-        .padding()
+            ZStack{
+                Image(uiImage: UIImage(named: "wenli")!)
+                    .resizable(resizingMode: .tile)
+                ScenekitView(colorFull: colorFull, result: result())
+            }
+            HStack {
+                ZStack{
+                    Rectangle().background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.green]), startPoint: .leading, endPoint: .trailing))
+                        .foregroundColor(.clear).cornerRadius(5)
+                    Text("上一个").foregroundColor(.white).font(.headline)
+                }.frame(height: 44).onTapGesture {
+                    focusItem = nil
+                    dataIndex = (dataIndex - 1 + numberOfSoma) % numberOfSoma
+                }
+                Spacer()
+                TextField("关卡", text: Binding(get: {
+                    "\(dataIndex)"
+                }, set: {
+                    let intValue = Int($0) ?? 0
+                    self.dataIndex = intValue % numberOfSoma
+                }), prompt: Text("关卡号"))
+                .focused($focusItem, equals: .dataIndexField)
+                .textFieldStyle(.roundedBorder)
+                .keyboardType(.numbersAndPunctuation)
+                .multilineTextAlignment(.center)
+                .padding()
+                Spacer()
+                ZStack{
+                    Rectangle().background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.green]), startPoint: .leading, endPoint: .trailing))
+                        .foregroundColor(.clear).cornerRadius(5)
+                    Text("下一个").foregroundColor(.white).font(.headline)
+                }.frame(height: 44).onTapGesture {
+                    focusItem = nil
+                    dataIndex = (dataIndex + 1) % numberOfSoma
+                }
+            }
+            Picker("显示模式", selection: $colorFull) {
+                Text("彩色").tag(ShowType.colorFul)
+                Text("单色").tag(ShowType.singleColor)
+                Text("数字").tag(ShowType.number)
+            }.pickerStyle(.segmented)
+        }.padding()
     }
 }
 
