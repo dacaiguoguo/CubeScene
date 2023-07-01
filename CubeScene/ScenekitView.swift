@@ -99,7 +99,7 @@ public struct ContentView: View {
 
     /// 解析结果
     /// - Returns: 返回三位数组
-    func result() -> [[[Int]]] {
+    func result() -> Matrix3D {
         let currentData = firstArray[dataIndex]
 
         let parsedData = currentData.trimmingCharacters(in: trimmingSet).split(separator: "\n").dropFirst().filter { item in
@@ -210,9 +210,9 @@ public struct SettingView: View {
 struct ScenekitView : UIViewRepresentable {
 
     let colorFull:ShowType;
-    let result: [[[Int]]]
+    let result: Matrix3D
     let colors:[UIColor]
-    init(colorFull: ShowType = .colorFul, result: [[[Int]]], colors:[UIColor] = colorsDefault ) {
+    init(colorFull: ShowType = .colorFul, result: Matrix3D, colors:[UIColor] = colorsDefault ) {
         self.colorFull = colorFull
         self.result = result
         self.colors = colors
@@ -224,7 +224,7 @@ struct ScenekitView : UIViewRepresentable {
         let camera = SCNCamera()
         let cameraNode = SCNNode()
         cameraNode.camera = camera
-        cameraNode.position = SCNVector3Make(3, 3, 15)
+        cameraNode.position = SCNVector3Make(1, 0, 15)
         ret.rootNode.addChildNode(cameraNode)
         return ret;
     }()

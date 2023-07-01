@@ -61,15 +61,21 @@ struct ModalView: View {
 //        ItemColor(index: 7, uicolor: UIColor.purple),
 //    ]
 
-    @State var colors:[ItemColor] = {colorsDefault.map({
-        ItemColor(index: 0, uicolor: $0)
+    @State var colors:[ItemColor] = {colorsDefault.enumerated().map({ index, element in
+        ItemColor(index: index, uicolor: element)
     })}()
 
-    let result: [[[Int]]] = [[[2,4,3], [6,4,1], [6,6,1]],
+    let result: Matrix3D = [[[2,4,3], [6,4,1], [6,6,1]],
                              [[2,3,3], [6,4,1], [7,4,5]],
                              [[2,2,3], [7,5,5], [7,7,5]]
 
     ]
+    
+    func currentResult() -> Matrix3D {
+        let array24 = getAll24(result)
+        return array24[dataIndex]
+    }
+    @State var dataIndex:Int = 0
 
     var body: some View {
         VStack {
@@ -89,7 +95,21 @@ struct ModalView: View {
                 }
             }
             .padding()
-            ScenekitView(colorFull: ShowType.colorFul, result: result, colors: colors.map({$0.uicolor}))
+            ZStack{
+                Image(uiImage: UIImage(named: "wenli4")!)
+                    .resizable(resizingMode: .tile)
+                ScenekitView(colorFull: ShowType.colorFul, result: currentResult(), colors: colors.map({$0.uicolor}))
+            }
+            HStack {
+                ZStack{
+                    Rectangle().background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.green]), startPoint: .leading, endPoint: .trailing))
+                        .foregroundColor(.clear).cornerRadius(5)
+                    Text("上一个").foregroundColor(.white).font(.headline)
+                }.frame(height: 44).onTapGesture {
+                    dataIndex = (dataIndex + 1) % 24;
+                }
+                
+            }
         }
         .padding()
     }
