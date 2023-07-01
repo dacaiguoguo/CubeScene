@@ -124,7 +124,7 @@ public struct ContentView: View {
 
     public var body: some View {
         VStack {
-            Toggle("显示编码", isOn: $isOn)
+            Toggle("显示代码", isOn: $isOn)
                 .padding()
             if isOn {
                 Text(firstArray[dataIndex].trimmingCharacters(in: trimmingSet))
@@ -133,7 +133,7 @@ public struct ContentView: View {
                     .background(Color.white)
             }
             ZStack{
-                Image(uiImage: UIImage(named: "wenli")!)
+                Image(uiImage: UIImage(named: "wenli4")!)
                     .resizable(resizingMode: .tile)
                 ScenekitView(colorFull: colorFull, result: result(), colors: colorsDefault)
             }
@@ -224,7 +224,7 @@ struct ScenekitView : UIViewRepresentable {
         let camera = SCNCamera()
         let cameraNode = SCNNode()
         cameraNode.camera = camera
-        cameraNode.position = SCNVector3Make(0, 0, 15)
+        cameraNode.position = SCNVector3Make(3, 3, 15)
         ret.rootNode.addChildNode(cameraNode)
         return ret;
     }()
@@ -265,7 +265,8 @@ struct ScenekitView : UIViewRepresentable {
 
                     switch colorFull {
                     case .singleColor:
-                        material.diffuse.contents = colors[1]
+//                        material.diffuse.contents = colors[1]
+                        material.diffuse.contents = UIImage(named: "border")!
                     case .colorFul:
                         material.diffuse.contents = colors[value]
                     case .number:
