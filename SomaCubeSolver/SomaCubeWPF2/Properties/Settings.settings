@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SomaCubeWPF2.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="BackgroundColor" Type="System.Windows.Media.Color" Scope="User">
+      <Value Profile="(Default)">#FFDDDDDD</Value>
+    </Setting>
+    <Setting Name="SmallCubeSetColor" Type="System.Windows.Media.Color" Scope="User">
+      <Value Profile="(Default)">#FFEED3D3</Value>
+    </Setting>
+    <Setting Name="SmallCubeLabelBrush" Type="System.Windows.Media.SolidColorBrush" Scope="User">
+      <Value Profile="(Default)">#FF1E90FF</Value>
+    </Setting>
+    <Setting Name="SmallCubeClearColor" Type="System.Windows.Media.Color" Scope="User">
+      <Value Profile="(Default)">#8890EE90</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
