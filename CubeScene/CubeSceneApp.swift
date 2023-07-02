@@ -17,7 +17,7 @@ struct CubeSceneApp: App {
 //            if #available(iOS 16.0, *) {
 //                NavigationStack {
             NavigationView {
-                EnterListView().navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
+                EnterListView().background(Color.white).navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
             }
             .navigationViewStyle(StackNavigationViewStyle())
 //            } else {

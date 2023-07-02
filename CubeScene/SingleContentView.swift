@@ -38,7 +38,27 @@ public struct SingleContentView: View {
             }).joined(separator: "/")
         }.joined(separator: "\n")
     }
-
+    func handleButtonTapped(_ direction: Direction) {
+        // 在此处处理按钮点击事件
+        switch direction {
+        case .up:
+            withAnimation {
+                viewOffset.height -= 10
+            }
+        case .down:
+            withAnimation {
+                viewOffset.height += 10
+            }
+        case .left:
+            withAnimation {
+                viewOffset.width -= 10
+            }
+        case .right:
+            withAnimation {
+                viewOffset.width += 10
+            }
+        }
+    }
     public var body: some View {
         VStack {
 
@@ -48,8 +68,8 @@ public struct SingleContentView: View {
                 ScenekitSingleView(colorFull: colorFull, result: result, colors: colorsDefault)
                     .frame(width: UIScreen.main.currentMode?.size.width)
                     .offset(viewOffset)
-                    .animation(.easeInOut)
             }
+            .clipped()
             Picker("显示模式", selection: $colorFull) {
                 Text("彩色").tag(ShowType.colorFul)
                 Text("单色").tag(ShowType.singleColor)
@@ -63,32 +83,7 @@ public struct SingleContentView: View {
                 Toggle("显示代码", isOn: $isOn)
                     .padding()
             }
-
-            //            RoundedRectangle(cornerRadius: 10)
-            //                .fill(Color.blue)
-            //                .frame(width: 100, height: 100)
-            //
-            HStack {
-                Button("Up") {
-                    viewOffset.height -= 10
-                }
-                .padding()
-                Button("Left") {
-                    viewOffset.width -= 10
-                }
-                .padding()
-
-                Button("Right") {
-                    viewOffset.width += 10
-                }
-                .padding()
-
-
-                Button("Down") {
-                    viewOffset.height += 10
-                }
-                .padding()
-            }
+            CustomView(onButtonTapped: handleButtonTapped)  // 将按钮点击事件传递给自定义视图
 
         }.padding()
     }
@@ -106,6 +101,67 @@ struct SingleContentView_Previews: PreviewProvider {
         .navigationViewStyle(StackNavigationViewStyle())
 
     }
+}
+
+struct CustomView: View {
+    var onButtonTapped: ((Direction) -> Void)?  // 定义按钮点击事件的闭包属性
+
+    var body: some View {
+//        VStack {
+//            Button(action: {
+//                onButtonTapped?(.up)  // 调用上按钮点击事件
+//            }) {
+//                Image(systemName: "arrow.up")
+//            }
+//            .padding()
+//
+//            HStack {
+//                Button(action: {
+//                    onButtonTapped?(.left)  // 调用左按钮点击事件
+//                }) {
+//                    Image(systemName: "arrow.left")
+//                }
+//                .padding()
+//
+//                Button(action: {
+//                    onButtonTapped?(.right)  // 调用右按钮点击事件
+//                }) {
+//                    Image(systemName: "arrow.right")
+//                }
+//                .padding()
+//            }
+//
+//            Button(action: {
+//                onButtonTapped?(.down)  // 调用下按钮点击事件
+//            }) {
+//                Image(systemName: "arrow.down")
+//            }
+//            .padding()
+//        }
+        HStack {
+            Button(action: {
+                onButtonTapped?(.left)  // 调用左按钮点击事件
+            }) {
+                Image(systemName: "arrow.left")
+            }
+            .padding()
+
+            Button(action: {
+                onButtonTapped?(.right)  // 调用右按钮点击事件
+            }) {
+                Image(systemName: "arrow.right")
+            }
+            .padding()
+        }
+
+    }
+}
+
+enum Direction {
+    case up
+    case down
+    case left
+    case right
 }
 
 struct ScenekitSingleView : UIViewRepresentable {
