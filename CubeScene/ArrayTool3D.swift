@@ -60,7 +60,10 @@ let matrix: Matrix3D = [[[2,4,3], [6,4,1], [6,6,1]],
                         [[2,3,3], [6,4,1], [7,4,5]],
                         [[2,2,3], [7,5,5], [7,7,5]]]
 func getAll24(_ matrix: Matrix3D) ->[Matrix3D] {
-    
+    let depth = matrix.count
+    let rows = matrix[0].count
+    let cols = matrix[0][0].count
+
     var result24:[Matrix3D] = []
 
     let rotatedMatrixy1 = matrix
@@ -74,7 +77,7 @@ func getAll24(_ matrix: Matrix3D) ->[Matrix3D] {
     result24.append(rotatedMatrixy3)
     result24.append(rotatedMatrixy4)
 
-    let matrix1 = rotateOnce(matrix, axes: .z, depth: 3, rows: 3, cols: 3)
+    let matrix1 = rotateOnce(matrix, axes: .z, depth: depth, rows: rows, cols: cols)
     let rotatedMatrixyb1 = matrix1
     let rotatedMatrixyb2 = rot90(matrix1, k: 1, axes: .y)
     let rotatedMatrixyb3 = rot90(matrix1, k: 2, axes: .y)
@@ -85,7 +88,7 @@ func getAll24(_ matrix: Matrix3D) ->[Matrix3D] {
     result24.append(rotatedMatrixyb3)
     result24.append(rotatedMatrixyb4)
 
-    let matrix2 = rotateOnce(matrix1, axes: .z, depth: 3, rows: 3, cols: 3)
+    let matrix2 = rotateOnce(matrix1, axes: .z, depth: depth, rows: rows, cols: cols)
     let rotatedMatrixyc1 = matrix2
     let rotatedMatrixyc2 = rot90(matrix2, k: 1, axes: .y)
     let rotatedMatrixyc3 = rot90(matrix2, k: 2, axes: .y)
@@ -96,7 +99,7 @@ func getAll24(_ matrix: Matrix3D) ->[Matrix3D] {
     result24.append(rotatedMatrixyc3)
     result24.append(rotatedMatrixyc4)
 
-    let matrix3 = rotateOnce(matrix2, axes: .z, depth: 3, rows: 3, cols: 3)
+    let matrix3 = rotateOnce(matrix2, axes: .z, depth: depth, rows: rows, cols: cols)
     let rotatedMatrixyd1 = matrix3
     let rotatedMatrixyd2 = rot90(matrix3, k: 1, axes: .y)
     let rotatedMatrixyd3 = rot90(matrix3, k: 2, axes: .y)
@@ -107,7 +110,7 @@ func getAll24(_ matrix: Matrix3D) ->[Matrix3D] {
     result24.append(rotatedMatrixyd3)
     result24.append(rotatedMatrixyd4)
 
-    let matrix4 = rotateOnce(matrix, axes: .x, depth: 3, rows: 3, cols: 3)
+    let matrix4 = rotateOnce(matrix, axes: .x, depth: depth, rows: rows, cols: cols)
     let rotatedMatrixye1 = matrix4
     let rotatedMatrixye2 = rot90(matrix4, k: 1, axes: .y)
     let rotatedMatrixye3 = rot90(matrix4, k: 2, axes: .y)
