@@ -35,21 +35,18 @@ func rot90(_ matrix: Matrix3D, k: Int = 1, axes: Axis = .y) -> Matrix3D {
 // 旋转一次
 func rotateOnce(_ matrix: Matrix3D, axes: Axis, depth: Int, rows: Int, cols: Int) -> Matrix3D {
 
-
-    
     var rotatedMatrix = Matrix3D(repeating: [[Int]](repeating: [Int](repeating: 0, count: rows), count: cols), count: depth)
     
     for i in 0..<depth {
         for j in 0..<rows {
             for k in 0..<cols {
                 switch (axes) {
-                case .z: // 沿着第一个轴和第二个轴旋转
-                    rotatedMatrix[i][j][k] = matrix[i][k][rows - j - 1]
-                case .y: // 沿着第一个轴和第三个轴旋转
-//                    rotatedMatrix[i][j][k] = matrix[i][rows - k - 1][j]
-                    rotatedMatrix[i][j][k] = matrix[rows - k - 1][j][i]
-                case .x: // 沿着第二个轴和第三个轴旋转
+                case .x: // 沿着第x轴旋转
                     rotatedMatrix[i][j][k] = matrix[rows - j - 1][i][k]
+                case .y: // 沿着第y轴旋转
+                    rotatedMatrix[i][j][k] = matrix[rows - k - 1][j][i]
+                case .z: // 沿着第z轴旋转
+                    rotatedMatrix[i][j][k] = matrix[i][k][rows - j - 1]
                 }
             }
         }
