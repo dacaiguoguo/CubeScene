@@ -49,9 +49,10 @@ struct EnterListView: View {
                             // todo 显示当前image
                             // Image(uiImage: UIImage(named: "c\(index)")!).resizable()
                             Text("\(index)")
-                                .foregroundColor(Color.primary)
-                                .frame(width: 100, height: 100)
-                                .background(Color(uiColor: UIColor.lightGray))
+//                                .foregroundColor(Color.primary)
+//                                .frame(width: 100, height: 100)
+//                                .background(Color(uiColor: UIColor.lightGray))
+//                            ScenekitSingleView(result: fruit).frame(width: 100, height: 100)
                         }
                     }
                 }

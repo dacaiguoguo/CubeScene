@@ -89,19 +89,6 @@ public struct SingleContentView: View {
     }
 }
 
-struct SingleContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            SingleContentView(result:[[[2,4,3], [6,4,1], [6,6,1]],
-                                      [[2,3,3], [6,4,1], [7,4,5]],
-                                      [[2,2,3], [7,5,5], [7,7,5]]])
-            .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
-
-        }
-        .navigationViewStyle(StackNavigationViewStyle())
-
-    }
-}
 
 struct CustomView: View {
     var onButtonTapped: ((Direction) -> Void)?  // 定义按钮点击事件的闭包属性
@@ -181,7 +168,10 @@ struct ScenekitSingleView : UIViewRepresentable {
         let camera = SCNCamera()
         let cameraNode = SCNNode()
         cameraNode.camera = camera
-        cameraNode.position = SCNVector3Make(1, 0, 15)
+        cameraNode.position = SCNVector3Make(-10, 3, 15)
+//        cameraNode.eulerAngles = SCNVector3Make(0, 0, Float.pi/2) // 设置相机的旋转角度，这里是将场景绕 X 轴逆时针旋转 45 度
+        cameraNode.eulerAngles = SCNVector3Make(-Float.pi/6, -Float.pi/9, Float.pi/6) // 设置相机的旋转角度，这里是将场景绕 X 轴逆时针旋转 45 度
+
         ret.rootNode.addChildNode(cameraNode)
         return ret;
     }()
@@ -222,7 +212,6 @@ struct ScenekitSingleView : UIViewRepresentable {
                 }
             }
         }
-
         scnView.scene = scene
         scnView.autoenablesDefaultLighting = true
         scnView.allowsCameraControl = true
@@ -272,4 +261,32 @@ struct ScenekitSingleView : UIViewRepresentable {
         }
     }
 
+}
+
+
+//struct SingleContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            SingleContentView(result:[[[2,4,3], [6,4,1], [6,6,1]],
+//                                      [[2,3,3], [6,4,1], [7,4,5]],
+//                                      [[2,2,3], [7,5,5], [7,7,5]]])
+//            .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
+//
+//        }
+//        .navigationViewStyle(StackNavigationViewStyle())
+//
+//    }
+//}
+struct ScenekitSingleView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            ScenekitSingleView(result:[[[2,4,3], [6,4,1], [6,6,1]],
+                                      [[2,3,3], [6,4,1], [7,4,5]],
+                                      [[2,2,3], [7,5,5], [7,7,5]]])
+            .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
+
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
+
+    }
 }
