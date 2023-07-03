@@ -166,6 +166,9 @@ struct ScenekitSingleView : UIViewRepresentable {
         scnView.backgroundColor = .clear
         return scnView
     }
+    
+    
+
 
     func updateUIView(_ scnView: SCNView, context: Context) {
         let countOfRow = result.count
@@ -207,6 +210,12 @@ struct ScenekitSingleView : UIViewRepresentable {
                 }
             }
         }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    // 在此处执行您的任务
+            let sss = scnView.snapshot()
+            print(sss)
+                }
     }
 
 }

@@ -47,7 +47,7 @@ struct EnterListView: View {
                     NavigationLink(destination: SingleContentView(result: fruit)) {
                         ZStack(alignment: .topLeading){
                             Text("\(index)")
-                            ScenekitSingleView(result: fruit).frame(width: 100, height: 100).disabled(true)
+//                            ScenekitSingleView(result: fruit).frame(width: 100, height: 100).disabled(true)
                         }
                     }
                 }
