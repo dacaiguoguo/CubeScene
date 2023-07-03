@@ -8,9 +8,34 @@
 import SwiftUI
 import SceneKit
 
+
+/// 显示类型 单色、彩色、数字
+enum ShowType: Hashable {
+    case singleColor
+    case colorFul
+    case number
+}
+
 extension SCNVector3: Equatable {
     public static func ==(lhs: SCNVector3, rhs: SCNVector3) -> Bool {
         return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z
+    }
+}
+
+
+extension Matrix3D {
+    var formatOutput: String {
+        return self.map { item in
+            "/" + item.map({ subItem in
+                subItem.map({ value in
+                    if value == -1 {
+                        return  "."
+                    } else {
+                        return String(value)
+                    }
+                }).joined()
+            }).joined(separator: "/")
+        }.joined(separator: "\n")
     }
 }
 
@@ -25,19 +50,6 @@ public struct SingleContentView: View {
     let result: Matrix3D
 
 
-    func resultDes() -> String {
-        return result.map { item in
-            "/" + item.map({ subItem in
-                subItem.map({ value in
-                    if value == -1 {
-                        return  "."
-                    } else {
-                        return String(value)
-                    }
-                }).joined()
-            }).joined(separator: "/")
-        }.joined(separator: "\n")
-    }
     func handleButtonTapped(_ direction: Direction) {
         // 在此处处理按钮点击事件
         switch direction {
@@ -77,7 +89,7 @@ public struct SingleContentView: View {
             }.pickerStyle(.segmented)
             HStack{
                 if isOn {
-                    Text(resultDes()).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).background(Color.white)
+                    Text(result.formatOutput).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).background(Color.white)
                 }
                 Spacer()
                 Toggle("显示代码", isOn: $isOn)
@@ -287,6 +299,8 @@ struct ScenekitSingleView_Previews: PreviewProvider {
 
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        .previewDevice(PreviewDevice(rawValue: "iPhone SE"))
+        .previewDisplayName("iPhone SE")
 
     }
 }

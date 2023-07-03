@@ -9,12 +9,6 @@ import SwiftUI
 import SceneKit
 
 
-/// 显示类型 单色、彩色、数字
-enum ShowType: Hashable {
-    case singleColor
-    case colorFul
-    case number
-}
 
 // public是为了Playgrounds代码通用
 
