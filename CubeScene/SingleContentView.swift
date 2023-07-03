@@ -82,20 +82,20 @@ public struct SingleContentView: View {
                     .offset(viewOffset)
             }
             .clipped()
-            Picker("显示模式", selection: $colorFull) {
-                Text("彩色").tag(ShowType.colorFul)
-                Text("单色").tag(ShowType.singleColor)
-                Text("数字").tag(ShowType.number)
-            }.pickerStyle(.segmented)
-            HStack{
-                if isOn {
-                    Text(result.formatOutput).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).background(Color.white)
-                }
-                Spacer()
-                Toggle("显示代码", isOn: $isOn)
-                    .padding()
-            }
-            CustomView(onButtonTapped: handleButtonTapped)  // 将按钮点击事件传递给自定义视图
+//            Picker("显示模式", selection: $colorFull) {
+//                Text("彩色").tag(ShowType.colorFul)
+//                Text("单色").tag(ShowType.singleColor)
+//                Text("数字").tag(ShowType.number)
+//            }.pickerStyle(.segmented)
+//            HStack{
+//                if isOn {
+//                    Text(result.formatOutput).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).background(Color.white)
+//                }
+//                Spacer()
+//                Toggle("显示代码", isOn: $isOn)
+//                    .padding()
+//            }
+//            CustomView(onButtonTapped: handleButtonTapped)  // 将按钮点击事件传递给自定义视图
 
         }.padding()
     }
@@ -106,52 +106,52 @@ struct CustomView: View {
     var onButtonTapped: ((Direction) -> Void)?  // 定义按钮点击事件的闭包属性
 
     var body: some View {
-//        VStack {
-//            Button(action: {
-//                onButtonTapped?(.up)  // 调用上按钮点击事件
-//            }) {
-//                Image(systemName: "arrow.up")
-//            }
-//            .padding()
-//
-//            HStack {
-//                Button(action: {
-//                    onButtonTapped?(.left)  // 调用左按钮点击事件
-//                }) {
-//                    Image(systemName: "arrow.left")
-//                }
-//                .padding()
-//
-//                Button(action: {
-//                    onButtonTapped?(.right)  // 调用右按钮点击事件
-//                }) {
-//                    Image(systemName: "arrow.right")
-//                }
-//                .padding()
-//            }
-//
-//            Button(action: {
-//                onButtonTapped?(.down)  // 调用下按钮点击事件
-//            }) {
-//                Image(systemName: "arrow.down")
-//            }
-//            .padding()
-//        }
-        HStack {
+        VStack {
             Button(action: {
-                onButtonTapped?(.left)  // 调用左按钮点击事件
+                onButtonTapped?(.up)  // 调用上按钮点击事件
             }) {
-                Image(systemName: "arrow.left")
+                Image(systemName: "arrow.up")
             }
             .padding()
 
+            HStack {
+                Button(action: {
+                    onButtonTapped?(.left)  // 调用左按钮点击事件
+                }) {
+                    Image(systemName: "arrow.left")
+                }
+                .padding()
+
+                Button(action: {
+                    onButtonTapped?(.right)  // 调用右按钮点击事件
+                }) {
+                    Image(systemName: "arrow.right")
+                }
+                .padding()
+            }
+
             Button(action: {
-                onButtonTapped?(.right)  // 调用右按钮点击事件
+                onButtonTapped?(.down)  // 调用下按钮点击事件
             }) {
-                Image(systemName: "arrow.right")
+                Image(systemName: "arrow.down")
             }
             .padding()
         }
+//        HStack {
+//            Button(action: {
+//                onButtonTapped?(.left)  // 调用左按钮点击事件
+//            }) {
+//                Image(systemName: "arrow.left")
+//            }
+//            .padding()
+//
+//            Button(action: {
+//                onButtonTapped?(.right)  // 调用右按钮点击事件
+//            }) {
+//                Image(systemName: "arrow.right")
+//            }
+//            .padding()
+//        }
 
     }
 }
@@ -180,9 +180,11 @@ struct ScenekitSingleView : UIViewRepresentable {
         let camera = SCNCamera()
         let cameraNode = SCNNode()
         cameraNode.camera = camera
-        cameraNode.position = SCNVector3Make(-10, 3, 15)
+        cameraNode.position = SCNVector3Make(0, 15, 25)
 //        cameraNode.eulerAngles = SCNVector3Make(0, 0, Float.pi/2) // 设置相机的旋转角度，这里是将场景绕 X 轴逆时针旋转 45 度
-        cameraNode.eulerAngles = SCNVector3Make(-Float.pi/6, -Float.pi/9, Float.pi/6) // 设置相机的旋转角度，这里是将场景绕 X 轴逆时针旋转 45 度
+//        cameraNode.eulerAngles = SCNVector3Make(-Float.pi/6, -Float.pi/9, Float.pi/6) // 设置相机的旋转角度，这里是将场景绕 X 轴逆时针旋转 45 度
+
+        cameraNode.eulerAngles = SCNVector3Make(-Float.pi/4, 0, 0) // 设置相机的旋转角度，这里是将场景绕 X 轴逆时针旋转 45 度
 
         ret.rootNode.addChildNode(cameraNode)
         return ret;
