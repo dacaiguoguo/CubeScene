@@ -41,7 +41,7 @@ extension Matrix3D {
 
 public struct SingleContentView: View {
 
-    @State private var isOn = false
+    @State private var isOn = true
     @State private var colorFull:ShowType = .colorFul
     @State private var viewOffset = CGSize.zero
 
@@ -91,9 +91,8 @@ public struct SingleContentView: View {
                 if isOn {
                     Text(result.formatOutput).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).background(Color.white)
                 }
-                Spacer()
-                Toggle("显示代码", isOn: $isOn)
-                    .padding()
+//                Toggle("", isOn: $isOn)
+//                    .padding()
             }
             ArrowButtonView(onButtonTapped: handleButtonTapped)  // 将按钮点击事件传递给自定义视图
 
@@ -107,7 +106,7 @@ struct ScenekitSingleView : UIViewRepresentable {
     let colorFull:ShowType;
     let result: Matrix3D
     let colors:[UIColor]
-    init(colorFull: ShowType = .colorFul, result: Matrix3D, colors:[UIColor] = colorsDefault ) {
+    init(colorFull: ShowType = .singleColor, result: Matrix3D, colors:[UIColor] = colorsDefault ) {
         self.colorFull = colorFull
         self.result = result
         self.colors = colors
