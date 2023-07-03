@@ -45,14 +45,9 @@ struct EnterListView: View {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
                 ForEach(Array(firstArray.enumerated()), id: \.1) { index, fruit in
                     NavigationLink(destination: SingleContentView(result: fruit)) {
-                        ZStack{
-                            // todo 显示当前image
-                            // Image(uiImage: UIImage(named: "c\(index)")!).resizable()
+                        ZStack(alignment: .topLeading){
                             Text("\(index)")
-//                                .foregroundColor(Color.primary)
-//                                .frame(width: 100, height: 100)
-//                                .background(Color(uiColor: UIColor.lightGray))
-//                            ScenekitSingleView(result: fruit).frame(width: 100, height: 100)
+                            ScenekitSingleView(result: fruit).frame(width: 100, height: 100).disabled(true)
                         }
                     }
                 }
@@ -65,5 +60,16 @@ struct EnterListView: View {
 struct EnterListView_Previews: PreviewProvider {
     static var previews: some View {
         EnterListView()
+//        ZStack(alignment: .topLeading){
+//            // todo 显示当前image
+//            // Image(uiImage: UIImage(named: "c\(index)")!).resizable()
+//            Text("001")
+//            //                                .foregroundColor(Color.primary)
+//            //                                .frame(width: 100, height: 100)
+//            //                                .background(Color(uiColor: UIColor.lightGray))
+//            ScenekitSingleView(result: [[[2,4,3], [6,4,1], [6,6,1]],
+//                                        [[2,3,3], [6,4,1], [7,4,5]],
+//                                        [[2,2,3], [7,5,5], [7,7,5]]]).frame(width: 100, height: 100)
+//        }
     }
 }
