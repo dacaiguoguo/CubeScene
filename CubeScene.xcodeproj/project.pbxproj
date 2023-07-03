@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5971BA8C2A50547800CD6111 /* ArrayTool3D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */; };
+		5971BA8E2A5064DC00CD6111 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5971BA8D2A5064DC00CD6111 /* ContentView.swift */; };
+		5971BA902A50652800CD6111 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5971BA8F2A50652800CD6111 /* SettingView.swift */; };
 		9D1602BA2A4BDBF100C247A7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D1602B92A4BDBF100C247A7 /* LaunchScreen.storyboard */; };
 		9DC929A52A4ECB8500162BC6 /* ModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC929A42A4ECB8500162BC6 /* ModalView.swift */; };
 		9DF9206D2A404BBC001BD720 /* CubeSceneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */; };
@@ -22,6 +24,8 @@
 
 /* Begin PBXFileReference section */
 		5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayTool3D.swift; sourceTree = "<group>"; };
+		5971BA8D2A5064DC00CD6111 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		5971BA8F2A50652800CD6111 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		9D1602B92A4BDBF100C247A7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9DC576A92A419BF20012E272 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		9DC929A42A4ECB8500162BC6 /* ModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalView.swift; sourceTree = "<group>"; };
@@ -66,18 +70,20 @@
 		9DF9206B2A404BBC001BD720 /* CubeScene */ = {
 			isa = PBXGroup;
 			children = (
-				9DC576A92A419BF20012E272 /* Info.plist */,
-				9DF9380B2A417BA4001BD720 /* SOMA101.txt */,
+				5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */,
+				9DF920702A404BBF001BD720 /* Assets.xcassets */,
+				5971BA8D2A5064DC00CD6111 /* ContentView.swift */,
+				9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */,
 				9DF9380A2A417BA4001BD720 /* data1.txt */,
 				9DF9380C2A417BA4001BD720 /* data2.txt */,
 				9DF938102A417BAD001BD720 /* data3.txt */,
-				9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */,
-				9DF9206E2A404BBC001BD720 /* ScenekitView.swift */,
-				5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */,
-				9DC929A42A4ECB8500162BC6 /* ModalView.swift */,
+				9DC576A92A419BF20012E272 /* Info.plist */,
 				9D1602B92A4BDBF100C247A7 /* LaunchScreen.storyboard */,
-				9DF920702A404BBF001BD720 /* Assets.xcassets */,
+				9DC929A42A4ECB8500162BC6 /* ModalView.swift */,
 				9DF920722A404BBF001BD720 /* Preview Content */,
+				9DF9206E2A404BBC001BD720 /* ScenekitView.swift */,
+				5971BA8F2A50652800CD6111 /* SettingView.swift */,
+				9DF9380B2A417BA4001BD720 /* SOMA101.txt */,
 			);
 			path = CubeScene;
 			sourceTree = "<group>";
@@ -166,7 +172,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				5971BA8C2A50547800CD6111 /* ArrayTool3D.swift in Sources */,
+				5971BA8E2A5064DC00CD6111 /* ContentView.swift in Sources */,
 				9DC929A52A4ECB8500162BC6 /* ModalView.swift in Sources */,
+				5971BA902A50652800CD6111 /* SettingView.swift in Sources */,
 				9DF9206F2A404BBC001BD720 /* ScenekitView.swift in Sources */,
 				9DF9206D2A404BBC001BD720 /* CubeSceneApp.swift in Sources */,
 			);

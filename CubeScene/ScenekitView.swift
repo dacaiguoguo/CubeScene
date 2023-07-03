@@ -8,211 +8,13 @@
 import SwiftUI
 import SceneKit
 
-var colorsDefault:[UIColor] = [
-    // UIColor.black,
-    // UIColor.systemCyan, // front
-    // UIColor.green, // right
-    // UIColor.red, // back
-    // UIColor.systemIndigo, // left
-    // UIColor.blue, // top
-    // UIColor.purple,
-    // UIColor.yellow,
-    UIColor(hex: "000000"),
-    UIColor(hex: "FF8800"),
-    UIColor(hex: "0396FF"),
-    UIColor(hex: "EA5455"),
-    UIColor(hex: "7367F0"),
-    UIColor(hex: "32CCBC"),
-    UIColor(hex: "28C76F"),
-    UIColor.purple
-]
-
-extension UIColor {
-    public convenience init(hex: String) {
-        let r, g, b, a: CGFloat
-        let hex2 = "#\(hex)ff"
-        let start = hex2.index(hex2.startIndex, offsetBy: 1)
-        let hexColor = String(hex2[start...])
-
-        if hexColor.count == 8 {
-            let scanner = Scanner(string: hexColor)
-            var hexNumber: UInt64 = 0
-
-            if scanner.scanHexInt64(&hexNumber) {
-                r = CGFloat((hexNumber & 0xff000000) >> 24) / 255
-                g = CGFloat((hexNumber & 0x00ff0000) >> 16) / 255
-                b = CGFloat((hexNumber & 0x0000ff00) >> 8) / 255
-                a = CGFloat(hexNumber & 0x000000ff) / 255
-
-                self.init(red: r, green: g, blue: b, alpha: a)
-                return
-            }
-        }
-
-        self.init(red: 0, green: 0, blue: 0, alpha: 1)
-        return
-    }
-}
-
-/// 显示类型 单色、彩色、数字
-enum ShowType: Hashable {
-    case singleColor
-    case colorFul
-    case number
-}
-
-// public是为了Playgrounds代码通用
-
-public struct ContentView: View {
-    public init(){}
-    @State private var isOn = false
-    @State private var showModal = false
-
-    @State private var colorFull:ShowType = .colorFul
-    enum Field: Hashable {
-        case dataIndexField
-        case dataInputField
-    }
-    @FocusState private var focusItem: Field?
-    @State var dataIndex:Int = 0
-
-    let trimmingSet:CharacterSet = {
-        var triSet = CharacterSet.whitespacesAndNewlines
-        triSet.insert("/")
-        return triSet
-    }()
-
-    let firstArray: [String] = {
-        let stringContent = try! String(contentsOf: Bundle.main.url(forResource: "SOMA101", withExtension: "txt")!, encoding: .utf8)
-        let firstArray = stringContent.components(separatedBy: "/SOMA")
-        return firstArray.filter { item in
-            item.lengthOfBytes(using: .utf8) > 5
-        }
-    }()
-
-
-    /// 用计算属性 不能使用 lazy var
-    var numberOfSoma:Int {
-        firstArray.count
-    }
-
-
-    /// 解析结果
-    /// - Returns: 返回三位数组
-    func result() -> Matrix3D {
-        let currentData = firstArray[dataIndex]
-
-        let parsedData = currentData.trimmingCharacters(in: trimmingSet).split(separator: "\n").dropFirst().filter { item in
-            item.hasPrefix("/")
-        }.map({ item in
-            item.trimmingCharacters(in: trimmingSet)
-        })
-
-        let separatorItem = Character("/")
-        // 非数字都解析成-1
-        let result = parsedData.map { item in
-            item.split(separator: separatorItem).map { subItem in
-                subItem.map { subSubItem in
-                    Int(String(subSubItem)) ?? -1
-                }
-            }
-        }
-        // print(result)
-        return result
-    }
-
-
-    public var body: some View {
-        VStack {
-            Toggle("显示代码", isOn: $isOn)
-                .padding()
-            if isOn {
-                Text(firstArray[dataIndex].trimmingCharacters(in: trimmingSet))
-                    .font(.custom("Menlo", size: 18))
-                    .frame(maxWidth: .infinity)
-                    .background(Color.white)
-            }
-            ZStack{
-                Image(uiImage: UIImage(named: "wenli4")!)
-                    .resizable(resizingMode: .tile)
-                ScenekitView(colorFull: colorFull, result: result(), colors: colorsDefault)
-            }
-            HStack {
-                ZStack{
-                    Rectangle().background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.green]), startPoint: .leading, endPoint: .trailing))
-                        .foregroundColor(.clear).cornerRadius(5)
-                    Text("上一个").foregroundColor(.white).font(.headline)
-                }.frame(height: 44).onTapGesture {
-                    focusItem = nil
-                    dataIndex = (dataIndex - 1 + numberOfSoma) % numberOfSoma
-                }
-                Spacer()
-                TextField("关卡", text: Binding(get: {
-                    "\(dataIndex)"
-                }, set: {
-                    let intValue = Int($0) ?? 0
-                    self.dataIndex = intValue % numberOfSoma
-                }), prompt: Text("关卡号"))
-                .focused($focusItem, equals: .dataIndexField)
-                .textFieldStyle(.roundedBorder)
-                .keyboardType(.numbersAndPunctuation)
-                .multilineTextAlignment(.center)
-                .padding()
-                Spacer()
-                ZStack{
-                    Rectangle().background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.green]), startPoint: .leading, endPoint: .trailing))
-                        .foregroundColor(.clear).cornerRadius(5)
-                    Text("下一个").foregroundColor(.white).font(.headline)
-                }.frame(height: 44).onTapGesture {
-                    focusItem = nil
-                    dataIndex = (dataIndex + 1) % numberOfSoma
-                }
-            }
-            Picker("显示模式", selection: $colorFull) {
-                Text("彩色").tag(ShowType.colorFul)
-                Text("单色").tag(ShowType.singleColor)
-                Text("数字").tag(ShowType.number)
-            }.pickerStyle(.segmented)
-        }.padding()
-    }
-}
-
-
-struct Channel: Decodable {
-    var channelID:String = ""
-    var name:String = ""
-}
-
-extension Channel: Identifiable {
-    var id: String {
-        channelID
-    }
-}
-
-
-public struct SettingView: View {
-    public init(){}
-
-    let channelLocalDataList:[Channel] = [Channel(channelID: "1", name: "色彩"), Channel(channelID: "2", name: "难度"),  Channel(channelID: "3", name: "帮助")]
-
-    public var body: some View {
-        List {
-            ForEach(channelLocalDataList) { channel in
-                HStack {
-                    Text(channel.name)
-                }.padding()
-            }
-        }
-    }
-}
-
 
 struct ScenekitView : UIViewRepresentable {
 
     let colorFull:ShowType;
     let result: Matrix3D
     let colors:[UIColor]
-    init(colorFull: ShowType = .colorFul, result: Matrix3D, colors:[UIColor] = colorsDefault ) {
+    init(colorFull: ShowType = .colorFul, result: Matrix3D, colors: [UIColor] = colorsDefault) {
         self.colorFull = colorFull
         self.result = result
         self.colors = colors
@@ -223,8 +25,9 @@ struct ScenekitView : UIViewRepresentable {
         // 添加照相机
         let camera = SCNCamera()
         let cameraNode = SCNNode()
+        cameraNode.name = "camera"
         cameraNode.camera = camera
-        cameraNode.position = SCNVector3Make(1, 0, 15)
+        cameraNode.position = SCNVector3Make(2, 2, 15)
         ret.rootNode.addChildNode(cameraNode)
         return ret;
     }()
@@ -244,9 +47,16 @@ struct ScenekitView : UIViewRepresentable {
     func makeUIView(context: Context) -> SCNView {
         // retrieve the SCNView
         let scnView = SCNView()
+        scnView.autoenablesDefaultLighting = true
+        scnView.allowsCameraControl = true
+        scnView.backgroundColor = .clear
+        scnView.scene = scene
+
         return scnView
     }
+    
 
+    
     func updateUIView(_ scnView: SCNView, context: Context) {
         let countOfRow = result.count
         let countOfLayer = result.first?.count ?? -1
@@ -282,20 +92,7 @@ struct ScenekitView : UIViewRepresentable {
                 }
             }
         }
-
-        scnView.scene = scene
-        scnView.autoenablesDefaultLighting = true
-        scnView.allowsCameraControl = true
-        scnView.backgroundColor = .clear
     }
 
 }
 
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-            .previewDevice(PreviewDevice(rawValue: "iPhone 14"))
-            .previewDisplayName("iPhone 14")
-    }
-}

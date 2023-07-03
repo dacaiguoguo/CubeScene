@@ -50,17 +50,6 @@ struct ModalView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedColor = Color.red
 
-//    @State var colors:[ItemColor] = [
-//        ItemColor(index: 0, uicolor: .black),
-//        ItemColor(index: 1, uicolor: UIColor(hex: "FF8800")),
-//        ItemColor(index: 2, uicolor: UIColor(hex: "0396FF")),
-//        ItemColor(index: 3, uicolor: UIColor(hex: "EA5455")),
-//        ItemColor(index: 4, uicolor: UIColor(hex: "7367F0")),
-//        ItemColor(index: 5, uicolor: UIColor(hex: "32CCBC")),
-//        ItemColor(index: 6, uicolor: UIColor(hex: "28C76F")),
-//        ItemColor(index: 7, uicolor: UIColor.purple),
-//    ]
-
     @State var colors:[ItemColor] = {colorsDefault.enumerated().map({ index, element in
         ItemColor(index: index, uicolor: element)
     })}()
@@ -76,6 +65,7 @@ struct ModalView: View {
         return array24[dataIndex]
     }
     @State var dataIndex:Int = 0
+    @State private var defaultCameraPosition = SCNVector3(x: 2, y: 2, z: 15)
 
     var body: some View {
         VStack {
