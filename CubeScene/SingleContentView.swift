@@ -180,12 +180,8 @@ struct ScenekitSingleView : UIViewRepresentable {
         let camera = SCNCamera()
         let cameraNode = SCNNode()
         cameraNode.camera = camera
-        cameraNode.position = SCNVector3Make(0, 15, 25)
-//        cameraNode.eulerAngles = SCNVector3Make(0, 0, Float.pi/2) // 设置相机的旋转角度，这里是将场景绕 X 轴逆时针旋转 45 度
-//        cameraNode.eulerAngles = SCNVector3Make(-Float.pi/6, -Float.pi/9, Float.pi/6) // 设置相机的旋转角度，这里是将场景绕 X 轴逆时针旋转 45 度
-
-        cameraNode.eulerAngles = SCNVector3Make(-Float.pi/4, 0, 0) // 设置相机的旋转角度，这里是将场景绕 X 轴逆时针旋转 45 度
-
+        cameraNode.position = SCNVector3Make(10, 15, 25)
+        cameraNode.eulerAngles = SCNVector3Make(-Float.pi/4, Float.pi/9, 0) // 设置相机的旋转角度，这里是将场景绕 X 轴逆时针旋转 45 度
         ret.rootNode.addChildNode(cameraNode)
         return ret;
     }()
