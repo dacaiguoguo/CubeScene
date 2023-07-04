@@ -69,15 +69,22 @@ public struct SingleContentView: View {
             }
         }
     }
-
+    let imageSize = 100.0;
     public var body: some View {
         VStack {
             ZStack{
                 Image(uiImage: UIImage(named: "wenli4")!)
                     .resizable(resizingMode: .tile)
-                ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: colorsDefault)
-                    .frame(maxWidth: .infinity)
-                    .offset(viewOffset)
+                ZStack(alignment: .bottom) {
+                    ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: colorsDefault)
+                        .frame(maxWidth: .infinity)
+                        .offset(viewOffset)
+                    HStack{
+                        Image(uiImage: UIImage(named: "c1")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
+                        Image(uiImage: UIImage(named: "c3")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
+                        Image(uiImage: UIImage(named: "c4")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
+                    }
+                }
             }
             .clipped()
             Picker("显示模式", selection: $showType) {
@@ -119,7 +126,7 @@ struct ScenekitSingleView : UIViewRepresentable {
         let camera = SCNCamera()
         let cameraNode = SCNNode()
         cameraNode.camera = camera
-        cameraNode.position = SCNVector3Make(5, 10, 10)
+        cameraNode.position = SCNVector3Make(5, 13, 8)
         cameraNode.eulerAngles = SCNVector3Make(-Float.pi/4, Float.pi/9, 0) // 设置相机的旋转角度，这里是将场景绕 X 轴逆时针旋转 45 度
         ret.rootNode.addChildNode(cameraNode)
         return ret;
@@ -170,22 +177,22 @@ struct ScenekitSingleView : UIViewRepresentable {
 
     func singleMaterial() -> [SCNMaterial] {
         let materialFront = SCNMaterial()
-        materialFront.diffuse.contents = UIColor.red
+        materialFront.diffuse.contents = UIColor.lightGray
 
         let materialBack = SCNMaterial()
-        materialBack.diffuse.contents = UIColor.red
+        materialBack.diffuse.contents = UIColor.lightGray
 
         let materialLeft = SCNMaterial()
-        materialLeft.diffuse.contents = UIColor.red
+        materialLeft.diffuse.contents = UIColor.lightGray
 
         let materialRight = SCNMaterial()
-        materialRight.diffuse.contents = UIColor.red
+        materialRight.diffuse.contents = UIColor.lightGray
 
         let materialTop = SCNMaterial()
-        materialTop.diffuse.contents = UIColor.yellow
+        materialTop.diffuse.contents = UIColor.white
 
         let materialBottom = SCNMaterial()
-        materialBottom.diffuse.contents = UIColor.yellow
+        materialBottom.diffuse.contents = UIColor.white
         return [materialFront, materialBack, materialLeft, materialRight, materialTop, materialBottom]
     }
 
@@ -211,8 +218,11 @@ struct ScenekitSingleView : UIViewRepresentable {
                         for boxNode in boxNodes {
                             switch showType {
                             case .singleColor:
-                                boxNode.geometry?.firstMaterial = nil
-                                boxNode.geometry?.materials = singleMaterial()
+//                                boxNode.geometry?.firstMaterial = nil
+//                                boxNode.geometry?.materials = singleMaterial()
+                                let material = SCNMaterial()
+                                material.diffuse.contents = UIImage(named: "border")!
+                                boxNode.geometry?.firstMaterial = material
                             case .colorFul:
                                 let material = SCNMaterial()
                                 material.diffuse.contents = colors[value]

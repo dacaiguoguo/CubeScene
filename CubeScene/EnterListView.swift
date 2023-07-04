@@ -59,12 +59,12 @@ struct EnterListView: View {
 
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))]) {
                 ForEach(Array(firstArray.enumerated()), id: \.0) { index, item in
                     NavigationLink(destination: SingleContentView(dataModel: item)) {
                         ZStack(alignment: .topLeading){
                             Text(item.name).foregroundColor(.black).font(.title).padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
-                            ScenekitSingleView(dataItem: item.matrix, imageName: item.name).frame(width: 300, height: 300).disabled(true)
+                            ScenekitSingleView(dataItem: item.matrix, imageName: item.name).frame(width: 150, height: 150).disabled(true)
                         }.background(Color(uiColor: UIColor(hex: "00bfff"))).cornerRadius(8)
                     }
                 }
