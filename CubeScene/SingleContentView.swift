@@ -91,8 +91,8 @@ public struct SingleContentView: View {
                 if isOn {
                     Text(result.formatOutput).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).background(Color.white)
                 }
-//                Toggle("", isOn: $isOn)
-//                    .padding()
+                Toggle("", isOn: $isOn)
+                    .padding().frame(maxWidth: 100)
             }
             ArrowButtonView(onButtonTapped: handleButtonTapped)  // 将按钮点击事件传递给自定义视图
 
