@@ -103,10 +103,12 @@ struct ScenekitSingleView : UIViewRepresentable {
     let colorFull:ShowType;
     let dataItem: Matrix3D
     let colors:[UIColor]
-    init(colorFull: ShowType = .singleColor, dataItem: Matrix3D, colors:[UIColor] = colorsDefault ) {
+    let imageName:String
+    init(colorFull: ShowType = .singleColor, dataItem: Matrix3D, colors:[UIColor] = colorsDefault, imageName:String = "" ) {
         self.colorFull = colorFull
         self.dataItem = dataItem
         self.colors = colors
+        self.imageName = imageName
     }
 
 
@@ -209,16 +211,34 @@ struct ScenekitSingleView : UIViewRepresentable {
                 }
             }
         }
-        
+//        辅助任务 保存图片到document 为了性能优化
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
 //            // 在此处执行您的任务
 //            let sss = scnView.snapshot()
-//            print(sss)
+//            saveImageToDocumentDirectory(image:sss, fileName: imageName)
 //        }
     }
 
 }
 
+func saveImageToDocumentDirectory(image: UIImage, fileName: String) {
+    guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+        return
+    }
+
+    guard let imageData = image.pngData() else {
+        return
+    }
+
+    let fileURL = documentsDirectory.appendingPathComponent(fileName)
+
+    do {
+        try imageData.write(to: fileURL)
+        print("Image saved successfully. File path: \(fileURL)")
+    } catch {
+        print("Error saving image: \(error)")
+    }
+}
 
 //struct SingleContentView_Previews: PreviewProvider {
 //    static var previews: some View {
