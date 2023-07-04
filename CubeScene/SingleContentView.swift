@@ -42,7 +42,7 @@ extension Matrix3D {
 public struct SingleContentView: View {
 
     @State private var isOn = false
-    @State private var colorFull:ShowType = .colorFul
+    @State private var showType:ShowType = .singleColor
     @State private var viewOffset = CGSize.zero
 
     let dataModel: EnterItem
@@ -75,15 +75,15 @@ public struct SingleContentView: View {
             ZStack{
                 Image(uiImage: UIImage(named: "wenli4")!)
                     .resizable(resizingMode: .tile)
-                ScenekitSingleView(colorFull: colorFull, dataItem: dataModel.matrix, colors: colorsDefault)
+                ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: colorsDefault)
                     .frame(width: UIScreen.main.currentMode?.size.width)
                     .offset(viewOffset)
             }
             .clipped()
-            Picker("显示模式", selection: $colorFull) {
-                Text("彩色").tag(ShowType.colorFul)
-                Text("单色").tag(ShowType.singleColor)
-                Text("数字").tag(ShowType.number)
+            Picker("显示模式", selection: $showType) {
+                Text("彩色答案").tag(ShowType.colorFul)
+                Text("出题模式").tag(ShowType.singleColor)
+                Text("数字模式").tag(ShowType.number)
             }.pickerStyle(.segmented)
             if isOn {
                 HStack{
@@ -100,12 +100,12 @@ public struct SingleContentView: View {
 
 struct ScenekitSingleView : UIViewRepresentable {
 
-    let colorFull:ShowType;
+    let showType:ShowType;
     let dataItem: Matrix3D
     let colors:[UIColor]
     let imageName:String
-    init(colorFull: ShowType = .singleColor, dataItem: Matrix3D, colors:[UIColor] = colorsDefault, imageName:String = "" ) {
-        self.colorFull = colorFull
+    init(showType: ShowType = .singleColor, dataItem: Matrix3D, colors:[UIColor] = colorsDefault, imageName:String = "" ) {
+        self.showType = showType
         self.dataItem = dataItem
         self.colors = colors
         self.imageName = imageName
@@ -170,22 +170,22 @@ struct ScenekitSingleView : UIViewRepresentable {
 
     func singleMaterial() -> [SCNMaterial] {
         let materialFront = SCNMaterial()
-        materialFront.diffuse.contents = UIColor.gray
+        materialFront.diffuse.contents = UIColor.red
 
         let materialBack = SCNMaterial()
-        materialBack.diffuse.contents = UIColor.gray
+        materialBack.diffuse.contents = UIColor.red
 
         let materialLeft = SCNMaterial()
-        materialLeft.diffuse.contents = UIColor.gray
+        materialLeft.diffuse.contents = UIColor.red
 
         let materialRight = SCNMaterial()
-        materialRight.diffuse.contents = UIColor.gray
+        materialRight.diffuse.contents = UIColor.red
 
         let materialTop = SCNMaterial()
-        materialTop.diffuse.contents = UIColor.white
+        materialTop.diffuse.contents = UIColor.yellow
 
         let materialBottom = SCNMaterial()
-        materialBottom.diffuse.contents = UIColor.white
+        materialBottom.diffuse.contents = UIColor.yellow
         return [materialFront, materialBack, materialLeft, materialRight, materialTop, materialBottom]
     }
 
@@ -209,18 +209,21 @@ struct ScenekitSingleView : UIViewRepresentable {
                     }) {
                         // 输出符合条件的节点名称
                         for boxNode in boxNodes {
-                            switch colorFull {
+                            switch showType {
                             case .singleColor:
+                                boxNode.geometry?.firstMaterial = nil
                                 boxNode.geometry?.materials = singleMaterial()
                             case .colorFul:
                                 let material = SCNMaterial()
                                 material.diffuse.contents = colors[value]
                                 material.locksAmbientWithDiffuse = true
+                                boxNode.geometry?.materials = [];
                                 boxNode.geometry?.firstMaterial = material
                             case .number:
                                 let material = SCNMaterial()
                                 material.diffuse.contents = colorImages[value]
                                 material.locksAmbientWithDiffuse = true
+                                boxNode.geometry?.materials = [];
                                 boxNode.geometry?.firstMaterial = material
                             }
                         }
