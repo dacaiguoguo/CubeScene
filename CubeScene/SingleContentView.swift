@@ -91,10 +91,11 @@ public struct SingleContentView: View {
                 if isOn {
                     Text(result.formatOutput).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).background(Color.white)
                 }
-                Toggle("", isOn: $isOn)
-                    .padding().frame(maxWidth: 100)
+
             }
-            ArrowButtonView(onButtonTapped: handleButtonTapped)  // 将按钮点击事件传递给自定义视图
+            Toggle("显示代码", isOn: $isOn)
+                .padding().frame(maxWidth: .infinity)
+//            ArrowButtonView(onButtonTapped: handleButtonTapped)  // 将按钮点击事件传递给自定义视图
 
         }.padding()
     }
@@ -211,11 +212,11 @@ struct ScenekitSingleView : UIViewRepresentable {
             }
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    // 在此处执行您的任务
-            let sss = scnView.snapshot()
-            print(sss)
-                }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//            // 在此处执行您的任务
+//            let sss = scnView.snapshot()
+//            print(sss)
+//        }
     }
 
 }
@@ -238,8 +239,8 @@ struct ScenekitSingleView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             ScenekitSingleView(result:[[[2,4,3], [6,4,1], [6,6,1]],
-                                      [[2,3,3], [6,4,1], [7,4,5]],
-                                      [[2,2,3], [7,5,5], [7,7,5]]])
+                                       [[2,3,3], [6,4,1], [7,4,5]],
+                                       [[2,2,3], [7,5,5], [7,7,5]]])
             .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
 
         }

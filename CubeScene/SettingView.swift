@@ -21,8 +21,8 @@ var colorsDefault:[UIColor] = [
     UIColor(hex: "FF8800"),
     UIColor(hex: "0396FF"),
     UIColor(hex: "EA5455"),
+    UIColor(hex: "7367F0"),
     UIColor.gray,
-    UIColor(hex: "32CCBC"),
     UIColor(hex: "28C76F"),
     UIColor.purple
 ]
