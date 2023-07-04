@@ -7,20 +7,34 @@
 
 import SwiftUI
 
+
+struct EnterItem: Decodable {
+    let name:String
+    var matrix:Matrix3D
+}
+
+extension EnterItem: Identifiable {
+    var id: String {
+        name
+    }
+}
+
 struct EnterListView: View {
 
-    let firstArray: [Matrix3D] = {
+    let firstArray: [EnterItem] = {
         let stringContent = try! String(contentsOf: Bundle.main.url(forResource: "SOMA101", withExtension: "txt")!, encoding: .utf8)
         let firstArray = stringContent.components(separatedBy: "/SOMA")
+        let trimmingSet:CharacterSet = {
+            var triSet = CharacterSet.whitespacesAndNewlines
+            triSet.insert("/")
+            return triSet
+        }()
         return firstArray.filter { item in
-            item.lengthOfBytes(using: .utf8) > 5
+            item.lengthOfBytes(using: .utf8) > 1
         }.map { currentData in
-            let trimmingSet:CharacterSet = {
-                var triSet = CharacterSet.whitespacesAndNewlines
-                triSet.insert("/")
-                return triSet
-            }()
-            let parsedData = currentData.trimmingCharacters(in: trimmingSet).split(separator: "\n").dropFirst().filter { item in
+            let splitArray = currentData.trimmingCharacters(in: trimmingSet).split(separator: "\n")
+            let firstLine = splitArray.first?.trimmingCharacters(in: trimmingSet).trimmingCharacters(in: CharacterSet(charactersIn: "-"))
+            let parsedData = splitArray.dropFirst().filter { item in
                 item.hasPrefix("/")
             }.map({ item in
                 item.trimmingCharacters(in: trimmingSet)
@@ -35,16 +49,19 @@ struct EnterListView: View {
                     }
                 }
             }
-            // print(result)
-            return result
+            if let name = firstLine {
+                return EnterItem(name: name, matrix: result)
+            } else {
+                return EnterItem(name: "无名", matrix: result)
+            }
         }
     }()
 
     var body: some View {
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
-                ForEach(Array(firstArray.enumerated()), id: \.1) { index, fruit in
-                    NavigationLink(destination: SingleContentView(result: fruit)) {
+                ForEach(Array(firstArray.enumerated()), id: \.0) { index, item in
+                    NavigationLink(destination: SingleContentView(dataModel: item)) {
                         ZStack(alignment: .topLeading){
                             Text("\(index)")
 //                            ScenekitSingleView(result: fruit).frame(width: 100, height: 100).disabled(true)

@@ -41,13 +41,11 @@ extension Matrix3D {
 
 public struct SingleContentView: View {
 
-    @State private var isOn = true
+    @State private var isOn = false
     @State private var colorFull:ShowType = .colorFul
     @State private var viewOffset = CGSize.zero
 
-    /// 解析结果
-    /// - Returns: 返回三维数组
-    let result: Matrix3D
+    let dataModel: EnterItem
 
 
     func handleButtonTapped(_ direction: Direction) {
@@ -71,13 +69,13 @@ public struct SingleContentView: View {
             }
         }
     }
+
     public var body: some View {
         VStack {
-
             ZStack{
                 Image(uiImage: UIImage(named: "wenli4")!)
                     .resizable(resizingMode: .tile)
-                ScenekitSingleView(colorFull: colorFull, result: result, colors: colorsDefault)
+                ScenekitSingleView(colorFull: colorFull, dataItem: dataModel.matrix, colors: colorsDefault)
                     .frame(width: UIScreen.main.currentMode?.size.width)
                     .offset(viewOffset)
             }
@@ -87,17 +85,15 @@ public struct SingleContentView: View {
                 Text("单色").tag(ShowType.singleColor)
                 Text("数字").tag(ShowType.number)
             }.pickerStyle(.segmented)
-            HStack{
-                if isOn {
-                    Text(result.formatOutput).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).background(Color.white)
+            if isOn {
+                HStack{
+                    Text(dataModel.matrix.formatOutput).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).background(Color.white)
                 }
-
             }
             Toggle("显示代码", isOn: $isOn)
                 .padding().frame(maxWidth: .infinity)
-//            ArrowButtonView(onButtonTapped: handleButtonTapped)  // 将按钮点击事件传递给自定义视图
-
-        }.padding()
+            // ArrowButtonView(onButtonTapped: handleButtonTapped)  // 将按钮点击事件传递给自定义视图
+        }.padding().navigationTitle(dataModel.name)
     }
 }
 
@@ -105,13 +101,15 @@ public struct SingleContentView: View {
 struct ScenekitSingleView : UIViewRepresentable {
 
     let colorFull:ShowType;
-    let result: Matrix3D
+    let dataItem: Matrix3D
     let colors:[UIColor]
-    init(colorFull: ShowType = .singleColor, result: Matrix3D, colors:[UIColor] = colorsDefault ) {
+    init(colorFull: ShowType = .singleColor, dataItem: Matrix3D, colors:[UIColor] = colorsDefault ) {
         self.colorFull = colorFull
-        self.result = result
+        self.dataItem = dataItem
         self.colors = colors
     }
+
+
 
     let scene : SCNScene = {
         let ret = SCNScene();
@@ -140,16 +138,16 @@ struct ScenekitSingleView : UIViewRepresentable {
     func makeUIView(context: Context) -> SCNView {
         // retrieve the SCNView
         let scnView = SCNView()
-        let countOfRow = result.count
-        let countOfLayer = result.first?.count ?? -1
-        let countOfColum = result.first?.first?.count ?? -1
+        let countOfRow = dataItem.count
+        let countOfLayer = dataItem.first?.count ?? -1
+        let countOfColum = dataItem.first?.first?.count ?? -1
 
         for z in 0..<countOfRow {
             for y in 0..<countOfLayer {
                 for x in 0..<countOfColum {
                     // 盒子
                     let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
-                    let value = result[z][y][x];
+                    let value = dataItem[z][y][x];
                     if value == -1 {
                         continue
                     }
@@ -172,16 +170,16 @@ struct ScenekitSingleView : UIViewRepresentable {
 
 
     func updateUIView(_ scnView: SCNView, context: Context) {
-        let countOfRow = result.count
-        let countOfLayer = result.first?.count ?? -1
-        let countOfColum = result.first?.first?.count ?? -1
+        let countOfRow = dataItem.count
+        let countOfLayer = dataItem.first?.count ?? -1
+        let countOfColum = dataItem.first?.first?.count ?? -1
 
         for z in 0..<countOfRow {
             for y in 0..<countOfLayer {
                 for x in 0..<countOfColum {
                     // 盒子
                     let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
-                    let value = result[z][y][x];
+                    let value = dataItem[z][y][x];
                     if value == -1 {
                         continue
                     }
@@ -238,7 +236,7 @@ struct ScenekitSingleView : UIViewRepresentable {
 struct ScenekitSingleView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ScenekitSingleView(result:[[[2,4,3], [6,4,1], [6,6,1]],
+            ScenekitSingleView(dataItem:[[[2,4,3], [6,4,1], [6,6,1]],
                                        [[2,3,3], [6,4,1], [7,4,5]],
                                        [[2,2,3], [7,5,5], [7,7,5]]])
             .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
