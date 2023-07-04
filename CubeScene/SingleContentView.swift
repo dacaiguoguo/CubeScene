@@ -76,7 +76,7 @@ public struct SingleContentView: View {
                 Image(uiImage: UIImage(named: "wenli4")!)
                     .resizable(resizingMode: .tile)
                 ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: colorsDefault)
-                    .frame(width: UIScreen.main.currentMode?.size.width)
+                    .frame(maxWidth: .infinity)
                     .offset(viewOffset)
             }
             .clipped()
