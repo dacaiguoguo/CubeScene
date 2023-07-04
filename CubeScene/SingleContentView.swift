@@ -142,6 +142,15 @@ struct ScenekitSingleView : UIViewRepresentable {
         UIImage(named: "5")!,
         UIImage(named: "6")!,
         UIImage(named: "7")!,
+//        UIImage(named: "border2")!,
+//        UIImage(named: "border3")!,
+//        UIImage(named: "wenli3")!,
+//        UIImage(named: "wenli2")!,
+//        UIImage(named: "4")!,
+//        UIImage(named: "5")!,
+//        UIImage(named: "6")!,
+//        UIImage(named: "7")!,
+
     ] // bottom
 
     func makeUIView(context: Context) -> SCNView {
@@ -222,6 +231,7 @@ struct ScenekitSingleView : UIViewRepresentable {
 //                                boxNode.geometry?.materials = singleMaterial()
                                 let material = SCNMaterial()
                                 material.diffuse.contents = UIImage(named: "border")!
+//                                material.diffuse.contents = UIColor(red: 0.55, green: 0.44, blue: 0.34, alpha: 1.0) // 设置青铜材质的漫反射颜色
                                 boxNode.geometry?.firstMaterial = material
                             case .colorFul:
                                 let material = SCNMaterial()
