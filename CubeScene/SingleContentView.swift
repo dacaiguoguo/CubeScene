@@ -167,8 +167,29 @@ struct ScenekitSingleView : UIViewRepresentable {
         scnView.backgroundColor = .clear
         return scnView
     }
-    
-    
+
+    func singleMaterial() -> [SCNMaterial] {
+        let materialFront = SCNMaterial()
+        materialFront.diffuse.contents = UIColor.gray
+
+        let materialBack = SCNMaterial()
+        materialBack.diffuse.contents = UIColor.gray
+
+        let materialLeft = SCNMaterial()
+        materialLeft.diffuse.contents = UIColor.gray
+
+        let materialRight = SCNMaterial()
+        materialRight.diffuse.contents = UIColor.gray
+
+        let materialTop = SCNMaterial()
+        materialTop.diffuse.contents = UIColor.white
+
+        let materialBottom = SCNMaterial()
+        materialBottom.diffuse.contents = UIColor.white
+        return [materialFront, materialBack, materialLeft, materialRight, materialTop, materialBottom]
+    }
+
+
 
 
     func updateUIView(_ scnView: SCNView, context: Context) {
@@ -179,32 +200,29 @@ struct ScenekitSingleView : UIViewRepresentable {
         for z in 0..<countOfRow {
             for y in 0..<countOfLayer {
                 for x in 0..<countOfColum {
-                    // 盒子
-                    let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
                     let value = dataItem[z][y][x];
                     if value == -1 {
                         continue
                     }
-                    let material = SCNMaterial()
-
-                    switch colorFull {
-                    case .singleColor:
-                        //                        material.diffuse.contents = colors[1]
-                        material.diffuse.contents = UIImage(named: "border")!
-                    case .colorFul:
-                        material.diffuse.contents = colors[value]
-                    case .number:
-                        material.diffuse.contents = colorImages[value]
-                    }
-                    material.locksAmbientWithDiffuse = true
-                    box2.firstMaterial = material;
-
                     if let boxNodes = scnView.scene?.rootNode.childNodes(passingTest: { node, _ in
                         node.position == SCNVector3Make(Float(x), Float(-y+3), Float(z))
                     }) {
                         // 输出符合条件的节点名称
                         for boxNode in boxNodes {
-                            boxNode.geometry?.firstMaterial = material
+                            switch colorFull {
+                            case .singleColor:
+                                boxNode.geometry?.materials = singleMaterial()
+                            case .colorFul:
+                                let material = SCNMaterial()
+                                material.diffuse.contents = colors[value]
+                                material.locksAmbientWithDiffuse = true
+                                boxNode.geometry?.firstMaterial = material
+                            case .number:
+                                let material = SCNMaterial()
+                                material.diffuse.contents = colorImages[value]
+                                material.locksAmbientWithDiffuse = true
+                                boxNode.geometry?.firstMaterial = material
+                            }
                         }
                     }
 
@@ -230,7 +248,7 @@ func saveImageToDocumentDirectory(image: UIImage, fileName: String) {
         return
     }
 
-    let fileURL = documentsDirectory.appendingPathComponent(fileName)
+    let fileURL = documentsDirectory.appendingPathComponent("\(fileName)@3x.png")
 
     do {
         try imageData.write(to: fileURL)
