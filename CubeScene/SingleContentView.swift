@@ -42,7 +42,7 @@ extension Matrix3D {
 public struct SingleContentView: View {
 
     @State private var isOn = false
-    @State private var showType:ShowType = .colorFul
+    @State private var showType:ShowType = .singleColor
     @State private var viewOffset = CGSize.zero
 
     let dataModel: EnterItem
