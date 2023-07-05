@@ -43,7 +43,7 @@ public struct SingleContentView: View {
 
     @State private var isOn = false
 #if DEBUG
-    @State private var showType:ShowType = .colorFul
+    @State private var showType:ShowType = .singleColor
 #else
     @State private var showType:ShowType = .singleColor
 #endif
@@ -102,7 +102,7 @@ public struct SingleContentView: View {
             }.pickerStyle(.segmented)
             if isOn {
                 HStack{
-                    Text(dataModel.matrix.formatOutput).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).background(Color.white)
+                    Text(dataModel.matrix.formatOutput).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).foregroundColor(.primary)
                 }
             }
             Toggle("显示代码", isOn: $isOn)

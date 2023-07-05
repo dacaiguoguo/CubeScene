@@ -17,7 +17,7 @@ struct CubeSceneApp: App {
 //            if #available(iOS 16.0, *) {
 //                NavigationStack {
             NavigationView {
-                EnterListView().background(Color.white).navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
+                EnterListView().navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
                     .navigationBarItems(trailing: Button(action: {
                         // 执行按钮1的操作
                         isPresented = true
