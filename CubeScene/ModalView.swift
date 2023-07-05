@@ -88,7 +88,7 @@ struct ModalView: View {
             ZStack{
                 Image(uiImage: UIImage(named: "wenli4")!)
                     .resizable(resizingMode: .tile)
-                ScenekitView(colorFull: ShowType.colorFul, result: currentResult(), colors: colors.map({$0.uicolor}))
+                ScenekitSingleView(showType: ShowType.colorFul, dataItem: currentResult(), colors: colors.map({$0.uicolor}))
             }
             HStack {
                 ZStack{

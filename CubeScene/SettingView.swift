@@ -72,16 +72,23 @@ public struct SettingView: View {
     public init(){}
 
     //    let channelLocalDataList:[Channel] = [Channel(channelID: "1", name: "色彩"), Channel(channelID: "2", name: "难度"),  Channel(channelID: "3", name: "帮助")]
-    let channelLocalDataList:[Channel] = [Channel(channelID: "1", name: "关于索玛立方体", link: "https://www.fam-bundgaard.dk/SOMA/SOMAPRINT.HTM"),
+    let channelLocalDataList:[Channel] = [Channel(channelID: "1", name: "关于索玛立方体", link: "https://dacaiguoguo.github.io/PrivacyPolicy.html"),
                                           Channel(channelID: "2", name: "联系：dacaiguoguo@163.com", link: "mailto:dacaiguoguo@163.com")]
 
     public var body: some View {
         List {
-            ForEach(channelLocalDataList) { channel in
-                Link(channel.name, destination: URL(string: channel.link)!)
-                    .foregroundColor(.blue)
-                    .font(.headline)
-            }
+            Section(content: {
+                ForEach(channelLocalDataList) { channel in
+                    Link(channel.name, destination: URL(string: channel.link)!)
+                        .foregroundColor(.blue)
+                        .font(.headline)
+                }
+            }, header: {
+                Text("Hello")
+            }, footer: {
+//                Text("双指滑动来平移").font(.title).foregroundColor(.black)
+//                Text("双指捏合或张开来放大缩小").font(.title).foregroundColor(.black)
+            })
         }
     }
 }

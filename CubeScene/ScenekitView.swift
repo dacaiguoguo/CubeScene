@@ -27,7 +27,7 @@ struct ScenekitView : UIViewRepresentable {
         let cameraNode = SCNNode()
         cameraNode.name = "camera"
         cameraNode.camera = camera
-        cameraNode.position = SCNVector3Make(2, 2, 15)
+        cameraNode.position = SCNVector3Make(2, 10, 15)//
         ret.rootNode.addChildNode(cameraNode)
         return ret;
     }()

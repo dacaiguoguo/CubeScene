@@ -25,7 +25,12 @@ struct CubeSceneApp: App {
                         Image(systemName: "gear.circle")
                     }) .sheet(isPresented: $isPresented) {
                         NavigationView {
-                            SettingView().navigationTitle("帮助和设置").navigationBarTitleDisplayMode(.inline)
+                            SettingView().navigationTitle("帮助和设置").navigationBarTitleDisplayMode(.inline).navigationBarItems(trailing: Button(action: {
+                                // 执行按钮1的操作
+                                isPresented = false
+                            }) {
+                                Image(systemName: "xmark")
+                            })
                         }
                     }
             }

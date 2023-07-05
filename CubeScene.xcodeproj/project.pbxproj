@@ -16,7 +16,6 @@
 		9D1602BA2A4BDBF100C247A7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D1602B92A4BDBF100C247A7 /* LaunchScreen.storyboard */; };
 		9DC929A52A4ECB8500162BC6 /* ModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC929A42A4ECB8500162BC6 /* ModalView.swift */; };
 		9DF9206D2A404BBC001BD720 /* CubeSceneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */; };
-		9DF9206F2A404BBC001BD720 /* ScenekitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF9206E2A404BBC001BD720 /* ScenekitView.swift */; };
 		9DF920712A404BBF001BD720 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DF920702A404BBF001BD720 /* Assets.xcassets */; };
 		9DF920742A404BBF001BD720 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DF920732A404BBF001BD720 /* Preview Assets.xcassets */; };
 		9DF9380D2A417BA4001BD720 /* data1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DF9380A2A417BA4001BD720 /* data1.txt */; };
@@ -37,7 +36,6 @@
 		9DC929A42A4ECB8500162BC6 /* ModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalView.swift; sourceTree = "<group>"; };
 		9DF920692A404BBC001BD720 /* CubeScene.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CubeScene.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeSceneApp.swift; sourceTree = "<group>"; };
-		9DF9206E2A404BBC001BD720 /* ScenekitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenekitView.swift; sourceTree = "<group>"; };
 		9DF920702A404BBF001BD720 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9DF920732A404BBF001BD720 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9DF9380A2A417BA4001BD720 /* data1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = data1.txt; sourceTree = "<group>"; };
@@ -82,7 +80,6 @@
 				9DF9380C2A417BA4001BD720 /* data2.txt */,
 				9DF938102A417BAD001BD720 /* data3.txt */,
 				9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */,
-				9DF9206E2A404BBC001BD720 /* ScenekitView.swift */,
 				9D04123B2A516AD30083741B /* EnterListView.swift */,
 				9D04123D2A516F050083741B /* SingleContentView.swift */,
 				9D0412452A529EC90083741B /* ArrowButtonView.swift */,
@@ -184,7 +181,6 @@
 				9D0412402A51A3920083741B /* SwiftUIView.swift in Sources */,
 				9DC929A52A4ECB8500162BC6 /* ModalView.swift in Sources */,
 				9D04123E2A516F050083741B /* SingleContentView.swift in Sources */,
-				9DF9206F2A404BBC001BD720 /* ScenekitView.swift in Sources */,
 				9D0412462A529EC90083741B /* ArrowButtonView.swift in Sources */,
 				9D0412432A52881A0083741B /* SettingView.swift in Sources */,
 				9DF9206D2A404BBC001BD720 /* CubeSceneApp.swift in Sources */,
@@ -322,7 +318,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CubeScene/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "索玛立方体";
-				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -334,7 +330,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -356,7 +352,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CubeScene/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "索玛立方体";
-				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -368,7 +364,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

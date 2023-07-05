@@ -88,6 +88,7 @@ public struct SingleContentView: View {
 //                        Image(uiImage: UIImage(named: "c3")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
 //                        Image(uiImage: UIImage(named: "c4")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
 //                    }
+                    Text("单指旋转\n双指滑动来平移\n双指捏合或张开来放大缩小").font(.subheadline).foregroundColor(.secondary)
                 }
             }
             .clipped()
@@ -130,7 +131,7 @@ struct ScenekitSingleView : UIViewRepresentable {
         let camera = SCNCamera()
         let cameraNode = SCNNode()
         cameraNode.camera = camera
-        cameraNode.position = SCNVector3Make(5, 13, 8)
+        cameraNode.position = SCNVector3Make(3, 10, 8)
         cameraNode.eulerAngles = SCNVector3Make(-Float.pi/4, Float.pi/9, 0) // 设置相机的旋转角度，这里是将场景绕 X 轴逆时针旋转 45 度
         ret.rootNode.addChildNode(cameraNode)
         return ret;
@@ -269,14 +270,14 @@ struct ScenekitSingleView : UIViewRepresentable {
                                 boxNode.geometry?.firstMaterial = material
                             case .colorFul:
                                 let material = SCNMaterial()
-//                                material.diffuse.contents = getColorWithText()[value]
                                 material.diffuse.contents = colors[value]
                                 material.locksAmbientWithDiffuse = true
                                 boxNode.geometry?.materials = [];
                                 boxNode.geometry?.firstMaterial = material
                             case .number:
                                 let material = SCNMaterial()
-                                material.diffuse.contents = colorImages[value]
+//                                material.diffuse.contents = colorImages[value]
+                                material.diffuse.contents = getColorWithText()[value]
                                 material.locksAmbientWithDiffuse = true
                                 boxNode.geometry?.materials = [];
                                 boxNode.geometry?.firstMaterial = material
