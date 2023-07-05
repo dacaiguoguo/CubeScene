@@ -73,21 +73,24 @@ public struct SingleContentView: View {
             }
         }
     }
-    let imageSize = 100.0;
+    let imageSize = 40.0
+
     public var body: some View {
         VStack {
             ZStack{
                 Image(uiImage: UIImage(named: "wenli4")!)
                     .resizable(resizingMode: .tile)
-                ZStack(alignment: .bottom) {
+                ZStack(alignment: .bottomLeading) {
                     ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: colorsDefault)
                         .frame(maxWidth: .infinity)
                         .offset(viewOffset)
-//                    HStack{
-//                        Image(uiImage: UIImage(named: "c1")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
-//                        Image(uiImage: UIImage(named: "c3")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
-//                        Image(uiImage: UIImage(named: "c4")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
-//                    }
+                    HStack{
+                        Spacer()
+                        ForEach(dataModel.usedBlock.indices, id: \.self) { index in
+                            let value = dataModel.usedBlock[index]
+                            Image(uiImage: UIImage(named: "c\(value)")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
+                        }
+                    }
                     Text("单指旋转\n双指滑动来平移\n双指捏合或张开来放大缩小").font(.subheadline).foregroundColor(.secondary)
                 }
             }

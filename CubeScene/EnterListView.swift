@@ -11,6 +11,7 @@ import SwiftUI
 struct EnterItem: Decodable {
     let name:String
     var matrix:Matrix3D
+    var usedBlock: [Int]
 }
 
 extension EnterItem: Identifiable {
@@ -41,18 +42,24 @@ struct EnterListView: View {
             })
 
             let separatorItem = Character("/")
+            var allset = Set<Int>()
             // 非数字都解析成-1
             let result = parsedData.map { item in
                 item.split(separator: separatorItem).map { subItem in
                     subItem.map { subSubItem in
-                        Int(String(subSubItem)) ?? -1
+                        let ret = Int(String(subSubItem)) ?? -1
+                        if ret > 0 {
+                            allset.insert(ret)
+                        }
+                        return ret
                     }
                 }
             }
+            let abl = allset.sorted(by: {$0 < $1})
             if let name = firstLine {
-                return EnterItem(name: name, matrix: result)
+                return EnterItem(name: name, matrix: result, usedBlock: abl)
             } else {
-                return EnterItem(name: "无名", matrix: result)
+                return EnterItem(name: "无名", matrix: result, usedBlock: abl)
             }
         }
     }()
