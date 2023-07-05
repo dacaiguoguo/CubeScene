@@ -58,6 +58,7 @@ extension UIColor {
 struct Channel: Decodable {
     var channelID:String = ""
     var name:String = ""
+    var link:String = ""
 }
 
 extension Channel: Identifiable {
@@ -70,14 +71,16 @@ extension Channel: Identifiable {
 public struct SettingView: View {
     public init(){}
 
-    let channelLocalDataList:[Channel] = [Channel(channelID: "1", name: "色彩"), Channel(channelID: "2", name: "难度"),  Channel(channelID: "3", name: "帮助")]
+    //    let channelLocalDataList:[Channel] = [Channel(channelID: "1", name: "色彩"), Channel(channelID: "2", name: "难度"),  Channel(channelID: "3", name: "帮助")]
+    let channelLocalDataList:[Channel] = [Channel(channelID: "1", name: "关于索玛立方体", link: "https://www.fam-bundgaard.dk/SOMA/SOMAPRINT.HTM"),
+                                          Channel(channelID: "2", name: "联系：dacaiguoguo@163.com", link: "mailto:dacaiguoguo@163.com")]
 
     public var body: some View {
         List {
             ForEach(channelLocalDataList) { channel in
-                HStack {
-                    Text(channel.name)
-                }.padding()
+                Link(channel.name, destination: URL(string: channel.link)!)
+                    .foregroundColor(.blue)
+                    .font(.headline)
             }
         }
     }

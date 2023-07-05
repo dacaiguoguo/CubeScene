@@ -18,19 +18,22 @@ struct CubeSceneApp: App {
 //                NavigationStack {
             NavigationView {
                 EnterListView().background(Color.white).navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
+                    .navigationBarItems(trailing: Button(action: {
+                        // 执行按钮1的操作
+                        isPresented = true
+                    }) {
+                        Image(systemName: "gear.circle")
+                    }) .sheet(isPresented: $isPresented) {
+                        NavigationView {
+                            SettingView().navigationTitle("帮助和设置").navigationBarTitleDisplayMode(.inline)
+                        }
+                    }
             }
             .navigationViewStyle(StackNavigationViewStyle())
 //            } else {
 //                TabView {
 //                    NavigationView {
-//                        ContentView().navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline).navigationBarItems(trailing: Button(action: {
-//                            // 执行按钮1的操作
-//                            isPresented = true
-//                        }) {
-//                            Image(systemName: "gear.circle")
-//                        }) .sheet(isPresented: $isPresented) {
-//                            ModalView()
-//                        }
+//                        ContentView().navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
 //                    }.tabItem {
 //                        Image(systemName: "gamecontroller")
 //                        Text("练习")
