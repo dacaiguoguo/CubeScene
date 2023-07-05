@@ -42,7 +42,7 @@ extension Matrix3D {
 public struct SingleContentView: View {
 
     @State private var isOn = false
-    @State private var showType:ShowType = .singleColor
+    @State private var showType:ShowType = .colorFul
     @State private var viewOffset = CGSize.zero
 
     let dataModel: EnterItem
@@ -79,11 +79,11 @@ public struct SingleContentView: View {
                     ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: colorsDefault)
                         .frame(maxWidth: .infinity)
                         .offset(viewOffset)
-                    HStack{
-                        Image(uiImage: UIImage(named: "c1")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
-                        Image(uiImage: UIImage(named: "c3")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
-                        Image(uiImage: UIImage(named: "c4")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
-                    }
+//                    HStack{
+//                        Image(uiImage: UIImage(named: "c1")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
+//                        Image(uiImage: UIImage(named: "c3")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
+//                        Image(uiImage: UIImage(named: "c4")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
+//                    }
                 }
             }
             .clipped()
@@ -205,6 +205,36 @@ struct ScenekitSingleView : UIViewRepresentable {
         return [materialFront, materialBack, materialLeft, materialRight, materialTop, materialBottom]
     }
 
+    func getColorWithText() -> [UIImage] {
+        colors.enumerated().map { (index, item) in
+            generateImage(color: item, text: "\(index)")
+        }
+    }
+
+    func generateImage(color: UIColor, text: String) -> UIImage {
+        let size = CGSize(width: 200, height: 200)
+        let renderer = UIGraphicsImageRenderer(size: size)
+
+        let image = renderer.image { context in
+            color.setFill()
+            context.fill(CGRect(origin: .zero, size: size))
+  
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.alignment = .center
+
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 96),
+                .foregroundColor: UIColor.black,
+                .paragraphStyle: paragraphStyle
+            ]
+
+            let attributedText = NSAttributedString(string: text, attributes: attributes)
+            let textRect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+            attributedText.draw(in: textRect)
+        }
+
+        return image
+    }
 
 
 
@@ -235,6 +265,7 @@ struct ScenekitSingleView : UIViewRepresentable {
                                 boxNode.geometry?.firstMaterial = material
                             case .colorFul:
                                 let material = SCNMaterial()
+//                                material.diffuse.contents = getColorWithText()[value]
                                 material.diffuse.contents = colors[value]
                                 material.locksAmbientWithDiffuse = true
                                 boxNode.geometry?.materials = [];

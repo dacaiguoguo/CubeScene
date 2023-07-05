@@ -30,7 +30,7 @@ var colorsDefault:[UIColor] = [
 extension UIColor {
     public convenience init(hex: String) {
         let r, g, b, a: CGFloat
-        let hex2 = "#\(hex)bf"
+        let hex2 = "#\(hex)ff"
         let start = hex2.index(hex2.startIndex, offsetBy: 1)
         let hexColor = String(hex2[start...])
 
