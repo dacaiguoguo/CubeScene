@@ -33,22 +33,18 @@ struct ConfigView: View {
             presentationMode.wrappedValue.dismiss()
         }, label: { Image(systemName: "xmark") })
     }
+    @State private var bgColor = Color.red
 
     func ConfigItemView(_ item:ItemColor) -> some View {
         ZStack{
             VStack{
-                Text("\(item.index)")
-                    .frame(width: 60, height: 30)
-                RoundedRectangle(cornerRadius: 8)
-                    .foregroundColor(Color(item.uicolor))
+                ColorPicker("\(item.index)", selection: $bgColor)
                     .frame(width: 60, height: 30)
             }
         }.overlay(
             RoundedRectangle(cornerRadius: 8)
                 .stroke(.blue, lineWidth: 1)
-        ).onTapGesture {
-            
-        }
+        )
     }
 
 }

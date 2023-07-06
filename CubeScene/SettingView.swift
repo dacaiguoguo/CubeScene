@@ -78,19 +78,18 @@ public struct SettingView: View {
                                           Channel(channelID: "2", name: "联系：dacaiguoguo@163.com", link: "mailto:dacaiguoguo@163.com")]
 
     public var body: some View {
-        NavigationView {
-            List {
-                Section(content: {
-                    ForEach(channelLocalDataList) { channel in
-                        Link(channel.name, destination: URL(string: channel.link)!)
-                            .foregroundColor(.blue)
-                            .font(.headline)
-                    }
-                })
-            }.navigationTitle("帮助和设置")
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationBarItems(trailing:closeButton())
-        }
+   
+        List {
+            Section(content: {
+                ForEach(channelLocalDataList) { channel in
+                    Link(channel.name, destination: URL(string: channel.link)!)
+                        .foregroundColor(.blue)
+                        .font(.headline)
+                }
+            })
+        }.navigationTitle("帮助和设置")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(trailing:closeButton())
     }
 
     func closeButton() -> some View {
@@ -104,6 +103,8 @@ public struct SettingView: View {
 
 struct SettingView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingView()
+        NavigationView {
+            SettingView()
+        }
     }
 }
