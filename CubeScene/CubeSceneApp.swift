@@ -5,6 +5,7 @@
 //  Created by yanguo sun on 2023/6/19.
 // TODO: 自定义修改颜色，和默认配色
 // 1.增加按钮 标记已经玩过。
+// 国际化
 
 import SwiftUI
 import UIKit
