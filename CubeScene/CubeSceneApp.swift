@@ -21,7 +21,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 }
 
 class UserData: ObservableObject {
-    @Published var colorSaveList:[UIColor]
+    @Published var colorSaveList:[UIColor] {
+        didSet {
+            for (index, item) in colorSaveList.enumerated() {
+                UserDefaults.standard.set(item.encode(), forKey: "block\(index)")
+            }
+        }
+    }
 
     init() {
         let array = [UIColor(hex: "000000"),

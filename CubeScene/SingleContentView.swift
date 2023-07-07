@@ -119,7 +119,7 @@ struct ScenekitSingleView : UIViewRepresentable {
     let dataItem: Matrix3D
     let colors:[UIColor]
     let imageName:String
-    init(showType: ShowType = .singleColor, dataItem: Matrix3D, colors:[UIColor] = [
+    static let defaultColors = [
         UIColor.white,
         UIColor(hex: "FF8800"),
         UIColor(hex: "0396FF"),
@@ -128,7 +128,8 @@ struct ScenekitSingleView : UIViewRepresentable {
         UIColor.gray,
         UIColor(hex: "28C76F"),
         UIColor.purple
-    ], imageName:String = "" ) {
+    ]
+    init(showType: ShowType = .singleColor, dataItem: Matrix3D, colors:[UIColor] = defaultColors, imageName:String = "" ) {
         self.showType = showType
         self.dataItem = dataItem
         self.colors = colors
