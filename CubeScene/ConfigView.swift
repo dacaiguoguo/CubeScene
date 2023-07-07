@@ -63,17 +63,18 @@ struct ConfigView: View {
 
 
     var body: some View {
-        VStack {
-            ScenekitSingleView(showType: .colorFul, dataItem:[[[2,4,3], [6,4,1], [6,6,1]],
-                                                              [[2,3,3], [6,4,1], [7,4,5]],
-                                                              [[2,2,3], [7,5,5], [7,7,5]]], colors: userData.colorSaveList)
+        VStack(alignment:.leading) {
+            ScenekitSingleView(showType: .colorFul, dataItem:[[[2,2,3], [5,3,3], [5,4,3]],
+                                                              [[2,1,1], [5,5,6], [7,4,4]],
+                                                              [[2,6,1], [7,6,6], [7,7,4]]], colors: userData.colorSaveList)
             .frame(height: 500)
+            Text("点击圆圈来修改块的颜色吧!").foregroundColor(.primary).font(.subheadline)
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 60))]) {
                 ForEach(colors()) { item in
                     ConfigItemView(item)
                 }
-            }.padding()
-        }.navigationTitle("设置")
+            }
+        }.padding().navigationTitle("设置")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing:closeButton())
 
@@ -96,7 +97,7 @@ struct ConfigView: View {
                     colorSaveListtemp[item.index] = UIColor($0);
                     userData.colorSaveList = colorSaveListtemp;
                 }))
-                    .frame(width: 60, height: 30)
+                    .frame(width: 60, height: 44)
             }
         }.overlay(
             RoundedRectangle(cornerRadius: 8)
