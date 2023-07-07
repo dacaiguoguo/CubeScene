@@ -72,13 +72,12 @@ struct EnterListView: View {
                     NavigationLink(destination: SingleContentView(dataModel: item).environmentObject(userData)) {
                         ZStack(alignment: .topLeading){
                             Text(item.name).foregroundColor(.primary).font(.title).padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
-//                            ScenekitSingleView(dataItem: item.matrix, imageName: item.name).frame(width: 150, height: 150).disabled(true)
+                            ScenekitSingleView(dataItem: item.matrix, imageName: item.name).frame(width: 150, height: 150).disabled(true)
                         }.background(Color(uiColor: UIColor(hex: "00bfff"))).cornerRadius(8)
                     }
                 }
             }
         }
-        .padding()
     }
 }
 

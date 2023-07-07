@@ -6,6 +6,7 @@
 // TODO: 自定义修改颜色，和默认配色
 // 1.增加按钮 标记已经玩过。
 // 国际化
+// EnterListView 入口优化为图片
 
 import SwiftUI
 import UIKit
