@@ -27,6 +27,19 @@ var colorsDefault:[UIColor] = [
     UIColor.purple
 ]
 
+import UIKit
+
+// UIColor 扩展，用于实现归档和解档操作
+extension UIColor {
+    func encode() -> Data? {
+        try? NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false)
+    }
+
+    static func decode(data: Data) -> UIColor? {
+        try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? UIColor
+    }
+}
+
 extension UIColor {
     public convenience init(hex: String) {
         let r, g, b, a: CGFloat
