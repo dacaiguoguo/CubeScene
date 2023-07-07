@@ -50,6 +50,7 @@ public struct SingleContentView: View {
     @State private var viewOffset = CGSize.zero
 
     let dataModel: EnterItem
+    @EnvironmentObject var userData: UserData
 
 
     func handleButtonTapped(_ direction: Direction) {
@@ -81,7 +82,7 @@ public struct SingleContentView: View {
                 Image(uiImage: UIImage(named: "wenli4")!)
                     .resizable(resizingMode: .tile)
                 ZStack(alignment: .bottomLeading) {
-                    ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: colorsDefault)
+                    ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: userData.colorSaveList)
                         .frame(maxWidth: .infinity)
                         .offset(viewOffset)
                     HStack{
@@ -114,12 +115,21 @@ public struct SingleContentView: View {
 
 
 struct ScenekitSingleView : UIViewRepresentable {
-
     let showType:ShowType;
     let dataItem: Matrix3D
     let colors:[UIColor]
     let imageName:String
-    init(showType: ShowType = .singleColor, dataItem: Matrix3D, colors:[UIColor] = colorsDefault, imageName:String = "" ) {
+    static let defaultColors = [
+        UIColor.white,
+        UIColor(hex: "FF8800"),
+        UIColor(hex: "0396FF"),
+        UIColor(hex: "EA5455"),
+        UIColor(hex: "7367F0"),
+        UIColor.gray,
+        UIColor(hex: "28C76F"),
+        UIColor.purple
+    ]
+    init(showType: ShowType = .singleColor, dataItem: Matrix3D, colors:[UIColor] = defaultColors, imageName:String = "" ) {
         self.showType = showType
         self.dataItem = dataItem
         self.colors = colors

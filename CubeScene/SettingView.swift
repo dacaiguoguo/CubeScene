@@ -6,26 +6,18 @@
 //
 
 import SwiftUI
+import UIKit
 
+// UIColor 扩展，用于实现归档和解档操作
+extension UIColor {
+    func encode() -> Data? {
+        try? NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false)
+    }
 
-var colorsDefault:[UIColor] = [
-    // UIColor.black,
-    // UIColor.systemCyan, // front
-    // UIColor.green, // right
-    // UIColor.red, // back
-    // UIColor.systemIndigo, // left
-    // UIColor.blue, // top
-    // UIColor.purple,
-    // UIColor.yellow,
-    UIColor(hex: "000000"),
-    UIColor(hex: "FF8800"),
-    UIColor(hex: "0396FF"),
-    UIColor(hex: "EA5455"),
-    UIColor(hex: "7367F0"),
-    UIColor.gray,
-    UIColor(hex: "28C76F"),
-    UIColor.purple
-]
+    static func decode(data: Data) -> UIColor? {
+        try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? UIColor
+    }
+}
 
 extension UIColor {
     public convenience init(hex: String) {
@@ -69,27 +61,25 @@ extension Channel: Identifiable {
 
 
 public struct SettingView: View {
+    @Environment(\.presentationMode) var presentationMode
     public init(){}
 
     //    let channelLocalDataList:[Channel] = [Channel(channelID: "1", name: "色彩"), Channel(channelID: "2", name: "难度"),  Channel(channelID: "3", name: "帮助")]
-    let channelLocalDataList:[Channel] = [Channel(channelID: "1", name: "关于索玛立方体", link: "https://dacaiguoguo.github.io/PrivacyPolicy.html"),
-                                          Channel(channelID: "2", name: "联系：dacaiguoguo@163.com", link: "mailto:dacaiguoguo@163.com")]
+    let channelLocalDataList:[Channel] = [Channel(channelID: "1", name: "ContentSoma", link: "https://dacaiguoguo.github.io/PrivacyPolicy.html"),
+                                          Channel(channelID: "2", name: "ContentAuthor", link: "mailto:dacaiguoguo@163.com")]
 
     public var body: some View {
+   
         List {
             Section(content: {
                 ForEach(channelLocalDataList) { channel in
-                    Link(channel.name, destination: URL(string: channel.link)!)
+                    Link(LocalizedStringKey(channel.name), destination: URL(string: channel.link)!)
                         .foregroundColor(.blue)
                         .font(.headline)
                 }
-            }, header: {
-                Text("Hello")
-            }, footer: {
-//                Text("双指滑动来平移").font(.title).foregroundColor(.black)
-//                Text("双指捏合或张开来放大缩小").font(.title).foregroundColor(.black)
             })
-        }
+        }.navigationTitle("TitleHelp")
+            .navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -97,6 +87,8 @@ public struct SettingView: View {
 
 struct SettingView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingView()
+        NavigationView {
+            SettingView()
+        }
     }
 }

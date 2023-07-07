@@ -28,7 +28,7 @@ struct ItemColor: Decodable {
         do {
             if let colorret = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(colorData) as? UIColor {
                 // Use the color
-                print(colorret)
+//                print("colorret:\(colorret)")
                 return colorret
             } else {
                 print("Failed to convert data to UIColor")
