@@ -74,7 +74,7 @@ struct ConfigView: View {
                     ConfigItemView(item)
                 }
             }
-        }.padding().navigationTitle("设置")
+        }.padding().navigationTitle("TitleSetting")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing:closeButton())
 

@@ -82,7 +82,7 @@ struct CubeSceneApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                EnterListView().navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
+                EnterListView().navigationTitle("TitleName").navigationBarTitleDisplayMode(.inline)
                     .navigationBarItems(leading: helpButton(), trailing:showButton()
                     ).onAppear {
                         print("onAppear EnterListView !")
