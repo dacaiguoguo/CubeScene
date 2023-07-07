@@ -6,27 +6,6 @@
 //
 
 import SwiftUI
-
-
-var colorsDefault:[UIColor] = [
-    // UIColor.black,
-    // UIColor.systemCyan, // front
-    // UIColor.green, // right
-    // UIColor.red, // back
-    // UIColor.systemIndigo, // left
-    // UIColor.blue, // top
-    // UIColor.purple,
-    // UIColor.yellow,
-    UIColor(hex: "000000"),
-    UIColor(hex: "FF8800"),
-    UIColor(hex: "0396FF"),
-    UIColor(hex: "EA5455"),
-    UIColor(hex: "7367F0"),
-    UIColor.gray,
-    UIColor(hex: "28C76F"),
-    UIColor.purple
-]
-
 import UIKit
 
 // UIColor 扩展，用于实现归档和解档操作

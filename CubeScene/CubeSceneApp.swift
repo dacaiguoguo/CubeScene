@@ -15,6 +15,15 @@ import UIKit
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         print(">> your code here !!")
+
+        return true
+    }
+}
+
+class UserData: ObservableObject {
+    @Published var colorSaveList:[UIColor]
+
+    init() {
         let array = [UIColor(hex: "000000"),
                      UIColor(hex: "FF8800"),
                      UIColor(hex: "0396FF"),
@@ -27,14 +36,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         for (index, item) in array.enumerated() {
             UserDefaults.standard.register(defaults: ["block\(index)" : item.encode()!])
         }
-
-        let naturalNumbers = Array(0...6)
-        naturalNumbers.forEach { index in
-            if let data = UserDefaults.standard.object(forKey: "block\(index)") {
-                print(UIColor.decode(data: data as! Data))
+        self.colorSaveList = Array(0...7).map { index in
+            if let data = UserDefaults.standard.data(forKey: "block\(index)") {
+                return UIColor.decode(data: data) ?? UIColor.purple
+            } else {
+                return UIColor.orange;
             }
         }
-        return true
     }
 }
 
@@ -43,9 +51,11 @@ struct CubeSceneApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @Environment(\.scenePhase) var scenePhase
 
+    let userData = UserData()
+
     func showButton() -> some View {
         NavigationLink {
-            SettingView()
+            SettingView().environmentObject(userData)
         } label: {
             Image(systemName: "info.circle")
         }
@@ -53,7 +63,7 @@ struct CubeSceneApp: App {
     
     func helpButton() -> some View {
         NavigationLink {
-            ConfigView()
+            ConfigView().environmentObject(userData)
         } label: {
             Image(systemName: "gear.circle")
         }
@@ -69,7 +79,7 @@ struct CubeSceneApp: App {
                     .navigationBarItems(leading: helpButton(), trailing:showButton()
                     ).onAppear {
                         print("onAppear EnterListView !")
-                    }
+                    }.environmentObject(userData)
             }
             .navigationViewStyle(StackNavigationViewStyle())
         }.onChange(of: scenePhase) { phase in

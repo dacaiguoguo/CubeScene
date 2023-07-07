@@ -7,18 +7,63 @@
 
 import SwiftUI
 
+
+struct ItemColor: Decodable {
+    var index:Int = 0
+    var colorData:Data = try! NSKeyedArchiver.archivedData(withRootObject: UIColor.black, requiringSecureCoding: false)
+
+
+    init(index: Int, uicolor: UIColor) {
+        self.index = index
+        self.colorData = try! NSKeyedArchiver.archivedData(withRootObject: uicolor, requiringSecureCoding: false)
+    }
+
+    init(index: Int, color: Color) {
+        self.index = index
+        self.colorData = try! NSKeyedArchiver.archivedData(withRootObject: UIColor(color), requiringSecureCoding: false)
+    }
+
+    var uicolor: UIColor {
+        do {
+            if let colorret = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(colorData) as? UIColor {
+                // Use the color
+                //                print("colorret:\(colorret)")
+                return colorret
+            } else {
+                print("Failed to convert data to UIColor")
+            }
+        } catch {
+            print("Failed to convert data to UIColor: \(error)")
+        }
+        return UIColor.black
+    }
+}
+
+extension ItemColor: Identifiable {
+    var id: Int {
+        index
+    }
+}
+
+
 struct ConfigView: View {
 
     @Environment(\.presentationMode) var presentationMode
-    var colors:[ItemColor] = {colorsDefault.dropFirst().enumerated().map({ index, element in
-        ItemColor(index: index+1, uicolor: element)
-    })}()
+
+    @State private var bgColor = Color.red
+    @EnvironmentObject var userData: UserData
+
+    func colors() -> [ItemColor] {
+        userData.colorSaveList.enumerated().map({ index, element in
+            ItemColor(index: index, uicolor: element )
+        })
+    }
 
 
     var body: some View {
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 60))]) {
-                ForEach(colors) { item in
+                ForEach(colors()) { item in
                     ConfigItemView(item)
                 }
             }.padding()
@@ -33,12 +78,18 @@ struct ConfigView: View {
             presentationMode.wrappedValue.dismiss()
         }, label: { Image(systemName: "xmark") })
     }
-    @State private var bgColor = Color.red
+
 
     func ConfigItemView(_ item:ItemColor) -> some View {
         ZStack{
             VStack{
-                ColorPicker("\(item.index)", selection: $bgColor)
+                ColorPicker("\(item.index+1)", selection: Binding(get: {
+                    Color(item.uicolor)
+                }, set: {
+                    var colorSaveListtemp = userData.colorSaveList;
+                    colorSaveListtemp[item.index] = UIColor($0);
+                    userData.colorSaveList = colorSaveListtemp;
+                }))
                     .frame(width: 60, height: 30)
             }
         }.overlay(

@@ -15,7 +15,6 @@
 		9D0412462A529EC90083741B /* ArrowButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0412452A529EC90083741B /* ArrowButtonView.swift */; };
 		9D1602BA2A4BDBF100C247A7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D1602B92A4BDBF100C247A7 /* LaunchScreen.storyboard */; };
 		9DBE04F02A56ECB70055AE14 /* ConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBE04EF2A56ECB70055AE14 /* ConfigView.swift */; };
-		9DC929A52A4ECB8500162BC6 /* ModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC929A42A4ECB8500162BC6 /* ModalView.swift */; };
 		9DF9206D2A404BBC001BD720 /* CubeSceneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */; };
 		9DF920712A404BBF001BD720 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DF920702A404BBF001BD720 /* Assets.xcassets */; };
 		9DF920742A404BBF001BD720 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DF920732A404BBF001BD720 /* Preview Assets.xcassets */; };
@@ -35,7 +34,6 @@
 		9D1602B92A4BDBF100C247A7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9DBE04EF2A56ECB70055AE14 /* ConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigView.swift; sourceTree = "<group>"; };
 		9DC576A92A419BF20012E272 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		9DC929A42A4ECB8500162BC6 /* ModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalView.swift; sourceTree = "<group>"; };
 		9DF920692A404BBC001BD720 /* CubeScene.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CubeScene.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeSceneApp.swift; sourceTree = "<group>"; };
 		9DF920702A404BBF001BD720 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -87,7 +85,6 @@
 				9D0412452A529EC90083741B /* ArrowButtonView.swift */,
 				9D04123F2A51A3920083741B /* SwiftUIView.swift */,
 				5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */,
-				9DC929A42A4ECB8500162BC6 /* ModalView.swift */,
 				9D0412412A52881A0083741B /* SettingView.swift */,
 				9DBE04EF2A56ECB70055AE14 /* ConfigView.swift */,
 				9D1602B92A4BDBF100C247A7 /* LaunchScreen.storyboard */,
@@ -182,7 +179,6 @@
 			files = (
 				5971BA8C2A50547800CD6111 /* ArrayTool3D.swift in Sources */,
 				9D0412402A51A3920083741B /* SwiftUIView.swift in Sources */,
-				9DC929A52A4ECB8500162BC6 /* ModalView.swift in Sources */,
 				9DBE04F02A56ECB70055AE14 /* ConfigView.swift in Sources */,
 				9D04123E2A516F050083741B /* SingleContentView.swift in Sources */,
 				9D0412462A529EC90083741B /* ArrowButtonView.swift in Sources */,
