@@ -54,14 +54,20 @@ struct ConfigView: View {
     @EnvironmentObject var userData: UserData
 
     func colors() -> [ItemColor] {
-        userData.colorSaveList.enumerated().map({ index, element in
+        var ret = userData.colorSaveList.enumerated().map({ index, element in
             ItemColor(index: index, uicolor: element )
         })
+        ret.removeFirst()
+        return ret
     }
 
 
     var body: some View {
-        ScrollView {
+        VStack {
+            ScenekitSingleView(showType: .colorFul, dataItem:[[[2,4,3], [6,4,1], [6,6,1]],
+                                                              [[2,3,3], [6,4,1], [7,4,5]],
+                                                              [[2,2,3], [7,5,5], [7,7,5]]], colors: userData.colorSaveList)
+            .frame(height: 500)
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 60))]) {
                 ForEach(colors()) { item in
                     ConfigItemView(item)
@@ -83,7 +89,7 @@ struct ConfigView: View {
     func ConfigItemView(_ item:ItemColor) -> some View {
         ZStack{
             VStack{
-                ColorPicker("\(item.index+1)", selection: Binding(get: {
+                ColorPicker("\(item.index)", selection: Binding(get: {
                     Color(item.uicolor)
                 }, set: {
                     var colorSaveListtemp = userData.colorSaveList;
