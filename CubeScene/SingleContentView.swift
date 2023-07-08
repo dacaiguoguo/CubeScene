@@ -75,24 +75,39 @@ public struct SingleContentView: View {
         }
     }
     let imageSize = 40.0
+    @State private var isTaskComplete = false
+
+    func completeStatus() -> some View {
+        Button(action: {
+            isTaskComplete.toggle()
+        }) {
+            HStack{
+                Text("\(isTaskComplete ? "已完成" : "待完成")")
+                Image(systemName: isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
+                    .foregroundColor(isTaskComplete ? .green : .gray)
+            }
+        }
+    }
 
     public var body: some View {
         VStack {
             ZStack{
                 Image(uiImage: UIImage(named: "wenli4")!)
                     .resizable(resizingMode: .tile)
-                ZStack(alignment: .bottomLeading) {
+                ZStack {
                     ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: userData.colorSaveList)
-                        .frame(maxWidth: .infinity)
                         .offset(viewOffset)
-                    HStack{
+                    VStack {
                         Spacer()
-                        ForEach(dataModel.usedBlock.indices, id: \.self) { index in
-                            let value = dataModel.usedBlock[index]
-                            Image(uiImage: UIImage(named: "c\(value)")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
+                        HStack{
+                            ForEach(dataModel.usedBlock.indices, id: \.self) { index in
+                                let value = dataModel.usedBlock[index]
+                                Image(uiImage: UIImage(named: "c\(value)")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
+                            }
                         }
+                        Text("单指旋转\n双指滑动来平移\n双指捏合或张开来放大缩小").font(.subheadline).foregroundColor(.secondary)
                     }
-                    Text("单指旋转\n双指滑动来平移\n双指捏合或张开来放大缩小").font(.subheadline).foregroundColor(.secondary)
+                    .padding()
                 }
             }
             .clipped()
@@ -106,8 +121,12 @@ public struct SingleContentView: View {
                     Text(dataModel.matrix.formatOutput).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).foregroundColor(.primary)
                 }
             }
-            Toggle("显示代码", isOn: $isOn)
-                .padding().frame(maxWidth: .infinity)
+            HStack{
+                Toggle("显示代码", isOn: $isOn)
+                    .padding().frame(width: 180)
+                Spacer()
+                completeStatus()
+            }
             // ArrowButtonView(onButtonTapped: handleButtonTapped)  // 将按钮点击事件传递给自定义视图
         }.padding().navigationTitle(dataModel.name)
     }
