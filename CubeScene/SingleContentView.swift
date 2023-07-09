@@ -116,7 +116,10 @@ public struct SingleContentView: View {
                             }
                         }
                         Spacer()
-                        Text("单指旋转\n双指滑动来平移\n双指捏合或张开来放大缩小").font(.subheadline).foregroundColor(.secondary)
+                        HStack{
+                            Text("单指旋转\n双指滑动来平移\n双指捏合或张开来放大缩小").font(.subheadline).foregroundColor(.secondary)
+                            Spacer()
+                        }
                     }
                     .padding()
                 }
