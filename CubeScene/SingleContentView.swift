@@ -75,24 +75,53 @@ public struct SingleContentView: View {
         }
     }
     let imageSize = 40.0
+    @State private var isTaskComplete = false {
+        didSet {
+            print("isTaskComplete:\(isTaskComplete)")
+            // 数据持久化，标记当前完成的关卡名
+//            UserDefaults.standard.set(dataModel.name, forKey: "list")
+        }
+    }
+
+    func completeStatus() -> some View {
+        Button(action: {
+            isTaskComplete.toggle()
+        }) {
+            HStack{
+                Text("\(isTaskComplete ? "已完成" : "待完成")")
+                Image(systemName: isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
+                    .foregroundColor(isTaskComplete ? .green : .gray)
+            }
+        }
+    }
 
     public var body: some View {
         VStack {
             ZStack{
                 Image(uiImage: UIImage(named: "wenli4")!)
                     .resizable(resizingMode: .tile)
-                ZStack(alignment: .bottomLeading) {
+                ZStack {
                     ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: userData.colorSaveList)
-                        .frame(maxWidth: .infinity)
                         .offset(viewOffset)
-                    HStack{
+                    VStack {
+                        HStack{
+                            ForEach(dataModel.usedBlock.indices, id: \.self) { index in
+                                let value = dataModel.usedBlock[index]
+                                Image(uiImage: UIImage(named: "c\(value)")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
+                            }
+                        }
+                        if isOn {
+                            HStack{
+                                Text(dataModel.matrix.formatOutput).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).foregroundColor(.primary)
+                            }
+                        }
                         Spacer()
-                        ForEach(dataModel.usedBlock.indices, id: \.self) { index in
-                            let value = dataModel.usedBlock[index]
-                            Image(uiImage: UIImage(named: "c\(value)")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
+                        HStack{
+                            Text("单指旋转\n双指滑动来平移\n双指捏合或张开来放大缩小").font(.subheadline).foregroundColor(.secondary)
+                            Spacer()
                         }
                     }
-                    Text("单指旋转\n双指滑动来平移\n双指捏合或张开来放大缩小").font(.subheadline).foregroundColor(.secondary)
+                    .padding()
                 }
             }
             .clipped()
@@ -101,13 +130,12 @@ public struct SingleContentView: View {
                 Text("出题模式").tag(ShowType.singleColor)
                 Text("数字模式").tag(ShowType.number)
             }.pickerStyle(.segmented)
-            if isOn {
-                HStack{
-                    Text(dataModel.matrix.formatOutput).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).foregroundColor(.primary)
-                }
+            HStack{
+                Toggle("显示代码", isOn: $isOn)
+                    .padding().frame(width: 180)
+                Spacer()
+                completeStatus()
             }
-            Toggle("显示代码", isOn: $isOn)
-                .padding().frame(maxWidth: .infinity)
             // ArrowButtonView(onButtonTapped: handleButtonTapped)  // 将按钮点击事件传递给自定义视图
         }.padding().navigationTitle(dataModel.name)
     }
