@@ -28,7 +28,28 @@ struct EnterListView: View {
 #else
     static private var resourceName = "SOMA101"
 #endif
-    @State var productList: [EnterItem] = {
+    @State var productList: [EnterItem] = produceData()
+
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))]) {
+                ForEach(productList.indices, id: \.self) { index in
+                    let item = productList[index]
+                    NavigationLink(destination: SingleContentView(dataModel: $productList[index]).environmentObject(userData)) {
+                        ZStack(alignment: .topLeading){
+                            Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
+                                .foregroundColor(item.isTaskComplete ? .green : .gray)
+                            Text(item.name).foregroundColor(.primary).font(.title).padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
+                            ScenekitSingleView(dataItem: item.matrix, imageName: item.name).frame(width: 150, height: 150).disabled(true)
+                        }
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))
+                    }
+                }
+            }
+        }
+    }
+
+    static func produceData() -> [EnterItem]  {
         let stringContent = try! String(contentsOf: Bundle.main.url(forResource: resourceName, withExtension: "txt")!, encoding: .utf8)
         let firstArray = stringContent.components(separatedBy: "/SOMA")
         let trimmingSet:CharacterSet = {
@@ -66,23 +87,6 @@ struct EnterListView: View {
                 return EnterItem(name: name, matrix: result, usedBlock: abl, isTaskComplete: UserDefaults.standard.bool(forKey: name))
             } else {
                 return EnterItem(name: "无名", matrix: result, usedBlock: abl, isTaskComplete: false)
-            }
-        }
-    }()
-
-    var body: some View {
-        ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))]) {
-                ForEach(productList.indices, id: \.self) { index in
-                    let item = productList[index]
-
-                    NavigationLink(destination: SingleContentView(dataModel: productList[index]).environmentObject(userData)) {
-                        ZStack(alignment: .topLeading){
-                            Text(item.name).foregroundColor(.primary).font(.title).padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
-                            ScenekitSingleView(dataItem: item.matrix, imageName: item.name).frame(width: 150, height: 150).disabled(true)
-                        }.background(Color(uiColor: UIColor(hex: "00bfff"))).cornerRadius(8)
-                    }
-                }
             }
         }
     }

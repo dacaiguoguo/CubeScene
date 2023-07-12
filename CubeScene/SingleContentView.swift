@@ -49,25 +49,12 @@ public struct SingleContentView: View {
 #endif
     @State private var viewOffset = CGSize.zero
 
-    @State var dataModel: EnterItem
+    @Binding var dataModel: EnterItem
     @EnvironmentObject var userData: UserData
     var onCompleteButtonTapped: ((EnterItem) -> Void)?
 
     let imageSize = 40.0
 
-    func completeStatus() -> some View {
-        Button(action: {
-            dataModel.isTaskComplete.toggle()
-            UserDefaults.standard.set(dataModel.isTaskComplete, forKey: dataModel.name)
-
-        }) {
-            HStack{
-                Text("\(dataModel.isTaskComplete ? "已完成" : "待完成")")
-                Image(systemName: dataModel.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
-                    .foregroundColor(dataModel.isTaskComplete ? .green : .gray)
-            }
-        }
-    }
 
     public var body: some View {
         VStack {
@@ -98,7 +85,6 @@ public struct SingleContentView: View {
                     .padding()
                 }
             }
-            .clipped()
             Picker("显示模式", selection: $showType) {
                 Text("彩色答案").tag(ShowType.colorFul)
                 Text("出题模式").tag(ShowType.singleColor)
@@ -107,11 +93,27 @@ public struct SingleContentView: View {
             HStack{
                 Toggle("显示代码", isOn: $isOn)
                     .padding().frame(width: 180)
-                Spacer()
-                completeStatus()
             }
-        }.padding().navigationTitle(dataModel.name)
+        }
+        .navigationTitle(dataModel.name)
+        .navigationBarItems(trailing:completeStatus())
+        .padding()
     }
+
+    func completeStatus() -> some View {
+        Button(action: {
+            dataModel.isTaskComplete.toggle()
+            UserDefaults.standard.set(dataModel.isTaskComplete, forKey: dataModel.name)
+
+        }) {
+            HStack{
+                Text("\(dataModel.isTaskComplete ? "已完成" : "待完成")")
+                Image(systemName: dataModel.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
+                    .foregroundColor(dataModel.isTaskComplete ? .green : .gray)
+            }
+        }
+    }
+
 
     func handleButtonTapped(_ direction: Direction) {
         // 在此处处理按钮点击事件
@@ -134,7 +136,6 @@ public struct SingleContentView: View {
             }
         }
     }
-
 }
 
 
