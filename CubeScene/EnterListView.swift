@@ -12,6 +12,7 @@ struct EnterItem: Decodable {
     let name:String
     var matrix:Matrix3D
     var usedBlock: [Int]
+    var isTaskComplete: Bool
 }
 
 extension EnterItem: Identifiable {
@@ -22,9 +23,13 @@ extension EnterItem: Identifiable {
 
 struct EnterListView: View {
     @EnvironmentObject var userData: UserData
-
-    let firstArray: [EnterItem] = {
-        let stringContent = try! String(contentsOf: Bundle.main.url(forResource: "SOMA101", withExtension: "txt")!, encoding: .utf8)
+#if DEBUG
+    static private var resourceName = "data1"
+#else
+    static private var resourceName = "SOMA101"
+#endif
+    @State var productList: [EnterItem] = {
+        let stringContent = try! String(contentsOf: Bundle.main.url(forResource: resourceName, withExtension: "txt")!, encoding: .utf8)
         let firstArray = stringContent.components(separatedBy: "/SOMA")
         let trimmingSet:CharacterSet = {
             var triSet = CharacterSet.whitespacesAndNewlines
@@ -58,9 +63,9 @@ struct EnterListView: View {
             }
             let abl = allset.sorted(by: {$0 < $1})
             if let name = firstLine {
-                return EnterItem(name: name, matrix: result, usedBlock: abl)
+                return EnterItem(name: name, matrix: result, usedBlock: abl, isTaskComplete: UserDefaults.standard.bool(forKey: name))
             } else {
-                return EnterItem(name: "无名", matrix: result, usedBlock: abl)
+                return EnterItem(name: "无名", matrix: result, usedBlock: abl, isTaskComplete: false)
             }
         }
     }()
@@ -68,8 +73,10 @@ struct EnterListView: View {
     var body: some View {
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))]) {
-                ForEach(Array(firstArray.enumerated()), id: \.0) { index, item in
-                    NavigationLink(destination: SingleContentView(dataModel: item).environmentObject(userData)) {
+                ForEach(productList.indices, id: \.self) { index in
+                    let item = productList[index]
+
+                    NavigationLink(destination: SingleContentView(dataModel: productList[index]).environmentObject(userData)) {
                         ZStack(alignment: .topLeading){
                             Text(item.name).foregroundColor(.primary).font(.title).padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
                             ScenekitSingleView(dataItem: item.matrix, imageName: item.name).frame(width: 150, height: 150).disabled(true)

@@ -49,48 +49,22 @@ public struct SingleContentView: View {
 #endif
     @State private var viewOffset = CGSize.zero
 
-    let dataModel: EnterItem
+    @State var dataModel: EnterItem
     @EnvironmentObject var userData: UserData
+    var onCompleteButtonTapped: ((EnterItem) -> Void)?
 
-
-    func handleButtonTapped(_ direction: Direction) {
-        // 在此处处理按钮点击事件
-        switch direction {
-        case .up:
-            withAnimation {
-                viewOffset.height -= 10
-            }
-        case .down:
-            withAnimation {
-                viewOffset.height += 10
-            }
-        case .left:
-            withAnimation {
-                viewOffset.width -= 10
-            }
-        case .right:
-            withAnimation {
-                viewOffset.width += 10
-            }
-        }
-    }
     let imageSize = 40.0
-    @State private var isTaskComplete = false {
-        didSet {
-            print("isTaskComplete:\(isTaskComplete)")
-            // 数据持久化，标记当前完成的关卡名
-//            UserDefaults.standard.set(dataModel.name, forKey: "list")
-        }
-    }
 
     func completeStatus() -> some View {
         Button(action: {
-            isTaskComplete.toggle()
+            dataModel.isTaskComplete.toggle()
+            UserDefaults.standard.set(dataModel.isTaskComplete, forKey: dataModel.name)
+
         }) {
             HStack{
-                Text("\(isTaskComplete ? "已完成" : "待完成")")
-                Image(systemName: isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
-                    .foregroundColor(isTaskComplete ? .green : .gray)
+                Text("\(dataModel.isTaskComplete ? "已完成" : "待完成")")
+                Image(systemName: dataModel.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
+                    .foregroundColor(dataModel.isTaskComplete ? .green : .gray)
             }
         }
     }
@@ -136,9 +110,31 @@ public struct SingleContentView: View {
                 Spacer()
                 completeStatus()
             }
-            // ArrowButtonView(onButtonTapped: handleButtonTapped)  // 将按钮点击事件传递给自定义视图
         }.padding().navigationTitle(dataModel.name)
     }
+
+    func handleButtonTapped(_ direction: Direction) {
+        // 在此处处理按钮点击事件
+        switch direction {
+        case .up:
+            withAnimation {
+                viewOffset.height -= 10
+            }
+        case .down:
+            withAnimation {
+                viewOffset.height += 10
+            }
+        case .left:
+            withAnimation {
+                viewOffset.width -= 10
+            }
+        case .right:
+            withAnimation {
+                viewOffset.width += 10
+            }
+        }
+    }
+
 }
 
 
