@@ -81,7 +81,7 @@ public struct SingleContentView: View {
                         }
                     }
                     .padding()
-                    ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: userData.colorSaveList)
+                    ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: userData.colorSaveList, imageName: dataModel.name)
                         .offset(viewOffset)
                 }
             }
@@ -172,8 +172,8 @@ struct ScenekitSingleView : UIViewRepresentable {
         let camera = SCNCamera()
         let cameraNode = SCNNode()
         cameraNode.camera = camera
-        cameraNode.position = SCNVector3Make(3, 10, 8)
-        cameraNode.eulerAngles = SCNVector3Make(-Float.pi/4, Float.pi/9, 0) // 设置相机的旋转角度，这里是将场景绕 X 轴逆时针旋转 45 度
+        cameraNode.position = SCNVector3Make(-2, 10, 8)
+        cameraNode.eulerAngles = SCNVector3Make(-Float.pi/3.5, -Float.pi/7, 0) // 设置相机的旋转角度，这里是将场景绕 X 轴逆时针旋转 45 度
         ret.rootNode.addChildNode(cameraNode)
         return ret;
     }()
@@ -256,7 +256,7 @@ struct ScenekitSingleView : UIViewRepresentable {
             generateImage(color: item, text: "\(index)")
         }
     }
-
+    // TODO 生成一次 优化效率
     func generateImage(color: UIColor, text: String) -> UIImage {
         let size = CGSize(width: 200, height: 200)
         let renderer = UIGraphicsImageRenderer(size: size)
@@ -329,6 +329,7 @@ struct ScenekitSingleView : UIViewRepresentable {
                 }
             }
         }
+//        TODO: 改成由变量控制，点击按钮生成图像
 //        辅助任务 保存图片到document 为了性能优化
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
 //            // 在此处执行您的任务
