@@ -37,9 +37,12 @@ struct EnterListView: View {
                     let item = productList[index]
                     NavigationLink(destination: SingleContentView(dataModel: $productList[index]).environmentObject(userData)) {
                         ZStack(alignment: .topLeading){
-                            Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
-                                .foregroundColor(item.isTaskComplete ? .green : .gray)
-                            Text(item.name).foregroundColor(.primary).font(.title).padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
+                            HStack{
+                                Text(item.name).foregroundColor(.primary).font(.title).padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
+                                Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
+                                    .foregroundColor(item.isTaskComplete ? .green : .gray)
+                                    .padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
+                            }
                             ScenekitSingleView(dataItem: item.matrix, imageName: item.name).frame(width: 150, height: 150).disabled(true)
                         }
                         .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))

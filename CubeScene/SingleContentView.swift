@@ -62,8 +62,6 @@ public struct SingleContentView: View {
                 Image(uiImage: UIImage(named: "wenli4")!)
                     .resizable(resizingMode: .tile)
                 ZStack {
-                    ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: userData.colorSaveList)
-                        .offset(viewOffset)
                     VStack {
                         HStack{
                             ForEach(dataModel.usedBlock.indices, id: \.self) { index in
@@ -74,7 +72,7 @@ public struct SingleContentView: View {
                         if isOn {
                             HStack{
                                 Text(dataModel.matrix.formatOutput).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).foregroundColor(.primary)
-                            }
+                            }.disabled(false)
                         }
                         Spacer()
                         HStack{
@@ -83,6 +81,8 @@ public struct SingleContentView: View {
                         }
                     }
                     .padding()
+                    ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: userData.colorSaveList)
+                        .offset(viewOffset)
                 }
             }
             Picker("显示模式", selection: $showType) {
@@ -90,10 +90,6 @@ public struct SingleContentView: View {
                 Text("出题模式").tag(ShowType.singleColor)
                 Text("数字模式").tag(ShowType.number)
             }.pickerStyle(.segmented)
-            HStack{
-                Toggle("显示代码", isOn: $isOn)
-                    .padding().frame(width: 180)
-            }
         }
         .navigationTitle(dataModel.name)
         .navigationBarItems(trailing:completeStatus())
@@ -101,15 +97,22 @@ public struct SingleContentView: View {
     }
 
     func completeStatus() -> some View {
-        Button(action: {
-            dataModel.isTaskComplete.toggle()
-            UserDefaults.standard.set(dataModel.isTaskComplete, forKey: dataModel.name)
+        HStack {
+            Button(action: {
+                isOn.toggle()
+            }) {
+                Image(systemName: isOn ? "eye.slash" : "eye.slash").foregroundColor(isOn ? .blue : .gray)
+            }
+            Button(action: {
+                dataModel.isTaskComplete.toggle()
+                UserDefaults.standard.set(dataModel.isTaskComplete, forKey: dataModel.name)
 
-        }) {
-            HStack{
-                Text("\(dataModel.isTaskComplete ? "已完成" : "待完成")")
-                Image(systemName: dataModel.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
-                    .foregroundColor(dataModel.isTaskComplete ? .green : .gray)
+            }) {
+                HStack{
+                    Text("\(dataModel.isTaskComplete ? "已完成" : "待完成")")
+                    Image(systemName: dataModel.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
+                        .foregroundColor(dataModel.isTaskComplete ? .green : .gray)
+                }
             }
         }
     }
