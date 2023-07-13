@@ -24,7 +24,8 @@ extension EnterItem: Identifiable {
 struct EnterListView: View {
     @EnvironmentObject var userData: UserData
 #if DEBUG
-    static private var resourceName = "data1"
+//    static private var resourceName = "data1"
+    static private var resourceName = "SOMA101"
 #else
     static private var resourceName = "SOMA101"
 #endif
