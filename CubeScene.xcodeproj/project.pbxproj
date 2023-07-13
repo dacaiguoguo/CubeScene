@@ -13,19 +13,11 @@
 		9D0412432A52881A0083741B /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0412412A52881A0083741B /* SettingView.swift */; };
 		9D0412462A529EC90083741B /* ArrowButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0412452A529EC90083741B /* ArrowButtonView.swift */; };
 		9D1602BA2A4BDBF100C247A7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D1602B92A4BDBF100C247A7 /* LaunchScreen.storyboard */; };
-		9D2D85972A6026F300B11A7D /* CubeSceneClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 9D2D85882A6026F000B11A7D /* CubeSceneClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		9D2D859C2A60277200B11A7D /* SOMA101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DF9380B2A417BA4001BD720 /* SOMA101.txt */; };
-		9D2D859D2A60277600B11A7D /* data1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DF9380A2A417BA4001BD720 /* data1.txt */; };
-		9D2D859E2A60277900B11A7D /* CubeSceneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */; };
-		9D2D859F2A60277C00B11A7D /* EnterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04123B2A516AD30083741B /* EnterListView.swift */; };
-		9D2D85A02A60277F00B11A7D /* SingleContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04123D2A516F050083741B /* SingleContentView.swift */; };
-		9D2D85A12A60278300B11A7D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DBE04FB2A57D7BC0055AE14 /* Localizable.strings */; };
-		9D2D85A22A60278C00B11A7D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DBE04F52A57D6560055AE14 /* InfoPlist.strings */; };
-		9D2D85A32A60279000B11A7D /* ArrowButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0412452A529EC90083741B /* ArrowButtonView.swift */; };
-		9D2D85A42A60279300B11A7D /* ArrayTool3D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */; };
-		9D2D85A52A60279500B11A7D /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0412412A52881A0083741B /* SettingView.swift */; };
-		9D2D85A62A60279A00B11A7D /* ConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBE04EF2A56ECB70055AE14 /* ConfigView.swift */; };
-		9D2D85A72A6027F000B11A7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DF920702A404BBF001BD720 /* Assets.xcassets */; };
+		9D2D85AF2A602AE400B11A7D /* ClipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D2D85AE2A602AE400B11A7D /* ClipApp.swift */; };
+		9D2D85B12A602AE400B11A7D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D2D85B02A602AE400B11A7D /* ContentView.swift */; };
+		9D2D85B32A602AE600B11A7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D2D85B22A602AE600B11A7D /* Assets.xcassets */; };
+		9D2D85B62A602AE600B11A7D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D2D85B52A602AE600B11A7D /* Preview Assets.xcassets */; };
+		9D2D85BB2A602AE600B11A7D /* Clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 9D2D85AC2A602AE400B11A7D /* Clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9DBE04F02A56ECB70055AE14 /* ConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBE04EF2A56ECB70055AE14 /* ConfigView.swift */; };
 		9DBE04F32A57D6560055AE14 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DBE04F52A57D6560055AE14 /* InfoPlist.strings */; };
 		9DBE04F92A57D7BC0055AE14 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DBE04FB2A57D7BC0055AE14 /* Localizable.strings */; };
@@ -39,12 +31,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		9D2D85952A6026F300B11A7D /* PBXContainerItemProxy */ = {
+		9D2D85B92A602AE600B11A7D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9DF920612A404BBC001BD720 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 9D2D85872A6026F000B11A7D;
-			remoteInfo = CubeSceneClip;
+			remoteGlobalIDString = 9D2D85AB2A602AE400B11A7D;
+			remoteInfo = Clip;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -55,7 +47,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
 			dstSubfolderSpec = 16;
 			files = (
-				9D2D85972A6026F300B11A7D /* CubeSceneClip.app in Embed App Clips */,
+				9D2D85BB2A602AE600B11A7D /* Clip.app in Embed App Clips */,
 			);
 			name = "Embed App Clips";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -69,9 +61,15 @@
 		9D0412412A52881A0083741B /* SettingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		9D0412452A529EC90083741B /* ArrowButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrowButtonView.swift; sourceTree = "<group>"; };
 		9D1602B92A4BDBF100C247A7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		9D2D85882A6026F000B11A7D /* CubeSceneClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CubeSceneClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D2D85932A6026F300B11A7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9D2D85942A6026F300B11A7D /* CubeSceneClip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CubeSceneClip.entitlements; sourceTree = "<group>"; };
+		9D2D85AC2A602AE400B11A7D /* Clip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clip.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D2D85AE2A602AE400B11A7D /* ClipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipApp.swift; sourceTree = "<group>"; };
+		9D2D85B02A602AE400B11A7D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		9D2D85B22A602AE600B11A7D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9D2D85B52A602AE600B11A7D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		9D2D85B72A602AE600B11A7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9D2D85B82A602AE600B11A7D /* Clip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Clip.entitlements; sourceTree = "<group>"; };
 		9DBE04EF2A56ECB70055AE14 /* ConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigView.swift; sourceTree = "<group>"; };
 		9DBE04F42A57D6560055AE14 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9DBE04F62A57D65A0055AE14 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
@@ -89,7 +87,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		9D2D85852A6026F000B11A7D /* Frameworks */ = {
+		9D2D85A92A602AE400B11A7D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -115,11 +113,33 @@
 			path = CubeSceneClip;
 			sourceTree = "<group>";
 		};
+		9D2D85AD2A602AE400B11A7D /* Clip */ = {
+			isa = PBXGroup;
+			children = (
+				9D2D85AE2A602AE400B11A7D /* ClipApp.swift */,
+				9D2D85B02A602AE400B11A7D /* ContentView.swift */,
+				9D2D85B22A602AE600B11A7D /* Assets.xcassets */,
+				9D2D85B72A602AE600B11A7D /* Info.plist */,
+				9D2D85B82A602AE600B11A7D /* Clip.entitlements */,
+				9D2D85B42A602AE600B11A7D /* Preview Content */,
+			);
+			path = Clip;
+			sourceTree = "<group>";
+		};
+		9D2D85B42A602AE600B11A7D /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				9D2D85B52A602AE600B11A7D /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		9DF920602A404BBC001BD720 = {
 			isa = PBXGroup;
 			children = (
 				9DF9206B2A404BBC001BD720 /* CubeScene */,
 				9D2D85892A6026F100B11A7D /* CubeSceneClip */,
+				9D2D85AD2A602AE400B11A7D /* Clip */,
 				9DF9206A2A404BBC001BD720 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -128,7 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				9DF920692A404BBC001BD720 /* CubeScene.app */,
-				9D2D85882A6026F000B11A7D /* CubeSceneClip.app */,
+				9D2D85AC2A602AE400B11A7D /* Clip.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -168,21 +188,21 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9D2D85872A6026F000B11A7D /* CubeSceneClip */ = {
+		9D2D85AB2A602AE400B11A7D /* Clip */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9D2D859B2A6026F300B11A7D /* Build configuration list for PBXNativeTarget "CubeSceneClip" */;
+			buildConfigurationList = 9D2D85BC2A602AE600B11A7D /* Build configuration list for PBXNativeTarget "Clip" */;
 			buildPhases = (
-				9D2D85842A6026F000B11A7D /* Sources */,
-				9D2D85852A6026F000B11A7D /* Frameworks */,
-				9D2D85862A6026F000B11A7D /* Resources */,
+				9D2D85A82A602AE400B11A7D /* Sources */,
+				9D2D85A92A602AE400B11A7D /* Frameworks */,
+				9D2D85AA2A602AE400B11A7D /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = CubeSceneClip;
-			productName = CubeSceneClip;
-			productReference = 9D2D85882A6026F000B11A7D /* CubeSceneClip.app */;
+			name = Clip;
+			productName = Clip;
+			productReference = 9D2D85AC2A602AE400B11A7D /* Clip.app */;
 			productType = "com.apple.product-type.application.on-demand-install-capable";
 		};
 		9DF920682A404BBC001BD720 /* CubeScene */ = {
@@ -197,7 +217,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				9D2D85962A6026F300B11A7D /* PBXTargetDependency */,
+				9D2D85BA2A602AE600B11A7D /* PBXTargetDependency */,
 			);
 			name = CubeScene;
 			productName = CubeScene;
@@ -214,7 +234,7 @@
 				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1420;
 				TargetAttributes = {
-					9D2D85872A6026F000B11A7D = {
+					9D2D85AB2A602AE400B11A7D = {
 						CreatedOnToolsVersion = 14.2;
 					};
 					9DF920682A404BBC001BD720 = {
@@ -237,21 +257,18 @@
 			projectRoot = "";
 			targets = (
 				9DF920682A404BBC001BD720 /* CubeScene */,
-				9D2D85872A6026F000B11A7D /* CubeSceneClip */,
+				9D2D85AB2A602AE400B11A7D /* Clip */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		9D2D85862A6026F000B11A7D /* Resources */ = {
+		9D2D85AA2A602AE400B11A7D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9D2D85A12A60278300B11A7D /* Localizable.strings in Resources */,
-				9D2D859D2A60277600B11A7D /* data1.txt in Resources */,
-				9D2D859C2A60277200B11A7D /* SOMA101.txt in Resources */,
-				9D2D85A72A6027F000B11A7D /* Assets.xcassets in Resources */,
-				9D2D85A22A60278C00B11A7D /* InfoPlist.strings in Resources */,
+				9D2D85B62A602AE600B11A7D /* Preview Assets.xcassets in Resources */,
+				9D2D85B32A602AE600B11A7D /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,17 +291,12 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		9D2D85842A6026F000B11A7D /* Sources */ = {
+		9D2D85A82A602AE400B11A7D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9D2D85A42A60279300B11A7D /* ArrayTool3D.swift in Sources */,
-				9D2D859E2A60277900B11A7D /* CubeSceneApp.swift in Sources */,
-				9D2D859F2A60277C00B11A7D /* EnterListView.swift in Sources */,
-				9D2D85A62A60279A00B11A7D /* ConfigView.swift in Sources */,
-				9D2D85A52A60279500B11A7D /* SettingView.swift in Sources */,
-				9D2D85A32A60279000B11A7D /* ArrowButtonView.swift in Sources */,
-				9D2D85A02A60277F00B11A7D /* SingleContentView.swift in Sources */,
+				9D2D85B12A602AE400B11A7D /* ContentView.swift in Sources */,
+				9D2D85AF2A602AE400B11A7D /* ClipApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,10 +317,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		9D2D85962A6026F300B11A7D /* PBXTargetDependency */ = {
+		9D2D85BA2A602AE600B11A7D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 9D2D85872A6026F000B11A7D /* CubeSceneClip */;
-			targetProxy = 9D2D85952A6026F300B11A7D /* PBXContainerItemProxy */;
+			target = 9D2D85AB2A602AE400B11A7D /* Clip */;
+			targetProxy = 9D2D85B92A602AE600B11A7D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -334,27 +346,25 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		9D2D85992A6026F300B11A7D /* Debug */ = {
+		9D2D85BD2A602AE600B11A7D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = CubeSceneClip/CubeSceneClip.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Clip/Clip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"CubeScene\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Clip/Preview Content\"";
 				DEVELOPMENT_TEAM = AJG2826637;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CubeSceneClip/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "索玛立方体";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_FILE = Clip/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CubeScene;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -368,28 +378,26 @@
 			};
 			name = Debug;
 		};
-		9D2D859A2A6026F300B11A7D /* Release */ = {
+		9D2D85BE2A602AE600B11A7D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = CubeSceneClip/CubeSceneClip.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Clip/Clip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"CubeScene\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Clip/Preview Content\"";
 				DEVELOPMENT_TEAM = AJG2826637;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CubeSceneClip/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "索玛立方体";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_FILE = Clip/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CubeScene;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -590,11 +598,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9D2D859B2A6026F300B11A7D /* Build configuration list for PBXNativeTarget "CubeSceneClip" */ = {
+		9D2D85BC2A602AE600B11A7D /* Build configuration list for PBXNativeTarget "Clip" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				9D2D85992A6026F300B11A7D /* Debug */,
-				9D2D859A2A6026F300B11A7D /* Release */,
+				9D2D85BD2A602AE600B11A7D /* Debug */,
+				9D2D85BE2A602AE600B11A7D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
