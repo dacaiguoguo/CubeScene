@@ -49,8 +49,72 @@ public struct SingleContentView: View {
 #endif
     @State private var viewOffset = CGSize.zero
 
-    let dataModel: EnterItem
+    @Binding var dataModel: EnterItem
     @EnvironmentObject var userData: UserData
+    var onCompleteButtonTapped: ((EnterItem) -> Void)?
+
+    let imageSize = 40.0
+
+
+    public var body: some View {
+        VStack {
+            ZStack{
+                Image(uiImage: UIImage(named: "wenli7")!)
+                    .resizable(resizingMode: .tile)
+                ZStack {
+                    VStack {
+                        HStack{
+                            ForEach(dataModel.usedBlock.indices, id: \.self) { index in
+                                let value = dataModel.usedBlock[index]
+                                Image(uiImage: UIImage(named: "c\(value)")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
+                            }
+                        }
+                        if isOn {
+                            HStack{
+                                Text(dataModel.matrix.formatOutput).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).foregroundColor(.primary)
+                            }.disabled(false)
+                        }
+                        Spacer()
+                        HStack{
+                            Text("单指旋转\n双指滑动来平移\n双指捏合或张开来放大缩小").font(.subheadline).foregroundColor(.secondary)
+                            Spacer()
+                        }
+                    }
+                    .padding()
+                    ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: userData.colorSaveList, imageName: dataModel.name)
+                        .offset(viewOffset)
+                }
+            }
+            Picker("显示模式", selection: $showType) {
+                Text("彩色答案").tag(ShowType.colorFul)
+                Text("出题模式").tag(ShowType.singleColor)
+                Text("数字模式").tag(ShowType.number)
+            }.pickerStyle(.segmented)
+        }
+        .navigationTitle(dataModel.name)
+        .navigationBarItems(trailing:completeStatus())
+        .padding()
+    }
+
+    func completeStatus() -> some View {
+        HStack {
+            Button(action: {
+                isOn.toggle()
+            }) {
+                Image(systemName: isOn ? "eye.slash" : "eye.slash").foregroundColor(isOn ? .blue : .gray)
+            }
+            Button(action: {
+                dataModel.isTaskComplete.toggle()
+                UserDefaults.standard.set(dataModel.isTaskComplete, forKey: dataModel.name)
+
+            }) {
+                HStack{
+                    Image(systemName: dataModel.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
+                    Text("\(dataModel.isTaskComplete ? "已完成" : "待完成")")
+                }.foregroundColor(dataModel.isTaskComplete ? .green : .gray)
+            }
+        }
+    }
 
 
     func handleButtonTapped(_ direction: Direction) {
@@ -73,71 +137,6 @@ public struct SingleContentView: View {
                 viewOffset.width += 10
             }
         }
-    }
-    let imageSize = 40.0
-    @State private var isTaskComplete = false {
-        didSet {
-            print("isTaskComplete:\(isTaskComplete)")
-            // 数据持久化，标记当前完成的关卡名
-//            UserDefaults.standard.set(dataModel.name, forKey: "list")
-        }
-    }
-
-    func completeStatus() -> some View {
-        Button(action: {
-            isTaskComplete.toggle()
-        }) {
-            HStack{
-                Text("\(isTaskComplete ? "已完成" : "待完成")")
-                Image(systemName: isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
-                    .foregroundColor(isTaskComplete ? .green : .gray)
-            }
-        }
-    }
-
-    public var body: some View {
-        VStack {
-            ZStack{
-                Image(uiImage: UIImage(named: "wenli4")!)
-                    .resizable(resizingMode: .tile)
-                ZStack {
-                    ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: userData.colorSaveList)
-                        .offset(viewOffset)
-                    VStack {
-                        HStack{
-                            ForEach(dataModel.usedBlock.indices, id: \.self) { index in
-                                let value = dataModel.usedBlock[index]
-                                Image(uiImage: UIImage(named: "c\(value)")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
-                            }
-                        }
-                        if isOn {
-                            HStack{
-                                Text(dataModel.matrix.formatOutput).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).foregroundColor(.primary)
-                            }
-                        }
-                        Spacer()
-                        HStack{
-                            Text("单指旋转\n双指滑动来平移\n双指捏合或张开来放大缩小").font(.subheadline).foregroundColor(.secondary)
-                            Spacer()
-                        }
-                    }
-                    .padding()
-                }
-            }
-            .clipped()
-            Picker("显示模式", selection: $showType) {
-                Text("彩色答案").tag(ShowType.colorFul)
-                Text("出题模式").tag(ShowType.singleColor)
-                Text("数字模式").tag(ShowType.number)
-            }.pickerStyle(.segmented)
-            HStack{
-                Toggle("显示代码", isOn: $isOn)
-                    .padding().frame(width: 180)
-                Spacer()
-                completeStatus()
-            }
-            // ArrowButtonView(onButtonTapped: handleButtonTapped)  // 将按钮点击事件传递给自定义视图
-        }.padding().navigationTitle(dataModel.name)
     }
 }
 
@@ -172,8 +171,8 @@ struct ScenekitSingleView : UIViewRepresentable {
         let camera = SCNCamera()
         let cameraNode = SCNNode()
         cameraNode.camera = camera
-        cameraNode.position = SCNVector3Make(3, 10, 8)
-        cameraNode.eulerAngles = SCNVector3Make(-Float.pi/4, Float.pi/9, 0) // 设置相机的旋转角度，这里是将场景绕 X 轴逆时针旋转 45 度
+        cameraNode.position = SCNVector3Make(-2, 10, 8)
+        cameraNode.eulerAngles = SCNVector3Make(-Float.pi/3.5, -Float.pi/7, 0) // 设置相机的旋转角度，这里是将场景绕 X 轴逆时针旋转 45 度
         ret.rootNode.addChildNode(cameraNode)
         return ret;
     }()
@@ -256,7 +255,7 @@ struct ScenekitSingleView : UIViewRepresentable {
             generateImage(color: item, text: "\(index)")
         }
     }
-
+    // TODO 生成一次 优化效率
     func generateImage(color: UIColor, text: String) -> UIImage {
         let size = CGSize(width: 200, height: 200)
         let renderer = UIGraphicsImageRenderer(size: size)
@@ -329,12 +328,13 @@ struct ScenekitSingleView : UIViewRepresentable {
                 }
             }
         }
+//        TODO: 改成由变量控制，点击按钮生成图像
 //        辅助任务 保存图片到document 为了性能优化
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//            // 在此处执行您的任务
-//            let sss = scnView.snapshot()
-//            saveImageToDocumentDirectory(image:sss, fileName: imageName)
-//        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            // 在此处执行您的任务
+            let sss = scnView.snapshot()
+            saveImageToDocumentDirectory(image:sss, fileName: imageName)
+        }
     }
 
 }
