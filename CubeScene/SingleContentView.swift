@@ -109,10 +109,9 @@ public struct SingleContentView: View {
 
             }) {
                 HStack{
-                    Text("\(dataModel.isTaskComplete ? "已完成" : "待完成")")
                     Image(systemName: dataModel.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
-                        .foregroundColor(dataModel.isTaskComplete ? .green : .gray)
-                }
+                    Text("\(dataModel.isTaskComplete ? "已完成" : "待完成")")
+                }.foregroundColor(dataModel.isTaskComplete ? .green : .gray)
             }
         }
     }
@@ -331,11 +330,11 @@ struct ScenekitSingleView : UIViewRepresentable {
         }
 //        TODO: 改成由变量控制，点击按钮生成图像
 //        辅助任务 保存图片到document 为了性能优化
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//            // 在此处执行您的任务
-//            let sss = scnView.snapshot()
-//            saveImageToDocumentDirectory(image:sss, fileName: imageName)
-//        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            // 在此处执行您的任务
+            let sss = scnView.snapshot()
+            saveImageToDocumentDirectory(image:sss, fileName: imageName)
+        }
     }
 
 }

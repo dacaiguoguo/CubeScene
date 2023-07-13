@@ -31,24 +31,29 @@ struct EnterListView: View {
     @State var productList: [EnterItem] = produceData()
 
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))]) {
-                ForEach(productList.indices, id: \.self) { index in
-                    let item = productList[index]
-                    NavigationLink(destination: SingleContentView(dataModel: $productList[index]).environmentObject(userData)) {
-                        ZStack(alignment: .topLeading){
-                            HStack{
-                                Text(item.name).foregroundColor(.primary).font(.title).padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
+        List{
+            ForEach(productList.indices, id: \.self) { index in
+                let item = productList[index]
+                NavigationLink(destination: SingleContentView(dataModel: $productList[index]).environmentObject(userData)) {
+                    HStack{
+                        ScenekitSingleView(dataItem: item.matrix, imageName: item.name).frame(width: 80, height: 80)
+                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))
+                            .disabled(true)
+                        VStack(alignment: .leading){
+                            Text(item.name).foregroundColor(.primary).font(.title2)
+                                .padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
+                            HStack(alignment: .center) {
                                 Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
-                                    .foregroundColor(item.isTaskComplete ? .green : .gray)
-                                    .padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
+                                Text("\(item.isTaskComplete ? "已完成" : "待完成")").font(.subheadline)
                             }
-                            ScenekitSingleView(dataItem: item.matrix, imageName: item.name).frame(width: 150, height: 150).disabled(true)
+                            .foregroundColor(item.isTaskComplete ? .green : .gray)
+                            .padding(EdgeInsets(top: 5.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
+
                         }
-                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))
                     }
                 }
             }
+
         }
     }
 
