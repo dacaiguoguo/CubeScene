@@ -60,12 +60,26 @@ struct ConfigView: View {
         ret.removeFirst()
         return ret
     }
+    let configData = [[[0,0,0],[2,3,0],[2,3,3]],[[2,5,5],[2,4,5],[6,4,4]],[[1,1,1],[6,1,5],[6,6,4]]].map { item in
+        item.map { item2 in
+            item2.map { item3 in
+                if item3 == 0 {return 2}
+                if item3 == 1 {return 3}
+                if item3 == 2 {return 4}
+                if item3 == 3 {return 1}
+                if item3 == 4 {return 5}
+                if item3 == 5 {return 6}
+                if item3 == 6 {return 7}
+                return item3
+            }
+        }
+    }
 
-
+    let configData2 = [[[2,2,3], [5,3,3], [5,4,3]], [[2,1,1], [5,5,6], [7,4,4]], [[2,6,1], [7,6,6], [7,7,4]]];
     var body: some View {
         VStack(alignment:.leading) {
             ScenekitSingleView(showType: .colorFul,
-                               dataItem:[[[2,2,3], [5,3,3], [5,4,3]], [[2,1,1], [5,5,6], [7,4,4]], [[2,6,1], [7,6,6], [7,7,4]]],
+                               dataItem:configData,
                                colors: userData.colorSaveList)
             .frame(height: 500)
             Text("点击圆圈来修改块的颜色吧!").foregroundColor(.primary).font(.subheadline)

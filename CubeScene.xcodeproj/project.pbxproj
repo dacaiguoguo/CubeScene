@@ -70,8 +70,6 @@
 		9D0412412A52881A0083741B /* SettingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		9D0412452A529EC90083741B /* ArrowButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrowButtonView.swift; sourceTree = "<group>"; };
 		9D1602B92A4BDBF100C247A7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		9D2D85932A6026F300B11A7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9D2D85942A6026F300B11A7D /* CubeSceneClip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CubeSceneClip.entitlements; sourceTree = "<group>"; };
 		9D2D85AC2A602AE400B11A7D /* Clip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D2D85AE2A602AE400B11A7D /* ClipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipApp.swift; sourceTree = "<group>"; };
 		9D2D85B02A602AE400B11A7D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -113,15 +111,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		9D2D85892A6026F100B11A7D /* CubeSceneClip */ = {
-			isa = PBXGroup;
-			children = (
-				9D2D85932A6026F300B11A7D /* Info.plist */,
-				9D2D85942A6026F300B11A7D /* CubeSceneClip.entitlements */,
-			);
-			path = CubeSceneClip;
-			sourceTree = "<group>";
-		};
 		9D2D85AD2A602AE400B11A7D /* Clip */ = {
 			isa = PBXGroup;
 			children = (
@@ -147,7 +136,6 @@
 			isa = PBXGroup;
 			children = (
 				9DF9206B2A404BBC001BD720 /* CubeScene */,
-				9D2D85892A6026F100B11A7D /* CubeSceneClip */,
 				9D2D85AD2A602AE400B11A7D /* Clip */,
 				9DF9206A2A404BBC001BD720 /* Products */,
 			);
@@ -378,6 +366,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Clip/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CubeScene;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -387,7 +376,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.2;
+				MARKETING_VERSION = 3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -411,6 +400,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Clip/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CubeScene;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -420,7 +410,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.2;
+				MARKETING_VERSION = 3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -568,7 +558,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.2;
+				MARKETING_VERSION = 3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -603,7 +593,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.2;
+				MARKETING_VERSION = 3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
