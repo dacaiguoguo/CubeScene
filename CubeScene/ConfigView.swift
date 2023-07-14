@@ -78,11 +78,14 @@ struct ConfigView: View {
     let configData2 = [[[2,2,3], [5,3,3], [5,4,3]], [[2,1,1], [5,5,6], [7,4,4]], [[2,6,1], [7,6,6], [7,7,4]]];
     var body: some View {
         VStack(alignment:.leading) {
-            ScenekitSingleView(showType: .colorFul,
-                               dataItem:configData,
-                               colors: userData.colorSaveList,
-                               textImageList: userData.textImageList
-            )
+//            ScenekitSingleView(showType: .colorFul,
+//                               dataItem:configData,
+//                               colors: userData.colorSaveList,
+//                               imageName: "",
+//                               numberImageList: userData.textImageList,
+//                               showColor: nil
+//            )
+            Text("11")
             .frame(height: 500)
             Text("点击圆圈来修改块的颜色吧!").foregroundColor(.primary).font(.subheadline)
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 60))]) {

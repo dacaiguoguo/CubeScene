@@ -57,6 +57,7 @@ public struct SingleContentView: View {
     @EnvironmentObject var userData: UserData
 
     let imageSize = 40.0
+    @State var showColor:[Int] = []
 
 
     public var body: some View {
@@ -84,7 +85,9 @@ public struct SingleContentView: View {
                         }
                     }
                     .padding()
-                    ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: userData.colorSaveList, textImageList: userData.textImageList, imageName: dataModel.name)
+                    
+                    ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: userData.colorSaveList, imageName: dataModel.name,
+                                       numberImageList: userData.textImageList, showColor: $showColor)
                         .offset(viewOffset)
                 }
             }
@@ -111,6 +114,8 @@ public struct SingleContentView: View {
                 }
                 if isShowItems {
                     Button(action: {
+                        showColor.append(showColor.count)
+                        print("showColor\(showColor)")
                         dataModel.isTaskComplete.toggle()
                         UserDefaults.standard.set(dataModel.isTaskComplete, forKey: dataModel.name)
                         
@@ -155,9 +160,9 @@ struct ScenekitSingleView : UIViewRepresentable {
     let dataItem: Matrix3D
     let colors:[UIColor]
     let imageName:String
-    
-    let gettextImageList: [UIImage]
-    
+    let numberImageList: [UIImage]
+    @Binding var showColor:[Int]
+
     static let defaultColors = [
         UIColor.white,
         UIColor(hex: "FF8800"),
@@ -168,15 +173,15 @@ struct ScenekitSingleView : UIViewRepresentable {
         UIColor(hex: "28C76F"),
         UIColor.purple
     ]
-    init(showType: ShowType = .singleColor, dataItem: Matrix3D, colors:[UIColor] = defaultColors, textImageList:[UIImage], imageName:String = "" ) {
-        self.showType = showType
-        self.dataItem = dataItem
-        self.colors = colors
-        self.imageName = imageName
-        self.gettextImageList = textImageList
-    }
 
-
+//    init(showType: ShowType = .singleColor, dataItem: Matrix3D, colors: [UIColor] = defaultColors, imageName: String, numberImageList: [UIImage]) {
+//        self.showType = showType
+//        self.dataItem = dataItem
+//        self.colors = colors
+//        self.imageName = imageName
+//        self.numberImageList = numberImageList
+//    }
+//
 
     let scene : SCNScene = {
         let ret = SCNScene();
@@ -270,14 +275,19 @@ struct ScenekitSingleView : UIViewRepresentable {
                                 boxNode.geometry?.firstMaterial = material
                             case .colorFul:
                                 let material = SCNMaterial()
-                                material.diffuse.contents = colors[value]
+                                if showColor.contains(value) {
+                                    material.diffuse.contents = colors[value]
+                                } else {
+                                    material.diffuse.contents = UIColor.clear
+                                }
+//                                material.diffuse.contents = colors[value]
                                 material.locksAmbientWithDiffuse = true
                                 boxNode.geometry?.materials = [];
                                 boxNode.geometry?.firstMaterial = material
                             case .number:
                                 let material = SCNMaterial()
 //                                material.diffuse.contents = colorImages[value]
-                                material.diffuse.contents = gettextImageList[value]
+                                material.diffuse.contents = numberImageList[value]
                                 material.locksAmbientWithDiffuse = true
                                 boxNode.geometry?.materials = [];
                                 boxNode.geometry?.firstMaterial = material
@@ -334,9 +344,13 @@ func saveImageToDocumentDirectory(image: UIImage, fileName: String) {
 struct ScenekitSingleView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ScenekitSingleView(dataItem:[[[2,4,3], [6,4,1], [6,6,1]],
-                                       [[2,3,3], [6,4,1], [7,4,5]],
-                                       [[2,2,3], [7,5,5], [7,7,5]]], textImageList: getTextImageList())
+//            ScenekitSingleView(dataItem:[[[2,4,3], [6,4,1], [6,6,1]],
+//                                       [[2,3,3], [6,4,1], [7,4,5]],
+//                                       [[2,2,3], [7,5,5], [7,7,5]]],
+//                               imageName: "",
+//                               numberImageList: getTextImageList(),
+//            showColor: nil)
+            Text("11")
             .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
 
         }

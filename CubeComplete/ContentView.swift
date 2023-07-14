@@ -19,6 +19,10 @@ struct Product {
 
 struct ProductDetailView: View {
     @Binding var product: Product
+    
+    init(<#parameters#>) {
+        <#statements#>
+    }
 
     var body: some View {
         VStack {
