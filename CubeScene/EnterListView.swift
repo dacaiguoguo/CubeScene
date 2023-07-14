@@ -37,7 +37,8 @@ struct EnterListView: View {
                 let item = productList[index]
                 NavigationLink(destination: SingleContentView(dataModel: $productList[index]).environmentObject(userData)) {
                     HStack{
-                        ScenekitSingleView(dataItem: item.matrix, imageName: item.name).frame(width: 80, height: 80)
+                        ScenekitSingleView(dataItem: item.matrix, imageName: item.name).frame(width: 180, height: 180)
+                            .padding(EdgeInsets(top: -20.0, leading: -50.0, bottom: -80.0, trailing: -50.0))
                             .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))
                             .disabled(true)
                         VStack(alignment: .leading){
