@@ -80,7 +80,9 @@ struct ConfigView: View {
         VStack(alignment:.leading) {
             ScenekitSingleView(showType: .colorFul,
                                dataItem:configData,
-                               colors: userData.colorSaveList)
+                               colors: userData.colorSaveList,
+                               colorWithText: userData.colorTextImage
+            )
             .frame(height: 500)
             Text("点击圆圈来修改块的颜色吧!").foregroundColor(.primary).font(.subheadline)
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 60))]) {
