@@ -91,8 +91,7 @@ struct CubeSceneApp: App {
             TabView {
                 NavigationView {
                     EnterListView().navigationTitle("TitleName").navigationBarTitleDisplayMode(.inline)
-                        .navigationBarItems(leading: helpButton(), trailing:showButton()
-                        ).onAppear {
+                        .onAppear {
                             print("onAppear EnterListView !")
                         }.environmentObject(userData)
                 }
@@ -109,6 +108,15 @@ struct CubeSceneApp: App {
                     Image(systemName: "cube.transparent")
                     Text("立方体")
                 }.tag(1)
+
+                NavigationView {
+                    SettingView().environmentObject(userData)
+                        .navigationBarTitleDisplayMode(.inline)
+                        .navigationTitle("更多")
+                }.tabItem {
+                    Image(systemName: "cube.transparent")
+                    Text("更多")
+                }.tag(2)
             }
 
         }.onChange(of: scenePhase) { phase in

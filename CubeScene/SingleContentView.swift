@@ -44,9 +44,9 @@ public struct SingleContentView: View {
 
     @State private var isOn = false
 #if DEBUG
-    @State private var showType:ShowType = .singleColor
+    @State var showType:ShowType = .singleColor
 #else
-    @State private var showType:ShowType = .singleColor
+    @State var showType:ShowType = .singleColor
 #endif
     @State private var viewOffset = CGSize.zero
 
@@ -88,11 +88,13 @@ public struct SingleContentView: View {
                         .offset(viewOffset)
                 }
             }
-            Picker("显示模式", selection: $showType) {
-                Text("彩色答案").tag(ShowType.colorFul)
-                Text("出题模式").tag(ShowType.singleColor)
-                Text("数字模式").tag(ShowType.number)
-            }.pickerStyle(.segmented)
+            if isShowItems {
+                Picker("显示模式", selection: $showType) {
+                    Text("彩色答案").tag(ShowType.colorFul)
+                    Text("出题模式").tag(ShowType.singleColor)
+                    Text("数字模式").tag(ShowType.number)
+                }.pickerStyle(.segmented)
+            }
         }
         .navigationTitle(dataModel.name)
         .navigationBarItems(trailing:completeStatus())

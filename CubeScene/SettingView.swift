@@ -62,15 +62,37 @@ extension Channel: Identifiable {
 
 public struct SettingView: View {
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var userData: UserData
+
     public init(){}
 
-    //    let channelLocalDataList:[Channel] = [Channel(channelID: "1", name: "色彩"), Channel(channelID: "2", name: "难度"),  Channel(channelID: "3", name: "帮助")]
     let channelLocalDataList:[Channel] = [Channel(channelID: "1", name: "ContentSoma", link: "https://dacaiguoguo.github.io/PrivacyPolicy.html"),
                                           Channel(channelID: "2", name: "ContentAuthor", link: "mailto:dacaiguoguo@163.com")]
 
     public var body: some View {
    
         List {
+            Section(content: {
+
+                NavigationLink {
+                    ConfigView().environmentObject(userData)
+                } label: {
+                    HStack{
+                        Text("设置")
+                        Spacer()
+                        Image(systemName: "gear.circle")
+                    }
+                }
+//                NavigationLink {
+//                    SettingView().environmentObject(userData)
+//                } label: {
+//                    HStack{
+//                        Text("帮助")
+//                        Spacer()
+//                        Image(systemName: "info.circle")
+//                    }
+//                }
+            })
             Section(content: {
                 ForEach(channelLocalDataList) { channel in
                     Link(LocalizedStringKey(channel.name), destination: URL(string: channel.link)!)
