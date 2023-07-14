@@ -101,6 +101,7 @@ struct EnterListView: View {
     }
 }
 
+
 struct EnterListView_Previews: PreviewProvider {
     static var previews: some View {
         EnterListView()

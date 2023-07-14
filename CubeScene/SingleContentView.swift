@@ -41,6 +41,7 @@ extension Matrix3D {
 
 public struct SingleContentView: View {
 
+
     @State private var isOn = false
 #if DEBUG
     @State private var showType:ShowType = .singleColor
@@ -50,8 +51,10 @@ public struct SingleContentView: View {
     @State private var viewOffset = CGSize.zero
 
     @Binding var dataModel: EnterItem
+
+    @State var isLoggedIn = true
+
     @EnvironmentObject var userData: UserData
-    var onCompleteButtonTapped: ((EnterItem) -> Void)?
 
     let imageSize = 40.0
 
@@ -97,21 +100,25 @@ public struct SingleContentView: View {
     }
 
     func completeStatus() -> some View {
-        HStack {
-            Button(action: {
-                isOn.toggle()
-            }) {
-                Image(systemName: isOn ? "eye.slash" : "eye.slash").foregroundColor(isOn ? .blue : .gray)
-            }
-            Button(action: {
-                dataModel.isTaskComplete.toggle()
-                UserDefaults.standard.set(dataModel.isTaskComplete, forKey: dataModel.name)
+        Group {
+            if isLoggedIn {
+                HStack {
+                    Button(action: {
+                        isOn.toggle()
+                    }) {
+                        Image(systemName: isOn ? "eye.slash" : "eye.slash").foregroundColor(isOn ? .blue : .gray)
+                    }
+                    Button(action: {
+                        dataModel.isTaskComplete.toggle()
+                        UserDefaults.standard.set(dataModel.isTaskComplete, forKey: dataModel.name)
 
-            }) {
-                HStack{
-                    Image(systemName: dataModel.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
-                    Text("\(dataModel.isTaskComplete ? "已完成" : "待完成")")
-                }.foregroundColor(dataModel.isTaskComplete ? .green : .gray)
+                    }) {
+                        HStack{
+                            Image(systemName: dataModel.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
+                            Text("\(dataModel.isTaskComplete ? "已完成" : "待完成")")
+                        }.foregroundColor(dataModel.isTaskComplete ? .green : .gray)
+                    }
+                }
             }
         }
     }

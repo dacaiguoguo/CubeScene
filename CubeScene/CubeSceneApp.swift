@@ -3,10 +3,16 @@
 //  CubeScene
 //
 //  Created by yanguo sun on 2023/6/19.
-// TODO: 自定义修改颜色，和默认配色
-// 1.增加按钮 标记已经玩过。
-// 国际化
-// EnterListView 入口优化为图片
+// 自定义修改颜色，和默认配色
+// 1.增加按钮 标记已经玩过。完成
+// 国际化 部分完成
+// TODO: EnterListView 入口优化为图片
+// TODO: 增加240种演示动画
+// TODO: 增加难度星级标识和筛选
+// TODO: 增加单步骤动画
+// TODO: 限制x轴旋转角度 防止翻转 增加恢复位置按钮
+
+
 
 import SwiftUI
 import UIKit
@@ -82,14 +88,29 @@ struct CubeSceneApp: App {
     }
     var body: some Scene {
         WindowGroup {
-            NavigationView {
-                EnterListView().navigationTitle("TitleName").navigationBarTitleDisplayMode(.inline)
-                    .navigationBarItems(leading: helpButton(), trailing:showButton()
-                    ).onAppear {
-                        print("onAppear EnterListView !")
-                    }.environmentObject(userData)
+            TabView {
+                NavigationView {
+                    EnterListView().navigationTitle("TitleName").navigationBarTitleDisplayMode(.inline)
+                        .navigationBarItems(leading: helpButton(), trailing:showButton()
+                        ).onAppear {
+                            print("onAppear EnterListView !")
+                        }.environmentObject(userData)
+                }
+                .navigationViewStyle(StackNavigationViewStyle()).tabItem {
+                    Image(systemName: "cube")
+                    Text("关卡")
+                }.tag(0)
+
+                NavigationView {
+                    EnterListView240().environmentObject(userData)
+                        .navigationBarTitleDisplayMode(.inline)
+                        .navigationTitle("索玛立方体的各种解法")
+                }.tabItem {
+                    Image(systemName: "cube.transparent")
+                    Text("立方体")
+                }.tag(1)
             }
-            .navigationViewStyle(StackNavigationViewStyle())
+
         }.onChange(of: scenePhase) { phase in
             if phase == .active {
                 // Perform launch tasks
