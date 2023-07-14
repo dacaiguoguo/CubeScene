@@ -7,14 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		59524DB82A60FC590078EBB6 /* CubeSceneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */; };
+		59524DB92A60FC5C0078EBB6 /* EnterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04123B2A516AD30083741B /* EnterListView.swift */; };
+		59524DBA2A60FC5F0078EBB6 /* SingleContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04123D2A516F050083741B /* SingleContentView.swift */; };
+		59524DBB2A60FC630078EBB6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DBE04FB2A57D7BC0055AE14 /* Localizable.strings */; };
+		59524DBC2A60FC6F0078EBB6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DBE04F52A57D6560055AE14 /* InfoPlist.strings */; };
+		59524DBD2A60FC720078EBB6 /* ArrowButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0412452A529EC90083741B /* ArrowButtonView.swift */; };
+		59524DBE2A60FC760078EBB6 /* ArrayTool3D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */; };
+		59524DBF2A60FC790078EBB6 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0412412A52881A0083741B /* SettingView.swift */; };
+		59524DC02A60FC7D0078EBB6 /* ConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBE04EF2A56ECB70055AE14 /* ConfigView.swift */; };
+		59524DC12A60FC970078EBB6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DF920702A404BBF001BD720 /* Assets.xcassets */; };
+		59524DC22A60FCEC0078EBB6 /* SOMA101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DF9380B2A417BA4001BD720 /* SOMA101.txt */; };
 		5971BA8C2A50547800CD6111 /* ArrayTool3D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */; };
 		9D04123C2A516AD30083741B /* EnterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04123B2A516AD30083741B /* EnterListView.swift */; };
 		9D04123E2A516F050083741B /* SingleContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04123D2A516F050083741B /* SingleContentView.swift */; };
 		9D0412432A52881A0083741B /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0412412A52881A0083741B /* SettingView.swift */; };
 		9D0412462A529EC90083741B /* ArrowButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0412452A529EC90083741B /* ArrowButtonView.swift */; };
 		9D1602BA2A4BDBF100C247A7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D1602B92A4BDBF100C247A7 /* LaunchScreen.storyboard */; };
-		9D2D85AF2A602AE400B11A7D /* ClipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D2D85AE2A602AE400B11A7D /* ClipApp.swift */; };
-		9D2D85B12A602AE400B11A7D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D2D85B02A602AE400B11A7D /* ContentView.swift */; };
 		9D2D85B32A602AE600B11A7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D2D85B22A602AE600B11A7D /* Assets.xcassets */; };
 		9D2D85B62A602AE600B11A7D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D2D85B52A602AE600B11A7D /* Preview Assets.xcassets */; };
 		9D2D85BB2A602AE600B11A7D /* Clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 9D2D85AC2A602AE400B11A7D /* Clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -268,7 +277,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D2D85B62A602AE600B11A7D /* Preview Assets.xcassets in Resources */,
+				59524DBC2A60FC6F0078EBB6 /* InfoPlist.strings in Resources */,
+				59524DBB2A60FC630078EBB6 /* Localizable.strings in Resources */,
 				9D2D85B32A602AE600B11A7D /* Assets.xcassets in Resources */,
+				59524DC12A60FC970078EBB6 /* Assets.xcassets in Resources */,
+				59524DC22A60FCEC0078EBB6 /* SOMA101.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -295,8 +308,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9D2D85B12A602AE400B11A7D /* ContentView.swift in Sources */,
-				9D2D85AF2A602AE400B11A7D /* ClipApp.swift in Sources */,
+				59524DBE2A60FC760078EBB6 /* ArrayTool3D.swift in Sources */,
+				59524DB82A60FC590078EBB6 /* CubeSceneApp.swift in Sources */,
+				59524DB92A60FC5C0078EBB6 /* EnterListView.swift in Sources */,
+				59524DC02A60FC7D0078EBB6 /* ConfigView.swift in Sources */,
+				59524DBF2A60FC790078EBB6 /* SettingView.swift in Sources */,
+				59524DBD2A60FC720078EBB6 /* ArrowButtonView.swift in Sources */,
+				59524DBA2A60FC5F0078EBB6 /* SingleContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,7 +387,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -402,7 +420,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -550,7 +568,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.1;
+				MARKETING_VERSION = 3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -585,7 +603,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.1;
+				MARKETING_VERSION = 3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
