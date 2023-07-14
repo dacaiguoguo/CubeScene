@@ -84,7 +84,7 @@ public struct SingleContentView: View {
                         }
                     }
                     .padding()
-                    ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: userData.colorSaveList, colorWithText: userData.colorTextImage, imageName: dataModel.name)
+                    ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: userData.colorSaveList, textImageList: userData.textImageList, imageName: dataModel.name)
                         .offset(viewOffset)
                 }
             }
@@ -100,20 +100,20 @@ public struct SingleContentView: View {
         .navigationBarItems(trailing:completeStatus())
         .padding()
     }
-
+    
     func completeStatus() -> some View {
         Group {
-            if isShowItems {
-                HStack {
-                    Button(action: {
-                        isOn.toggle()
-                    }) {
-                        Image(systemName: isOn ? "eye.slash" : "eye.slash").foregroundColor(isOn ? .blue : .gray)
-                    }
+            HStack {
+                Button(action: {
+                    isOn.toggle()
+                }) {
+                    Image(systemName: isOn ? "eye.slash" : "eye.slash").foregroundColor(isOn ? .blue : .gray)
+                }
+                if isShowItems {
                     Button(action: {
                         dataModel.isTaskComplete.toggle()
                         UserDefaults.standard.set(dataModel.isTaskComplete, forKey: dataModel.name)
-
+                        
                     }) {
                         HStack{
                             Image(systemName: dataModel.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
@@ -124,7 +124,7 @@ public struct SingleContentView: View {
             }
         }
     }
-
+    
 
     func handleButtonTapped(_ direction: Direction) {
         // 在此处处理按钮点击事件
@@ -156,7 +156,7 @@ struct ScenekitSingleView : UIViewRepresentable {
     let colors:[UIColor]
     let imageName:String
     
-    let getColorWithText: [UIImage]
+    let gettextImageList: [UIImage]
     
     static let defaultColors = [
         UIColor.white,
@@ -168,12 +168,12 @@ struct ScenekitSingleView : UIViewRepresentable {
         UIColor(hex: "28C76F"),
         UIColor.purple
     ]
-    init(showType: ShowType = .singleColor, dataItem: Matrix3D, colors:[UIColor] = defaultColors, colorWithText:[UIImage], imageName:String = "" ) {
+    init(showType: ShowType = .singleColor, dataItem: Matrix3D, colors:[UIColor] = defaultColors, textImageList:[UIImage], imageName:String = "" ) {
         self.showType = showType
         self.dataItem = dataItem
         self.colors = colors
         self.imageName = imageName
-        self.getColorWithText = colorWithText
+        self.gettextImageList = textImageList
     }
 
 
@@ -277,7 +277,7 @@ struct ScenekitSingleView : UIViewRepresentable {
                             case .number:
                                 let material = SCNMaterial()
 //                                material.diffuse.contents = colorImages[value]
-                                material.diffuse.contents = getColorWithText[value]
+                                material.diffuse.contents = gettextImageList[value]
                                 material.locksAmbientWithDiffuse = true
                                 boxNode.geometry?.materials = [];
                                 boxNode.geometry?.firstMaterial = material
@@ -336,7 +336,7 @@ struct ScenekitSingleView_Previews: PreviewProvider {
         NavigationView {
             ScenekitSingleView(dataItem:[[[2,4,3], [6,4,1], [6,6,1]],
                                        [[2,3,3], [6,4,1], [7,4,5]],
-                                       [[2,2,3], [7,5,5], [7,7,5]]], colorWithText: getTextImageList())
+                                       [[2,2,3], [7,5,5], [7,7,5]]], textImageList: getTextImageList())
             .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
 
         }

@@ -85,10 +85,10 @@ class UserData: ObservableObject {
                 }
             }
             // 同步修改文字图片
-            self.colorTextImage = getTextImageList()
+            self.textImageList = getTextImageList()
         }
     }
-    var colorTextImage:[UIImage]
+    var textImageList:[UIImage]
     
     init() {
         // 默认颜色
@@ -123,7 +123,7 @@ class UserData: ObservableObject {
             }
         }
         // 赋值图片
-        self.colorTextImage = getTextImageList()
+        self.textImageList = getTextImageList()
     }
     
 

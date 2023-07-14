@@ -81,7 +81,7 @@ struct ConfigView: View {
             ScenekitSingleView(showType: .colorFul,
                                dataItem:configData,
                                colors: userData.colorSaveList,
-                               colorWithText: userData.colorTextImage
+                               textImageList: userData.textImageList
             )
             .frame(height: 500)
             Text("点击圆圈来修改块的颜色吧!").foregroundColor(.primary).font(.subheadline)
