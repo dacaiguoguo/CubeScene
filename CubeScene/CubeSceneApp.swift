@@ -29,7 +29,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 // 生成一次 优化效率
 func generateImage(color: UIColor, text: String) -> UIImage {
-    let size = CGSize(width: 200, height: 200)
+    let size = CGSize(width: 100, height: 100)
     let renderer = UIGraphicsImageRenderer(size: size)
 
     let image = renderer.image { context in
@@ -40,14 +40,13 @@ func generateImage(color: UIColor, text: String) -> UIImage {
         paragraphStyle.alignment = .center
 
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 96),
+            .font: UIFont.systemFont(ofSize: 46),
             .foregroundColor: UIColor.black,
             .paragraphStyle: paragraphStyle
         ]
 
         let attributedText = NSAttributedString(string: text, attributes: attributes)
-        let textRect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        attributedText.draw(in: textRect)
+        attributedText.draw(at: CGPoint(x: 35, y: 23))
     }
 
     return image
