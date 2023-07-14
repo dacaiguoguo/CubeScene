@@ -90,33 +90,42 @@ struct CubeSceneApp: App {
         WindowGroup {
             TabView {
                 NavigationView {
-                    EnterListView().navigationTitle("TitleName").navigationBarTitleDisplayMode(.inline)
+                    EnterListView(productList: produceData(resourceName: "SOMA108")).navigationTitle("TitleName").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
                             print("onAppear EnterListView !")
                         }.environmentObject(userData)
                 }
                 .navigationViewStyle(StackNavigationViewStyle()).tabItem {
                     Image(systemName: "cube")
-                    Text("关卡")
+                    Text("TabTitleName")
                 }.tag(0)
 
                 NavigationView {
                     EnterListView240().environmentObject(userData)
                         .navigationBarTitleDisplayMode(.inline)
-                        .navigationTitle("索玛立方体的各种解法")
+                        .navigationTitle("TitleName2")
                 }.tabItem {
                     Image(systemName: "cube.transparent")
-                    Text("立方体")
+                    Text("TabTitleName2")
                 }.tag(1)
-
+                NavigationView {
+                    EnterListView(productList: produceData(resourceName: "SOMAT101")).navigationTitle("TitleName3").navigationBarTitleDisplayMode(.inline)
+                        .onAppear {
+                            print("onAppear EnterListView !")
+                        }.environmentObject(userData)
+                }
+                .navigationViewStyle(StackNavigationViewStyle()).tabItem {
+                    Image(systemName: "scribble.variable")
+                    Text("TabTitleName3")
+                }.tag(2)
                 NavigationView {
                     SettingView().environmentObject(userData)
                         .navigationBarTitleDisplayMode(.inline)
-                        .navigationTitle("更多")
+                        .navigationTitle("TitleName4")
                 }.tabItem {
                     Image(systemName: "cube.transparent")
-                    Text("更多")
-                }.tag(2)
+                    Text("TabTitleName4")
+                }.tag(3)
             }
 
         }.onChange(of: scenePhase) { phase in

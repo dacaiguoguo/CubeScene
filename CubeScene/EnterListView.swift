@@ -21,15 +21,52 @@ extension EnterItem: Identifiable {
     }
 }
 
+func produceData(resourceName:String) -> [EnterItem]  {
+    let stringContent = try! String(contentsOf: Bundle.main.url(forResource: resourceName, withExtension: "txt")!, encoding: .utf8)
+    let firstArray = stringContent.components(separatedBy: "/SOMA")
+    let trimmingSet:CharacterSet = {
+        var triSet = CharacterSet.whitespacesAndNewlines
+        triSet.insert("/")
+        return triSet
+    }()
+    return firstArray.filter { item in
+        item.lengthOfBytes(using: .utf8) > 1
+    }.map { currentData in
+        let splitArray = currentData.trimmingCharacters(in: trimmingSet).split(separator: "\n")
+        let firstLine = splitArray.first?.trimmingCharacters(in: trimmingSet).trimmingCharacters(in: CharacterSet(charactersIn: "-"))
+        let parsedData = splitArray.dropFirst().filter { item in
+            item.hasPrefix("/")
+        }.map({ item in
+            item.trimmingCharacters(in: trimmingSet)
+        })
+
+        let separatorItem = Character("/")
+        var allset = Set<Int>()
+        // 非数字都解析成-1
+        let result = parsedData.map { item in
+            item.split(separator: separatorItem).map { subItem in
+                subItem.map { subSubItem in
+                    let ret = Int(String(subSubItem)) ?? -1
+                    if ret > 0 {
+                        allset.insert(ret)
+                    }
+                    return ret
+                }
+            }
+        }
+        let abl = allset.sorted(by: {$0 < $1})
+        if let name = firstLine {
+            return EnterItem(name: name, matrix: result, usedBlock: abl, isTaskComplete: UserDefaults.standard.bool(forKey: name))
+        } else {
+            return EnterItem(name: "无名", matrix: result, usedBlock: abl, isTaskComplete: false)
+        }
+    }
+}
+
+
 struct EnterListView: View {
     @EnvironmentObject var userData: UserData
-#if DEBUG
-//    static private var resourceName = "data1"
-    static private var resourceName = "SOMA101"
-#else
-    static private var resourceName = "SOMA101"
-#endif
-    @State var productList: [EnterItem] = produceData()
+    @State var productList: [EnterItem]
 
     var body: some View {
         List{
@@ -58,54 +95,12 @@ struct EnterListView: View {
 
         }
     }
-
-    static func produceData() -> [EnterItem]  {
-        let stringContent = try! String(contentsOf: Bundle.main.url(forResource: resourceName, withExtension: "txt")!, encoding: .utf8)
-        let firstArray = stringContent.components(separatedBy: "/SOMA")
-        let trimmingSet:CharacterSet = {
-            var triSet = CharacterSet.whitespacesAndNewlines
-            triSet.insert("/")
-            return triSet
-        }()
-        return firstArray.filter { item in
-            item.lengthOfBytes(using: .utf8) > 1
-        }.map { currentData in
-            let splitArray = currentData.trimmingCharacters(in: trimmingSet).split(separator: "\n")
-            let firstLine = splitArray.first?.trimmingCharacters(in: trimmingSet).trimmingCharacters(in: CharacterSet(charactersIn: "-"))
-            let parsedData = splitArray.dropFirst().filter { item in
-                item.hasPrefix("/")
-            }.map({ item in
-                item.trimmingCharacters(in: trimmingSet)
-            })
-
-            let separatorItem = Character("/")
-            var allset = Set<Int>()
-            // 非数字都解析成-1
-            let result = parsedData.map { item in
-                item.split(separator: separatorItem).map { subItem in
-                    subItem.map { subSubItem in
-                        let ret = Int(String(subSubItem)) ?? -1
-                        if ret > 0 {
-                            allset.insert(ret)
-                        }
-                        return ret
-                    }
-                }
-            }
-            let abl = allset.sorted(by: {$0 < $1})
-            if let name = firstLine {
-                return EnterItem(name: name, matrix: result, usedBlock: abl, isTaskComplete: UserDefaults.standard.bool(forKey: name))
-            } else {
-                return EnterItem(name: "无名", matrix: result, usedBlock: abl, isTaskComplete: false)
-            }
-        }
-    }
 }
 
 
 struct EnterListView_Previews: PreviewProvider {
     static var previews: some View {
-        EnterListView()
+        EnterListView(productList: produceData(resourceName: "SOMA101"))
 //        ZStack(alignment: .topLeading){
 //            // todo 显示当前image
 //            // Image(uiImage: UIImage(named: "c\(index)")!).resizable()
