@@ -83,15 +83,6 @@ public struct SettingView: View {
                         Image(systemName: "gear.circle")
                     }
                 }
-//                NavigationLink {
-//                    SettingView().environmentObject(userData)
-//                } label: {
-//                    HStack{
-//                        Text("帮助")
-//                        Spacer()
-//                        Image(systemName: "info.circle")
-//                    }
-//                }
             })
             Section(content: {
                 ForEach(channelLocalDataList) { channel in

@@ -84,7 +84,7 @@ public struct SingleContentView: View {
                         }
                     }
                     .padding()
-                    ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: userData.colorSaveList, imageName: dataModel.name)
+                    ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: userData.colorSaveList, colorWithText: userData.colorTextImage, imageName: dataModel.name)
                         .offset(viewOffset)
                 }
             }
@@ -155,6 +155,9 @@ struct ScenekitSingleView : UIViewRepresentable {
     let dataItem: Matrix3D
     let colors:[UIColor]
     let imageName:String
+    
+    let getColorWithText: [UIImage]
+    
     static let defaultColors = [
         UIColor.white,
         UIColor(hex: "FF8800"),
@@ -165,11 +168,12 @@ struct ScenekitSingleView : UIViewRepresentable {
         UIColor(hex: "28C76F"),
         UIColor.purple
     ]
-    init(showType: ShowType = .singleColor, dataItem: Matrix3D, colors:[UIColor] = defaultColors, imageName:String = "" ) {
+    init(showType: ShowType = .singleColor, dataItem: Matrix3D, colors:[UIColor] = defaultColors, colorWithText:[UIImage], imageName:String = "" ) {
         self.showType = showType
         self.dataItem = dataItem
         self.colors = colors
         self.imageName = imageName
+        self.getColorWithText = colorWithText
     }
 
 
@@ -186,26 +190,6 @@ struct ScenekitSingleView : UIViewRepresentable {
         return ret;
     }()
 
-
-    let colorImages:[UIImage] = [
-        UIImage(named: "1")!,
-        UIImage(named: "1")!,
-        UIImage(named: "2")!,
-        UIImage(named: "3")!,
-        UIImage(named: "4")!,
-        UIImage(named: "5")!,
-        UIImage(named: "6")!,
-        UIImage(named: "7")!,
-//        UIImage(named: "border2")!,
-//        UIImage(named: "border3")!,
-//        UIImage(named: "wenli3")!,
-//        UIImage(named: "wenli2")!,
-//        UIImage(named: "4")!,
-//        UIImage(named: "5")!,
-//        UIImage(named: "6")!,
-//        UIImage(named: "7")!,
-
-    ] // bottom
 
     func makeUIView(context: Context) -> SCNView {
         // retrieve the SCNView
@@ -259,39 +243,6 @@ struct ScenekitSingleView : UIViewRepresentable {
         return [materialFront, materialBack, materialLeft, materialRight, materialTop, materialBottom]
     }
 
-    func getColorWithText() -> [UIImage] {
-        colors.enumerated().map { (index, item) in
-            generateImage(color: item, text: "\(index)")
-        }
-    }
-    // TODO 生成一次 优化效率
-    func generateImage(color: UIColor, text: String) -> UIImage {
-        let size = CGSize(width: 200, height: 200)
-        let renderer = UIGraphicsImageRenderer(size: size)
-
-        let image = renderer.image { context in
-            color.setFill()
-            context.fill(CGRect(origin: .zero, size: size))
-  
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.alignment = .center
-
-            let attributes: [NSAttributedString.Key: Any] = [
-                .font: UIFont.systemFont(ofSize: 96),
-                .foregroundColor: UIColor.black,
-                .paragraphStyle: paragraphStyle
-            ]
-
-            let attributedText = NSAttributedString(string: text, attributes: attributes)
-            let textRect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-            attributedText.draw(in: textRect)
-        }
-
-        return image
-    }
-
-
-
     func updateUIView(_ scnView: SCNView, context: Context) {
         let countOfRow = dataItem.count
         let countOfLayer = dataItem.first?.count ?? -1
@@ -326,7 +277,7 @@ struct ScenekitSingleView : UIViewRepresentable {
                             case .number:
                                 let material = SCNMaterial()
 //                                material.diffuse.contents = colorImages[value]
-                                material.diffuse.contents = getColorWithText()[value]
+                                material.diffuse.contents = getColorWithText[value]
                                 material.locksAmbientWithDiffuse = true
                                 boxNode.geometry?.materials = [];
                                 boxNode.geometry?.firstMaterial = material
@@ -385,7 +336,7 @@ struct ScenekitSingleView_Previews: PreviewProvider {
         NavigationView {
             ScenekitSingleView(dataItem:[[[2,4,3], [6,4,1], [6,6,1]],
                                        [[2,3,3], [6,4,1], [7,4,5]],
-                                       [[2,2,3], [7,5,5], [7,7,5]]])
+                                       [[2,2,3], [7,5,5], [7,7,5]]], colorWithText: getTextImageList())
             .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
 
         }
