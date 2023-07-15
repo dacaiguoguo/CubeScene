@@ -12,7 +12,38 @@ struct EnterItem: Decodable {
     let name:String
     var matrix:Matrix3D
     var usedBlock: [Int]
+    var orderBlock: [Int]
     var isTaskComplete: Bool
+    /*
+     [[[2,4,3], [6,4,1], [6,6,1]],
+     [[2,3,3], [6,4,1], [7,4,5]],
+     [[2,2,3], [7,5,5], [7,7,5]]]
+     */
+    static func orderList(matrix:Matrix3D) -> [Int] {
+        guard matrix.count > 0 else {
+            return []
+        }
+        let countOfRow = matrix.count
+        let countOfLayer = matrix.first?.count ?? -1
+        let countOfColum = matrix.first?.first?.count ?? -1
+        var ret:[Int] = []
+        for y in (0..<countOfLayer).reversed() {
+            for x in (0..<countOfColum).reversed() {
+                for z in (0..<countOfRow).reversed() {
+                    let value = matrix[z][y][x];
+                    if value == -1 {
+                        continue
+                    }
+                    if !ret.contains(value) {
+                        ret.append(value)
+                    }
+                }
+            }
+            
+        }
+//        print("retorderlist:\(ret)")
+        return ret
+    }
 }
 
 extension EnterItem: Identifiable {
@@ -55,10 +86,11 @@ func produceData(resourceName:String) -> [EnterItem]  {
             }
         }
         let abl = allset.sorted(by: {$0 < $1})
+        let or = EnterItem.orderList(matrix: result)
         if let name = firstLine {
-            return EnterItem(name: name, matrix: result, usedBlock: abl, isTaskComplete: UserDefaults.standard.bool(forKey: name))
+            return EnterItem(name: name, matrix: result, usedBlock: abl, orderBlock: or, isTaskComplete: UserDefaults.standard.bool(forKey: name))
         } else {
-            return EnterItem(name: "无名", matrix: result, usedBlock: abl, isTaskComplete: false)
+            return EnterItem(name: "无名", matrix: result, usedBlock: abl, orderBlock: or, isTaskComplete: false)
         }
     }
 }
@@ -74,7 +106,7 @@ struct EnterListView: View {
                 let item = productList[index]
                 NavigationLink(destination: SingleContentView(dataModel: $productList[index]).environmentObject(userData)) {
                     HStack{
-                        ScenekitSingleView(dataItem: item.matrix, textImageList: userData.textImageList, imageName: item.name).frame(width: 180, height: 180)
+                        ScenekitSingleView(dataModel:item, showType: .singleColor, numberImageList: userData.textImageList).frame(width: 180, height: 180)
                             .padding(EdgeInsets(top: -20.0, leading: -50.0, bottom: -80.0, trailing: -50.0))
                             .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))
                             .disabled(true)
@@ -101,16 +133,5 @@ struct EnterListView: View {
 struct EnterListView_Previews: PreviewProvider {
     static var previews: some View {
         EnterListView(productList: produceData(resourceName: "SOMA101"))
-//        ZStack(alignment: .topLeading){
-//            // todo 显示当前image
-//            // Image(uiImage: UIImage(named: "c\(index)")!).resizable()
-//            Text("001")
-//            //                                .foregroundColor(Color.primary)
-//            //                                .frame(width: 100, height: 100)
-//            //                                .background(Color(uiColor: UIColor.lightGray))
-//            ScenekitSingleView(result: [[[2,4,3], [6,4,1], [6,6,1]],
-//                                        [[2,3,3], [6,4,1], [7,4,5]],
-//                                        [[2,2,3], [7,5,5], [7,7,5]]]).frame(width: 100, height: 100)
-//        }
     }
 }

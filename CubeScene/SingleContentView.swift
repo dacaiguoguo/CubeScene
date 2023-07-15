@@ -40,8 +40,8 @@ extension Matrix3D {
 }
 
 public struct SingleContentView: View {
-
-
+    
+    
     @State private var isOn = false
 #if DEBUG
     @State var showType:ShowType = .singleColor
@@ -49,16 +49,39 @@ public struct SingleContentView: View {
     @State var showType:ShowType = .singleColor
 #endif
     @State private var viewOffset = CGSize.zero
-
+    
     @Binding var dataModel: EnterItem
-
+    
     @State var isShowItems = true
-
+    
     @EnvironmentObject var userData: UserData
-
+    
     let imageSize = 40.0
+    @State var showColor:[Int] = []
+    @State private var value = 0
+   
 
+    func incrementStep() {
+        value += 1
+        if value > dataModel.orderBlock.count { value = 0 }
+        if value == 0 {
+            showColor = []
+        } else {
+            showColor = Array(dataModel.orderBlock[0 ..< value])
+        }
+    }
+    
+    func decrementStep() {
+        value -= 1
+        if value < 0 { value = dataModel.orderBlock.count }
+        if value == 0 {
+            showColor = []
+        } else {
+            showColor = Array(dataModel.orderBlock[0 ..< value])
+        }
 
+    }
+    
     public var body: some View {
         VStack {
             ZStack{
@@ -84,9 +107,19 @@ public struct SingleContentView: View {
                         }
                     }
                     .padding()
-                    ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: userData.colorSaveList, textImageList: userData.textImageList, imageName: dataModel.name)
-                        .offset(viewOffset)
+                    
+                    ScenekitSingleView(dataModel:dataModel,
+                                       showType: showType,
+                                       colors: userData.colorSaveList,
+                                       numberImageList: userData.textImageList,
+                                       showColor: showColor)
+                    .offset(viewOffset)
                 }
+            }
+            if showType == .colorFul {
+                Stepper("步骤\(value)", onIncrement: incrementStep, onDecrement: decrementStep)
+                    .padding(5)
+                    .background(Color.white)
             }
             if isShowItems {
                 Picker("显示模式", selection: $showType) {
@@ -111,6 +144,8 @@ public struct SingleContentView: View {
                 }
                 if isShowItems {
                     Button(action: {
+                        showColor.append(showColor.count)
+                        print("showColor\(showColor)")
                         dataModel.isTaskComplete.toggle()
                         UserDefaults.standard.set(dataModel.isTaskComplete, forKey: dataModel.name)
                         
@@ -125,7 +160,7 @@ public struct SingleContentView: View {
         }
     }
     
-
+    
     func handleButtonTapped(_ direction: Direction) {
         // 在此处处理按钮点击事件
         switch direction {
@@ -151,12 +186,11 @@ public struct SingleContentView: View {
 
 
 struct ScenekitSingleView : UIViewRepresentable {
+    var dataModel: EnterItem
     let showType:ShowType;
-    let dataItem: Matrix3D
     let colors:[UIColor]
-    let imageName:String
-    
-    let gettextImageList: [UIImage]
+    let numberImageList: [UIImage]
+    var showColor:[Int]
     
     static let defaultColors = [
         UIColor.white,
@@ -168,16 +202,22 @@ struct ScenekitSingleView : UIViewRepresentable {
         UIColor(hex: "28C76F"),
         UIColor.purple
     ]
-    init(showType: ShowType = .singleColor, dataItem: Matrix3D, colors:[UIColor] = defaultColors, textImageList:[UIImage], imageName:String = "" ) {
-        self.showType = showType
-        self.dataItem = dataItem
-        self.colors = colors
-        self.imageName = imageName
-        self.gettextImageList = textImageList
+    
+    var imageName:String {
+        dataModel.name
     }
-
-
-
+    var dataItem: Matrix3D {
+        dataModel.matrix
+    }
+    
+    init(dataModel: EnterItem, showType: ShowType = .singleColor, colors: [UIColor] = defaultColors, numberImageList: [UIImage], showColor: [Int] = []) {
+        self.dataModel = dataModel
+        self.showType = showType
+        self.colors = colors
+        self.numberImageList = numberImageList
+        self.showColor = showColor
+    }
+    
     let scene : SCNScene = {
         let ret = SCNScene();
         // 添加照相机
@@ -189,15 +229,15 @@ struct ScenekitSingleView : UIViewRepresentable {
         ret.rootNode.addChildNode(cameraNode)
         return ret;
     }()
-
-
+    
+    
     func makeUIView(context: Context) -> SCNView {
         // retrieve the SCNView
         let scnView = SCNView()
         let countOfRow = dataItem.count
         let countOfLayer = dataItem.first?.count ?? -1
         let countOfColum = dataItem.first?.first?.count ?? -1
-
+        
         for z in 0..<countOfRow {
             for y in 0..<countOfLayer {
                 for x in 0..<countOfColum {
@@ -221,33 +261,33 @@ struct ScenekitSingleView : UIViewRepresentable {
         scnView.backgroundColor = .clear
         return scnView
     }
-
+    
     func singleMaterial() -> [SCNMaterial] {
         let materialFront = SCNMaterial()
         materialFront.diffuse.contents = UIColor.lightGray
-
+        
         let materialBack = SCNMaterial()
         materialBack.diffuse.contents = UIColor.lightGray
-
+        
         let materialLeft = SCNMaterial()
         materialLeft.diffuse.contents = UIColor.lightGray
-
+        
         let materialRight = SCNMaterial()
         materialRight.diffuse.contents = UIColor.lightGray
-
+        
         let materialTop = SCNMaterial()
         materialTop.diffuse.contents = UIColor.white
-
+        
         let materialBottom = SCNMaterial()
         materialBottom.diffuse.contents = UIColor.white
         return [materialFront, materialBack, materialLeft, materialRight, materialTop, materialBottom]
     }
-
+    
     func updateUIView(_ scnView: SCNView, context: Context) {
         let countOfRow = dataItem.count
         let countOfLayer = dataItem.first?.count ?? -1
         let countOfColum = dataItem.first?.first?.count ?? -1
-
+        
         for z in 0..<countOfRow {
             for y in 0..<countOfLayer {
                 for x in 0..<countOfColum {
@@ -262,54 +302,57 @@ struct ScenekitSingleView : UIViewRepresentable {
                         for boxNode in boxNodes {
                             switch showType {
                             case .singleColor:
-//                                boxNode.geometry?.firstMaterial = nil
-//                                boxNode.geometry?.materials = singleMaterial()
+                                //                                boxNode.geometry?.firstMaterial = nil
+                                //                                boxNode.geometry?.materials = singleMaterial()
                                 let material = SCNMaterial()
                                 material.diffuse.contents = UIImage(named: "border")!
-//                                material.diffuse.contents = UIColor(red: 0.55, green: 0.44, blue: 0.34, alpha: 1.0) // 设置青铜材质的漫反射颜色
                                 boxNode.geometry?.firstMaterial = material
                             case .colorFul:
                                 let material = SCNMaterial()
-                                material.diffuse.contents = colors[value]
+                                if showColor.contains(value) {
+                                    material.diffuse.contents = colors[value]
+                                } else {
+                                    material.diffuse.contents = UIColor.clear
+                                }
+                                //                                material.diffuse.contents = colors[value]
                                 material.locksAmbientWithDiffuse = true
                                 boxNode.geometry?.materials = [];
                                 boxNode.geometry?.firstMaterial = material
                             case .number:
                                 let material = SCNMaterial()
-//                                material.diffuse.contents = colorImages[value]
-                                material.diffuse.contents = gettextImageList[value]
+                                material.diffuse.contents = numberImageList[value]
                                 material.locksAmbientWithDiffuse = true
                                 boxNode.geometry?.materials = [];
                                 boxNode.geometry?.firstMaterial = material
                             }
                         }
                     }
-
+                    
                 }
             }
         }
-//        TODO: 改成由变量控制，点击按钮生成图像
-//        辅助任务 保存图片到document 为了性能优化
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//            // 在此处执行您的任务
-//            let sss = scnView.snapshot()
-//            saveImageToDocumentDirectory(image:sss, fileName: imageName)
-//        }
+        //        TODO: 改成由变量控制，点击按钮生成图像
+        //        辅助任务 保存图片到document 为了性能优化
+        //        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        //            // 在此处执行您的任务
+        //            let sss = scnView.snapshot()
+        //            saveImageToDocumentDirectory(image:sss, fileName: imageName)
+        //        }
     }
-
+    
 }
 
 func saveImageToDocumentDirectory(image: UIImage, fileName: String) {
     guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
         return
     }
-
+    
     guard let imageData = image.pngData() else {
         return
     }
-
+    
     let fileURL = documentsDirectory.appendingPathComponent("\(fileName)@3x.png")
-
+    
     do {
         try imageData.write(to: fileURL)
         print("Image saved successfully. File path: \(fileURL)")
@@ -331,18 +374,20 @@ func saveImageToDocumentDirectory(image: UIImage, fileName: String) {
 //
 //    }
 //}
+
 struct ScenekitSingleView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ScenekitSingleView(dataItem:[[[2,4,3], [6,4,1], [6,6,1]],
-                                       [[2,3,3], [6,4,1], [7,4,5]],
-                                       [[2,2,3], [7,5,5], [7,7,5]]], textImageList: getTextImageList())
+            ScenekitSingleView(dataModel:EnterItem(name: "测试", matrix: [[[2,4,3], [6,4,1], [6,6,1]],
+                                                                        [[2,3,3], [6,4,1], [7,4,5]],
+                                                                        [[2,2,3], [7,5,5], [7,7,5]]], usedBlock: [1,2,3,4,5,6,7], orderBlock: [1,2,3,4,5,6,7], isTaskComplete: true),
+                               numberImageList: getTextImageList())
             .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
-
+            
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .previewDevice(PreviewDevice(rawValue: "iPhone SE"))
         .previewDisplayName("iPhone SE")
-
+        
     }
 }
