@@ -81,10 +81,12 @@ public struct SingleContentView: View {
         }
 
     }
+    @State private var isTimerRunning = false
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     public var body: some View {
         VStack {
-            ZStack{
+            ZStack(alignment:.bottomLeading) {
                 Image(uiImage: UIImage(named: "wenli7")!)
                     .resizable(resizingMode: .tile)
                 ZStack {
@@ -115,18 +117,39 @@ public struct SingleContentView: View {
                                        showColor: showColor)
                     .offset(viewOffset)
                 }
-            }
-            if showType == .colorFul {
-                Stepper("步骤\(value)", onIncrement: incrementStep, onDecrement: decrementStep)
-                    .padding(5)
+                if showType == .colorFul {
+                    HStack {
+                        Button(action: {
+                            isTimerRunning.toggle()
+                        }) {
+                            Text(isTimerRunning ? "暂停播放" : "自动播放")
+                                .font(.custom("Menlo", size: 18))
+                                .foregroundColor(.white)
+                                .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
+                                .background(isTimerRunning ? Color.red : Color.green)
+                                .cornerRadius(8)
+                        }.frame(height: 44.0)
+                        Spacer()
+                        Stepper("步骤\(value)", onIncrement: incrementStep, onDecrement: decrementStep)
+                            .padding(5)
+                            .background(Color.white)
+                    }
                     .background(Color.white)
+
+                }
             }
+           
             if isShowItems {
                 Picker("显示模式", selection: $showType) {
                     Text("彩色答案").tag(ShowType.colorFul)
                     Text("出题模式").tag(ShowType.singleColor)
                     Text("数字模式").tag(ShowType.number)
                 }.pickerStyle(.segmented)
+            }
+        }
+        .onReceive(timer) { _ in
+            if isTimerRunning {
+                incrementStep()
             }
         }
         .navigationTitle(dataModel.name)
