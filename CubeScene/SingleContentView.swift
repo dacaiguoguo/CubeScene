@@ -86,8 +86,11 @@ public struct SingleContentView: View {
                     }
                     .padding()
                     
-                    ScenekitSingleView(showType: showType, dataItem: dataModel.matrix, colors: userData.colorSaveList, imageName: dataModel.name,
-                                       numberImageList: userData.textImageList, showColor: $showColor)
+                    ScenekitSingleView(dataModel:dataModel,
+                                       showType: showType,
+                                       colors: userData.colorSaveList,
+                                       numberImageList: userData.textImageList,
+                                       showColor: $showColor)
                         .offset(viewOffset)
                 }
             }
@@ -156,10 +159,9 @@ public struct SingleContentView: View {
 
 
 struct ScenekitSingleView : UIViewRepresentable {
+    var dataModel: EnterItem
     let showType:ShowType;
-    let dataItem: Matrix3D
     let colors:[UIColor]
-    let imageName:String
     let numberImageList: [UIImage]
     @Binding var showColor:[Int]
 
@@ -173,16 +175,22 @@ struct ScenekitSingleView : UIViewRepresentable {
         UIColor(hex: "28C76F"),
         UIColor.purple
     ]
-
-//    init(showType: ShowType = .singleColor, dataItem: Matrix3D, colors: [UIColor] = defaultColors, imageName: String, numberImageList: [UIImage]) {
-//        self.showType = showType
-//        self.dataItem = dataItem
-//        self.colors = colors
-//        self.imageName = imageName
-//        self.numberImageList = numberImageList
-//    }
-//
-
+    
+    var imageName:String {
+        dataModel.name
+    }
+    var dataItem: Matrix3D {
+        dataModel.matrix
+    }
+    
+    init(dataModel: EnterItem, showType: ShowType = .singleColor, colors: [UIColor] = defaultColors, numberImageList: [UIImage], showColor: Binding<[Int]>) {
+        self.dataModel = dataModel
+        self.showType = showType
+        self.colors = colors
+        self.numberImageList = numberImageList
+        self._showColor = showColor
+    }
+    
     let scene : SCNScene = {
         let ret = SCNScene();
         // 添加照相机
