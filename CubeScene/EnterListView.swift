@@ -13,6 +13,33 @@ struct EnterItem: Decodable {
     var matrix:Matrix3D
     var usedBlock: [Int]
     var isTaskComplete: Bool
+    /*
+     [[[2,4,3], [6,4,1], [6,6,1]],
+     [[2,3,3], [6,4,1], [7,4,5]],
+     [[2,2,3], [7,5,5], [7,7,5]]]
+     */
+    func orderList() -> [Int] {
+        let countOfRow = matrix.count
+        let countOfLayer = matrix.first?.count ?? -1
+        let countOfColum = matrix.first?.first?.count ?? -1
+        var ret:[Int] = []
+        for y in (0..<countOfLayer).reversed() {
+            for x in (0..<countOfColum).reversed() {
+                for z in (0..<countOfRow).reversed() {
+                    let value = matrix[z][y][x];
+                    if value == -1 {
+                        continue
+                    }
+                    if !ret.contains(value) {
+                        ret.append(value)
+                    }
+                }
+            }
+            
+        }
+//        print("retorderlist:\(ret)")
+        return ret
+    }
 }
 
 extension EnterItem: Identifiable {

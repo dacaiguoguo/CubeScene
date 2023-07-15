@@ -19,10 +19,7 @@ struct Product {
 
 struct ProductDetailView: View {
     @Binding var product: Product
-    
-    init(<#parameters#>) {
-        <#statements#>
-    }
+
 
     var body: some View {
         VStack {
@@ -45,17 +42,34 @@ struct ProductDetailView: View {
 
 
 struct ContentView: View {
-    @State private var productList = [
-        Product(name: "Product 1", isFavorite: true),
-        Product(name: "Product 2", isFavorite: false),
-        Product(name: "Product 3", isFavorite: true)
-    ]
-
-    var body: some View {
-        NavigationView {
-            ProductListView(products: $productList)
+    @State private var age = 18 {
+        didSet {
+            print("age\(age)")
         }
     }
+
+    var body: some View {
+        VStack {
+//            Stepper("Enter your age", value: $age, in: 0...130)
+            Stepper("显示下一步", onIncrement: {
+                         age += 1
+                     }, onDecrement: {
+                         age -= 1
+                     })
+            Text("Your age is \(age)")
+        }
+    }
+//    @State private var productList = [
+//        Product(name: "Product 1", isFavorite: true),
+//        Product(name: "Product 2", isFavorite: false),
+//        Product(name: "Product 3", isFavorite: true)
+//    ]
+//
+//    var body: some View {
+//        NavigationView {
+//            ProductListView(products: $productList)
+//        }
+//    }
 }
 
 struct ProductListView: View {

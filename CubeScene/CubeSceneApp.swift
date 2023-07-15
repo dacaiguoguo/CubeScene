@@ -153,7 +153,8 @@ struct CubeSceneApp: App {
     }
 
     init() {
-        print("init app")
+        print("init app\(demo.orderList())")
+        
     }
    @State var demo = EnterItem(name: "测试", matrix: [[[2,4,3], [6,4,1], [6,6,1]],
                                                     [[2,3,3], [6,4,1], [7,4,5]],
@@ -161,7 +162,7 @@ struct CubeSceneApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                SingleContentView(dataModel:$demo)
+                SingleContentView(dataModel:$demo, showColor: [5])
                 .environmentObject(userData)
                 .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
 
