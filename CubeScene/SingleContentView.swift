@@ -122,13 +122,14 @@ public struct SingleContentView: View {
                         Button(action: {
                             isTimerRunning.toggle()
                         }) {
-                            Text(isTimerRunning ? "手动" : "自动")
+                            Text(isTimerRunning ? "暂停播放" : "自动播放")
                                 .font(.custom("Menlo", size: 18))
                                 .foregroundColor(.white)
                                 .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
                                 .background(isTimerRunning ? Color.red : Color.green)
                                 .cornerRadius(8)
                         }.frame(height: 44.0)
+                        Spacer()
                         Stepper("步骤\(value)", onIncrement: incrementStep, onDecrement: decrementStep)
                             .padding(5)
                             .background(Color.white)
