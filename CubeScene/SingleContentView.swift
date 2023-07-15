@@ -60,18 +60,26 @@ public struct SingleContentView: View {
     @State var showColor:[Int] = []
     @State private var value = 0
    
-    let colors: [Color] = [.orange, .red, .gray, .blue, .green,
-                           .purple, .pink, .yellow]
+
     func incrementStep() {
         value += 1
-        if value >= colors.count { value = 1 }
-        showColor = Array(dataModel.orderList()[0 ..< value])
+        if value > dataModel.orderBlock.count { value = 0 }
+        if value == 0 {
+            showColor = []
+        } else {
+            showColor = Array(dataModel.orderBlock[0 ..< value])
+        }
     }
     
     func decrementStep() {
         value -= 1
-        if value < 1 { value = colors.count - 1 }
-        showColor = Array(dataModel.orderList()[0 ..< value])
+        if value < 0 { value = dataModel.orderBlock.count }
+        if value == 0 {
+            showColor = []
+        } else {
+            showColor = Array(dataModel.orderBlock[0 ..< value])
+        }
+
     }
     
     public var body: some View {
@@ -104,11 +112,14 @@ public struct SingleContentView: View {
                                        showType: showType,
                                        colors: userData.colorSaveList,
                                        numberImageList: userData.textImageList,
-                                       showColor: $showColor)
+                                       showColor: showColor)
                     .offset(viewOffset)
-                    // Binding 的value 不响应 didset
-                    //                    Stepper("显示下一步", value: $age, in: 0...6)
                 }
+            }
+            if showType == .colorFul {
+                Stepper("步骤\(value)", onIncrement: incrementStep, onDecrement: decrementStep)
+                    .padding(5)
+                    .background(Color.white)
             }
             if isShowItems {
                 Picker("显示模式", selection: $showType) {
@@ -116,11 +127,6 @@ public struct SingleContentView: View {
                     Text("出题模式").tag(ShowType.singleColor)
                     Text("数字模式").tag(ShowType.number)
                 }.pickerStyle(.segmented)
-            }
-            if showType == .colorFul {
-                Stepper("步骤\(value)", onIncrement: incrementStep, onDecrement: decrementStep)
-                    .padding(5)
-                    .background(Color.white)
             }
         }
         .navigationTitle(dataModel.name)
@@ -184,7 +190,7 @@ struct ScenekitSingleView : UIViewRepresentable {
     let showType:ShowType;
     let colors:[UIColor]
     let numberImageList: [UIImage]
-    @Binding var showColor:[Int]
+    var showColor:[Int]
     
     static let defaultColors = [
         UIColor.white,
@@ -204,12 +210,12 @@ struct ScenekitSingleView : UIViewRepresentable {
         dataModel.matrix
     }
     
-    init(dataModel: EnterItem, showType: ShowType = .singleColor, colors: [UIColor] = defaultColors, numberImageList: [UIImage], showColor: Binding<[Int]>) {
+    init(dataModel: EnterItem, showType: ShowType = .singleColor, colors: [UIColor] = defaultColors, numberImageList: [UIImage], showColor: [Int] = []) {
         self.dataModel = dataModel
         self.showType = showType
         self.colors = colors
         self.numberImageList = numberImageList
-        self._showColor = showColor
+        self.showColor = showColor
     }
     
     let scene : SCNScene = {
@@ -300,7 +306,6 @@ struct ScenekitSingleView : UIViewRepresentable {
                                 //                                boxNode.geometry?.materials = singleMaterial()
                                 let material = SCNMaterial()
                                 material.diffuse.contents = UIImage(named: "border")!
-                                //                                material.diffuse.contents = UIColor(red: 0.55, green: 0.44, blue: 0.34, alpha: 1.0) // 设置青铜材质的漫反射颜色
                                 boxNode.geometry?.firstMaterial = material
                             case .colorFul:
                                 let material = SCNMaterial()
@@ -315,7 +320,6 @@ struct ScenekitSingleView : UIViewRepresentable {
                                 boxNode.geometry?.firstMaterial = material
                             case .number:
                                 let material = SCNMaterial()
-                                //                                material.diffuse.contents = colorImages[value]
                                 material.diffuse.contents = numberImageList[value]
                                 material.locksAmbientWithDiffuse = true
                                 boxNode.geometry?.materials = [];
@@ -370,17 +374,15 @@ func saveImageToDocumentDirectory(image: UIImage, fileName: String) {
 //
 //    }
 //}
+
 struct ScenekitSingleView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            //            ScenekitSingleView(dataItem:[[[2,4,3], [6,4,1], [6,6,1]],
-            //                                       [[2,3,3], [6,4,1], [7,4,5]],
-            //                                       [[2,2,3], [7,5,5], [7,7,5]]],
-            //                               imageName: "",
-            //                               numberImageList: getTextImageList(),
-            //            showColor: nil)
-            Text("11")
-                .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
+            ScenekitSingleView(dataModel:EnterItem(name: "测试", matrix: [[[2,4,3], [6,4,1], [6,6,1]],
+                                                                        [[2,3,3], [6,4,1], [7,4,5]],
+                                                                        [[2,2,3], [7,5,5], [7,7,5]]], usedBlock: [1,2,3,4,5,6,7], orderBlock: [1,2,3,4,5,6,7], isTaskComplete: true),
+                               numberImageList: getTextImageList())
+            .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
             
         }
         .navigationViewStyle(StackNavigationViewStyle())
