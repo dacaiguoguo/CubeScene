@@ -139,12 +139,7 @@ public struct SingleContentView: View {
             }
            
             if isShowItems {
-                Picker("显示模式", selection: Binding(get: {
-                    showType
-                }, set: {
-                    showType = $0;
-                    isTimerRunning = showType == .colorFul
-                })) {
+                Picker("显示模式", selection: $showType) {
                     Text("彩色答案").tag(ShowType.colorFul)
                     Text("出题模式").tag(ShowType.singleColor)
                     Text("数字模式").tag(ShowType.number)
