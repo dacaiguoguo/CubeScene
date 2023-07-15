@@ -162,7 +162,7 @@ struct CubeSceneApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                SingleContentView(dataModel:$demo, showColor: [5])
+                SingleContentView(dataModel:$demo, showColor: [])
                 .environmentObject(userData)
                 .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
 

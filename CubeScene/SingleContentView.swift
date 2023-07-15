@@ -120,7 +120,7 @@ public struct SingleContentView: View {
             if showType == .colorFul {
                 Stepper("步骤\(value)", onIncrement: incrementStep, onDecrement: decrementStep)
                     .padding(5)
-                    .background(colors[value])
+                    .background(Color.white)
             }
         }
         .navigationTitle(dataModel.name)
