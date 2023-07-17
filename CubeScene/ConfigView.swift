@@ -78,7 +78,8 @@ struct ConfigView: View {
     let configData2 = [[[2,2,3], [5,3,3], [5,4,3]], [[2,1,1], [5,5,6], [7,4,4]], [[2,6,1], [7,6,6], [7,7,4]]];
     var body: some View {
         VStack(alignment:.leading) {
-            ScenekitSingleView(dataModel:EnterItem(name: "测试", matrix: configData2, usedBlock: [1,2,3,4,5,6,7], orderBlock: [1,2,3,4,5,6,7], isTaskComplete: true),
+            ScenekitSingleView(dataModel:EnterItem(name: "测试",
+                                                   matrix: configData2,isTaskComplete: false),
                                showType: .colorFul,
                                numberImageList: getTextImageList(),
                                showColor: [1,2,3,4,5,6,7])
