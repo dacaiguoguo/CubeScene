@@ -14,6 +14,15 @@ struct EnterItem: Decodable {
     var usedBlock: [Int]
     var orderBlock: [Int]
     var isTaskComplete: Bool
+    
+    init(name: String, matrix: Matrix3D, isTaskComplete: Bool) {
+        self.name = name
+        self.matrix = matrix
+        let temp = EnterItem.orderList(matrix: matrix)
+        self.usedBlock = temp.sorted(by: {$0 < $1})
+        self.orderBlock = temp
+        self.isTaskComplete = isTaskComplete
+    }
     /*
      [[[2,4,3], [6,4,1], [6,6,1]],
      [[2,3,3], [6,4,1], [7,4,5]],
@@ -72,25 +81,20 @@ func produceData(resourceName:String) -> [EnterItem]  {
         })
 
         let separatorItem = Character("/")
-        var allset = Set<Int>()
         // 非数字都解析成-1
         let result = parsedData.map { item in
             item.split(separator: separatorItem).map { subItem in
                 subItem.map { subSubItem in
                     let ret = Int(String(subSubItem)) ?? -1
-                    if ret > 0 {
-                        allset.insert(ret)
-                    }
                     return ret
                 }
             }
         }
-        let abl = allset.sorted(by: {$0 < $1})
-        let or = EnterItem.orderList(matrix: result)
+    
         if let name = firstLine {
-            return EnterItem(name: name, matrix: result, usedBlock: abl, orderBlock: or, isTaskComplete: UserDefaults.standard.bool(forKey: name))
+            return EnterItem(name: name, matrix: result, isTaskComplete: UserDefaults.standard.bool(forKey: name))
         } else {
-            return EnterItem(name: "无名", matrix: result, usedBlock: abl, orderBlock: or, isTaskComplete: false)
+            return EnterItem(name: "无名", matrix: result, isTaskComplete: false)
         }
     }
 }
