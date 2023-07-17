@@ -216,14 +216,14 @@ struct ScenekitSingleView : UIViewRepresentable {
     var showColor:[Int]
     
     static let defaultColors = [
-        UIColor.white,
-        UIColor(hex: "FF8800"),
-        UIColor(hex: "0396FF"),
-        UIColor(hex: "EA5455"),
-        UIColor(hex: "7367F0"),
-        UIColor.gray,
-        UIColor(hex: "28C76F"),
-        UIColor.purple
+        UIColor(hex: "000000"),
+        UIColor(hex: "5B5B5B"),
+        UIColor(hex: "C25C1D"),
+        UIColor(hex: "FDC593"),
+        UIColor(hex: "FA2E34"),
+        UIColor(hex: "FB5BC2"),
+        UIColor(hex: "FCC633"),
+        UIColor(hex: "178E20")
     ]
     
     var imageName:String {
