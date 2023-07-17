@@ -75,14 +75,25 @@ class UserData: ObservableObject {
     
     init() {
         // 默认颜色
-        let array = [UIColor(hex: "000000"),
-                     UIColor(hex: "FF8800"),
-                     UIColor(hex: "0396FF"),
-                     UIColor(hex: "EA5455"),
-                     UIColor(hex: "7367F0"),
-                     UIColor.gray,
-                     UIColor(hex: "28C76F"),
-                     UIColor.purple];
+//        let array = [UIColor(hex: "000000"),
+//                     UIColor(hex: "FF8800"),
+//                     UIColor(hex: "0396FF"),
+//                     UIColor(hex: "EA5455"),
+//                     UIColor(hex: "7367F0"),
+//                     UIColor.gray,
+//                     UIColor(hex: "28C76F"),
+//                     UIColor.purple];
+
+        let array = [
+            UIColor(hex: "000000"),
+            UIColor(hex: "5B5B5B"),
+            UIColor(hex: "C25C1D"),
+            UIColor(hex: "FDC593"),
+            UIColor(hex: "FA2E34"),
+            UIColor(hex: "FB5BC2"),
+            UIColor(hex: "FCC633"),
+            UIColor(hex: "178E20")]
+
         // 根据颜色生成带数字的图片，写入ducument
         for (index, item) in array.enumerated() {
             UserDefaults.standard.register(defaults: ["block\(index)" : item.encode()!])
