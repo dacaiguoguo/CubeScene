@@ -42,7 +42,6 @@ public struct SingleContentView: View {
 #else
     @State var showType:ShowType = .singleColor
 #endif
-    @State private var viewOffset = CGSize.zero
     
     @Binding var dataModel: EnterItem
     
@@ -109,8 +108,9 @@ public struct SingleContentView: View {
                                        colors: userData.colorSaveList,
                                        numberImageList: userData.textImageList,
                                        showColor: showColor)
-                    .offset(viewOffset)
                 }
+//                .frame(width: 300.0, height: 300.0).border(Color.purple)
+
                 if showType == .colorFul {
                     HStack {
                         Button(action: {
@@ -173,29 +173,6 @@ public struct SingleContentView: View {
                         }.foregroundColor(dataModel.isTaskComplete ? .green : .gray)
                     }
                 }
-            }
-        }
-    }
-    
-    
-    func handleButtonTapped(_ direction: Direction) {
-        // 在此处处理按钮点击事件
-        switch direction {
-        case .up:
-            withAnimation {
-                viewOffset.height -= 10
-            }
-        case .down:
-            withAnimation {
-                viewOffset.height += 10
-            }
-        case .left:
-            withAnimation {
-                viewOffset.width -= 10
-            }
-        case .right:
-            withAnimation {
-                viewOffset.width += 10
             }
         }
     }

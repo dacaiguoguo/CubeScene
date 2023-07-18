@@ -51,22 +51,24 @@ struct ScenekitSingleView : UIViewRepresentable {
         let ret = SCNScene();
         // 添加照相机
         let camera = SCNCamera()
+        camera.focalLength = 60;
         let cameraNode = SCNNode()
         cameraNode.camera = camera
-        cameraNode.position = SCNVector3Make(-2, 10, 8)
-        cameraNode.eulerAngles = SCNVector3Make(-Float.pi/3.5, -Float.pi/7, 0) // 设置相机的旋转角度，这里是将场景绕 X 轴逆时针旋转 45 度
+        cameraNode.position = SCNVector3Make(-10.5, 8, 20)
+        cameraNode.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
         ret.rootNode.addChildNode(cameraNode)
         return ret;
     }()
-    
-    
+
+
     func makeUIView(context: Context) -> SCNView {
         // retrieve the SCNView
         let scnView = SCNView()
         let countOfRow = dataItem.count
         let countOfLayer = dataItem.first?.count ?? -1
         let countOfColum = dataItem.first?.first?.count ?? -1
-        
+        let parNode2 = SCNNode()
+
         for z in 0..<countOfRow {
             for y in 0..<countOfLayer {
                 for x in 0..<countOfColum {
@@ -79,11 +81,14 @@ struct ScenekitSingleView : UIViewRepresentable {
                     let boxNode2 = SCNNode()
                     boxNode2.geometry = box2
                     // 由于默认y朝向上的，所以要取负值
-                    boxNode2.position = SCNVector3Make(Float(x), Float(-y+3), Float(z))
-                    scene.rootNode.addChildNode(boxNode2)
+                    boxNode2.position = SCNVector3Make(Float(x), Float(-y), Float(z))
+                    parNode2.addChildNode(boxNode2)
                 }
             }
         }
+        parNode2.position = SCNVector3Make(Float(-1), Float(1), Float(1))
+//        parNode2.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
+        scene.rootNode.addChildNode(parNode2)
         scnView.scene = scene
         scnView.autoenablesDefaultLighting = true
         scnView.allowsCameraControl = true
@@ -125,7 +130,7 @@ struct ScenekitSingleView : UIViewRepresentable {
                         continue
                     }
                     if let boxNodes = scnView.scene?.rootNode.childNodes(passingTest: { node, _ in
-                        node.position == SCNVector3Make(Float(x), Float(-y+3), Float(z))
+                        node.position == SCNVector3Make(Float(x), Float(-y), Float(z))
                     }) {
                         // 输出符合条件的节点名称
                         for boxNode in boxNodes {
@@ -162,11 +167,11 @@ struct ScenekitSingleView : UIViewRepresentable {
         }
         //        TODO: 改成由变量控制，点击按钮生成图像
         //        辅助任务 保存图片到document 为了性能优化
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    // 在此处执行您的任务
-                    let sss = scnView.snapshot()
-                    saveImageToDocumentDirectory(image:sss, fileName: imageName)
-                }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+//            // 在此处执行您的任务
+//            let sss = scnView.snapshot()
+//            saveImageToDocumentDirectory(image:sss, fileName: imageName)
+//        }
     }
     
 }
