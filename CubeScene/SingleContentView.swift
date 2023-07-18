@@ -79,7 +79,7 @@ public struct SingleContentView: View {
     
     public var body: some View {
         VStack {
-            ZStack(alignment:.bottomLeading) {
+            ZStack() {
                 Image(uiImage: UIImage(named: "wenli7")!)
                     .resizable(resizingMode: .tile)
                 ZStack {

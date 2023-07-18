@@ -110,10 +110,10 @@ struct EnterListView: View {
                 let item = productList[index]
                 NavigationLink(destination: SingleContentView(dataModel: $productList[index]).environmentObject(userData)) {
                     HStack{
-                        ScenekitSingleView(dataModel:item, showType: .singleColor, numberImageList: userData.textImageList).frame(width: 180, height: 180)
-                            .padding(EdgeInsets(top: -20.0, leading: -50.0, bottom: -80.0, trailing: -50.0))
-                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))
-                            .disabled(true)
+//                        ScenekitSingleView(dataModel:item, showType: .singleColor, numberImageList: userData.textImageList).frame(width: 180, height: 180)
+//                            .padding(EdgeInsets(top: -20.0, leading: -50.0, bottom: -80.0, trailing: -50.0))
+//                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))
+//                            .disabled(true)
                         VStack(alignment: .leading){
                             Text(item.name).foregroundColor(.primary).font(.title2)
                                 .padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
