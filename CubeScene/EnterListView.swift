@@ -138,7 +138,7 @@ struct EnterListView: View {
             ForEach(productList.indices, id: \.self) { index in
                 let item = productList[index]
                 NavigationLink(destination: SingleContentView(dataModel: $productList[index]).environmentObject(userData)) {
-                    HStack(alignment: .center){
+                    HStack{
                         if let uiimage = UIImage(named: item.name) {
                             Image(uiImage: uiimage)
                                 .resizable(resizingMode: .stretch)
@@ -154,10 +154,16 @@ struct EnterListView: View {
 
                         VStack(alignment: .leading){
                             Text(item.name).foregroundColor(.primary).font(.title2)
-                                .padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
-                            HStack(alignment: .center) {
-                                Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
+                                .padding(EdgeInsets(top: 5.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
+                            HStack {
+                                if item.usedBlock.count < 7 && item.usedBlock.count > 1 {
+                                    let coun = item.usedBlock.count-1
+                                    ForEach(0..<coun) { _ in
+                                        Image(systemName:"star.fill").scaleEffect(CGSizeMake(0.8, 0.8)).foregroundColor(.yellow)
+                                    }
+                                }
                                 Text(LocalizedStringResource(stringLiteral: "\(item.isTaskComplete ? "Completed" : "ToDo")")).font(.subheadline)
+                                Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
                             }
                             .foregroundColor(item.isTaskComplete ? .green : blueColor)
                             .padding(EdgeInsets(top: 5.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
