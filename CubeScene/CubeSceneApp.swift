@@ -8,10 +8,9 @@
 // 国际化 部分完成
 // TODO: EnterListView 入口优化为图片
 // TODO: 增加240种演示动画
-// TODO: 增加难度星级标识和筛选
-// TODO: 增加单步骤动画
-// TODO: 限制x轴旋转角度 防止翻转 增加恢复位置按钮
-// TODO: 分为3个tab，第一个108种，第二个立方体的240种解法，第三个创意玩法，第四个我的（设置，关于入口）
+// TODO: 增加难度星级标识和筛选 简单
+// TODO: 增加单步骤动画 已经增加
+// TODO: 限制x轴旋转角度 防止翻转 增加恢复位置按钮 可以不做
 // ;https://www.fam-bundgaard.dk/SOMA/FIGURES/T101125.HTM
 
 import SwiftUI
@@ -85,7 +84,7 @@ struct CubeSceneApp: App {
                         .navigationBarTitleDisplayMode(.inline)
                         .navigationTitle("TitleName4")
                 }.navigationViewStyle(StackNavigationViewStyle()).tabItem {
-                    Image(systemName: "cube.transparent")
+                    Image(systemName: "ellipsis.circle")
                     Text("TabTitleName4")
                 }.tag(3)
             }
