@@ -92,7 +92,7 @@ class UserData: ObservableObject {
             UIColor(hex: "FA2E34"),
             UIColor(hex: "FB5BC2"),
             UIColor(hex: "FCC633"),
-            UIColor.white]
+            UIColor(hex: "178E20")]
 
         // 根据颜色生成带数字的图片，写入ducument
         for (index, item) in array.enumerated() {
