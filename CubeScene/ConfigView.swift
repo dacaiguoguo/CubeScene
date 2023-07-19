@@ -81,6 +81,7 @@ struct ConfigView: View {
             ScenekitSingleView(dataModel:EnterItem(name: "测试",
                                                    matrix: configData2,isTaskComplete: false),
                                showType: .colorFul,
+                               colors: userData.colorSaveList,
                                numberImageList: getTextImageList(),
                                showColor: [1,2,3,4,5,6,7])
             .frame(height: 500)

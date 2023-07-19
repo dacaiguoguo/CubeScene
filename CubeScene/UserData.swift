@@ -85,7 +85,7 @@ class UserData: ObservableObject {
 //                     UIColor.purple];
 
         let array = [
-            UIColor(hex: "000000"),
+            UIColor.black,
             UIColor(hex: "5B5B5B"),
             UIColor(hex: "C25C1D"),
             UIColor(hex: "FDC593"),
