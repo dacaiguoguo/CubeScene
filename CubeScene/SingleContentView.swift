@@ -164,16 +164,14 @@ public struct SingleContentView: View {
                 }
                 if isShowItems {
                     Button(action: {
-                        showColor.append(showColor.count)
-                        print("showColor\(showColor)")
                         dataModel.isTaskComplete.toggle()
                         UserDefaults.standard.set(dataModel.isTaskComplete, forKey: dataModel.name)
                         
                     }) {
                         HStack{
                             Image(systemName: dataModel.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
-                            Text("\(dataModel.isTaskComplete ? "已完成" : "待完成")")
-                        }.foregroundColor(dataModel.isTaskComplete ? .green : .gray)
+                            Text(LocalizedStringResource(stringLiteral: "\(dataModel.isTaskComplete ? "Completed" : "ToDo")"))
+                        }.foregroundColor(dataModel.isTaskComplete ? .green : Color(uiColor: UIColor(hex: "00bfff")))
                     }
                 }
             }

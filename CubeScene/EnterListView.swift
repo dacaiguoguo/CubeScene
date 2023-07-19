@@ -103,7 +103,7 @@ func produceData(resourceName:String) -> [EnterItem]  {
 struct EnterListView: View {
     @EnvironmentObject var userData: UserData
     @State var productList: [EnterItem]
-
+    let blueColor = Color(uiColor: UIColor(hex: "00bfff"));
     var body: some View {
         List{
             ForEach(productList.indices, id: \.self) { index in
@@ -115,11 +115,11 @@ struct EnterListView: View {
                                 .resizable(resizingMode: .stretch)
                                 .aspectRatio(contentMode: .fill).clipped()
                                 .frame(width: 100.0, height: 100.0, alignment: .center)
-                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))
+                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
                                 .disabled(true)
                         } else {
                             ScenekitSingleView(dataModel:item, showType: .singleColor, numberImageList: userData.textImageList).frame(width: 100, height: 100)
-                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))
+                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
                                 .disabled(true)
                         }
 
@@ -128,9 +128,9 @@ struct EnterListView: View {
                                 .padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
                             HStack(alignment: .center) {
                                 Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
-                                Text("\(item.isTaskComplete ? "已完成" : "待完成")").font(.subheadline)
+                                Text(LocalizedStringResource(stringLiteral: "\(item.isTaskComplete ? "Completed" : "ToDo")")).font(.subheadline)
                             }
-                            .foregroundColor(item.isTaskComplete ? .green : .gray)
+                            .foregroundColor(item.isTaskComplete ? .green : blueColor)
                             .padding(EdgeInsets(top: 5.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
 
                         }

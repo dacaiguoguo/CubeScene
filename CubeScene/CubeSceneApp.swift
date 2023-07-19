@@ -65,7 +65,8 @@ struct CubeSceneApp: App {
                     EnterListView240().environmentObject(userData)
                         .navigationBarTitleDisplayMode(.inline)
                         .navigationTitle("TitleName2")
-                }.tabItem {
+                }
+                .navigationViewStyle(StackNavigationViewStyle()).tabItem {
                     Image(systemName: "cube.transparent")
                     Text("TabTitleName2")
                 }.tag(1)
@@ -83,7 +84,7 @@ struct CubeSceneApp: App {
                     SettingView().environmentObject(userData)
                         .navigationBarTitleDisplayMode(.inline)
                         .navigationTitle("TitleName4")
-                }.tabItem {
+                }.navigationViewStyle(StackNavigationViewStyle()).tabItem {
                     Image(systemName: "cube.transparent")
                     Text("TabTitleName4")
                 }.tag(3)
