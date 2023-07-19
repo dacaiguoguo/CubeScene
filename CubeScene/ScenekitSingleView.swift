@@ -15,13 +15,14 @@ extension SCNVector3: Equatable {
 }
 
 struct ScenekitSingleView : UIViewRepresentable {
-    var dataModel: EnterItem
-    let showType:ShowType;
-    let colors:[UIColor]
-    let numberImageList: [UIImage]
-    var showColor:[Int]
-    
-    static let defaultColors = [
+    private let dataModel: EnterItem
+    private let showType:ShowType;
+    private let colors:[UIColor]
+    private let numberImageList: [UIImage]
+    private let showColor:[Int]
+    private let scene : SCNScene
+
+    private static let defaultColors = [
         UIColor(hex: "000000"),
         UIColor(hex: "5B5B5B"),
         UIColor(hex: "C25C1D"),
@@ -32,14 +33,14 @@ struct ScenekitSingleView : UIViewRepresentable {
         UIColor(hex: "178E20")
     ]
     
-    var imageName:String {
+    private var imageName:String {
         dataModel.name
     }
-    var dataItem: Matrix3D {
+    private var dataItem: Matrix3D {
         dataModel.matrix
     }
     
-    init(dataModel: EnterItem, showType: ShowType = .singleColor, colors: [UIColor] = defaultColors, numberImageList: [UIImage], showColor: [Int] = []) {
+    init(dataModel: EnterItem, showType: ShowType = .singleColor, colors: [UIColor] = defaultColors, numberImageList: [UIImage], showColor: [Int] = [], focalLength: CGFloat = 110) {
         self.dataModel = dataModel
         self.showType = showType
         self.colors = colors
@@ -48,7 +49,7 @@ struct ScenekitSingleView : UIViewRepresentable {
         let ret = SCNScene();
         // 添加照相机
         let camera = SCNCamera()
-        camera.focalLength = 110;
+        camera.focalLength = focalLength;
         let cameraNode = SCNNode()
         cameraNode.camera = camera
         cameraNode.position = SCNVector3Make(-10.5, 7.5, 20)
@@ -57,8 +58,6 @@ struct ScenekitSingleView : UIViewRepresentable {
         self.scene = ret
     }
     
-    let scene : SCNScene
-
 
     func makeUIView(context: Context) -> SCNView {
         // retrieve the SCNView
@@ -86,7 +85,8 @@ struct ScenekitSingleView : UIViewRepresentable {
             }
         }
         parNode2.position = SCNVector3Make(Float(-1), Float(1), Float(1))
-//        parNode2.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
+        // 旋转此节点回导致 用手势旋转时有偏轴现象
+        //        parNode2.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
         scene.rootNode.addChildNode(parNode2)
         scnView.scene = scene
         scnView.autoenablesDefaultLighting = true
@@ -94,7 +94,10 @@ struct ScenekitSingleView : UIViewRepresentable {
         scnView.backgroundColor = .clear
         return scnView
     }
-    
+
+
+    /// 单色时用的 效果不太好，改成切图了
+    /// - Returns: 各个面的颜色，上下白色，侧边灰色
     func singleMaterial() -> [SCNMaterial] {
         let materialFront = SCNMaterial()
         materialFront.diffuse.contents = UIColor.lightGray
@@ -166,11 +169,11 @@ struct ScenekitSingleView : UIViewRepresentable {
         }
         //        TODO: 改成由变量控制，点击按钮生成图像
         //        辅助任务 保存图片到document 为了性能优化
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            // 在此处执行您的任务
-            let sss = scnView.snapshot()
-            saveImageToDocumentDirectory(image:sss, fileName: imageName)
-        }
+        // DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+        //     // 在此处执行您的任务
+        //     let sss = scnView.snapshot()
+        //     saveImageToDocumentDirectory(image:sss, fileName: imageName)
+        // }
     }
     
 }
@@ -194,19 +197,6 @@ func saveImageToDocumentDirectory(image: UIImage, fileName: String) {
     }
 }
 
-//struct SingleContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NavigationView {
-//            SingleContentView(result:[[[2,4,3], [6,4,1], [6,6,1]],
-//                                      [[2,3,3], [6,4,1], [7,4,5]],
-//                                      [[2,2,3], [7,5,5], [7,7,5]]])
-//            .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
-//
-//        }
-//        .navigationViewStyle(StackNavigationViewStyle())
-//
-//    }
-//}
 
 struct ScenekitSingleView_Previews: PreviewProvider {
     static var previews: some View {

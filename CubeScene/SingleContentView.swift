@@ -79,7 +79,7 @@ public struct SingleContentView: View {
     
     public var body: some View {
         VStack {
-            ZStack() {
+            ZStack(alignment: .bottomLeading) {
                 Image(uiImage: UIImage(named: "wenli7")!)
                     .resizable(resizingMode: .tile)
                 ZStack {
@@ -107,9 +107,11 @@ public struct SingleContentView: View {
                                        showType: showType,
                                        colors: userData.colorSaveList,
                                        numberImageList: userData.textImageList,
-                                       showColor: showColor)
+                                       showColor: showColor,
+                                       focalLength: 40)
                 }
-//                .frame(width: 300.0, height: 300.0).border(Color.purple)
+                // 用来生成正方形的切图的
+                // .frame(width: 300.0, height: 300.0).border(Color.purple)
 
                 if showType == .colorFul {
                     HStack {
@@ -122,7 +124,7 @@ public struct SingleContentView: View {
                                 .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
                                 .background(isTimerRunning ? Color.red : Color.green)
                                 .cornerRadius(8)
-                        }.frame(height: 44.0)
+                        }.frame(height: 44.0).padding(EdgeInsets(top: 5, leading: 8, bottom: 5, trailing: 5))
                         Spacer()
                         Stepper("步骤\(value)", onIncrement: incrementStep, onDecrement: decrementStep)
                             .padding(5)
