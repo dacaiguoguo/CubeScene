@@ -110,12 +110,19 @@ struct EnterListView: View {
                 let item = productList[index]
                 NavigationLink(destination: SingleContentView(dataModel: $productList[index]).environmentObject(userData)) {
                     HStack(alignment: .center){
-                        Image(uiImage: UIImage(named: item.name) ?? UIImage(named: "Cube")!)
-                            .resizable(resizingMode: .stretch)
-                            .aspectRatio(contentMode: .fill).clipped()
-                            .frame(width: 100.0, height: 100.0, alignment: .center)
-                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))
-                            .disabled(true)
+                        if let uiimage = UIImage(named: item.name) {
+                            Image(uiImage: uiimage)
+                                .resizable(resizingMode: .stretch)
+                                .aspectRatio(contentMode: .fill).clipped()
+                                .frame(width: 100.0, height: 100.0, alignment: .center)
+                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))
+                                .disabled(true)
+                        } else {
+                            ScenekitSingleView(dataModel:item, showType: .singleColor, numberImageList: userData.textImageList).frame(width: 100, height: 100)
+                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))
+                                .disabled(true)
+                        }
+
                         VStack(alignment: .leading){
                             Text(item.name).foregroundColor(.primary).font(.title2)
                                 .padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))

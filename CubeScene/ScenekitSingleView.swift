@@ -45,9 +45,6 @@ struct ScenekitSingleView : UIViewRepresentable {
         self.colors = colors
         self.numberImageList = numberImageList
         self.showColor = showColor
-    }
-    
-    let scene : SCNScene = {
         let ret = SCNScene();
         // 添加照相机
         let camera = SCNCamera()
@@ -57,8 +54,10 @@ struct ScenekitSingleView : UIViewRepresentable {
         cameraNode.position = SCNVector3Make(-10.5, 7.5, 20)
         cameraNode.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
         ret.rootNode.addChildNode(cameraNode)
-        return ret;
-    }()
+        self.scene = ret
+    }
+    
+    let scene : SCNScene
 
 
     func makeUIView(context: Context) -> SCNView {

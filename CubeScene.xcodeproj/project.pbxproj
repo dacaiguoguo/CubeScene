@@ -175,7 +175,6 @@
 				9DDEC0D12A6178DF001A0046 /* SOMAT101.txt */,
 				9DF9380A2A417BA4001BD720 /* data1.txt */,
 				9DF9380C2A417BA4001BD720 /* data2.txt */,
-				9DF9EFA22A66BF2D00F62156 /* AImages */,
 				9DF938102A417BAD001BD720 /* data3.txt */,
 				9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */,
 				59CFCD422A6281F700E38F38 /* UserData.swift */,
@@ -203,13 +202,6 @@
 				9DF920732A404BBF001BD720 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		9DF9EFA22A66BF2D00F62156 /* AImages */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = AImages;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
