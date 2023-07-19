@@ -85,14 +85,14 @@ class UserData: ObservableObject {
 //                     UIColor.purple];
 
         let array = [
-            UIColor(hex: "000000"),
+            UIColor.black,
             UIColor(hex: "5B5B5B"),
             UIColor(hex: "C25C1D"),
             UIColor(hex: "FDC593"),
             UIColor(hex: "FA2E34"),
             UIColor(hex: "FB5BC2"),
             UIColor(hex: "FCC633"),
-            UIColor(hex: "178E20")]
+            UIColor.white]
 
         // 根据颜色生成带数字的图片，写入ducument
         for (index, item) in array.enumerated() {

@@ -51,7 +51,7 @@ struct CubeSceneApp: App {
             //            .navigationViewStyle(StackNavigationViewStyle())
             TabView {
                 NavigationView {
-                    EnterListView(productList: produceData(resourceName: "SOMA108")).navigationTitle("TitleName").navigationBarTitleDisplayMode(.inline)
+                    EnterListView(productList: produceData(resourceName: "data3")).navigationTitle("TitleName").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
                             print("onAppear EnterListView !")
                         }.environmentObject(userData)

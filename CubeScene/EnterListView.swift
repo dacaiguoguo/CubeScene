@@ -85,8 +85,37 @@ func produceData(resourceName:String) -> [EnterItem]  {
         let result = parsedData.map { item in
             item.split(separator: separatorItem).map { subItem in
                 subItem.map { subSubItem in
+                    if subSubItem == "," {
+                        return -1;
+                    }
+                    if subSubItem == ";" {
+                        return 0;
+                    }
+                    if subSubItem == "@" {
+                        return 7;
+                    }
+                    if subSubItem == "." {
+                        return 1;
+                    }
+                    if subSubItem == "-" {
+                        return 2;
+                    }
+                    if subSubItem == ":" {
+                        return 3;
+                    }
+                    if subSubItem == "+" {
+                        return 4;
+                    }
+                    if subSubItem == "=" {
+                        return 5;
+                    }
+                    if subSubItem == "#" {
+                        return 3;
+                    }
+
+//                        .-:+*=
                     let ret = Int(String(subSubItem)) ?? -1
-                    return ret
+                    return ret % 7
                 }
             }
         }
