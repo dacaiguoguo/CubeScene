@@ -113,8 +113,7 @@ struct ConfigView: View {
                     var colorSaveListtemp = userData.colorSaveList;
                     colorSaveListtemp[item.index] = UIColor($0);
                     userData.colorSaveList = colorSaveListtemp;
-                }))
-                    .frame(width: 60, height: 44)
+                })).frame(width: 60, height: 44)
             }
         }.overlay(
             RoundedRectangle(cornerRadius: 8)
