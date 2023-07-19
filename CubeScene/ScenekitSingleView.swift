@@ -22,16 +22,7 @@ struct ScenekitSingleView : UIViewRepresentable {
     private let showColor:[Int]
     private let scene : SCNScene
 
-    private static let defaultColors = [
-        UIColor(hex: "000000"),
-        UIColor(hex: "5B5B5B"),
-        UIColor(hex: "C25C1D"),
-        UIColor(hex: "FDC593"),
-        UIColor(hex: "FA2E34"),
-        UIColor(hex: "FB5BC2"),
-        UIColor(hex: "FCC633"),
-        UIColor(hex: "178E20")
-    ]
+   
     
     private var imageName:String {
         dataModel.name
@@ -40,7 +31,7 @@ struct ScenekitSingleView : UIViewRepresentable {
         dataModel.matrix
     }
     
-    init(dataModel: EnterItem, showType: ShowType = .singleColor, colors: [UIColor] = defaultColors, numberImageList: [UIImage], showColor: [Int] = [], focalLength: CGFloat = 110) {
+    init(dataModel: EnterItem, showType: ShowType = .singleColor, colors: [UIColor], numberImageList: [UIImage], showColor: [Int] = [], focalLength: CGFloat = 110) {
         self.dataModel = dataModel
         self.showType = showType
         self.colors = colors
@@ -205,6 +196,14 @@ struct ScenekitSingleView_Previews: PreviewProvider {
                                                                         [[2,3,3], [6,4,1], [7,4,5]],
                                                                         [[2,2,3], [7,5,5], [7,7,5]]],
                                                    isTaskComplete: true),
+                               colors: [UIColor(hex: "000000"),
+                                                UIColor(hex: "5B5B5B"),
+                                                UIColor(hex: "C25C1D"),
+                                                UIColor(hex: "2788e7"),
+                                                UIColor(hex: "FA2E34"),
+                                                UIColor(hex: "FB5BC2"),
+                                                UIColor(hex: "FCC633"),
+                                                UIColor(hex: "178E20")],
                                numberImageList: getTextImageList())
             .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
             

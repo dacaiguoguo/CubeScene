@@ -147,7 +147,7 @@ struct EnterListView: View {
                                 .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
                                 .disabled(true)
                         } else {
-                            ScenekitSingleView(dataModel:item, showType: .singleColor, numberImageList: userData.textImageList).frame(width: 100, height: 100)
+                            ScenekitSingleView(dataModel:item, showType: .singleColor, colors: userData.colorSaveList, numberImageList: userData.textImageList).frame(width: 100, height: 100)
                                 .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
                                 .disabled(true)
                         }
