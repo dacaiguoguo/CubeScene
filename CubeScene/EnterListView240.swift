@@ -14,6 +14,7 @@ struct EnterListView240: View {
 
 
     @State var productList: [EnterItem] = produceData()
+    let blueColor = Color(uiColor: UIColor(hex: "00bfff"));
 
     var body: some View {
         List{
@@ -21,8 +22,11 @@ struct EnterListView240: View {
                 let item = productList[index]
                 NavigationLink(destination: SingleContentView(showType:.colorFul, dataModel: $productList[index], isShowItems: false).environmentObject(userData)) {
                     HStack{
-                        Image("Cube").frame(width: 80, height: 80)
-                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))
+//                        Image("Cube").frame(width: 80, height: 80)
+//                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))
+//                            .disabled(true)
+                        ScenekitSingleView(dataModel:item, showType: .colorFul, numberImageList: userData.textImageList, showColor: [1, 2, 3, 4, 5, 6, 7]).frame(width: 100, height: 100)
+                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
                             .disabled(true)
                         VStack(alignment: .leading){
                             Text(item.name).foregroundColor(.primary).font(.title2)
