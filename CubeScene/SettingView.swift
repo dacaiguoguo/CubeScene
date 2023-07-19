@@ -78,7 +78,7 @@ public struct SettingView: View {
                     ConfigView().environmentObject(userData)
                 } label: {
                     HStack{
-                        Text("设置")
+                        Text("TitleSetting")
                         Spacer()
                         Image(systemName: "gear.circle")
                     }

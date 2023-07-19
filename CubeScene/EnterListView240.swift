@@ -73,7 +73,7 @@ struct EnterListView240: View {
 
         return (jsonContentData as! [[[[Int]]]]).enumerated().map { index, item in
             
-            return EnterItem(name: "第\(index+1)种", matrix: item, usedBlock: [1,2,3,4,5,6,7], orderBlock: EnterItem.orderList(matrix: item),isTaskComplete: false)
+            return EnterItem(name: "第\(index+1)种", matrix: item,isTaskComplete: false)
         }
     }
 }

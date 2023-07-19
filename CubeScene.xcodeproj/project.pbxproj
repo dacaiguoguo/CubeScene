@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5934F66B2A65038B00AED0E9 /* ScenekitSingleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5934F66A2A65038B00AED0E9 /* ScenekitSingleView.swift */; };
+		5934F66C2A65038B00AED0E9 /* ScenekitSingleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5934F66A2A65038B00AED0E9 /* ScenekitSingleView.swift */; };
 		59524DB82A60FC590078EBB6 /* CubeSceneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */; };
 		59524DB92A60FC5C0078EBB6 /* EnterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04123B2A516AD30083741B /* EnterListView.swift */; };
 		59524DBA2A60FC5F0078EBB6 /* SingleContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04123D2A516F050083741B /* SingleContentView.swift */; };
@@ -72,6 +74,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5934F66A2A65038B00AED0E9 /* ScenekitSingleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenekitSingleView.swift; sourceTree = "<group>"; };
 		5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayTool3D.swift; sourceTree = "<group>"; };
 		59CFCD422A6281F700E38F38 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		9D04123B2A516AD30083741B /* EnterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterListView.swift; sourceTree = "<group>"; };
@@ -179,6 +182,7 @@
 				9DDEC0C52A614716001A0046 /* EnterListView240.swift */,
 				9DDEC0CA2A614D47001A0046 /* solutionsMaped.json */,
 				9D04123D2A516F050083741B /* SingleContentView.swift */,
+				5934F66A2A65038B00AED0E9 /* ScenekitSingleView.swift */,
 				9DBE04FB2A57D7BC0055AE14 /* Localizable.strings */,
 				9DBE04F52A57D6560055AE14 /* InfoPlist.strings */,
 				9D0412452A529EC90083741B /* ArrowButtonView.swift */,
@@ -320,6 +324,7 @@
 			files = (
 				59524DBE2A60FC760078EBB6 /* ArrayTool3D.swift in Sources */,
 				59524DB82A60FC590078EBB6 /* CubeSceneApp.swift in Sources */,
+				5934F66C2A65038B00AED0E9 /* ScenekitSingleView.swift in Sources */,
 				59524DB92A60FC5C0078EBB6 /* EnterListView.swift in Sources */,
 				59CFCD442A62824000E38F38 /* UserData.swift in Sources */,
 				59524DC02A60FC7D0078EBB6 /* ConfigView.swift in Sources */,
@@ -336,6 +341,7 @@
 			files = (
 				5971BA8C2A50547800CD6111 /* ArrayTool3D.swift in Sources */,
 				9DBE04F02A56ECB70055AE14 /* ConfigView.swift in Sources */,
+				5934F66B2A65038B00AED0E9 /* ScenekitSingleView.swift in Sources */,
 				9D04123E2A516F050083741B /* SingleContentView.swift in Sources */,
 				59CFCD432A6281F700E38F38 /* UserData.swift in Sources */,
 				9D0412462A529EC90083741B /* ArrowButtonView.swift in Sources */,
