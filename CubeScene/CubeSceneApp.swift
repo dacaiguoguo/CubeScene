@@ -84,7 +84,7 @@ struct CubeSceneApp: App {
                         .navigationBarTitleDisplayMode(.inline)
                         .navigationTitle("TitleName4")
                 }.navigationViewStyle(StackNavigationViewStyle()).tabItem {
-                    Image(systemName: "cube.transparent")
+                    Image(systemName: "ellipsis.circle")
                     Text("TabTitleName4")
                 }.tag(3)
             }

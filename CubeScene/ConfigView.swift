@@ -83,7 +83,7 @@ struct ConfigView: View {
                                showType: .colorFul,
                                colors: userData.colorSaveList,
                                numberImageList: getTextImageList(),
-                               showColor: [1,2,3,4,5,6,7])
+                               showColor: [1,2,3,4,5,6,7],focalLength: 50)
             .frame(height: 500)
             Text("点击圆圈来修改块的颜色吧!").foregroundColor(.primary).font(.subheadline)
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 60))]) {
