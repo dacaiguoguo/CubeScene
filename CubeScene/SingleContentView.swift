@@ -166,7 +166,6 @@ public struct SingleContentView: View {
                     Button(action: {
                         dataModel.isTaskComplete.toggle()
                         UserDefaults.standard.set(dataModel.isTaskComplete, forKey: dataModel.name)
-                        
                     }) {
                         HStack{
                             Image(systemName: dataModel.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
