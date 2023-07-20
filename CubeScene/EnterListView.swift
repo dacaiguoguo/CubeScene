@@ -135,7 +135,7 @@ func produceData(resourceName:String) -> [EnterItem]  {
                 }
             }
         }
-    
+
         if let name = firstLine {
             return EnterItem(name: name, matrix: result, isTaskComplete: UserDefaults.standard.bool(forKey: name))
         } else {
@@ -154,38 +154,36 @@ struct EnterListView: View {
             ForEach(productList.indices, id: \.self) { index in
                 let item = productList[index]
                 NavigationLink(destination: SingleContentView(dataModel: $productList[index]).environmentObject(userData)) {
-                    HStack{
-                        if let uiimage = UIImage(named: item.name) {
-                            Image(uiImage: uiimage)
-                                .resizable(resizingMode: .stretch)
-                                .aspectRatio(contentMode: .fill).clipped()
-                                .frame(width: 100.0, height: 100.0, alignment: .center)
-                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
-                                .disabled(true)
-                        } else {
-                            ScenekitSingleView(dataModel:item, showType: .singleColor, colors: userData.colorSaveList, numberImageList: userData.textImageList).frame(width: 100, height: 100)
-                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
-                                .disabled(true)
-                        }
-
-                        VStack(alignment: .leading){
-                            Text(item.name).foregroundColor(.primary).font(.title2)
-                                .padding(EdgeInsets(top: 5.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
-                            HStack {
-                                ForEach(0..<item.level, id: \.self) { _ in
-                                    Image(systemName:"star.fill").scaleEffect(CGSizeMake(0.8, 0.8)).foregroundColor(.yellow)
-                                }
-                                Text(LocalizedStringResource(stringLiteral: "\(item.isTaskComplete ? "Completed" : "ToDo")")).font(.subheadline)
-                                Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
+                    if let uiimage = UIImage(named: item.name) {
+                        Image(uiImage: uiimage)
+                            .resizable(resizingMode: .stretch)
+                            .aspectRatio(contentMode: .fill).clipped()
+                            .frame(width: 100.0, height: 100.0, alignment: .center)
+                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
+                            .disabled(true)
+                    } else {
+                        ScenekitSingleView(dataModel:item, showType: .singleColor, colors: userData.colorSaveList, numberImageList: userData.textImageList).frame(width: 100, height: 100)
+                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
+                            .disabled(true)
+                    }
+                    Spacer(minLength: 12.0)
+                    VStack(alignment: .leading){
+                        Text("\(item.name)").padding(EdgeInsets(top: 0, leading: 0, bottom: 8, trailing: 0))
+                        HStack {
+                            ForEach(0..<item.level, id: \.self) { _ in
+                                Image(systemName:"star.fill").scaleEffect(CGSizeMake(0.8, 0.8)).foregroundColor(.yellow)
                             }
-                            .foregroundColor(item.isTaskComplete ? .green : blueColor)
-                            .padding(EdgeInsets(top: 5.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
+                        }.padding(EdgeInsets(top: 0, leading: 0, bottom: 8, trailing: 0))
 
-                        }
+                        Text("\(LocalizedStringResource(stringLiteral: "\(item.isTaskComplete ? "Completed" : "ToDo")")) ")
+                            .font(.subheadline)
+                        +
+                        Text(Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle"))
+                            .font(.subheadline)
+                            .foregroundColor(item.isTaskComplete ? .green : .pink)
                     }
                 }
             }
-
         }
     }
 }
