@@ -9,17 +9,16 @@ import SwiftUI
 
 struct Product {
     var name: String
-    var isFavorite: Bool
-
+    var isTaskComplete: Bool
+    let level: Int
     mutating func toggleFavorite() {
-        isFavorite.toggle()
+        isTaskComplete.toggle()
     }
 }
 
 
 struct ProductDetailView: View {
     @Binding var product: Product
-
 
     var body: some View {
         VStack {
@@ -28,7 +27,7 @@ struct ProductDetailView: View {
             Button(action: {
                 product.toggleFavorite()
             }) {
-                if product.isFavorite {
+                if product.isTaskComplete {
                     Image(systemName: "star.fill")
                         .foregroundColor(.yellow)
                 } else {
@@ -42,86 +41,52 @@ struct ProductDetailView: View {
 
 
 struct ContentView: View {
-    @State private var counter = 0
-    @State private var isTimerRunning = true
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State private var productList = [
+        Product(name: "Product 1", isTaskComplete: true, level: 3),
+        Product(name: "Product 2", isTaskComplete: false, level: 4),
+        Product(name: "Product 3", isTaskComplete: true, level: 5),
+    ]
 
     var body: some View {
-        VStack {
-            Text("Counter: \(counter)")
-                .font(.largeTitle)
-            
-            Button(action: {
-                isTimerRunning.toggle()
-            }) {
-                Text(isTimerRunning ? "暂停" : "继续")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(isTimerRunning ? Color.red : Color.green)
-                    .cornerRadius(10)
-            }
-        }
-        .onReceive(timer) { _ in
-            if isTimerRunning {
-                counter += 1
-            }
+        NavigationView {
+            ProductListView(products: $productList)
         }
     }
-    
-//    @State private var age = 18 {
-//        didSet {
-//            print("age\(age)")
-//        }
-//    }
-//
-//    var body: some View {
-//        VStack {
-////            Stepper("Enter your age", value: $age, in: 0...130)
-//            Stepper("显示下一步", onIncrement: {
-//                         age += 1
-//                     }, onDecrement: {
-//                         age -= 1
-//                     })
-//            Text("Your age is \(age)")
-//        }
-//    }
-//    @State private var productList = [
-//        Product(name: "Product 1", isFavorite: true),
-//        Product(name: "Product 2", isFavorite: false),
-//        Product(name: "Product 3", isFavorite: true)
-//    ]
-//
-//    var body: some View {
-//        NavigationView {
-//            ProductListView(products: $productList)
-//        }
-//    }
 }
 
 struct ProductListView: View {
     @Binding var products: [Product]
+    let blueColor = Color(uiColor: UIColor.blue);
+    let rows = [GridItem(.fixed(20)), GridItem(.fixed(20))]
 
     var body: some View {
         List {
             ForEach(products.indices, id: \.self) { index in
-                let product = products[index]
+                let item = products[index]
 
                 NavigationLink {
                     ProductDetailView(product: $products[index])
                 } label: {
-                    HStack {
-                        Text(product.name)
-                        if product.isFavorite {
-                            Image(systemName: "star.fill")
-                                .foregroundColor(.yellow)
-                        } else {
-                            Image(systemName: "star")
-                                .foregroundColor(.gray)
+                    Image("Cube")
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
+                        .scaleEffect(CGSize(width: 1.0, height: 1.0))
+                        .disabled(true)
+                    Spacer(minLength: 12.0)
+                    VStack(alignment: .leading){
+                        Text("\(item.name)")
+                        HStack {
+                            ForEach(0..<item.level, id: \.self) { _ in
+                                Image(systemName:"star.fill").scaleEffect(CGSizeMake(0.8, 0.8)).foregroundColor(.yellow)
+                            }
                         }
+                        Text("\(LocalizedStringResource(stringLiteral: "\(item.isTaskComplete ? "Completed" : "ToDo")")) ")
+                            .font(.subheadline)
+                        +
+                        Text(Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle"))
+                            .font(.subheadline)
+                            .foregroundColor(item.isTaskComplete ? .green : .pink)
                     }
                 }
-
             }
         }
     }
