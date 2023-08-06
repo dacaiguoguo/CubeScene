@@ -81,7 +81,15 @@ struct ConfigView: View {
     @State private var configData2 = [[[2,2,3], [5,3,3], [5,4,3]], [[2,1,1], [5,5,6], [7,4,4]], [[2,6,1], [7,6,6], [7,7,4]]];
     var body: some View {
         VStack(alignment:.leading) {
-            HStack{
+           
+            ScenekitSingleView(dataModel:EnterItem(name: "测试",
+                                                   matrix: configData2,isTaskComplete: false),
+                               showType: .colorFul,
+                               colors: userData.colorSaveList,
+                               numberImageList: getTextImageList(),
+                               showColor: [1,2,3,4,5,6,7],focalLength: 50)
+            .frame(height: 500)
+             HStack{
                 TextEditor(text: $message)
                 .font(.custom("Menlo", size: 18))
                 .lineSpacing(20)
@@ -95,18 +103,11 @@ struct ConfigView: View {
                     
                     // 结束编辑状态
                     isEditing = false
+                    produceData2(stringContent: message)
                 })
                 .padding()
                 .disabled(!isEditing)
             }
-            
-            ScenekitSingleView(dataModel:EnterItem(name: "测试",
-                                                   matrix: configData2,isTaskComplete: false),
-                               showType: .colorFul,
-                               colors: userData.colorSaveList,
-                               numberImageList: getTextImageList(),
-                               showColor: [1,2,3,4,5,6,7],focalLength: 50)
-            .frame(height: 500)
             Text("点击圆圈来修改块的颜色吧!").foregroundColor(.primary).font(.subheadline)
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 60))]) {
                 ForEach(colors()) { item in
