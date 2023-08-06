@@ -56,9 +56,9 @@ struct ConfigView: View {
 
     @State private var message = """
     /SOMA-YA001
-/.66/461
-/4.6/411
-/43./333
+    /.66/461
+    /4.6/411
+    /43./333
     """
 
     func colors() -> [ItemColor] {
