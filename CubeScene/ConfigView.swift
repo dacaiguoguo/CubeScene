@@ -83,6 +83,7 @@ struct ConfigView: View {
         }
     }
     @FocusState private var isEditing: Bool
+    @State private var counter = 0
 
     @State var ditem: EnterItem = EnterItem(name: "测试",
                                                    matrix: [[[2,2,3], [5,3,3], [5,4,3]], [[2,1,1], [5,5,6], [7,4,4]], [[2,6,1], [7,6,6], [7,7,4]]],isTaskComplete: false)
@@ -95,6 +96,7 @@ struct ConfigView: View {
                                numberImageList: getTextImageList(),
                                showColor: ditem.orderBlock, focalLength: 50)
             .frame(height: 500)
+            .id(counter) // 强制重新创建视图
              HStack{
                 TextEditor(text: $message)
                 .font(.custom("Menlo", size: 18))
@@ -116,6 +118,7 @@ struct ConfigView: View {
                     } else {
                         debugStr = "old input\(input)"                
                     }
+                    counter += 1
                 })
                 .padding()
                 .disabled(!isEditing)
