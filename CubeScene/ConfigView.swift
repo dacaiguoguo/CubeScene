@@ -53,7 +53,12 @@ struct ConfigView: View {
     @State private var bgColor = Color.red
     @EnvironmentObject var userData: UserData
 
-    @State private var message = "[[[2,2,3], [5,3,3], [5,4,3]], [[2,1,1], [5,5,6], [7,4,4]], [[2,6,1], [7,6,6], [7,7,4]]]"
+    @State private var message = """
+    /SOMA-YA001
+/.66/461
+/4.6/411
+/43./333
+    """
 
     func colors() -> [ItemColor] {
         var ret = userData.colorSaveList.enumerated().map({ index, element in
