@@ -105,7 +105,7 @@ struct ConfigView: View {
                     isEditing = false
                     let input = produceData2(stringContent: message)
                     if input.count > 0 {
-                        ditem = input.first                
+                        ditem = input.first!                
                     }
 
                 })
