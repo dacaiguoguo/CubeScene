@@ -52,6 +52,7 @@ struct ConfigView: View {
 
     @State private var bgColor = Color.red
     @EnvironmentObject var userData: UserData
+    @State private var debugStr = ""
 
     @State private var message = """
     /SOMA-YA001
@@ -110,13 +111,16 @@ struct ConfigView: View {
                     isEditing = false
                     let input = produceData2(stringContent: message)
                     if input.count > 0 {
-                        ditem = input.first!                
+                        ditem = input.first!
+                        debugStr = "new input\(input)"                
+                    } else {
+                        debugStr = "old input\(input)"                
                     }
-
                 })
                 .padding()
                 .disabled(!isEditing)
             }
+            Text("debugStr:\(debugStr)")
             Text("点击圆圈来修改块的颜色吧!").foregroundColor(.primary).font(.subheadline)
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 60))]) {
                 ForEach(colors()) { item in
