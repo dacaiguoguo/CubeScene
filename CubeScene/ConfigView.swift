@@ -103,6 +103,7 @@ struct ConfigView: View {
                     
                     // 结束编辑状态
                     isEditing = false
+                    produceData2(stringContent: message)
                 })
                 .padding()
                 .disabled(!isEditing)

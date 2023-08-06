@@ -79,6 +79,10 @@ extension EnterItem: Identifiable {
 
 func produceData(resourceName:String) -> [EnterItem]  {
     let stringContent = try! String(contentsOf: Bundle.main.url(forResource: resourceName, withExtension: "txt")!, encoding: .utf8)
+    produceData2(stringContent: stringContent)
+}
+
+func produceData2(stringContent:String) -> [EnterItem]  {
     let firstArray = stringContent.components(separatedBy: "/SOMA")
     let trimmingSet:CharacterSet = {
         var triSet = CharacterSet.whitespacesAndNewlines
