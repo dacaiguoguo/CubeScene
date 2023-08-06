@@ -93,7 +93,7 @@ struct ConfigView: View {
                                showType: .colorFul,
                                colors: userData.colorSaveList,
                                numberImageList: getTextImageList(),
-                               showColor: [1,2,3,4,5,6,7],focalLength: 50)
+                               showColor: ditem.orderBlock, focalLength: 50)
             .frame(height: 500)
              HStack{
                 TextEditor(text: $message)
