@@ -105,10 +105,7 @@ struct ConfigView: View {
                     isEditing = false
                     let input = produceData2(stringContent: message)
                     if input.count > 0 {
-                        ditem = 
-                        EnterItem(name: "测试",
-                                    matrix: input.first ,isTaskComplete: false)
-                        
+                        ditem = input.first                
                     }
 
                 })
