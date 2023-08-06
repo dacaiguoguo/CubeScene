@@ -68,25 +68,12 @@ struct ConfigView: View {
         ret.removeFirst()
         return ret
     }
-    let configData = [[[0,0,0],[2,3,0],[2,3,3]],[[2,5,5],[2,4,5],[6,4,4]],[[1,1,1],[6,1,5],[6,6,4]]].map { item in
-        item.map { item2 in
-            item2.map { item3 in
-                if item3 == 0 {return 2}
-                if item3 == 1 {return 3}
-                if item3 == 2 {return 4}
-                if item3 == 3 {return 1}
-                if item3 == 4 {return 5}
-                if item3 == 5 {return 6}
-                if item3 == 6 {return 7}
-                return item3
-            }
-        }
-    }
+
     @FocusState private var isEditing: Bool
     @State private var counter = 0
 
     @State var ditem: EnterItem = EnterItem(name: "测试",
-                                                   matrix: [[[2,2,3], [5,3,3], [5,4,3]], [[2,1,1], [5,5,6], [7,4,4]], [[2,6,1], [7,6,6], [7,7,4]]],isTaskComplete: false)
+                                                   matrix: [],isTaskComplete: false)
 
     var body: some View {
         VStack(alignment:.leading) {
