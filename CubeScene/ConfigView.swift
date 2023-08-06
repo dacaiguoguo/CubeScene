@@ -76,15 +76,30 @@ struct ConfigView: View {
             }
         }
     }
+    @FocusState private var isEditing: Bool
 
     @State private var configData2 = [[[2,2,3], [5,3,3], [5,4,3]], [[2,1,1], [5,5,6], [7,4,4]], [[2,6,1], [7,6,6], [7,7,4]]];
     var body: some View {
         VStack(alignment:.leading) {
-            TextEditor(text: $message)
+            HStack{
+                TextEditor(text: $message)
                 .font(.custom("Menlo", size: 18))
                 .lineSpacing(20)
+                .focused($isEditing)
                 .disableAutocorrection(true)
                 .padding()
+                .frame(height: 100)
+                Button("完成", action: {
+                    // 在这里执行编辑完成的操作
+                    // 比如保存文本、关闭键盘等等
+                    
+                    // 结束编辑状态
+                    isEditing = false
+                })
+                .padding()
+                .disabled(!isEditing)
+            }
+            
             ScenekitSingleView(dataModel:EnterItem(name: "测试",
                                                    matrix: configData2,isTaskComplete: false),
                                showType: .colorFul,
