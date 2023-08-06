@@ -78,12 +78,12 @@ struct ConfigView: View {
     }
     @FocusState private var isEditing: Bool
 
-    @State private var configData2 = [[[2,2,3], [5,3,3], [5,4,3]], [[2,1,1], [5,5,6], [7,4,4]], [[2,6,1], [7,6,6], [7,7,4]]];
+    @State var ditem: EnterItem = EnterItem(name: "测试",
+                                                   matrix: [[[2,2,3], [5,3,3], [5,4,3]], [[2,1,1], [5,5,6], [7,4,4]], [[2,6,1], [7,6,6], [7,7,4]]],isTaskComplete: false)
+
     var body: some View {
         VStack(alignment:.leading) {
-           
-            ScenekitSingleView(dataModel:EnterItem(name: "测试",
-                                                   matrix: configData2,isTaskComplete: false),
+            ScenekitSingleView(dataModel:ditem,
                                showType: .colorFul,
                                colors: userData.colorSaveList,
                                numberImageList: getTextImageList(),
@@ -103,7 +103,14 @@ struct ConfigView: View {
                     
                     // 结束编辑状态
                     isEditing = false
-                    produceData2(stringContent: message)
+                    let input = produceData2(stringContent: message)
+                    if input.count > 0 {
+                        ditem = 
+                        EnterItem(name: "测试",
+                                    matrix: input.first ,isTaskComplete: false)
+                        
+                    }
+
                 })
                 .padding()
                 .disabled(!isEditing)
