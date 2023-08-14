@@ -54,12 +54,7 @@ struct ConfigView: View {
     @EnvironmentObject var userData: UserData
     @State private var debugStr = ""
 
-    @State private var message = """
-    /SOMA-YA001
-    /.66/461
-    /4.6/411
-    /43./333
-    """
+    @State private var message = ""
 
     func colors() -> [ItemColor] {
         var ret = userData.colorSaveList.enumerated().map({ index, element in
