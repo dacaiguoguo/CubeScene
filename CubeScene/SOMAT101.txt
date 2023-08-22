@@ -1172,7 +1172,7 @@ The 'Tycho Magnetic Anomaly' is the monolith.
 
 
 /SOMA-T151
-/;split level castle
+;split level castle
 /6...../611...
 /.....7/661477
 /....../553447
@@ -1207,11 +1207,7 @@ The 'Tycho Magnetic Anomaly' is the monolith.
 /.422./74421/77421
 /...../5...6/7...1
 /...../53336/55366
-
-
 ;3 ways of holes
-
-
 
 /SOMA-T156    
 /1447/1177
@@ -1533,8 +1529,6 @@ The 'Tycho Magnetic Anomaly' is the monolith.
 
 
 ;"The count is now 199, I will try and make 'T200' a good one. Thanks Thor, for everything!" -Tim
-
-
 
 /SOMA-T200
 /....7/.5277/55222    
@@ -1932,8 +1926,8 @@ The 'Tycho Magnetic Anomaly' is the monolith.
 /..77/6172/3...
 /..../3222/3..5
 /..../4455/3445
-ps, #7 acts as a counter balance
-holding #1 and #2 in  place.
+;ps, #7 acts as a counter balance
+;holding #1 and #2 in  place.
 
 
 /SOMA-T253
