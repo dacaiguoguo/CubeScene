@@ -38,10 +38,18 @@ func getTextImageList() -> [UIImage] {
     return Array(0...7).map { index in
         if let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first{
             let fileURL = documentsDirectory.appendingPathComponent("blockside\(index).png")
-            if let ret = UIImage(contentsOfFile: fileURL.path()) {
-                return ret
+            if #available(iOS 16.0, *) {
+                if let ret = UIImage(contentsOfFile: fileURL.path()) {
+                    return ret
+                } else {
+                    return UIImage(named: "c1")!;
+                }
             } else {
-                return UIImage(named: "c1")!;
+                if let ret = UIImage(contentsOfFile: fileURL.path) {
+                    return ret
+                } else {
+                    return UIImage(named: "c1")!;
+                }
             }
         } else {
             return UIImage(named: "c1")!;
