@@ -181,14 +181,19 @@ struct EnterListView: View {
                         if #available(iOS 16, *) {
                             Text("\(LocalizedStringResource(stringLiteral: "\(item.isTaskComplete ? "Completed" : "ToDo")")) ")
                             .font(.subheadline)
-                        } else {
-                        Text("\(item.isTaskComplete ? "Completed" : "ToDo")")
-                        .font(.subheadline)
-                        }
-                        +
+                                           +
                         Text(Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle"))
                             .font(.subheadline)
                             .foregroundColor(item.isTaskComplete ? .green : .pink)
+                        } else {
+                        Text("\(item.isTaskComplete ? "Completed" : "ToDo")")
+                        .font(.subheadline)
+                                       +
+                        Text(Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle"))
+                            .font(.subheadline)
+                            .foregroundColor(item.isTaskComplete ? .green : .pink)
+                        }
+         
                     }
                 }
             }
