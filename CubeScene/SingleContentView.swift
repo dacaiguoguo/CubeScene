@@ -169,7 +169,11 @@ public struct SingleContentView: View {
                     }) {
                         HStack{
                             Image(systemName: dataModel.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
-                            Text(LocalizedStringResource(stringLiteral: "\(dataModel.isTaskComplete ? "Completed" : "ToDo")"))
+                            if #available(iOS 16, *) {
+                                Text(LocalizedStringResource(stringLiteral: "\(dataModel.isTaskComplete ? "Completed" : "ToDo")"))
+                            } else {
+                                Text("\(dataModel.isTaskComplete ? "Completed" : "ToDo")")
+                            }
                         }.foregroundColor(dataModel.isTaskComplete ? .green : Color(uiColor: UIColor(hex: "00bfff")))
                     }
                 }

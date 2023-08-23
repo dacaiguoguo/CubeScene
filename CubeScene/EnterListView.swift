@@ -178,9 +178,13 @@ struct EnterListView: View {
                                 Image(systemName:"star.fill").scaleEffect(CGSizeMake(0.8, 0.8)).foregroundColor(.yellow)
                             }
                         }.padding(EdgeInsets(top: 0, leading: 0, bottom: 8, trailing: 0))
-
-                        Text("\(LocalizedStringResource(stringLiteral: "\(item.isTaskComplete ? "Completed" : "ToDo")")) ")
+                        if #available(iOS 16, *) {
+                            Text("\(LocalizedStringResource(stringLiteral: "\(item.isTaskComplete ? "Completed" : "ToDo")")) ")
                             .font(.subheadline)
+                        } else {
+                        Text("\(item.isTaskComplete ? "Completed" : "ToDo")")
+                        .font(.subheadline)
+                        }
                         +
                         Text(Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle"))
                             .font(.subheadline)
