@@ -68,7 +68,9 @@ struct ConfigView: View {
     @State private var counter = 0
 
     @State var ditem: EnterItem = EnterItem(name: "测试",
-                                                   matrix: [],isTaskComplete: false)
+                                            matrix: [[[2,4,3], [6,4,1], [6,6,1]],
+                                                     [[2,3,3], [6,4,1], [7,4,5]],
+                                                     [[2,2,3], [7,5,5], [7,7,5]]], isTaskComplete: false)
 
     var body: some View {
         VStack(alignment:.leading) {
@@ -77,7 +79,7 @@ struct ConfigView: View {
                                colors: userData.colorSaveList,
                                numberImageList: getTextImageList(),
                                showColor: ditem.orderBlock, focalLength: 50)
-            .frame(height: 500)
+            .frame(height: 300)
             .id(counter) // 强制重新创建视图
              HStack{
                 TextEditor(text: $message)
@@ -87,6 +89,8 @@ struct ConfigView: View {
                 .disableAutocorrection(true)
                 .padding()
                 .frame(height: 100)
+                .border(.gray)
+
                 Button("完成", action: {
                     // 在这里执行编辑完成的操作
                     // 比如保存文本、关闭键盘等等
@@ -105,7 +109,6 @@ struct ConfigView: View {
                 .padding()
                 .disabled(!isEditing)
             }
-            Text("debugStr:\(debugStr)")
             Text("点击圆圈来修改块的颜色吧!").foregroundColor(.primary).font(.subheadline)
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 60))]) {
                 ForEach(colors()) { item in
@@ -114,16 +117,8 @@ struct ConfigView: View {
             }
         }.padding().navigationTitle("TitleSetting")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing:closeButton())
 
     }
-
-    func closeButton() -> some View {
-        Button(action: {
-            presentationMode.wrappedValue.dismiss()
-        }, label: { Image(systemName: "xmark") })
-    }
-
 
     func ConfigItemView(_ item:ItemColor) -> some View {
         ZStack{

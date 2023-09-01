@@ -80,13 +80,23 @@ struct CubeSceneApp: App {
                     Text("TabTitleName3")
                 }.tag(2)
                 NavigationView {
+                    EnterListView(productList: produceData(resourceName: "SOMAY101")).navigationTitle("TabTitleNameY").navigationBarTitleDisplayMode(.inline)
+                        .onAppear {
+                            print("onAppear EnterListView !")
+                        }.environmentObject(userData)
+                }
+                .navigationViewStyle(StackNavigationViewStyle()).tabItem {
+                    Image(systemName: "highlighter")
+                    Text("TabTitleNameY")
+                }.tag(3)
+                NavigationView {
                     SettingView().environmentObject(userData)
                         .navigationBarTitleDisplayMode(.inline)
                         .navigationTitle("TitleName4")
                 }.navigationViewStyle(StackNavigationViewStyle()).tabItem {
                     Image(systemName: "ellipsis.circle")
                     Text("TabTitleName4")
-                }.tag(3)
+                }.tag(4)
             }
             
         }.onChange(of: scenePhase) { phase in
