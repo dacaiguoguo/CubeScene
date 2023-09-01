@@ -12,7 +12,7 @@
 // 增加单步骤动画 已经增加
 // TODO: 限制x轴旋转角度 防止翻转 增加恢复位置按钮 可以不做
 // TODO: 同一个形状，添加多种解法 比如A034
-// TODO:
+// TODO: 增加双套VLTZABP和1234567的支持，显示不同配色
 // ;https://www.fam-bundgaard.dk/SOMA/FIGURES/T101125.HTM
 
 import SwiftUI
