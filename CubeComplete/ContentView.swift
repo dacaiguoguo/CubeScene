@@ -7,6 +7,48 @@
 
 import SwiftUI
 
+import SceneKit
+
+struct ContentView: View {
+    var body: some View {
+        SceneView(scene: createScene(), options: [.autoenablesDefaultLighting, .allowsCameraControl])
+            .frame(width: 300, height: 300)
+    }
+
+    func createScene() -> SCNScene {
+        let scene = SCNScene()
+
+        // Create a box with chamfered corners
+        let boxGeometry = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.2)
+        let boxNode = SCNNode(geometry: boxGeometry)
+        scene.rootNode.addChildNode(boxNode)
+
+        // Create a plane as the background
+        let planeGeometry = SCNPlane(width: 10, height: 10)
+        let planeNode = SCNNode(geometry: planeGeometry)
+        planeNode.eulerAngles.x = -.pi / 2 // Rotate the plane to lie flat on the ground
+        planeNode.position.y = -0.5 // Position the plane slightly below the box
+
+        scene.rootNode.addChildNode(planeNode)
+
+        // Add some lighting to the scene
+        let lightNode = SCNNode()
+        lightNode.light = SCNLight()
+        lightNode.light?.type = .omni
+        lightNode.position = SCNVector3(x: 0, y: 5, z: 5)
+        scene.rootNode.addChildNode(lightNode)
+
+        // Create a fixed camera and add it to the scene
+        let cameraNode = SCNNode()
+        cameraNode.camera = SCNCamera()
+        cameraNode.position = SCNVector3(x: 0, y: 0, z: 3)
+        cameraNode.eulerAngles = SCNVector3(x: -15 * .pi / 180, y: 0, z: 0) // Set a fixed angle for the camera
+        scene.rootNode.addChildNode(cameraNode)
+
+        return scene
+    }
+}
+
 struct Product {
     var name: String
     var isTaskComplete: Bool
@@ -40,19 +82,19 @@ struct ProductDetailView: View {
 }
 
 
-struct ContentView: View {
-    @State private var productList = [
-        Product(name: "Product 1", isTaskComplete: true, level: 3),
-        Product(name: "Product 2", isTaskComplete: false, level: 4),
-        Product(name: "Product 3", isTaskComplete: true, level: 5),
-    ]
-
-    var body: some View {
-        NavigationView {
-            ProductListView(products: $productList)
-        }
-    }
-}
+//struct ContentView: View {
+//    @State private var productList = [
+//        Product(name: "Product 1", isTaskComplete: true, level: 3),
+//        Product(name: "Product 2", isTaskComplete: false, level: 4),
+//        Product(name: "Product 3", isTaskComplete: true, level: 5),
+//    ]
+//
+//    var body: some View {
+//        NavigationView {
+//            ProductListView(products: $productList)
+//        }
+//    }
+//}
 
 struct ProductListView: View {
     @Binding var products: [Product]
