@@ -32,6 +32,10 @@
 		9D2D85BB2A602AE600B11A7D /* Clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 9D2D85AC2A602AE400B11A7D /* Clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9D6DC3E52AA168460068C807 /* SOMAY101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D6DC3E42AA168460068C807 /* SOMAY101.txt */; };
 		9D6DC3E62AA168460068C807 /* SOMAY101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D6DC3E42AA168460068C807 /* SOMAY101.txt */; };
+		9D7E411D2AA2356A00863C43 /* SOMAX101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411B2AA2356A00863C43 /* SOMAX101.txt */; };
+		9D7E411E2AA2356A00863C43 /* SOMAX101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411B2AA2356A00863C43 /* SOMAX101.txt */; };
+		9D7E411F2AA2356A00863C43 /* SOMAW101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411C2AA2356A00863C43 /* SOMAW101.txt */; };
+		9D7E41202AA2356A00863C43 /* SOMAW101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411C2AA2356A00863C43 /* SOMAW101.txt */; };
 		9DBE04F02A56ECB70055AE14 /* ConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBE04EF2A56ECB70055AE14 /* ConfigView.swift */; };
 		9DBE04F32A57D6560055AE14 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DBE04F52A57D6560055AE14 /* InfoPlist.strings */; };
 		9DBE04F92A57D7BC0055AE14 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DBE04FB2A57D7BC0055AE14 /* Localizable.strings */; };
@@ -92,6 +96,8 @@
 		9D2D85B72A602AE600B11A7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9D2D85B82A602AE600B11A7D /* Clip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Clip.entitlements; sourceTree = "<group>"; };
 		9D6DC3E42AA168460068C807 /* SOMAY101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAY101.txt; sourceTree = "<group>"; };
+		9D7E411B2AA2356A00863C43 /* SOMAX101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAX101.txt; sourceTree = "<group>"; };
+		9D7E411C2AA2356A00863C43 /* SOMAW101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAW101.txt; sourceTree = "<group>"; };
 		9DBE04EF2A56ECB70055AE14 /* ConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigView.swift; sourceTree = "<group>"; };
 		9DBE04F42A57D6560055AE14 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9DBE04F62A57D65A0055AE14 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
@@ -177,6 +183,8 @@
 				9DDEC0CE2A61753A001A0046 /* SOMA108.txt */,
 				9DDEC0D12A6178DF001A0046 /* SOMAT101.txt */,
 				9D6DC3E42AA168460068C807 /* SOMAY101.txt */,
+				9D7E411C2AA2356A00863C43 /* SOMAW101.txt */,
+				9D7E411B2AA2356A00863C43 /* SOMAX101.txt */,
 				9DF9380A2A417BA4001BD720 /* data1.txt */,
 				9DF9380C2A417BA4001BD720 /* data2.txt */,
 				9DF938102A417BAD001BD720 /* data3.txt */,
@@ -295,9 +303,11 @@
 				9DDEC0CC2A614F69001A0046 /* solutionsMaped.json in Resources */,
 				9DDEC0D02A61753A001A0046 /* SOMA108.txt in Resources */,
 				59524DBC2A60FC6F0078EBB6 /* InfoPlist.strings in Resources */,
+				9D7E41202AA2356A00863C43 /* SOMAW101.txt in Resources */,
 				59524DBB2A60FC630078EBB6 /* Localizable.strings in Resources */,
 				9D2D85B32A602AE600B11A7D /* Assets.xcassets in Resources */,
 				59524DC12A60FC970078EBB6 /* Assets.xcassets in Resources */,
+				9D7E411E2AA2356A00863C43 /* SOMAX101.txt in Resources */,
 				9D6DC3E62AA168460068C807 /* SOMAY101.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -307,7 +317,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DF920742A404BBF001BD720 /* Preview Assets.xcassets in Resources */,
+				9D7E411F2AA2356A00863C43 /* SOMAW101.txt in Resources */,
 				9DBE04F32A57D6560055AE14 /* InfoPlist.strings in Resources */,
+				9D7E411D2AA2356A00863C43 /* SOMAX101.txt in Resources */,
 				9DDEC0D22A6178DF001A0046 /* SOMAT101.txt in Resources */,
 				9DF938112A417BAD001BD720 /* data3.txt in Resources */,
 				9DBE04F92A57D7BC0055AE14 /* Localizable.strings in Resources */,

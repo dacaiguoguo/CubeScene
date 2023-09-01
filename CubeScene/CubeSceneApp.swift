@@ -6,11 +6,13 @@
 // 自定义修改颜色，和默认配色
 // 1.增加按钮 标记已经玩过。完成
 // 国际化 部分完成
-// TODO: EnterListView 入口优化为图片
-// TODO: 增加240种演示动画
-// TODO: 增加难度星级标识和筛选 简单
-// TODO: 增加单步骤动画 已经增加
+// EnterListView 入口优化为图片
+// 增加240种演示动画
+// TODO: 增加筛选 简单
+// 增加单步骤动画 已经增加
 // TODO: 限制x轴旋转角度 防止翻转 增加恢复位置按钮 可以不做
+// TODO: 同一个形状，添加多种解法 比如A034
+// TODO:
 // ;https://www.fam-bundgaard.dk/SOMA/FIGURES/T101125.HTM
 
 import SwiftUI
