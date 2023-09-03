@@ -91,26 +91,7 @@ struct CubeSceneApp: App {
                     Image(systemName: "highlighter")
                     Text("TabTitleNameY")
                 }.tag(3)
-                NavigationView {
-                    EnterListView(productList: produceData(resourceName: "SOMAX101")).navigationTitle("TabTitleNameX").navigationBarTitleDisplayMode(.inline)
-                        .onAppear {
-                            print("onAppear EnterListView !")
-                        }.environmentObject(userData)
-                }
-                .navigationViewStyle(StackNavigationViewStyle()).tabItem {
-                    Image(systemName: "highlighter")
-                    Text("TabTitleNameX")
-                }.tag(4)
-                NavigationView {
-                    EnterListView(productList: produceData(resourceName: "SOMAW101")).navigationTitle("TabTitleNameW").navigationBarTitleDisplayMode(.inline)
-                        .onAppear {
-                            print("onAppear EnterListView !")
-                        }.environmentObject(userData)
-                }
-                .navigationViewStyle(StackNavigationViewStyle()).tabItem {
-                    Image(systemName: "highlighter")
-                    Text("TabTitleNameW")
-                }.tag(5)
+                
                 NavigationView {
                     SettingView().environmentObject(userData)
                         .navigationBarTitleDisplayMode(.inline)
@@ -118,7 +99,7 @@ struct CubeSceneApp: App {
                 }.navigationViewStyle(StackNavigationViewStyle()).tabItem {
                     Image(systemName: "ellipsis.circle")
                     Text("TabTitleName4")
-                }.tag(6)
+                }.tag(4)
             }
             
         }.onChange(of: scenePhase) { phase in

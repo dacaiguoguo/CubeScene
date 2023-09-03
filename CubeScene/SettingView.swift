@@ -83,6 +83,33 @@ public struct SettingView: View {
                         Image(systemName: "gear.circle")
                     }
                 }
+
+                NavigationLink {
+                    EnterListView(productList: produceData(resourceName: "SOMAX101")).navigationTitle("TabTitleNameX").navigationBarTitleDisplayMode(.inline)
+                        .onAppear {
+                            print("onAppear EnterListView !")
+                        }.environmentObject(userData)
+                } label: {
+                    HStack{
+                        Text("TabTitleNameX")
+                        Spacer()
+                        Image(systemName: "highlighter")
+                    }
+                }
+
+
+                NavigationLink {
+                    EnterListView(productList: produceData(resourceName: "SOMAW101")).navigationTitle("TabTitleNameW").navigationBarTitleDisplayMode(.inline)
+                        .onAppear {
+                            print("onAppear EnterListView !")
+                        }.environmentObject(userData)
+                } label: {
+                    HStack{
+                        Text("TabTitleNameW")
+                        Spacer()
+                        Image(systemName: "highlighter")
+                    }
+                }
             })
             Section(content: {
                 ForEach(channelLocalDataList) { channel in
