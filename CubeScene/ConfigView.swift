@@ -131,7 +131,7 @@ struct InputView: View {
     @State private var debugStr = ""
     var body: some View {
         NavigationView {
-            HStack{
+            VStack {
                 TextEditor(text: $message)
                     .font(.custom("Menlo", size: 18))
                     .lineSpacing(20)
@@ -158,15 +158,20 @@ struct InputView: View {
                 })
                 .padding()
                 .disabled(!isEditing)
-            }
-            Button("点击隐藏") {
-                // 当按钮被点击时，isPresented 的值就会被设置为 true
-                self.isPresented = false
-            }
-        }
-        .navigationTitle("TitleSetting")
-        .navigationBarTitleDisplayMode(.inline)
 
+
+            }
+            .navigationBarItems(trailing:completeStatus())
+            .navigationTitle("自定义代码")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+
+    func completeStatus() -> some View {
+        Button("关闭") {
+            // 当按钮被点击时，isPresented 的值就会被设置为 true
+            self.isPresented = false
+        }
     }
 }
 
