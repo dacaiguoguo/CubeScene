@@ -11,18 +11,18 @@ import SwiftUI
 struct ItemColor: Decodable {
     var index:Int = 0
     var colorData:Data = try! NSKeyedArchiver.archivedData(withRootObject: UIColor.black, requiringSecureCoding: false)
-
-
+    
+    
     init(index: Int, uicolor: UIColor) {
         self.index = index
         self.colorData = try! NSKeyedArchiver.archivedData(withRootObject: uicolor, requiringSecureCoding: false)
     }
-
+    
     init(index: Int, color: Color) {
         self.index = index
         self.colorData = try! NSKeyedArchiver.archivedData(withRootObject: UIColor(color), requiringSecureCoding: false)
     }
-
+    
     var uicolor: UIColor {
         do {
             if let colorret = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(colorData) as? UIColor {
@@ -47,15 +47,15 @@ extension ItemColor: Identifiable {
 
 
 struct ConfigView: View {
-
+    
     @Environment(\.presentationMode) var presentationMode
-
+    
     @State private var bgColor = Color.red
     @EnvironmentObject var userData: UserData
     @State private var debugStr = ""
-
+    
     @State private var message = ""
-
+    
     func colors() -> [ItemColor] {
         var ret = userData.colorSaveList.enumerated().map({ index, element in
             ItemColor(index: index, uicolor: element )
@@ -63,15 +63,15 @@ struct ConfigView: View {
         ret.removeFirst()
         return ret
     }
-
+    
     @FocusState private var isEditing: Bool
     @State private var counter = 0
-
+    
     @State var ditem: EnterItem = EnterItem(name: "测试",
                                             matrix: [[[2,4,3], [6,4,1], [6,6,1]],
                                                      [[2,3,3], [6,4,1], [7,4,5]],
                                                      [[2,2,3], [7,5,5], [7,7,5]]], isTaskComplete: false)
-
+    
     var body: some View {
         VStack(alignment:.leading) {
             ScenekitSingleView(dataModel:ditem,
@@ -81,16 +81,16 @@ struct ConfigView: View {
                                showColor: ditem.orderBlock, focalLength: 50)
             .frame(height: 300)
             .id(counter) // 强制重新创建视图
-             HStack{
+            HStack{
                 TextEditor(text: $message)
-                .font(.custom("Menlo", size: 18))
-                .lineSpacing(20)
-                .focused($isEditing)
-                .disableAutocorrection(true)
-                .padding()
-                .frame(height: 100)
-                .border(.gray)
-
+                    .font(.custom("Menlo", size: 18))
+                    .lineSpacing(20)
+                    .focused($isEditing)
+                    .disableAutocorrection(true)
+                    .padding()
+                    .frame(height: 100)
+                    .border(.gray)
+                
                 Button("完成", action: {
                     // 在这里执行编辑完成的操作
                     // 比如保存文本、关闭键盘等等
@@ -117,9 +117,9 @@ struct ConfigView: View {
             }
         }.padding().navigationTitle("TitleSetting")
             .navigationBarTitleDisplayMode(.inline)
-
+        
     }
-
+    
     func ConfigItemView(_ item:ItemColor) -> some View {
         ZStack{
             VStack{
@@ -136,7 +136,7 @@ struct ConfigView: View {
                 .stroke(.blue, lineWidth: 1)
         )
     }
-
+    
 }
 
 struct ConfigView_Previews: PreviewProvider {
