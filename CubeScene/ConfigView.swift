@@ -141,13 +141,18 @@ struct InputView: View {
                     .frame(height: 400)
                     .border(.gray)
 
-                Button("完成", action: {
+                Button("确定输入", action: {
                     // 在这里执行编辑完成的操作
                     // 比如保存文本、关闭键盘等等
 
                     // 结束编辑状态
                     isEditing = false
-                    let input = produceData2(stringContent: message)
+                    let input:[EnterItem]
+                    if message.hasPrefix("/SOMA") {
+                        input = produceData2(stringContent: message)
+                    } else {
+                        input = produceData2(stringContent: "/SOMA-test\n\(message)")
+                    }
                     if input.count > 0 {
                         ditem = input.first!
                         debugStr = "new input\(input)"
