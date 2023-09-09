@@ -105,9 +105,21 @@ func produceData2(stringContent:String) -> [EnterItem]  {
         let result = parsedData.map { item in
             item.split(separator: separatorItem).map { subItem in
                 subItem.map { subSubItem in
-                    //    if subSubItem == "," {
-                    //        return -1;
-                    //    }
+
+                    if subSubItem == "A" {
+                        let character: Character = "A"
+                        if let asciiValue = character.unicodeScalars.first?.value {
+                            print("ASCII值为: \(asciiValue)")
+                            return Int(asciiValue);
+                        } else {
+                            print("无法获取ASCII值")
+                        }
+                        return -1
+                    }
+
+//                        if subSubItem == "," {
+//                            return -1;
+//                        }
                     //    if subSubItem == ";" {
                     //        return 0;
                     //    }
