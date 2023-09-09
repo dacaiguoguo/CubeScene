@@ -22,19 +22,19 @@ struct EnterItem: Decodable {
         let temp = EnterItem.orderList(matrix: matrix)
         self.usedBlock = Array(Set(temp.map({ item in
             switch item {
-            case 86:
+            case 86:// V
                 return 1
-            case 76:
+            case 76:// L
                 return 2;
-            case 84:
+            case 84:// T
                 return 3;
-            case 90:
+            case 90:// Z
                 return 4;
-            case 65:
+            case 65:// A
                 return 5;
-            case 66:
+            case 66:// B
                 return 6;
-            case 80:
+            case 80:// P
                 return 7;
             default:
                 return item
@@ -85,7 +85,6 @@ struct EnterItem: Decodable {
                     }
                 }
             }
-            
         }
         return ret
     }
