@@ -20,7 +20,7 @@ struct EnterItem: Decodable {
         self.name = name
         self.matrix = matrix
         let temp = EnterItem.orderList(matrix: matrix)
-        self.usedBlock = temp.map({ item in
+        self.usedBlock = Array(Set(temp.map({ item in
             switch item {
             case 86:
                 return 1
@@ -39,7 +39,8 @@ struct EnterItem: Decodable {
             default:
                 return item
             }
-        }).sorted(by: {$0 < $1})
+        }))).sorted(by: {$0 < $1})
+
         self.orderBlock = temp
         self.isTaskComplete = isTaskComplete
         switch usedBlock.count {

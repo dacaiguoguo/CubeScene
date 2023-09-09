@@ -137,7 +137,37 @@ struct ScenekitSingleView : UIViewRepresentable {
                             case .colorFul:
                                 let material = SCNMaterial()
                                 if showColor.contains(value) {
-                                    material.diffuse.contents = colors[value]
+                                    switch value {
+                                    case 86:
+//                                        return 1
+                                        material.diffuse.contents = colors[1].withAlphaComponent(0.7)
+                                    case 76:
+//                                        return 2;
+                                        material.diffuse.contents = colors[2].withAlphaComponent(0.7)
+                                    case 84:
+//                                        return 3;
+                                        material.diffuse.contents = colors[3].withAlphaComponent(0.7)
+
+                                    case 90:
+//                                        return 4;
+                                        material.diffuse.contents = colors[4].withAlphaComponent(0.7)
+
+                                    case 65:
+//                                        return 5;
+                                        material.diffuse.contents = colors[5].withAlphaComponent(0.7)
+
+                                    case 66:
+//                                        return 6;
+                                        material.diffuse.contents = colors[6].withAlphaComponent(0.7)
+
+                                    case 80:
+//                                        return 7;
+                                        material.diffuse.contents = colors[7].withAlphaComponent(0.7)
+
+                                    default:
+                                        material.diffuse.contents = colors[value]
+                                    }
+
                                 } else {
                                     material.diffuse.contents = UIColor.clear
                                 }
@@ -147,7 +177,36 @@ struct ScenekitSingleView : UIViewRepresentable {
                                 boxNode.geometry?.firstMaterial = material
                             case .number:
                                 let material = SCNMaterial()
-                                material.diffuse.contents = numberImageList[value]
+                                switch value {
+                                case 86:
+                                    //                                        return 1
+                                    material.diffuse.contents = generateImage(color: .red.withAlphaComponent(0.8), text: "V")
+                                case 76:
+                                    //                                        return 2;
+                                    material.diffuse.contents = generateImage(color: .orange.withAlphaComponent(0.8), text: "L")
+                                case 84:
+                                    //                                        return 3;
+                                    material.diffuse.contents = generateImage(color: .yellow.withAlphaComponent(0.8), text: "T")
+
+                                case 90:
+                                    //                                        return 4;
+                                    material.diffuse.contents = generateImage(color: .green.withAlphaComponent(0.8), text: "Z")
+
+                                case 65:
+                                    //                                        return 5;
+                                    material.diffuse.contents = generateImage(color: .cyan.withAlphaComponent(0.8), text: "A")
+
+                                case 66:
+                                    //                                        return 6;
+                                    material.diffuse.contents = generateImage(color: .blue.withAlphaComponent(0.8), text: "B")
+
+                                case 80:
+                                    //                                        return 7;
+                                    material.diffuse.contents = generateImage(color: .purple.withAlphaComponent(0.8), text: "P")
+
+                                default:
+                                    material.diffuse.contents = numberImageList[value]
+                                }
                                 material.locksAmbientWithDiffuse = true
                                 boxNode.geometry?.materials = [];
                                 boxNode.geometry?.firstMaterial = material
