@@ -20,7 +20,26 @@ struct EnterItem: Decodable {
         self.name = name
         self.matrix = matrix
         let temp = EnterItem.orderList(matrix: matrix)
-        self.usedBlock = temp.sorted(by: {$0 < $1})
+        self.usedBlock = temp.map({ item in
+            switch item {
+            case 86:
+                return 1
+            case 76:
+                return 2;
+            case 84:
+                return 3;
+            case 90:
+                return 4;
+            case 65:
+                return 5;
+            case 66:
+                return 6;
+            case 80:
+                return 7;
+            default:
+                return item
+            }
+        }).sorted(by: {$0 < $1})
         self.orderBlock = temp
         self.isTaskComplete = isTaskComplete
         switch usedBlock.count {
@@ -106,16 +125,18 @@ func produceData2(stringContent:String) -> [EnterItem]  {
             item.split(separator: separatorItem).map { subItem in
                 subItem.map { subSubItem in
 
-                    if subSubItem == "A" {
-                        let character: Character = "A"
+                    if subSubItem == "V" || subSubItem == "L" || subSubItem == "T" || subSubItem == "A" || subSubItem == "B" || subSubItem == "P" || subSubItem == "Z"
+                    {
+                        let character: Character = subSubItem
                         if let asciiValue = character.unicodeScalars.first?.value {
-                            print("ASCII值为: \(asciiValue)")
+                            print("\(character)  :ASCII值为: \(asciiValue)")
                             return Int(asciiValue);
                         } else {
                             print("无法获取ASCII值")
                         }
                         return -1
                     }
+
 
 //                        if subSubItem == "," {
 //                            return -1;

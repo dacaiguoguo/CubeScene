@@ -87,7 +87,7 @@ public struct SingleContentView: View {
                     VStack {
                         HStack{
                             ForEach(dataModel.usedBlock.indices, id: \.self) { index in
-                                let value = dataModel.usedBlock[index]
+                                var value = dataModel.usedBlock[index]
                                 Image(uiImage: UIImage(named: "c\(value)")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
                             }
                         }
