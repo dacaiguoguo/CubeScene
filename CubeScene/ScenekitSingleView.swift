@@ -180,29 +180,29 @@ struct ScenekitSingleView : UIViewRepresentable {
                                 switch value {
                                 case 86:
                                     //                                        return 1
-                                    material.diffuse.contents = generateImage(color: .red.withAlphaComponent(0.8), text: "V")
+                                    material.diffuse.contents = generateImage(color: colors[1].withAlphaComponent(0.8), text: "V")
                                 case 76:
                                     //                                        return 2;
-                                    material.diffuse.contents = generateImage(color: .orange.withAlphaComponent(0.8), text: "L")
+                                    material.diffuse.contents = generateImage(color: colors[2].withAlphaComponent(0.8), text: "L")
                                 case 84:
                                     //                                        return 3;
-                                    material.diffuse.contents = generateImage(color: .yellow.withAlphaComponent(0.8), text: "T")
+                                    material.diffuse.contents = generateImage(color: colors[3].withAlphaComponent(0.8), text: "T")
 
                                 case 90:
                                     //                                        return 4;
-                                    material.diffuse.contents = generateImage(color: .green.withAlphaComponent(0.8), text: "Z")
+                                    material.diffuse.contents = generateImage(color: colors[4].withAlphaComponent(0.8), text: "Z")
 
                                 case 65:
                                     //                                        return 5;
-                                    material.diffuse.contents = generateImage(color: .cyan.withAlphaComponent(0.8), text: "A")
+                                    material.diffuse.contents = generateImage(color: colors[5].withAlphaComponent(0.8), text: "A")
 
                                 case 66:
                                     //                                        return 6;
-                                    material.diffuse.contents = generateImage(color: .blue.withAlphaComponent(0.8), text: "B")
+                                    material.diffuse.contents = generateImage(color: colors[6].withAlphaComponent(0.8), text: "B")
 
                                 case 80:
                                     //                                        return 7;
-                                    material.diffuse.contents = generateImage(color: .purple.withAlphaComponent(0.8), text: "P")
+                                    material.diffuse.contents = generateImage(color: colors[7].withAlphaComponent(0.8), text: "P")
 
                                 default:
                                     material.diffuse.contents = numberImageList[value]
@@ -228,25 +228,25 @@ struct ScenekitSingleView : UIViewRepresentable {
     
 }
 
-func saveImageToDocumentDirectory(image: UIImage, fileName: String) {
-    guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-        return
-    }
-    
-    guard let imageData = image.pngData() else {
-        return
-    }
-    
-    let fileURL = documentsDirectory.appendingPathComponent("\(fileName).png")
-    
-    do {
-        try imageData.write(to: fileURL)
-        print("Image saved successfully. File path: \(fileURL)")
-    } catch {
-        print("Error saving image: \(error)")
-    }
-}
-
+//func saveImageToDocumentDirectory(image: UIImage, fileName: String) {
+//    guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+//        return
+//    }
+//
+//    guard let imageData = image.pngData() else {
+//        return
+//    }
+//
+//    let fileURL = documentsDirectory.appendingPathComponent("\(fileName).png")
+//
+//    do {
+//        try imageData.write(to: fileURL)
+//        // print("Image saved successfully. File path: \(fileURL)")
+//    } catch {
+//        print("Error saving image: \(error)")
+//    }
+//}
+//
 
 struct ScenekitSingleView_Previews: PreviewProvider {
     static var previews: some View {

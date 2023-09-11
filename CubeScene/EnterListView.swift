@@ -9,11 +9,23 @@ import SwiftUI
 
 
 struct EnterItem: Decodable {
+
+    /// 形状名称
     let name:String
+
+    /// 形状数据 三位数组
     let matrix:Matrix3D
+
+    /// 形状用到哪些块
     let usedBlock: [Int]
+
+    /// 形状拼接的顺序，从底层遍历得出，暂时不支持自定义顺序，TO支持自定义顺序
     let orderBlock: [Int]
+
+    /// 标记形状是否完成
     var isTaskComplete: Bool
+
+    /// 形状难度等级
     let level: Int
 
     init(name: String, matrix: Matrix3D, isTaskComplete: Bool) {
@@ -96,11 +108,19 @@ extension EnterItem: Identifiable {
     }
 }
 
+
+/// 解析文件得到要展示的形状数据数组
+/// - Parameter resourceName: 数据文件名，在main bundle里
+/// - Returns: 形状数组
 func produceData(resourceName:String) -> [EnterItem]  {
     let stringContent = try! String(contentsOf: Bundle.main.url(forResource: resourceName, withExtension: "txt")!, encoding: .utf8)
     return produceData2(stringContent: stringContent)
 }
 
+/// 解析字符串得到要展示的形状数据数组
+/// - Parameter stringContent: 要解析的字符串
+/// - Returns: 形状数组
+/// - Note: 第一行 以/SOMA开头
 func produceData2(stringContent:String) -> [EnterItem]  {
     let firstArray = stringContent.components(separatedBy: "/SOMA")
     let trimmingSet:CharacterSet = {
@@ -108,6 +128,8 @@ func produceData2(stringContent:String) -> [EnterItem]  {
         triSet.insert("/")
         return triSet
     }()
+    let charactersOfV = "VLTZABP"
+
     return firstArray.filter { item in
         item.lengthOfBytes(using: .utf8) > 1
     }.map { currentData in
@@ -124,12 +146,10 @@ func produceData2(stringContent:String) -> [EnterItem]  {
         let result = parsedData.map { item in
             item.split(separator: separatorItem).map { subItem in
                 subItem.map { subSubItem in
-
-                    if subSubItem == "V" || subSubItem == "L" || subSubItem == "T" || subSubItem == "A" || subSubItem == "B" || subSubItem == "P" || subSubItem == "Z"
-                    {
+                    if charactersOfV.contains(subSubItem) {
                         let character: Character = subSubItem
                         if let asciiValue = character.unicodeScalars.first?.value {
-                            print("\(character)  :ASCII值为: \(asciiValue)")
+                            // print("\(character)  :ASCII值为: \(asciiValue)")
                             return Int(asciiValue);
                         } else {
                             print("无法获取ASCII值")
