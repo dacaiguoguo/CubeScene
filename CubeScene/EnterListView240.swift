@@ -35,7 +35,6 @@ struct EnterListView240: View {
                     }
                 }
             }
-
         }
     }
 

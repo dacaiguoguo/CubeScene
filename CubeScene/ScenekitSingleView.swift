@@ -140,29 +140,29 @@ struct ScenekitSingleView : UIViewRepresentable {
                                     switch value {
                                     case 86:
 //                                        return 1
-                                        material.diffuse.contents = colors[1].withAlphaComponent(0.7)
+                                        material.diffuse.contents = colors[1].withAlphaComponent(0.81)
                                     case 76:
 //                                        return 2;
-                                        material.diffuse.contents = colors[2].withAlphaComponent(0.7)
+                                        material.diffuse.contents = colors[2].withAlphaComponent(0.81)
                                     case 84:
 //                                        return 3;
-                                        material.diffuse.contents = colors[3].withAlphaComponent(0.7)
+                                        material.diffuse.contents = colors[3].withAlphaComponent(0.81)
 
                                     case 90:
 //                                        return 4;
-                                        material.diffuse.contents = colors[4].withAlphaComponent(0.7)
+                                        material.diffuse.contents = colors[4].withAlphaComponent(0.81)
 
                                     case 65:
 //                                        return 5;
-                                        material.diffuse.contents = colors[5].withAlphaComponent(0.7)
+                                        material.diffuse.contents = colors[5].withAlphaComponent(0.81)
 
                                     case 66:
 //                                        return 6;
-                                        material.diffuse.contents = colors[6].withAlphaComponent(0.7)
+                                        material.diffuse.contents = colors[6].withAlphaComponent(0.81)
 
                                     case 80:
 //                                        return 7;
-                                        material.diffuse.contents = colors[7].withAlphaComponent(0.7)
+                                        material.diffuse.contents = colors[7].withAlphaComponent(0.81)
 
                                     default:
                                         material.diffuse.contents = colors[value]

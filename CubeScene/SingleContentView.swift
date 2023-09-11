@@ -81,7 +81,7 @@ public struct SingleContentView: View {
         VStack {
             // 用来生成正方形的切图的时候 需要去掉 alignment，居中用模拟器手势方便 一些
             ZStack(alignment: .bottomLeading) {
-                Image(uiImage: UIImage(named: "wenli8")!)
+                Image(uiImage: UIImage(named: "wenli5")!)
                     .resizable(resizingMode: .tile)
                 ZStack {
                     VStack {

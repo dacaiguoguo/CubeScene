@@ -213,26 +213,28 @@ struct EnterListView: View {
                         }.padding(EdgeInsets(top: 0, leading: 0, bottom: 8, trailing: 0))
                         if #available(iOS 16, *) {
                             Text("\(LocalizedStringResource(stringLiteral: "\(item.isTaskComplete ? "Completed" : "ToDo")")) ")
-                            .font(.subheadline)
-                                           +
-                        Text(Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle"))
-                            .font(.subheadline)
-                            .foregroundColor(item.isTaskComplete ? .green : .pink)
+                                .font(.subheadline)
+                            +
+                            Text(Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle"))
+                                .font(.subheadline)
+                                .foregroundColor(item.isTaskComplete ? .green : .pink)
                         } else {
-                        Text("\(item.isTaskComplete ? "Completed" : "ToDo")")
-                        .font(.subheadline)
-                                       +
-                        Text(Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle"))
-                            .font(.subheadline)
-                            .foregroundColor(item.isTaskComplete ? .green : .pink)
+                            Text("\(item.isTaskComplete ? "Completed" : "ToDo")")
+                                .font(.subheadline)
+                            +
+                            Text(Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle"))
+                                .font(.subheadline)
+                                .foregroundColor(item.isTaskComplete ? .green : .pink)
                         }
-         
+
                     }
                 }
             }
+            // .listRowBackground(Color(uiColor: UIColor(hex: "f8f8f8")))
         }
     }
 }
+
 
 
 struct EnterListView_Previews: PreviewProvider {
