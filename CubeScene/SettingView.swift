@@ -110,6 +110,20 @@ public struct SettingView: View {
                         Image(systemName: "highlighter")
                     }
                 }
+                NavigationLink {
+                    EnterListView(productList: produceData(resourceName: "SOMAC101")).navigationTitle("SOMA C3A").navigationBarTitleDisplayMode(.inline)
+                        .onAppear {
+                            print("onAppear EnterListView !")
+                        }.environmentObject(userData)
+                } label: {
+                    HStack{
+                        Text("SOMA C3A")
+                        Spacer()
+                        Image(systemName: "highlighter")
+                    }
+                }
+
+
             })
             Section(content: {
                 ForEach(channelLocalDataList) { channel in
