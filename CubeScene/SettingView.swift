@@ -123,6 +123,19 @@ public struct SettingView: View {
                     }
                 }
 
+                NavigationLink {
+                    EnterListView(productList: produceData(resourceName: "SOMAC3B101")).navigationTitle("SOMA C3B").navigationBarTitleDisplayMode(.inline)
+                        .onAppear {
+                            print("onAppear EnterListView !")
+                        }.environmentObject(userData)
+                } label: {
+                    HStack{
+                        Text("SOMA C3B")
+                        Spacer()
+                        Image(systemName: "highlighter")
+                    }
+                }
+
 
             })
             Section(content: {

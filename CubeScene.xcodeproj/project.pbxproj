@@ -38,6 +38,8 @@
 		9D7E41202AA2356A00863C43 /* SOMAW101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411C2AA2356A00863C43 /* SOMAW101.txt */; };
 		9D9448812AB43E0E0005FD11 /* SOMAC101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D9448802AB43E0E0005FD11 /* SOMAC101.txt */; };
 		9D9448822AB43E0E0005FD11 /* SOMAC101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D9448802AB43E0E0005FD11 /* SOMAC101.txt */; };
+		9DB0AAB52AC1DEAB0093A611 /* SOMAC3B101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DB0AAB42AC1DEAB0093A611 /* SOMAC3B101.txt */; };
+		9DB0AAB62AC1DEAB0093A611 /* SOMAC3B101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DB0AAB42AC1DEAB0093A611 /* SOMAC3B101.txt */; };
 		9DBE04F02A56ECB70055AE14 /* ConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBE04EF2A56ECB70055AE14 /* ConfigView.swift */; };
 		9DBE04F32A57D6560055AE14 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DBE04F52A57D6560055AE14 /* InfoPlist.strings */; };
 		9DBE04F92A57D7BC0055AE14 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DBE04FB2A57D7BC0055AE14 /* Localizable.strings */; };
@@ -101,6 +103,7 @@
 		9D7E411B2AA2356A00863C43 /* SOMAX101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAX101.txt; sourceTree = "<group>"; };
 		9D7E411C2AA2356A00863C43 /* SOMAW101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAW101.txt; sourceTree = "<group>"; };
 		9D9448802AB43E0E0005FD11 /* SOMAC101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAC101.txt; sourceTree = "<group>"; };
+		9DB0AAB42AC1DEAB0093A611 /* SOMAC3B101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAC3B101.txt; sourceTree = "<group>"; };
 		9DBE04EF2A56ECB70055AE14 /* ConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigView.swift; sourceTree = "<group>"; };
 		9DBE04F42A57D6560055AE14 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9DBE04F62A57D65A0055AE14 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
@@ -189,6 +192,7 @@
 				9D7E411C2AA2356A00863C43 /* SOMAW101.txt */,
 				9D7E411B2AA2356A00863C43 /* SOMAX101.txt */,
 				9D9448802AB43E0E0005FD11 /* SOMAC101.txt */,
+				9DB0AAB42AC1DEAB0093A611 /* SOMAC3B101.txt */,
 				9DF9380A2A417BA4001BD720 /* data1.txt */,
 				9DF9380C2A417BA4001BD720 /* data2.txt */,
 				9DF938102A417BAD001BD720 /* data3.txt */,
@@ -309,6 +313,7 @@
 				59524DBC2A60FC6F0078EBB6 /* InfoPlist.strings in Resources */,
 				9D7E41202AA2356A00863C43 /* SOMAW101.txt in Resources */,
 				59524DBB2A60FC630078EBB6 /* Localizable.strings in Resources */,
+				9DB0AAB62AC1DEAB0093A611 /* SOMAC3B101.txt in Resources */,
 				9D2D85B32A602AE600B11A7D /* Assets.xcassets in Resources */,
 				59524DC12A60FC970078EBB6 /* Assets.xcassets in Resources */,
 				9D7E411E2AA2356A00863C43 /* SOMAX101.txt in Resources */,
@@ -327,6 +332,7 @@
 				9D7E411D2AA2356A00863C43 /* SOMAX101.txt in Resources */,
 				9DDEC0D22A6178DF001A0046 /* SOMAT101.txt in Resources */,
 				9DF938112A417BAD001BD720 /* data3.txt in Resources */,
+				9DB0AAB52AC1DEAB0093A611 /* SOMAC3B101.txt in Resources */,
 				9DBE04F92A57D7BC0055AE14 /* Localizable.strings in Resources */,
 				9D6DC3E52AA168460068C807 /* SOMAY101.txt in Resources */,
 				9D9448812AB43E0E0005FD11 /* SOMAC101.txt in Resources */,
@@ -432,7 +438,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.4.7;
+				MARKETING_VERSION = 3.4.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -466,7 +472,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.4.7;
+				MARKETING_VERSION = 3.4.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -614,7 +620,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.4.7;
+				MARKETING_VERSION = 3.4.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -650,7 +656,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.4.7;
+				MARKETING_VERSION = 3.4.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
