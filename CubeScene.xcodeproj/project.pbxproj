@@ -36,8 +36,12 @@
 		9D7E411E2AA2356A00863C43 /* SOMAX101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411B2AA2356A00863C43 /* SOMAX101.txt */; };
 		9D7E411F2AA2356A00863C43 /* SOMAW101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411C2AA2356A00863C43 /* SOMAW101.txt */; };
 		9D7E41202AA2356A00863C43 /* SOMAW101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411C2AA2356A00863C43 /* SOMAW101.txt */; };
-		9D9448812AB43E0E0005FD11 /* SOMAC101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D9448802AB43E0E0005FD11 /* SOMAC101.txt */; };
-		9D9448822AB43E0E0005FD11 /* SOMAC101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D9448802AB43E0E0005FD11 /* SOMAC101.txt */; };
+		9D9448812AB43E0E0005FD11 /* SOMAC3A101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D9448802AB43E0E0005FD11 /* SOMAC3A101.txt */; };
+		9D9448822AB43E0E0005FD11 /* SOMAC3A101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D9448802AB43E0E0005FD11 /* SOMAC3A101.txt */; };
+		9DA001872AD6390100FDACFE /* SOMAC3C101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DA001852AD6390100FDACFE /* SOMAC3C101.txt */; };
+		9DA001882AD6390100FDACFE /* SOMAC3C101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DA001852AD6390100FDACFE /* SOMAC3C101.txt */; };
+		9DA001892AD6390100FDACFE /* SOMAC3D101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DA001862AD6390100FDACFE /* SOMAC3D101.txt */; };
+		9DA0018A2AD6390100FDACFE /* SOMAC3D101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DA001862AD6390100FDACFE /* SOMAC3D101.txt */; };
 		9DB0AAB52AC1DEAB0093A611 /* SOMAC3B101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DB0AAB42AC1DEAB0093A611 /* SOMAC3B101.txt */; };
 		9DB0AAB62AC1DEAB0093A611 /* SOMAC3B101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DB0AAB42AC1DEAB0093A611 /* SOMAC3B101.txt */; };
 		9DBE04F02A56ECB70055AE14 /* ConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBE04EF2A56ECB70055AE14 /* ConfigView.swift */; };
@@ -102,7 +106,9 @@
 		9D6DC3E42AA168460068C807 /* SOMAY101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAY101.txt; sourceTree = "<group>"; };
 		9D7E411B2AA2356A00863C43 /* SOMAX101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAX101.txt; sourceTree = "<group>"; };
 		9D7E411C2AA2356A00863C43 /* SOMAW101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAW101.txt; sourceTree = "<group>"; };
-		9D9448802AB43E0E0005FD11 /* SOMAC101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAC101.txt; sourceTree = "<group>"; };
+		9D9448802AB43E0E0005FD11 /* SOMAC3A101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAC3A101.txt; sourceTree = "<group>"; };
+		9DA001852AD6390100FDACFE /* SOMAC3C101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAC3C101.txt; sourceTree = "<group>"; };
+		9DA001862AD6390100FDACFE /* SOMAC3D101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAC3D101.txt; sourceTree = "<group>"; };
 		9DB0AAB42AC1DEAB0093A611 /* SOMAC3B101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAC3B101.txt; sourceTree = "<group>"; };
 		9DBE04EF2A56ECB70055AE14 /* ConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigView.swift; sourceTree = "<group>"; };
 		9DBE04F42A57D6560055AE14 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -191,8 +197,10 @@
 				9D6DC3E42AA168460068C807 /* SOMAY101.txt */,
 				9D7E411C2AA2356A00863C43 /* SOMAW101.txt */,
 				9D7E411B2AA2356A00863C43 /* SOMAX101.txt */,
-				9D9448802AB43E0E0005FD11 /* SOMAC101.txt */,
+				9D9448802AB43E0E0005FD11 /* SOMAC3A101.txt */,
 				9DB0AAB42AC1DEAB0093A611 /* SOMAC3B101.txt */,
+				9DA001852AD6390100FDACFE /* SOMAC3C101.txt */,
+				9DA001862AD6390100FDACFE /* SOMAC3D101.txt */,
 				9DF9380A2A417BA4001BD720 /* data1.txt */,
 				9DF9380C2A417BA4001BD720 /* data2.txt */,
 				9DF938102A417BAD001BD720 /* data3.txt */,
@@ -311,6 +319,7 @@
 				9DDEC0CC2A614F69001A0046 /* solutionsMaped.json in Resources */,
 				9DDEC0D02A61753A001A0046 /* SOMA108.txt in Resources */,
 				59524DBC2A60FC6F0078EBB6 /* InfoPlist.strings in Resources */,
+				9DA0018A2AD6390100FDACFE /* SOMAC3D101.txt in Resources */,
 				9D7E41202AA2356A00863C43 /* SOMAW101.txt in Resources */,
 				59524DBB2A60FC630078EBB6 /* Localizable.strings in Resources */,
 				9DB0AAB62AC1DEAB0093A611 /* SOMAC3B101.txt in Resources */,
@@ -318,7 +327,8 @@
 				59524DC12A60FC970078EBB6 /* Assets.xcassets in Resources */,
 				9D7E411E2AA2356A00863C43 /* SOMAX101.txt in Resources */,
 				9D6DC3E62AA168460068C807 /* SOMAY101.txt in Resources */,
-				9D9448822AB43E0E0005FD11 /* SOMAC101.txt in Resources */,
+				9D9448822AB43E0E0005FD11 /* SOMAC3A101.txt in Resources */,
+				9DA001882AD6390100FDACFE /* SOMAC3C101.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,10 +345,12 @@
 				9DB0AAB52AC1DEAB0093A611 /* SOMAC3B101.txt in Resources */,
 				9DBE04F92A57D7BC0055AE14 /* Localizable.strings in Resources */,
 				9D6DC3E52AA168460068C807 /* SOMAY101.txt in Resources */,
-				9D9448812AB43E0E0005FD11 /* SOMAC101.txt in Resources */,
+				9D9448812AB43E0E0005FD11 /* SOMAC3A101.txt in Resources */,
+				9DA001872AD6390100FDACFE /* SOMAC3C101.txt in Resources */,
 				9DF9380D2A417BA4001BD720 /* data1.txt in Resources */,
 				9DDEC0CB2A614D47001A0046 /* solutionsMaped.json in Resources */,
 				9D1602BA2A4BDBF100C247A7 /* LaunchScreen.storyboard in Resources */,
+				9DA001892AD6390100FDACFE /* SOMAC3D101.txt in Resources */,
 				9DDEC0CF2A61753A001A0046 /* SOMA108.txt in Resources */,
 				9DF920712A404BBF001BD720 /* Assets.xcassets in Resources */,
 				9DF9380F2A417BA4001BD720 /* data2.txt in Resources */,

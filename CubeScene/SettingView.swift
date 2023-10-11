@@ -111,7 +111,7 @@ public struct SettingView: View {
                     }
                 }
                 NavigationLink {
-                    EnterListView(productList: produceData(resourceName: "SOMAC101")).navigationTitle("SOMA C3A").navigationBarTitleDisplayMode(.inline)
+                    EnterListView(productList: produceData(resourceName: "SOMAC3A101")).navigationTitle("SOMA C3A").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
                             print("onAppear EnterListView !")
                         }.environmentObject(userData)
@@ -135,7 +135,30 @@ public struct SettingView: View {
                         Image(systemName: "highlighter")
                     }
                 }
-
+                NavigationLink {
+                    EnterListView(productList: produceData(resourceName: "SOMAC3C101")).navigationTitle("SOMA C3C").navigationBarTitleDisplayMode(.inline)
+                        .onAppear {
+                            print("onAppear EnterListView !")
+                        }.environmentObject(userData)
+                } label: {
+                    HStack{
+                        Text("SOMA C3C")
+                        Spacer()
+                        Image(systemName: "highlighter")
+                    }
+                }
+                NavigationLink {
+                    EnterListView(productList: produceData(resourceName: "SOMAC3D101")).navigationTitle("SOMA C3D").navigationBarTitleDisplayMode(.inline)
+                        .onAppear {
+                            print("onAppear EnterListView !")
+                        }.environmentObject(userData)
+                } label: {
+                    HStack{
+                        Text("SOMA C3D")
+                        Spacer()
+                        Image(systemName: "highlighter")
+                    }
+                }
 
             })
             Section(content: {
