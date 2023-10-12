@@ -134,7 +134,7 @@ struct InputView: View {
             VStack {
                 TextEditor(text: $message)
                     .font(.custom("Menlo", size: 18))
-                    .lineSpacing(20)
+                    .lineSpacing(10)
                     .focused($isEditing)
                     .disableAutocorrection(true)
                     .padding()
