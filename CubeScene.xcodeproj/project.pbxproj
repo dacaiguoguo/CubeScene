@@ -36,6 +36,8 @@
 		9D7E411E2AA2356A00863C43 /* SOMAX101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411B2AA2356A00863C43 /* SOMAX101.txt */; };
 		9D7E411F2AA2356A00863C43 /* SOMAW101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411C2AA2356A00863C43 /* SOMAW101.txt */; };
 		9D7E41202AA2356A00863C43 /* SOMAW101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411C2AA2356A00863C43 /* SOMAW101.txt */; };
+		9D890F9C2AD8EF3600E1EF0C /* SOMAC4A101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D890F9B2AD8EF3600E1EF0C /* SOMAC4A101.txt */; };
+		9D890F9D2AD8EF3600E1EF0C /* SOMAC4A101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D890F9B2AD8EF3600E1EF0C /* SOMAC4A101.txt */; };
 		9D9448812AB43E0E0005FD11 /* SOMAC3A101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D9448802AB43E0E0005FD11 /* SOMAC3A101.txt */; };
 		9D9448822AB43E0E0005FD11 /* SOMAC3A101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D9448802AB43E0E0005FD11 /* SOMAC3A101.txt */; };
 		9DA001872AD6390100FDACFE /* SOMAC3C101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DA001852AD6390100FDACFE /* SOMAC3C101.txt */; };
@@ -106,6 +108,7 @@
 		9D6DC3E42AA168460068C807 /* SOMAY101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAY101.txt; sourceTree = "<group>"; };
 		9D7E411B2AA2356A00863C43 /* SOMAX101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAX101.txt; sourceTree = "<group>"; };
 		9D7E411C2AA2356A00863C43 /* SOMAW101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAW101.txt; sourceTree = "<group>"; };
+		9D890F9B2AD8EF3600E1EF0C /* SOMAC4A101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAC4A101.txt; sourceTree = "<group>"; };
 		9D9448802AB43E0E0005FD11 /* SOMAC3A101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAC3A101.txt; sourceTree = "<group>"; };
 		9DA001852AD6390100FDACFE /* SOMAC3C101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAC3C101.txt; sourceTree = "<group>"; };
 		9DA001862AD6390100FDACFE /* SOMAC3D101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAC3D101.txt; sourceTree = "<group>"; };
@@ -201,6 +204,7 @@
 				9DB0AAB42AC1DEAB0093A611 /* SOMAC3B101.txt */,
 				9DA001852AD6390100FDACFE /* SOMAC3C101.txt */,
 				9DA001862AD6390100FDACFE /* SOMAC3D101.txt */,
+				9D890F9B2AD8EF3600E1EF0C /* SOMAC4A101.txt */,
 				9DF9380A2A417BA4001BD720 /* data1.txt */,
 				9DF9380C2A417BA4001BD720 /* data2.txt */,
 				9DF938102A417BAD001BD720 /* data3.txt */,
@@ -320,6 +324,7 @@
 				9DDEC0D02A61753A001A0046 /* SOMA108.txt in Resources */,
 				59524DBC2A60FC6F0078EBB6 /* InfoPlist.strings in Resources */,
 				9DA0018A2AD6390100FDACFE /* SOMAC3D101.txt in Resources */,
+				9D890F9D2AD8EF3600E1EF0C /* SOMAC4A101.txt in Resources */,
 				9D7E41202AA2356A00863C43 /* SOMAW101.txt in Resources */,
 				59524DBB2A60FC630078EBB6 /* Localizable.strings in Resources */,
 				9DB0AAB62AC1DEAB0093A611 /* SOMAC3B101.txt in Resources */,
@@ -337,6 +342,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DF920742A404BBF001BD720 /* Preview Assets.xcassets in Resources */,
+				9D890F9C2AD8EF3600E1EF0C /* SOMAC4A101.txt in Resources */,
 				9D7E411F2AA2356A00863C43 /* SOMAW101.txt in Resources */,
 				9DBE04F32A57D6560055AE14 /* InfoPlist.strings in Resources */,
 				9D7E411D2AA2356A00863C43 /* SOMAX101.txt in Resources */,
