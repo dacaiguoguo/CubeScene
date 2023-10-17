@@ -11,7 +11,9 @@ import SwiftUI
 struct CubeCompleteApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView().onAppear {
+                print("\(NSHomeDirectory())")
+            }
         }
     }
 }

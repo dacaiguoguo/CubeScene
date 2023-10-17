@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9D6A342E2ADD0839004391CE /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 9D6A342D2ADD0839004391CE /* SQLite */; };
+		9D6A34302ADD09BE004391CE /* chaizi-jt.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D6A342F2ADD09BE004391CE /* chaizi-jt.txt */; };
 		9DA0DF8E2A5EB9CE009F358B /* CubeCompleteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA0DF8D2A5EB9CE009F358B /* CubeCompleteApp.swift */; };
 		9DA0DF902A5EB9CE009F358B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA0DF8F2A5EB9CE009F358B /* ContentView.swift */; };
 		9DA0DF922A5EB9D1009F358B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DA0DF912A5EB9D1009F358B /* Assets.xcassets */; };
@@ -14,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9D6A342F2ADD09BE004391CE /* chaizi-jt.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "chaizi-jt.txt"; sourceTree = "<group>"; };
 		9DA0DF8A2A5EB9CE009F358B /* CubeComplete.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CubeComplete.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DA0DF8D2A5EB9CE009F358B /* CubeCompleteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeCompleteApp.swift; sourceTree = "<group>"; };
 		9DA0DF8F2A5EB9CE009F358B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -26,6 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D6A342E2ADD0839004391CE /* SQLite in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,6 +56,7 @@
 			isa = PBXGroup;
 			children = (
 				9DA0DF8D2A5EB9CE009F358B /* CubeCompleteApp.swift */,
+				9D6A342F2ADD09BE004391CE /* chaizi-jt.txt */,
 				9DA0DF8F2A5EB9CE009F358B /* ContentView.swift */,
 				9DA0DF912A5EB9D1009F358B /* Assets.xcassets */,
 				9DA0DF932A5EB9D1009F358B /* Preview Content */,
@@ -83,6 +88,9 @@
 			dependencies = (
 			);
 			name = CubeComplete;
+			packageProductDependencies = (
+				9D6A342D2ADD0839004391CE /* SQLite */,
+			);
 			productName = CubeComplete;
 			productReference = 9DA0DF8A2A5EB9CE009F358B /* CubeComplete.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +119,9 @@
 				Base,
 			);
 			mainGroup = 9DA0DF812A5EB9CE009F358B;
+			packageReferences = (
+				9D6A342C2ADD0839004391CE /* XCRemoteSwiftPackageReference "SQLite" */,
+			);
 			productRefGroup = 9DA0DF8B2A5EB9CE009F358B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -125,6 +136,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D6A34302ADD09BE004391CE /* chaizi-jt.txt in Resources */,
 				9DA0DF952A5EB9D1009F358B /* Preview Assets.xcassets in Resources */,
 				9DA0DF922A5EB9D1009F358B /* Assets.xcassets in Resources */,
 			);
@@ -339,6 +351,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9D6A342C2ADD0839004391CE /* XCRemoteSwiftPackageReference "SQLite" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stephencelis/SQLite.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9D6A342D2ADD0839004391CE /* SQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D6A342C2ADD0839004391CE /* XCRemoteSwiftPackageReference "SQLite" */;
+			productName = SQLite;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9DA0DF822A5EB9CE009F358B /* Project object */;
 }
