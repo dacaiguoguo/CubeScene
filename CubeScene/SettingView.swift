@@ -63,6 +63,7 @@ extension Channel: Identifiable {
 public struct SettingView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var userData: UserData
+    let persistenceController = PersistenceController.shared
 
     public init(){}
 
@@ -174,12 +175,38 @@ public struct SettingView: View {
 
             })
             Section(content: {
+
+                NavigationLink {
+                    ChaiZiView<FtItem>(filename: "chaizi-jt", titleStr: "简体拆字字典")
+                        .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                } label: {
+                    HStack{
+                        Text("简体拆字")
+                        Spacer()
+                        Image(systemName: "lasso")
+                    }
+                }
+
+                NavigationLink {
+                    ChaiZiView<FtItem>(filename: "chaizi-ft", titleStr: "繁体拆字字典")
+                        .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                } label: {
+                    HStack{
+                        Text("繁体拆字")
+                        Spacer()
+                        Image(systemName: "lasso.and.sparkles")
+                    }
+                }
+            })
+
+            Section(content: {
                 ForEach(channelLocalDataList) { channel in
                     Link(LocalizedStringKey(channel.name), destination: URL(string: channel.link)!)
                         .foregroundColor(.blue)
                         .font(.headline)
                 }
             })
+            
         }.navigationTitle("TitleHelp")
             .navigationBarTitleDisplayMode(.inline)
     }
