@@ -81,11 +81,54 @@ struct ScenekitSingleView : UIViewRepresentable {
         scene.rootNode.addChildNode(parNode2)
         scnView.scene = scene
         scnView.autoenablesDefaultLighting = true
-        scnView.allowsCameraControl = true
+//        scnView.allowsCameraControl = true
         scnView.backgroundColor = .clear
+
+
+        // 添加旋转手势
+        let rotateGesture = UIRotationGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.rotateGesture(_:)))
+        scnView.addGestureRecognizer(rotateGesture)
+
+        // 添加平移手势
+        let panGesture = UIPanGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.panGesture(_:)))
+        scnView.addGestureRecognizer(panGesture)
+
         return scnView
     }
+    func makeCoordinator() -> Coordinator {
+        return Coordinator()
+    }
 
+    class Coordinator: NSObject {
+        @objc func rotateGesture(_ gesture: UIRotationGestureRecognizer) {
+            // 处理旋转手势
+            if gesture.state == .changed {
+                // 在这里更新拼图块的旋转
+                // 使用 gesture.rotation 获取旋转角度
+                print("gesture.rotation \(gesture.rotation)");
+                if let view = gesture.view as? SCNView {
+                    // 获取SCNBox的节点
+                    if let boxNode = view.scene?.rootNode.childNodes.first {
+                        // 使用手势的旋转值来旋转方块
+                        let rotation = SCNAction.rotateBy(x: 0, y: 0, z: gesture.rotation, duration: 0)
+                        boxNode.runAction(rotation)
+                    }
+                }
+
+                // 重置手势的旋转值，以便继续旋转
+                gesture.rotation = 0
+            }
+        }
+
+        @objc func panGesture(_ gesture: UIPanGestureRecognizer) {
+            // 处理平移手势
+            if gesture.state == .changed {
+                // 在这里更新拼图块的位置
+                // 使用 gesture.translation(in: gesture.view) 获取平移的位移
+                print("gesture.translation \(gesture.translation(in: gesture.view))");
+            }
+        }
+    }
 
     /// 单色时用的 效果不太好，改成切图了
     /// - Returns: 各个面的颜色，上下白色，侧边灰色
