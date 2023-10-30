@@ -46,6 +46,8 @@ struct ScenekitSingleView : UIViewRepresentable {
         cameraNode.position = SCNVector3Make(-10.5, 7.5, 20)
         cameraNode.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
         ret.rootNode.addChildNode(cameraNode)
+        let env = UIImage(named: "shinyRoom.jpg")
+        ret.background.contents = env
         self.scene = ret
     }
     
@@ -53,6 +55,8 @@ struct ScenekitSingleView : UIViewRepresentable {
     func makeUIView(context: Context) -> SCNView {
         // retrieve the SCNView
         let scnView = SCNView()
+
+
         let countOfRow = dataItem.count
         let countOfLayer = dataItem.first?.count ?? -1
         let countOfColum = dataItem.first?.first?.count ?? -1
@@ -81,17 +85,13 @@ struct ScenekitSingleView : UIViewRepresentable {
         scene.rootNode.addChildNode(parNode2)
         scnView.scene = scene
         scnView.autoenablesDefaultLighting = true
-//        scnView.allowsCameraControl = true
+        scnView.allowsCameraControl = true
         scnView.backgroundColor = .clear
 
 
-        // 添加旋转手势
-        let rotateGesture = UIRotationGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.rotateGesture(_:)))
-        scnView.addGestureRecognizer(rotateGesture)
-
-        // 添加平移手势
-        let panGesture = UIPanGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.panGesture(_:)))
-        scnView.addGestureRecognizer(panGesture)
+        // 添加点击手势
+        let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handleTap(_:)))
+        scnView.addGestureRecognizer(tapGesture)
 
         return scnView
     }
@@ -100,32 +100,19 @@ struct ScenekitSingleView : UIViewRepresentable {
     }
 
     class Coordinator: NSObject {
-        @objc func rotateGesture(_ gesture: UIRotationGestureRecognizer) {
-            // 处理旋转手势
-            if gesture.state == .changed {
-                // 在这里更新拼图块的旋转
-                // 使用 gesture.rotation 获取旋转角度
-                print("gesture.rotation \(gesture.rotation)");
-                if let view = gesture.view as? SCNView {
-                    // 获取SCNBox的节点
-                    if let boxNode = view.scene?.rootNode.childNodes.first {
-                        // 使用手势的旋转值来旋转方块
-                        let rotation = SCNAction.rotateBy(x: 0, y: 0, z: gesture.rotation, duration: 0)
-                        boxNode.runAction(rotation)
+        @objc func handleTap(_ gesture: UITapGestureRecognizer) {
+            if let view = gesture.view as? SCNView {
+                let location = gesture.location(in: view)
+                let hitResults = view.hitTest(location, options: nil)
+                if let hitNode = hitResults.first?.node {
+                    // 用户选择了对象，可以在此处处理高亮逻辑
+                    // 恢复其他对象的材质以取消高亮
+                    for node in view.scene?.rootNode.childNodes.first?.childNodes ?? [] {
+                        node.geometry?.firstMaterial?.emission.contents = UIColor.black
                     }
+                    // 高亮选定的对象
+                    hitNode.geometry?.firstMaterial?.emission.contents = UIColor.yellow
                 }
-
-                // 重置手势的旋转值，以便继续旋转
-                gesture.rotation = 0
-            }
-        }
-
-        @objc func panGesture(_ gesture: UIPanGestureRecognizer) {
-            // 处理平移手势
-            if gesture.state == .changed {
-                // 在这里更新拼图块的位置
-                // 使用 gesture.translation(in: gesture.view) 获取平移的位移
-                print("gesture.translation \(gesture.translation(in: gesture.view))");
             }
         }
     }
