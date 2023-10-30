@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		5934F66B2A65038B00AED0E9 /* ScenekitSingleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5934F66A2A65038B00AED0E9 /* ScenekitSingleView.swift */; };
 		5934F66C2A65038B00AED0E9 /* ScenekitSingleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5934F66A2A65038B00AED0E9 /* ScenekitSingleView.swift */; };
+		59452FB12AEFFCC6008442ED /* dijon_notre_dame.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 59452FB02AEFFCC6008442ED /* dijon_notre_dame.jpg */; };
+		59452FB22AEFFCC6008442ED /* dijon_notre_dame.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 59452FB02AEFFCC6008442ED /* dijon_notre_dame.jpg */; };
 		59524DB82A60FC590078EBB6 /* CubeSceneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */; };
 		59524DB92A60FC5C0078EBB6 /* EnterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04123B2A516AD30083741B /* EnterListView.swift */; };
 		59524DBA2A60FC5F0078EBB6 /* SingleContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04123D2A516F050083741B /* SingleContentView.swift */; };
@@ -20,6 +22,8 @@
 		59524DC02A60FC7D0078EBB6 /* ConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBE04EF2A56ECB70055AE14 /* ConfigView.swift */; };
 		59524DC12A60FC970078EBB6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DF920702A404BBF001BD720 /* Assets.xcassets */; };
 		5971BA8C2A50547800CD6111 /* ArrayTool3D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */; };
+		598902B12AEFFB130019CCDF /* shinyRoompng@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 598902B02AEFFB130019CCDF /* shinyRoompng@3x.png */; };
+		598902B22AEFFB130019CCDF /* shinyRoompng@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 598902B02AEFFB130019CCDF /* shinyRoompng@3x.png */; };
 		59CFCD432A6281F700E38F38 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59CFCD422A6281F700E38F38 /* UserData.swift */; };
 		59CFCD442A62824000E38F38 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59CFCD422A6281F700E38F38 /* UserData.swift */; };
 		9D01CC762AEFED5B0085A920 /* SceneKit Scene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 9D01CC752AEFED5B0085A920 /* SceneKit Scene.scn */; };
@@ -106,7 +110,9 @@
 
 /* Begin PBXFileReference section */
 		5934F66A2A65038B00AED0E9 /* ScenekitSingleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenekitSingleView.swift; sourceTree = "<group>"; };
+		59452FB02AEFFCC6008442ED /* dijon_notre_dame.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = dijon_notre_dame.jpg; sourceTree = "<group>"; };
 		5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayTool3D.swift; sourceTree = "<group>"; };
+		598902B02AEFFB130019CCDF /* shinyRoompng@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shinyRoompng@3x.png"; sourceTree = "<group>"; };
 		59CFCD422A6281F700E38F38 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		9D01CC752AEFED5B0085A920 /* SceneKit Scene.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "SceneKit Scene.scn"; sourceTree = "<group>"; };
 		9D01CC772AEFF14A0085A920 /* shinyRoom.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = shinyRoom.jpg; sourceTree = "<group>"; };
@@ -225,9 +231,11 @@
 				9D7E411B2AA2356A00863C43 /* SOMAX101.txt */,
 				9D01CC752AEFED5B0085A920 /* SceneKit Scene.scn */,
 				9D9448802AB43E0E0005FD11 /* SOMAC3A101.txt */,
+				598902B02AEFFB130019CCDF /* shinyRoompng@3x.png */,
 				9D01CC772AEFF14A0085A920 /* shinyRoom.jpg */,
 				9DB0AAB42AC1DEAB0093A611 /* SOMAC3B101.txt */,
 				9DA001852AD6390100FDACFE /* SOMAC3C101.txt */,
+				59452FB02AEFFCC6008442ED /* dijon_notre_dame.jpg */,
 				9DA001862AD6390100FDACFE /* SOMAC3D101.txt */,
 				9D890F9B2AD8EF3600E1EF0C /* SOMAC4A101.txt */,
 				9DF9380A2A417BA4001BD720 /* data1.txt */,
@@ -349,6 +357,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59452FB22AEFFCC6008442ED /* dijon_notre_dame.jpg in Resources */,
 				9DDEC0D32A6178DF001A0046 /* SOMAT101.txt in Resources */,
 				9D2D85B62A602AE600B11A7D /* Preview Assets.xcassets in Resources */,
 				9DDEC0CC2A614F69001A0046 /* solutionsMaped.json in Resources */,
@@ -366,6 +375,7 @@
 				9D2D85B32A602AE600B11A7D /* Assets.xcassets in Resources */,
 				59524DC12A60FC970078EBB6 /* Assets.xcassets in Resources */,
 				9D7E411E2AA2356A00863C43 /* SOMAX101.txt in Resources */,
+				598902B22AEFFB130019CCDF /* shinyRoompng@3x.png in Resources */,
 				9D6DC3E62AA168460068C807 /* SOMAY101.txt in Resources */,
 				9D9448822AB43E0E0005FD11 /* SOMAC3A101.txt in Resources */,
 				9DA001882AD6390100FDACFE /* SOMAC3C101.txt in Resources */,
@@ -381,6 +391,7 @@
 				9D890F9C2AD8EF3600E1EF0C /* SOMAC4A101.txt in Resources */,
 				9D7E411F2AA2356A00863C43 /* SOMAW101.txt in Resources */,
 				9DBE04F32A57D6560055AE14 /* InfoPlist.strings in Resources */,
+				598902B12AEFFB130019CCDF /* shinyRoompng@3x.png in Resources */,
 				9D7E411D2AA2356A00863C43 /* SOMAX101.txt in Resources */,
 				9DDEC0D22A6178DF001A0046 /* SOMAT101.txt in Resources */,
 				9D01CC762AEFED5B0085A920 /* SceneKit Scene.scn in Resources */,
@@ -395,6 +406,7 @@
 				9D1602BA2A4BDBF100C247A7 /* LaunchScreen.storyboard in Resources */,
 				9DA001892AD6390100FDACFE /* SOMAC3D101.txt in Resources */,
 				9DDEC0CF2A61753A001A0046 /* SOMA108.txt in Resources */,
+				59452FB12AEFFCC6008442ED /* dijon_notre_dame.jpg in Resources */,
 				9DF920712A404BBF001BD720 /* Assets.xcassets in Resources */,
 				9D01CC782AEFF14A0085A920 /* shinyRoom.jpg in Resources */,
 				9D89A1BB2AE37C19008C6707 /* chaizi-gbk.txt in Resources */,

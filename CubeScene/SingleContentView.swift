@@ -72,37 +72,23 @@ public struct SingleContentView: View {
         } else {
             showColor = Array(dataModel.orderBlock[0 ..< value])
         }
-
     }
+    
+    func decrementStep(a: Direction) {
+        print(a);
+    }
+    
     @State private var isTimerRunning = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     public var body: some View {
         VStack {
+            ArrowButtonView(onButtonTapped: decrementStep)
+
             // 用来生成正方形的切图的时候 需要去掉 alignment，居中用模拟器手势方便 一些
             ZStack(alignment: .bottomLeading) {
-                Image(uiImage: UIImage(named: "wenli5")!)
-                    .resizable(resizingMode: .tile)
+
                 ZStack {
-                    VStack {
-                        HStack{
-                            ForEach(dataModel.usedBlock.indices, id: \.self) { index in
-                                let value = dataModel.usedBlock[index]
-                                Image(uiImage: UIImage(named: "c\(value)")!).resizable(resizingMode: .stretch).frame(width: imageSize, height: imageSize)
-                            }
-                        }
-                        if isOn {
-                            HStack{
-                                Text(dataModel.matrix.formatOutput).font(.custom("Menlo", size: 18)).frame(maxWidth: .infinity).foregroundColor(.primary)
-                            }.disabled(false)
-                        }
-                        Spacer()
-                        HStack{
-                            Text("单指旋转\n双指滑动来平移\n双指捏合或张开来放大缩小").font(.subheadline).foregroundColor(.secondary)
-                            Spacer()
-                        }
-                    }
-                    .padding()
                     
                     ScenekitSingleView(dataModel:dataModel,
                                        showType: showType,

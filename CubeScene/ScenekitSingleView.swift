@@ -21,8 +21,8 @@ struct ScenekitSingleView : UIViewRepresentable {
     private let numberImageList: [UIImage]
     private let showColor:[Int]
     private let scene : SCNScene
-
-   
+    
+    
     
     private var imageName:String {
         dataModel.name
@@ -46,22 +46,21 @@ struct ScenekitSingleView : UIViewRepresentable {
         cameraNode.position = SCNVector3Make(-10.5, 7.5, 20)
         cameraNode.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
         ret.rootNode.addChildNode(cameraNode)
-        let env = UIImage(named: "shinyRoom.jpg")
+        let env = UIImage(named: "dijon_notre_dame.jpg")
         ret.background.contents = env
         self.scene = ret
     }
     
-
+    
     func makeUIView(context: Context) -> SCNView {
         // retrieve the SCNView
         let scnView = SCNView()
-
-
+        
+        
         let countOfRow = dataItem.count
         let countOfLayer = dataItem.first?.count ?? -1
         let countOfColum = dataItem.first?.first?.count ?? -1
         let parNode2 = SCNNode()
-
         for z in 0..<countOfRow {
             for y in 0..<countOfLayer {
                 for x in 0..<countOfColum {
@@ -87,19 +86,23 @@ struct ScenekitSingleView : UIViewRepresentable {
         scnView.autoenablesDefaultLighting = true
         scnView.allowsCameraControl = true
         scnView.backgroundColor = .clear
-
-
+        
+        
         // 添加点击手势
         let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handleTap(_:)))
         scnView.addGestureRecognizer(tapGesture)
-
+        // 添加上下手势识别器
+        let panGesture = UIPanGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.panGestureHandler(_:)))
+        scnView.addGestureRecognizer(panGesture)
         return scnView
     }
     func makeCoordinator() -> Coordinator {
         return Coordinator()
     }
-
+    
     class Coordinator: NSObject {
+        var selectedNode: SCNNode?
+        
         @objc func handleTap(_ gesture: UITapGestureRecognizer) {
             if let view = gesture.view as? SCNView {
                 let location = gesture.location(in: view)
@@ -112,11 +115,53 @@ struct ScenekitSingleView : UIViewRepresentable {
                     }
                     // 高亮选定的对象
                     hitNode.geometry?.firstMaterial?.emission.contents = UIColor.yellow
+                    selectedNode = hitNode.parent;
+                }
+            }
+            
+        }
+        @objc func panGestureHandler(_ gesture: UIPanGestureRecognizer) {
+            if let view = gesture.view as? SCNView {
+                
+                if let node = selectedNode {
+                    if gesture.state == .changed {
+                        let translation = gesture.translation(in: view)
+
+                        // 计算位移
+                        let deltaX = Float(translation.x) / 100.0
+                        let deltaY = -Float(translation.y) / 100.0  // Y轴反向
+                        let deltaZ = 0.0;//Float(translation.x - translation.y) / 100.0  // 使用X和Y位移来移动Z轴
+                        
+                        // 更新节点的位置
+                        var newPosition = SCNVector3(
+                            x: node.position.x + deltaX,
+                            y: node.position.y + deltaY,
+                            z: node.position.z
+                        )
+                        
+//                        // 四舍五入到最接近的整数值
+//                        newPosition.x = round(newPosition.x)
+//                        newPosition.y = round(newPosition.y)
+//                        newPosition.z = round(newPosition.z)
+                        
+                        node.position = newPosition
+                        
+                        
+                        gesture.setTranslation(.zero, in: view)
+                    }
+                    if gesture.state == .ended {
+                        // 在手势结束时，将节点的位置四舍五入到最接近的整数
+                        let roundedX = round(node.position.x)
+                        let roundedY = round(node.position.y)
+                        let roundedZ = round(node.position.z)
+
+                        node.position = SCNVector3(roundedX, roundedY, roundedZ)
+                    }
                 }
             }
         }
     }
-
+    
     /// 单色时用的 效果不太好，改成切图了
     /// - Returns: 各个面的颜色，上下白色，侧边灰色
     func singleMaterial() -> [SCNMaterial] {
@@ -169,35 +214,35 @@ struct ScenekitSingleView : UIViewRepresentable {
                                 if showColor.contains(value) {
                                     switch value {
                                     case 86:
-//                                        return 1
+                                        //                                        return 1
                                         material.diffuse.contents = colors[1].withAlphaComponent(0.81)
                                     case 76:
-//                                        return 2;
+                                        //                                        return 2;
                                         material.diffuse.contents = colors[2].withAlphaComponent(0.81)
                                     case 84:
-//                                        return 3;
+                                        //                                        return 3;
                                         material.diffuse.contents = colors[3].withAlphaComponent(0.81)
-
+                                        
                                     case 90:
-//                                        return 4;
+                                        //                                        return 4;
                                         material.diffuse.contents = colors[4].withAlphaComponent(0.81)
-
+                                        
                                     case 65:
-//                                        return 5;
+                                        //                                        return 5;
                                         material.diffuse.contents = colors[5].withAlphaComponent(0.81)
-
+                                        
                                     case 66:
-//                                        return 6;
+                                        //                                        return 6;
                                         material.diffuse.contents = colors[6].withAlphaComponent(0.81)
-
+                                        
                                     case 80:
-//                                        return 7;
+                                        //                                        return 7;
                                         material.diffuse.contents = colors[7].withAlphaComponent(0.81)
-
+                                        
                                     default:
                                         material.diffuse.contents = colors[value]
                                     }
-
+                                    
                                 } else {
                                     material.diffuse.contents = UIColor.clear
                                 }
@@ -217,23 +262,23 @@ struct ScenekitSingleView : UIViewRepresentable {
                                 case 84:
                                     //                                        return 3;
                                     material.diffuse.contents = generateImage(color: colors[3].withAlphaComponent(0.8), text: "T")
-
+                                    
                                 case 90:
                                     //                                        return 4;
                                     material.diffuse.contents = generateImage(color: colors[4].withAlphaComponent(0.8), text: "Z")
-
+                                    
                                 case 65:
                                     //                                        return 5;
                                     material.diffuse.contents = generateImage(color: colors[5].withAlphaComponent(0.8), text: "A")
-
+                                    
                                 case 66:
                                     //                                        return 6;
                                     material.diffuse.contents = generateImage(color: colors[6].withAlphaComponent(0.8), text: "B")
-
+                                    
                                 case 80:
                                     //                                        return 7;
                                     material.diffuse.contents = generateImage(color: colors[7].withAlphaComponent(0.8), text: "P")
-
+                                    
                                 default:
                                     material.diffuse.contents = numberImageList[value]
                                 }
@@ -286,13 +331,13 @@ struct ScenekitSingleView_Previews: PreviewProvider {
                                                                         [[2,2,3], [7,5,5], [7,7,5]]],
                                                    isTaskComplete: true),
                                colors: [UIColor(hex: "000000"),
-                                                UIColor(hex: "5B5B5B"),
-                                                UIColor(hex: "C25C1D"),
-                                                UIColor(hex: "2788e7"),
-                                                UIColor(hex: "FA2E34"),
-                                                UIColor(hex: "FB5BC2"),
-                                                UIColor(hex: "FCC633"),
-                                                UIColor(hex: "178E20")],
+                                        UIColor(hex: "5B5B5B"),
+                                        UIColor(hex: "C25C1D"),
+                                        UIColor(hex: "2788e7"),
+                                        UIColor(hex: "FA2E34"),
+                                        UIColor(hex: "FB5BC2"),
+                                        UIColor(hex: "FCC633"),
+                                        UIColor(hex: "178E20")],
                                numberImageList: getTextImageList())
             .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
             
