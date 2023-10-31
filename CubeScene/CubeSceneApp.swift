@@ -83,7 +83,7 @@ struct CubeSceneApp: App {
                     Text("TabTitleName3")
                 }.tag(2)
                 NavigationView {
-                    EnterListView(productList: produceData(resourceName: "SOMAY101")).navigationTitle("TabTitleNameY").navigationBarTitleDisplayMode(.inline)
+                    SingleContentView2().navigationTitle("TabTitleNameY").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
                             print("onAppear EnterListView !")
                         }.environmentObject(userData)

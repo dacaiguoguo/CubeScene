@@ -8,13 +8,6 @@
 import SwiftUI
 import SceneKit
 
-/// 显示类型 单色、彩色、数字
-enum ShowType: Hashable {
-    case singleColor
-    case colorFul
-    case number
-}
-
 struct Matrix3DPoint {
     let data: Matrix3D
     let position: SCNVector3
@@ -23,44 +16,10 @@ struct Matrix3DPoint {
     var offset:SCNVector3
 }
 
-
-extension Matrix3D {
-    var formatOutput: String {
-        return self.map { item in
-            "/" + item.map({ subItem in
-                subItem.map({ value in
-                    if value == -1 {
-                        return  "."
-                    } else {
-                        return String(value)
-                    }
-                }).joined()
-            }).joined(separator: "/")
-        }.joined(separator: "\n")
-    }
-}
-
 public struct SingleContentView2: View {
-    
 
-    
     @EnvironmentObject var userData: UserData
 
-    func decrementStep(a: Direction) {
-        if (isRouteEnabled) {
-            switch a {
-            case .left:
-                dataList[selectedSegment].rotationAngle.x += .pi / 2
-            case .right:
-                dataList[selectedSegment].rotationAngle.y += .pi / 2
-            case .up:
-                dataList[selectedSegment].rotationAngle.z += .pi / 2
-            }
-        }
-    }
-    
-    @State private var isTimerRunning = false
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var isRouteEnabled = true
 
     @State private var selectedSegment = 3
@@ -110,7 +69,7 @@ public struct SingleContentView2: View {
                     dacai = segments[newValue];
                 }
             if (isRouteEnabled) {
-                ArrowButtonView(onButtonTapped: decrementStep)
+                ArrowButtonView2(onButtonTapped: decrementStep)
             } else {
                 HStack {
                     Stepper("X:", value: Binding(get: {
@@ -138,42 +97,23 @@ public struct SingleContentView2: View {
                 }
             }
         }
-        .onReceive(timer) { _ in
-            if isTimerRunning {
-                incrementStep()
-            }
-        }
-        .navigationTitle(dataModel.name)
-        .navigationBarItems(trailing:completeStatus())
+        .navigationTitle("try")
         .padding()
     }
-    
-    func completeStatus() -> some View {
-        Group {
-            HStack {
-                Button(action: {
-                    isOn.toggle()
-                }) {
-                    Image(systemName: isOn ? "eye.slash" : "eye.slash").foregroundColor(isOn ? .blue : .gray)
-                }
-                if isShowItems {
-                    Button(action: {
-                        dataModel.isTaskComplete.toggle()
-                        UserDefaults.standard.set(dataModel.isTaskComplete, forKey: dataModel.name)
-                    }) {
-                        HStack{
-                            Image(systemName: dataModel.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle")
-                            if #available(iOS 16, *) {
-                                Text(LocalizedStringResource(stringLiteral: "\(dataModel.isTaskComplete ? "Completed" : "ToDo")"))
-                            } else {
-                                Text("\(dataModel.isTaskComplete ? "Completed" : "ToDo")")
-                            }
-                        }.foregroundColor(dataModel.isTaskComplete ? .green : Color(uiColor: UIColor(hex: "00bfff")))
-                    }
-                }
+
+    func decrementStep(a: Direction) {
+        if (isRouteEnabled) {
+            switch a {
+            case .left:
+                dataList[selectedSegment].rotationAngle.x += .pi / 2
+            case .right:
+                dataList[selectedSegment].rotationAngle.y += .pi / 2
+            case .up:
+                dataList[selectedSegment].rotationAngle.z += .pi / 2
             }
         }
     }
+
 }
 
 
