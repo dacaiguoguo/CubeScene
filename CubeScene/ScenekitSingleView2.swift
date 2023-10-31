@@ -17,8 +17,7 @@ struct ScenekitSingleView2 : UIViewRepresentable {
     private let showColor:[Int]
     private let scene : SCNScene
     @Binding var isPanGestureEnabled: Bool
-    @Binding var rotationAngleleft: Float
-    @Binding var rotationAngleup: Float
+    @Binding var rotationAngle: RotationAngle
     
     struct Matrix3DPoint {
         let data: Matrix3D
@@ -47,15 +46,17 @@ struct ScenekitSingleView2 : UIViewRepresentable {
     
     
     
-    init(dataModel: EnterItem, showType: ShowType = .singleColor, colors: [UIColor], numberImageList: [UIImage], showColor: [Int] = [], focalLength: CGFloat = 110, isPanGestureEnabled: Binding<Bool>, rotationAngleleft: Binding<Float>, rotationAngleup:Binding<Float>) {
+    init(dataModel: EnterItem, showType: ShowType = .singleColor,
+         colors: [UIColor], numberImageList: [UIImage], showColor: [Int] = [],
+         focalLength: CGFloat = 110, isPanGestureEnabled: Binding<Bool>,
+         rotationAngle: Binding<RotationAngle>) {
         self.dataModel = dataModel
         self.showType = showType
         self.colors = colors
         self.numberImageList = numberImageList
         self.showColor = showColor
         self._isPanGestureEnabled = isPanGestureEnabled
-        self._rotationAngleleft = rotationAngleleft
-        self._rotationAngleup = rotationAngleup
+        self._rotationAngle = rotationAngle
         let ret = SCNScene();
         // 添加照相机
         let camera = SCNCamera()
@@ -213,8 +214,12 @@ struct ScenekitSingleView2 : UIViewRepresentable {
                 }
             }
         })
-        let rotation = SCNAction.rotateBy(x: CGFloat(rotationAngleup), y: CGFloat(rotationAngleleft), z: 0, duration: 0.1)
-        context.coordinator.selectedNode?.runAction(rotation)
+        if let snode = context.coordinator.selectedNode {
+            let rotation = SCNAction.rotateBy(x: CGFloat(snode.rotation.x) + CGFloat(rotationAngle.up),
+                                              y: CGFloat(snode.rotation.y) + CGFloat(rotationAngle.left), z: 0, duration: 0.1)
+            snode.runAction(rotation)
+        }
+        
         
     }
 }

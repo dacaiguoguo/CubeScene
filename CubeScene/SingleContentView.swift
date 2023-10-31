@@ -33,6 +33,11 @@ extension Matrix3D {
     }
 }
 
+struct RotationAngle {
+    var left:Float
+    var up:Float
+}
+
 public struct SingleContentView: View {
     
     
@@ -77,27 +82,22 @@ public struct SingleContentView: View {
     func decrementStep(a: Direction) {
         switch a {
         case .left:
-            rotationAngleleft = -.pi / 2
-            rotationAngleup = 0.0
+            rotationAngle.left = -.pi / 2 ;//  = RotationAngle(left: -.pi / 2, up: 0)
         case .right:
-            rotationAngleleft = .pi / 2
-            rotationAngleup = 0.0
+            rotationAngle = RotationAngle(left: .pi / 2, up: 0)
         case .up:
-            rotationAngleup = -.pi / 2
-            rotationAngleleft = 0.0
+            rotationAngle = RotationAngle(left: 0, up: -.pi / 2)
         case .down:
-            rotationAngleup = .pi / 2
-            rotationAngleleft = 0.0
+            rotationAngle = RotationAngle(left: 0, up: .pi / 2)
         }
-        print("rotationAngleleft \(rotationAngleleft)")
-        print("rotationAngleup \(rotationAngleup)")
+        print("rotationAngleleft \(rotationAngle.left) -- \(rotationAngle.up)")
     }
     
     @State private var isTimerRunning = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var isPanGestureEnabled = true
-    @State private var rotationAngleup: Float = 0.0
-    @State private var rotationAngleleft: Float = 0.0
+    @State private var rotationAngle: RotationAngle = RotationAngle(left: 0.0, up: 0.0)
+
 
     public var body: some View {
         VStack {
@@ -120,8 +120,7 @@ public struct SingleContentView: View {
                                         showColor: showColor,
                                         focalLength: 45,
                                         isPanGestureEnabled: $isPanGestureEnabled,
-                                        rotationAngleleft: $rotationAngleleft,
-                                        rotationAngleup: $rotationAngleup
+                                        rotationAngle: $rotationAngle
                     )
                 }
                 // 用来生成正方形的切图的
