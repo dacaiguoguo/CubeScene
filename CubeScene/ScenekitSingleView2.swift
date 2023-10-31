@@ -9,6 +9,13 @@ import SwiftUI
 import SceneKit
 
 
+extension SCNAction {
+    class func rotate(to location: SCNVector3, duration: TimeInterval) -> SCNAction {
+        SCNAction.rotateTo(x: CGFloat(location.x), y: CGFloat(location.y), z: CGFloat(location.z), duration: duration)
+    }
+
+}
+
 struct ScenekitSingleView2 : UIViewRepresentable {
     let colors:[UIColor]
     let scene : SCNScene = {
@@ -87,10 +94,8 @@ struct ScenekitSingleView2 : UIViewRepresentable {
             }
         }
 
-        let rotateAction = SCNAction.rotateTo(x: CGFloat(dataList[indexofdacai].rotationAngle.x),
-                                              y: CGFloat(dataList[indexofdacai].rotationAngle.y), z: CGFloat(dataList[indexofdacai].rotationAngle.z), duration: 0.1)
+        let rotateAction =  SCNAction.rotate(to: dataList[indexofdacai].rotationAngle, duration: 0.1)
         let moveAction = SCNAction.move(to: dataList[indexofdacai].offset, duration: 0.2);
-        // 使用 group 方法将它们组合在一起
         let groupAction = SCNAction.group([moveAction, rotateAction])
         scnView.scene?.rootNode.childNode(withName: somd , recursively: true)?.runAction(groupAction)
     }
