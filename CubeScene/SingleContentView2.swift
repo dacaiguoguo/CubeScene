@@ -53,19 +53,19 @@ public struct SingleContentView2: View {
                              [[-1,-1,-1],[-1,-1,-1],]],
                       name: "B 5",
                       rotationAngle: SCNVector3Zero,
-                      offset: SCNVector3(-3, 0, -5)),
+                      offset: SCNVector3(3, 3, -5)),
         Matrix3DPoint(data: [[[-1, 6,-1],[ 6, 6,-1], ],
                              [[-1,-1,-1],[ 6,-1,-1],],
                              [[-1,-1,-1],[-1,-1,-1],]],
                       name: "B 6",
                       rotationAngle: SCNVector3Zero,
-                      offset: SCNVector3(-6, 0, -5)),
+                      offset: SCNVector3(6, 3, -5)),
         Matrix3DPoint(data: [[[ 7,-1,-1],[ 7, 7,-1], ],
                              [[-1,-1,-1],[ 7,-1,-1],],
                              [[-1,-1,-1],[-1,-1,-1],]],
                       name: "B 7",
                       rotationAngle: SCNVector3Zero,
-                      offset: SCNVector3(-9, 0, -5)),
+                      offset: SCNVector3(9, 3, -5)),
 
     ];
 
