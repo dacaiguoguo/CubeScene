@@ -11,7 +11,8 @@ import SceneKit
 
 extension SCNAction {
     class func rotate(to location: SCNVector3, duration: TimeInterval) -> SCNAction {
-        SCNAction.rotateTo(x: CGFloat(location.x), y: CGFloat(location.y), z: CGFloat(location.z), duration: duration)
+        print(location)
+        return SCNAction.rotateTo(x: CGFloat(location.x), y: CGFloat(location.y), z: CGFloat(location.z), duration: duration)
 //        let rotationVector =  // 绕Y轴旋转45度
 //        SCNAction.rotate(toX: CGFloat(location.x), y: CGFloat(location.y), z: CGFloat(location.z), duration: duration)
 //        SCNAction.rotate(toAxisAngle: SCNVector4(x: location.x, y: location.y, z: location.z, w: Float.pi / 2), duration: duration)

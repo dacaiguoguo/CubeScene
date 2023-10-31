@@ -89,7 +89,7 @@ public struct SingleContentView2: View {
                     dacai = segments[newValue];
                 }
             if (isRouteEnabled) {
-                ArrowButtonView2(onButtonTapped: decrementStep)
+                StepperViewR()
             } else {
                 StepperView()
             }
@@ -117,6 +117,26 @@ public struct SingleContentView2: View {
         }
     }
 
+
+    func StepperViewR() -> some View {
+        HStack {
+            Stepper("X:", value: Binding(get: {
+                dataList[selectedSegment].rotationAngle.x / (.pi / 2)
+            }, set: { newvalue, _ in
+                dataList[selectedSegment].rotationAngle.x = newvalue * (.pi / 2)
+            }), in: 0...4)
+            Stepper("Y:", value: Binding(get: {
+                dataList[selectedSegment].rotationAngle.y / (.pi / 2)
+            }, set: { newvalue, _ in
+                dataList[selectedSegment].rotationAngle.y = newvalue * (.pi / 2)
+            }), in: 0...4)
+            Stepper("Z:", value:Binding(get: {
+                dataList[selectedSegment].rotationAngle.z / (.pi / 2)
+            }, set: { newvalue, _ in
+                dataList[selectedSegment].rotationAngle.z = newvalue * (.pi / 2)
+            }), in: 0...4)
+        }
+    }
     func StepperView() -> some View {
         HStack {
             Stepper("X:", value: Binding(get: {
