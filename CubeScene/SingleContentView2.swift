@@ -10,7 +10,6 @@ import SceneKit
 
 struct Matrix3DPoint {
     let data: Matrix3D
-    let position: SCNVector3
     let name: String
     var rotationAngle:SCNVector3
     var offset:SCNVector3
@@ -22,27 +21,24 @@ public struct SingleContentView2: View {
 
     @State private var isRouteEnabled = true
 
-    @State private var selectedSegment = 3
+    @State private var selectedSegment = 0
 
     @State var dataList:[Matrix3DPoint] = [
         Matrix3DPoint(data: [[[1,-1,-1],],
                              [[1,1,-1], ],
                              [[-1,-1,-1],]],
-                      position: SCNVector3(3, 0, -5),
                       name: "Block 1",
                       rotationAngle: SCNVector3Zero,
                       offset: SCNVector3(3, 0, -5)),
         Matrix3DPoint(data: [[[3,-1,-1],],
                              [[3,3,-1],],
                              [[3,-1,-1],]],
-                      position: SCNVector3(0, 0, -5),
                       name: "Block 3",
                       rotationAngle: SCNVector3Zero,
                       offset: SCNVector3(0, 0, -5)),
         Matrix3DPoint(data: [[[4,-1,-1],],
                              [[4,4,-1],],
                              [[-1,4,-1],]],
-                      position: SCNVector3(-3, 0, -5),
                       name: "Block 4",
                       rotationAngle: SCNVector3Zero,
                       offset: SCNVector3(-3, 0, -5)),
@@ -81,7 +77,6 @@ public struct SingleContentView2: View {
                 }
             }
         }
-        .navigationTitle("try")
         .padding()
     }
 

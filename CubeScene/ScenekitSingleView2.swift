@@ -69,7 +69,7 @@ struct ScenekitSingleView2 : UIViewRepresentable {
                 }
             }
         }
-        parNode2.position = item.position; // SCNVector3Make(Float(-1), Float(1), Float(1))
+        parNode2.position = item.offset;
         parNode2.name = item.name;
         // 旋转此节点会导致 用手势旋转时有偏轴现象
         // parNode2.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
