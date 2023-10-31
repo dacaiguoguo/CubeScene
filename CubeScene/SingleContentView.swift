@@ -75,16 +75,33 @@ public struct SingleContentView: View {
     }
     
     func decrementStep(a: Direction) {
-        print(a);
+        switch a {
+        case .left:
+            rotationAngleleft = -.pi / 2
+            rotationAngleup = 0.0
+        case .right:
+            rotationAngleleft = .pi / 2
+            rotationAngleup = 0.0
+        case .up:
+            rotationAngleup = -.pi / 2
+            rotationAngleleft = 0.0
+        case .down:
+            rotationAngleup = .pi / 2
+            rotationAngleleft = 0.0
+        }
+        print("rotationAngleleft \(rotationAngleleft)")
+        print("rotationAngleup \(rotationAngleup)")
     }
     
     @State private var isTimerRunning = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var isPanGestureEnabled = true
+    @State private var rotationAngleup: Float = 0.0
+    @State private var rotationAngleleft: Float = 0.0
 
     public var body: some View {
         VStack {
-//            ArrowButtonView(onButtonTapped: decrementStep)
+            ArrowButtonView(onButtonTapped: decrementStep)
             Button(action: {
                 // 切换手势的启用状态
                 isPanGestureEnabled.toggle()
@@ -97,11 +114,15 @@ public struct SingleContentView: View {
                 ZStack {
                     
                     ScenekitSingleView2(dataModel:dataModel,
-                                       showType: showType,
-                                       colors: userData.colorSaveList,
-                                       numberImageList: userData.textImageList,
-                                       showColor: showColor,
-                                       focalLength: 45, isPanGestureEnabled: $isPanGestureEnabled)
+                                        showType: showType,
+                                        colors: userData.colorSaveList,
+                                        numberImageList: userData.textImageList,
+                                        showColor: showColor,
+                                        focalLength: 45,
+                                        isPanGestureEnabled: $isPanGestureEnabled,
+                                        rotationAngleleft: $rotationAngleleft,
+                                        rotationAngleup: $rotationAngleup
+                    )
                 }
                 // 用来生成正方形的切图的
                 // .frame(width: 300.0, height: 300.0).border(Color.purple)

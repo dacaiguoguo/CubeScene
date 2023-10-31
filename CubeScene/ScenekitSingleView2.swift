@@ -17,7 +17,8 @@ struct ScenekitSingleView2 : UIViewRepresentable {
     private let showColor:[Int]
     private let scene : SCNScene
     @Binding var isPanGestureEnabled: Bool
-
+    @Binding var rotationAngleleft: Float
+    @Binding var rotationAngleup: Float
     
     struct Matrix3DPoint {
         let data: Matrix3D
@@ -29,12 +30,12 @@ struct ScenekitSingleView2 : UIViewRepresentable {
                              [[1,1,-1], ],
                              [[-1,-1,-1],]], pos: SCNVector3(3, 0, -5)),
         Matrix3DPoint(data: [[[3,-1,-1],],
-                                                              [[3,3,-1], ],
-                                                              [[3,-1,-1],  ]], pos: SCNVector3(0, 0, -5)),
+                             [[3,3,-1], ],
+                             [[3,-1,-1],  ]], pos: SCNVector3(0, 0, -5)),
         Matrix3DPoint(data: [[[4,-1,-1],],
-                                                              [[4,4,-1], ],
-                                                              [[-1,4,-1],  ]], pos: SCNVector3(-3, 0, -5)),
-                                      
+                             [[4,4,-1], ],
+                             [[-1,4,-1],  ]], pos: SCNVector3(-3, 0, -5)),
+        
     ];
     
     private var imageName:String {
@@ -45,14 +46,16 @@ struct ScenekitSingleView2 : UIViewRepresentable {
     }
     
     
-
-    init(dataModel: EnterItem, showType: ShowType = .singleColor, colors: [UIColor], numberImageList: [UIImage], showColor: [Int] = [], focalLength: CGFloat = 110, isPanGestureEnabled: Binding<Bool>) {
+    
+    init(dataModel: EnterItem, showType: ShowType = .singleColor, colors: [UIColor], numberImageList: [UIImage], showColor: [Int] = [], focalLength: CGFloat = 110, isPanGestureEnabled: Binding<Bool>, rotationAngleleft: Binding<Float>, rotationAngleup:Binding<Float>) {
         self.dataModel = dataModel
         self.showType = showType
         self.colors = colors
         self.numberImageList = numberImageList
         self.showColor = showColor
         self._isPanGestureEnabled = isPanGestureEnabled
+        self._rotationAngleleft = rotationAngleleft
+        self._rotationAngleup = rotationAngleup
         let ret = SCNScene();
         // 添加照相机
         let camera = SCNCamera()
@@ -62,11 +65,10 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         cameraNode.position = SCNVector3Make(-10.5, 7.5, 20)
         cameraNode.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
         ret.rootNode.addChildNode(cameraNode)
-        let env = UIImage(named: "dijon_notre_dame.jpg")
+        // let env = UIImage(named: "dijon_notre_dame.jpg")
         ret.background.contents = UIColor(hex: "00bfff");
         self.scene = ret
     }
-//
     
     func makeUIView(context: Context) -> SCNView {
         // retrieve the SCNView
@@ -82,7 +84,7 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         scnView.backgroundColor = .clear
         
         
-  
+        
         return scnView
     }
     
@@ -133,7 +135,7 @@ struct ScenekitSingleView2 : UIViewRepresentable {
                             node.geometry?.firstMaterial?.emission.contents = UIColor.black
                         }
                     }
-                        
+                    
                     selectedNode = hitNode.parent;
                     // 用户选择了对象，可以在此处处理高亮逻辑
                     // 恢复其他对象的材质以取消高亮
@@ -154,7 +156,7 @@ struct ScenekitSingleView2 : UIViewRepresentable {
                         // 计算位移
                         let deltaX = Float(translation.x) / 100.0
                         let deltaY = -Float(translation.y) / 100.0  // Y轴反向
-
+                        
                         node.position = SCNVector3(
                             x: node.position.x + deltaX,
                             y: node.position.y + deltaY,
@@ -167,35 +169,12 @@ struct ScenekitSingleView2 : UIViewRepresentable {
                         let roundedX = round(node.position.x)
                         let roundedY = round(node.position.y)
                         let roundedZ = round(node.position.z)
-
+                        
                         node.position = SCNVector3(roundedX, roundedY, roundedZ)
                     }
                 }
             }
         }
-    }
-    
-    /// 单色时用的 效果不太好，改成切图了
-    /// - Returns: 各个面的颜色，上下白色，侧边灰色
-    func singleMaterial() -> [SCNMaterial] {
-        let materialFront = SCNMaterial()
-        materialFront.diffuse.contents = UIColor.lightGray
-        
-        let materialBack = SCNMaterial()
-        materialBack.diffuse.contents = UIColor.lightGray
-        
-        let materialLeft = SCNMaterial()
-        materialLeft.diffuse.contents = UIColor.lightGray
-        
-        let materialRight = SCNMaterial()
-        materialRight.diffuse.contents = UIColor.lightGray
-        
-        let materialTop = SCNMaterial()
-        materialTop.diffuse.contents = UIColor.white
-        
-        let materialBottom = SCNMaterial()
-        materialBottom.diffuse.contents = UIColor.white
-        return [materialFront, materialBack, materialLeft, materialRight, materialTop, materialBottom]
     }
     
     func updateUIView(_ scnView: SCNView, context: Context) {
@@ -211,19 +190,17 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         } else {
             for recognizer in scnView.gestureRecognizers ?? [] {
                 if let panGesture = recognizer as? UIPanGestureRecognizer ,
-                    let panGesturename = panGesture.name,
+                   let panGesturename = panGesture.name,
                    (panGesturename.hasSuffix("panGesture")) {
                     scnView.removeGestureRecognizer(panGesture)
                 }
                 if let tapGesture = recognizer as? UITapGestureRecognizer ,
                    let tapGesturename = tapGesture.name,
-                  (tapGesturename.hasSuffix("tapGesture")) {
+                   (tapGesturename.hasSuffix("tapGesture")) {
                     scnView.removeGestureRecognizer(tapGesture)
                 }
             }
         }
-        
-
         
         scnView.scene?.rootNode.childNodes.forEach({ node in
             node.childNodes.forEach { subNode in
@@ -234,12 +211,12 @@ struct ScenekitSingleView2 : UIViewRepresentable {
                         subNode.geometry?.firstMaterial?.diffuse.contents =  UIColor.blue;
                     }
                 }
-      
             }
         })
+        let rotation = SCNAction.rotateBy(x: CGFloat(rotationAngleup), y: CGFloat(rotationAngleleft), z: 0, duration: 0.1)
+        context.coordinator.selectedNode?.runAction(rotation)
+        
     }
-    
-
 }
 
 struct ScenekitSingleView2_Previews: PreviewProvider {
