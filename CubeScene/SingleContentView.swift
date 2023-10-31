@@ -80,11 +80,17 @@ public struct SingleContentView: View {
     
     @State private var isTimerRunning = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
+    @State private var isPanGestureEnabled = true
+
     public var body: some View {
         VStack {
-            ArrowButtonView(onButtonTapped: decrementStep)
-
+//            ArrowButtonView(onButtonTapped: decrementStep)
+            Button(action: {
+                // 切换手势的启用状态
+                isPanGestureEnabled.toggle()
+            }) {
+                Text(isPanGestureEnabled ? "禁用 Pan 手势" : "启用 Pan 手势")
+            }
             // 用来生成正方形的切图的时候 需要去掉 alignment，居中用模拟器手势方便 一些
             ZStack(alignment: .bottomLeading) {
 
@@ -95,7 +101,7 @@ public struct SingleContentView: View {
                                        colors: userData.colorSaveList,
                                        numberImageList: userData.textImageList,
                                        showColor: showColor,
-                                       focalLength: 45)
+                                       focalLength: 45, isPanGestureEnabled: $isPanGestureEnabled)
                 }
                 // 用来生成正方形的切图的
                 // .frame(width: 300.0, height: 300.0).border(Color.purple)

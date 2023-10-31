@@ -129,6 +129,7 @@ struct InputView: View {
     @State private var message = ""
     @FocusState private var isEditing: Bool
     @State private var debugStr = ""
+    
     var body: some View {
         NavigationView {
             VStack {
