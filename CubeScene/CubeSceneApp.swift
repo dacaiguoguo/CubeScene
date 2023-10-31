@@ -39,9 +39,12 @@ struct CubeSceneApp: App {
     //        print("init app\(demo.orderList())")
     //
     //    }
-       @State var demo = EnterItem(name: "测试", matrix: [[[2,4,3], [6,4,1], [6,6,1]],
-                                                        [[2,3,3], [6,4,1], [7,4,5]],
-                                                        [[2,2,3], [7,5,5], [7,7,5]]], isTaskComplete: true)
+//       @State var demo = EnterItem(name: "测试", matrix: [[[2,4,3], [6,4,1], [6,6,1]],
+//                                                        [[2,3,3], [6,4,1], [7,4,5]],
+//                                                        [[2,2,3], [7,5,5], [7,7,5]]], isTaskComplete: true)
+    @State var demo = EnterItem(name: "测试", matrix: [[[2,-1,-1], [-1,-1,-1], [-1,-1,-1]],
+                                                     [[2,-1,-1], [-1,-1,-1], [-1,-1,-1]],
+                                                     [[2,2,-1], [-1,-1,-1], [-1,-1,-1]]], isTaskComplete: true)
     var body: some Scene {
         WindowGroup {
                         NavigationView {

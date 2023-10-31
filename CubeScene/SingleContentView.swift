@@ -90,7 +90,7 @@ public struct SingleContentView: View {
 
                 ZStack {
                     
-                    ScenekitSingleView(dataModel:dataModel,
+                    ScenekitSingleView2(dataModel:dataModel,
                                        showType: showType,
                                        colors: userData.colorSaveList,
                                        numberImageList: userData.textImageList,
