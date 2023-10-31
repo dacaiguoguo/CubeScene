@@ -97,7 +97,18 @@ public struct SettingView: View {
                         Image(systemName: "highlighter")
                     }
                 }
-
+                NavigationLink {
+                    EnterListView(productList: produceData(resourceName: "SOMAY101")).navigationTitle("自创形状Y").navigationBarTitleDisplayMode(.inline)
+                        .onAppear {
+                            print("onAppear EnterListView !")
+                        }.environmentObject(userData)
+                } label: {
+                    HStack{
+                        Text("自创形状Y")
+                        Spacer()
+                        Image(systemName: "highlighter")
+                    }
+                }
 
                 NavigationLink {
                     EnterListView(productList: produceData(resourceName: "SOMAW101")).navigationTitle("TabTitleNameW").navigationBarTitleDisplayMode(.inline)
