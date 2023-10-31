@@ -30,6 +30,10 @@
 		9D2D85B32A602AE600B11A7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D2D85B22A602AE600B11A7D /* Assets.xcassets */; };
 		9D2D85B62A602AE600B11A7D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D2D85B52A602AE600B11A7D /* Preview Assets.xcassets */; };
 		9D2D85BB2A602AE600B11A7D /* Clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 9D2D85AC2A602AE400B11A7D /* Clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9D46D7252AF12F57002DE821 /* SingleContentView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D46D7232AF12F57002DE821 /* SingleContentView2.swift */; };
+		9D46D7262AF12F57002DE821 /* SingleContentView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D46D7232AF12F57002DE821 /* SingleContentView2.swift */; };
+		9D46D7272AF12F57002DE821 /* ScenekitSingleView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D46D7242AF12F57002DE821 /* ScenekitSingleView2.swift */; };
+		9D46D7282AF12F57002DE821 /* ScenekitSingleView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D46D7242AF12F57002DE821 /* ScenekitSingleView2.swift */; };
 		9D6DC3E52AA168460068C807 /* SOMAY101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D6DC3E42AA168460068C807 /* SOMAY101.txt */; };
 		9D6DC3E62AA168460068C807 /* SOMAY101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D6DC3E42AA168460068C807 /* SOMAY101.txt */; };
 		9D7E411D2AA2356A00863C43 /* SOMAX101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411B2AA2356A00863C43 /* SOMAX101.txt */; };
@@ -117,6 +121,8 @@
 		9D2D85B52A602AE600B11A7D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9D2D85B72A602AE600B11A7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9D2D85B82A602AE600B11A7D /* Clip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Clip.entitlements; sourceTree = "<group>"; };
+		9D46D7232AF12F57002DE821 /* SingleContentView2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleContentView2.swift; sourceTree = "<group>"; };
+		9D46D7242AF12F57002DE821 /* ScenekitSingleView2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScenekitSingleView2.swift; sourceTree = "<group>"; };
 		9D6DC3E42AA168460068C807 /* SOMAY101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAY101.txt; sourceTree = "<group>"; };
 		9D7E411B2AA2356A00863C43 /* SOMAX101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAX101.txt; sourceTree = "<group>"; };
 		9D7E411C2AA2356A00863C43 /* SOMAW101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAW101.txt; sourceTree = "<group>"; };
@@ -237,6 +243,8 @@
 				9D89A1AE2AE37C0B008C6707 /* Persistence.swift */,
 				9DDEC0C52A614716001A0046 /* EnterListView240.swift */,
 				9DDEC0CA2A614D47001A0046 /* solutionsMaped.json */,
+				9D46D7242AF12F57002DE821 /* ScenekitSingleView2.swift */,
+				9D46D7232AF12F57002DE821 /* SingleContentView2.swift */,
 				9D04123D2A516F050083741B /* SingleContentView.swift */,
 				5934F66A2A65038B00AED0E9 /* ScenekitSingleView.swift */,
 				9DBE04FB2A57D7BC0055AE14 /* Localizable.strings */,
@@ -401,6 +409,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D89A1B02AE37C0B008C6707 /* Persistence.swift in Sources */,
+				9D46D7262AF12F57002DE821 /* SingleContentView2.swift in Sources */,
+				9D46D7282AF12F57002DE821 /* ScenekitSingleView2.swift in Sources */,
 				9D89A1BE2AE37C19008C6707 /* CoreDataTest.xcdatamodeld in Sources */,
 				59524DBE2A60FC760078EBB6 /* ArrayTool3D.swift in Sources */,
 				59524DB82A60FC590078EBB6 /* CubeSceneApp.swift in Sources */,
@@ -421,6 +431,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D89A1AF2AE37C0B008C6707 /* Persistence.swift in Sources */,
+				9D46D7252AF12F57002DE821 /* SingleContentView2.swift in Sources */,
+				9D46D7272AF12F57002DE821 /* ScenekitSingleView2.swift in Sources */,
 				9D89A1BD2AE37C19008C6707 /* CoreDataTest.xcdatamodeld in Sources */,
 				5971BA8C2A50547800CD6111 /* ArrayTool3D.swift in Sources */,
 				9DBE04F02A56ECB70055AE14 /* ConfigView.swift in Sources */,
