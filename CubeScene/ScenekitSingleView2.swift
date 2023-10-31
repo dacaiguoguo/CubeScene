@@ -82,14 +82,7 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         scnView.backgroundColor = .clear
         
         
-        // 添加点击手势
-        let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handleTap(_:)))
-        scnView.addGestureRecognizer(tapGesture)
-        tapGesture.isEnabled = false;
-        // 添加上下手势识别器
-        let panGesture = UIPanGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.panGestureHandler(_:)))
-        scnView.addGestureRecognizer(panGesture)
-        panGesture.isEnabled = false;
+  
         return scnView
     }
     
@@ -206,14 +199,31 @@ struct ScenekitSingleView2 : UIViewRepresentable {
     }
     
     func updateUIView(_ scnView: SCNView, context: Context) {
-        for recognizer in scnView.gestureRecognizers ?? [] {
-            if let panGesture = recognizer as? UIPanGestureRecognizer {
-                panGesture.isEnabled = isPanGestureEnabled
-            }
-            if let tapGesture = recognizer as? UITapGestureRecognizer {
-                tapGesture.isEnabled = isPanGestureEnabled
+        if isPanGestureEnabled {
+            // 添加点击手势
+            let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handleTap(_:)))
+            tapGesture.name = "tapGesture"
+            scnView.addGestureRecognizer(tapGesture)
+            // 添加上下手势识别器
+            let panGesture = UIPanGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.panGestureHandler(_:)))
+            panGesture.name = "panGesture"
+            scnView.addGestureRecognizer(panGesture)
+        } else {
+            for recognizer in scnView.gestureRecognizers ?? [] {
+                if let panGesture = recognizer as? UIPanGestureRecognizer ,
+                    let panGesturename = panGesture.name,
+                   (panGesturename.hasSuffix("panGesture")) {
+                    scnView.removeGestureRecognizer(panGesture)
+                }
+                if let tapGesture = recognizer as? UITapGestureRecognizer ,
+                   let tapGesturename = tapGesture.name,
+                  (tapGesturename.hasSuffix("tapGesture")) {
+                    scnView.removeGestureRecognizer(tapGesture)
+                }
             }
         }
+        
+
         
         scnView.scene?.rootNode.childNodes.forEach({ node in
             node.childNodes.forEach { subNode in
