@@ -12,6 +12,10 @@ import SceneKit
 extension SCNAction {
     class func rotate(to location: SCNVector3, duration: TimeInterval) -> SCNAction {
         SCNAction.rotateTo(x: CGFloat(location.x), y: CGFloat(location.y), z: CGFloat(location.z), duration: duration)
+//        let rotationVector =  // 绕Y轴旋转45度
+//        SCNAction.rotate(toX: CGFloat(location.x), y: CGFloat(location.y), z: CGFloat(location.z), duration: duration)
+//        SCNAction.rotate(toAxisAngle: SCNVector4(x: location.x, y: location.y, z: location.z, w: Float.pi / 2), duration: duration)
+
     }
 
 }
@@ -95,7 +99,7 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         }
 
         let rotateAction =  SCNAction.rotate(to: dataList[indexofdacai].rotationAngle, duration: 0.1)
-        let moveAction = SCNAction.move(to: dataList[indexofdacai].offset, duration: 0.2);
+        let moveAction = SCNAction.move(to: dataList[indexofdacai].offset, duration: 0.1);
         let groupAction = SCNAction.group([moveAction, rotateAction])
         scnView.scene?.rootNode.childNode(withName: somd , recursively: true)?.runAction(groupAction)
     }
