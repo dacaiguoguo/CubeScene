@@ -123,17 +123,17 @@ public struct SingleContentView2: View {
                 dataList[selectedSegment].offset.x
             }, set: { newvalue, _ in
                 dataList[selectedSegment].offset.x = newvalue
-            }), in: -5...10)
+            }), in: -10...10)
             Stepper("Y:", value: Binding(get: {
                 dataList[selectedSegment].offset.y
             }, set: { newvalue, _ in
                 dataList[selectedSegment].offset.y = newvalue
-            }), in: -5...10)
+            }), in: -10...10)
             Stepper("Z:", value:Binding(get: {
                 dataList[selectedSegment].offset.z
             }, set: { newvalue, _ in
                 dataList[selectedSegment].offset.z = newvalue
-            }), in: -5...10)
+            }), in: -10...10)
         }
     }
 }
