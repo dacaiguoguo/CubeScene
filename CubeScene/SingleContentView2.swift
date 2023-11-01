@@ -144,48 +144,45 @@ public struct SingleContentView2: View {
                     }).first?.runAction(rotationAction)
                 }
             }
+            StepperView()
         }
         .padding()
     }
 
-//    func StepperViewRoute() -> some View {
-//        HStack {
-//            Stepper("X:", value: Binding(get: {
-//                dataList[selectedSegment].rotationAngle.x / (.pi / 2)
-//            }, set: { newvalue, _ in
-//                dataList[selectedSegment].rotationAngle.x = newvalue * (.pi / 2)
-//            }), in: 0...4)
-//            Stepper("Y:", value: Binding(get: {
-//                dataList[selectedSegment].rotationAngle.y / (.pi / 2)
-//            }, set: { newvalue, _ in
-//                dataList[selectedSegment].rotationAngle.y = newvalue * (.pi / 2)
-//            }), in: 0...4)
-//            Stepper("Z:", value:Binding(get: {
-//                dataList[selectedSegment].rotationAngle.z / (.pi / 2)
-//            }, set: { newvalue, _ in
-//                dataList[selectedSegment].rotationAngle.z = newvalue * (.pi / 2)
-//            }), in: 0...4)
-//        }
-//    }
-//    func StepperView() -> some View {
-//        HStack {
-//            Stepper("X:", value: Binding(get: {
-//                dataList[selectedSegment].offset.x
-//            }, set: { newvalue, _ in
-//                dataList[selectedSegment].offset.x = newvalue
-//            }), in: -10...10)
-//            Stepper("Y:", value: Binding(get: {
-//                dataList[selectedSegment].offset.y
-//            }, set: { newvalue, _ in
-//                dataList[selectedSegment].offset.y = newvalue
-//            }), in: -10...10)
-//            Stepper("Z:", value:Binding(get: {
-//                dataList[selectedSegment].offset.z
-//            }, set: { newvalue, _ in
-//                dataList[selectedSegment].offset.z = newvalue
-//            }), in: -10...10)
-//        }
-//    }
+    func StepperView() -> some View {
+        HStack {
+
+            Stepper("X") {
+                nodeList.filter({ node in
+                    node.name == dacai
+                }).first?.runAction(SCNAction.move(by: SCNVector3Make(1.0, 0, 0), duration: 0.1))
+            } onDecrement: {
+                nodeList.filter({ node in
+                    node.name == dacai
+                }).first?.runAction(SCNAction.move(by: SCNVector3Make(-1.0, 0, 0), duration: 0.1))
+            }
+
+            Stepper("Y") {
+                nodeList.filter({ node in
+                    node.name == dacai
+                }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 1.0, 0), duration: 0.1))
+            } onDecrement: {
+                nodeList.filter({ node in
+                    node.name == dacai
+                }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, -1.0, 0), duration: 0.1))
+            }
+
+            Stepper("Z") {
+                nodeList.filter({ node in
+                    node.name == dacai
+                }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 0, 1.0), duration: 0.1))
+            } onDecrement: {
+                nodeList.filter({ node in
+                    node.name == dacai
+                }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 0, -1.0), duration: 0.1))
+            }
+        }
+    }
 }
 
 
