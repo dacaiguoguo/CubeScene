@@ -153,7 +153,11 @@ public struct SingleContentView2: View {
         }
         .padding()
     }
-    @State private var stepcount = 0
+    @State private var stepcount = 0 {
+        didSet {
+            triggerHapticFeedback()
+        }
+    }
 
     func StepperView() -> some View {
         HStack {
@@ -203,6 +207,12 @@ public struct SingleContentView2: View {
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 0, -1.0), duration: 0.1))
             }
         }
+    }
+
+    func triggerHapticFeedback() {
+        let generator = UIImpactFeedbackGenerator(style: .medium)
+        generator.prepare()
+        generator.impactOccurred()
     }
 }
 
