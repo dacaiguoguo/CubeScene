@@ -11,7 +11,7 @@ import SwiftUI
 struct Route4App: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            StepperView()
         }
     }
 }

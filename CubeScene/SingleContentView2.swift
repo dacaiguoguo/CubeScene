@@ -125,58 +125,79 @@ public struct SingleContentView2: View {
                     dacai = segments[newValue];
                 }
             HStack {
-                Button("Rotate X") {
+                CustomButton(title: "旋转X") {
+                    stepcount += 1;
                     let rotationAction = SCNAction.rotate(by: .pi / 2, around: SCNVector3(1, 0, 0), duration: 0.2)
                     nodeList.filter({ node in
                         node.name == dacai
                     }).first?.runAction(rotationAction)
                 }
-                Button("Rotate Y") {
+                CustomButton(title: "旋转Y") {
+                    stepcount += 1;
                     let rotationAction = SCNAction.rotate(by: .pi / 2, around: SCNVector3(0, 1, 0), duration: 0.2)
                     nodeList.filter({ node in
                         node.name == dacai
                     }).first?.runAction(rotationAction)
                 }
-                Button("Rotate Z") {
+                CustomButton(title: "旋转Z") {
+                    stepcount += 1;
                     let rotationAction = SCNAction.rotate(by: .pi / 2, around: SCNVector3(0, 0, 1), duration: 0.2)
                     nodeList.filter({ node in
                         node.name == dacai
                     }).first?.runAction(rotationAction)
                 }
+                Spacer()
+                Text("步数:\(stepcount)")
             }
             StepperView()
         }
         .padding()
     }
+    @State private var stepcount = 0
 
     func StepperView() -> some View {
         HStack {
+            Stepper {
+                Text("X")
+            } onIncrement :{
+                stepcount += 1;
 
-            Stepper("X") {
                 nodeList.filter({ node in
                     node.name == dacai
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(1.0, 0, 0), duration: 0.1))
             } onDecrement: {
+                stepcount += 1;
+
                 nodeList.filter({ node in
                     node.name == dacai
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(-1.0, 0, 0), duration: 0.1))
             }
 
-            Stepper("Y") {
+            Stepper {
+                Text("Y")
+            } onIncrement :{
+                stepcount += 1;
                 nodeList.filter({ node in
                     node.name == dacai
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 1.0, 0), duration: 0.1))
             } onDecrement: {
+                stepcount += 1;
                 nodeList.filter({ node in
                     node.name == dacai
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, -1.0, 0), duration: 0.1))
             }
 
-            Stepper("Z") {
+            Stepper {
+                Text("Z")
+            } onIncrement :{
+                stepcount += 1;
+
                 nodeList.filter({ node in
                     node.name == dacai
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 0, 1.0), duration: 0.1))
             } onDecrement: {
+                stepcount += 1;
+
                 nodeList.filter({ node in
                     node.name == dacai
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 0, -1.0), duration: 0.1))
@@ -186,3 +207,22 @@ public struct SingleContentView2: View {
 }
 
 
+struct CustomButton: View {
+    let title: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .padding(6)
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.blue, lineWidth: 2)
+                )
+        } .background(Color.yellow)
+            .cornerRadius(8)
+    }
+}
