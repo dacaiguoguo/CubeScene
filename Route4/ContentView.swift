@@ -29,31 +29,41 @@ struct ContentView: View {
 
         let boxNode = SCNNode(geometry: box)
         boxNode.position = SCNVector3Make(-2, 0, 0)
+        boxNode.name = "boxNode";
         let box2 = SCNBox(width: 2, height: 2, length: 2, chamferRadius: 0)
         // 将材质分配给SCNBox的各个面
         box2.materials = materials
         let boxNode2 = SCNNode(geometry: box2)
-        boxNode.position = SCNVector3Make(2, 0, 0)
+        boxNode2.position = SCNVector3Make(2, 0, 0)
+        boxNode2.name = "boxNode2";
+
+
         return [boxNode, boxNode2]
     }()
     
 
     var body: some View {
         VStack {
-            SceneKitView(node: $node)
+            SceneKitView(nodeList: $node)
                 .frame(width: 300, height: 300)
             HStack {
                 Button("Rotate X") {
                     let rotationAction = SCNAction.rotate(by: .pi / 2, around: SCNVector3(1, 0, 0), duration: 0.2)
-                    node.first?.runAction(rotationAction)
+                    node.filter({ node in
+                        node.name == "boxNode"
+                    }).first?.runAction(rotationAction)
                 }
                 Button("Rotate Y") {
                     let rotationAction = SCNAction.rotate(by: .pi / 2, around: SCNVector3(0, 1, 0), duration: 0.2)
-                    node.last?.runAction(rotationAction)
+                    node.filter({ node in
+                        node.name == "boxNode2"
+                    }).first?.runAction(rotationAction)
                 }
                 Button("Rotate Z") {
                     let rotationAction = SCNAction.rotate(by: .pi / 2, around: SCNVector3(0, 0, 1), duration: 0.2)
-                    node.first?.runAction(rotationAction)
+                    node.filter({ node in
+                        node.name == "boxNode"
+                    }).first?.runAction(rotationAction)
                 }
             }
         }
@@ -61,7 +71,7 @@ struct ContentView: View {
 }
 
 struct SceneKitView: UIViewRepresentable {
-    @Binding var node: [SCNNode]
+    @Binding var nodeList: [SCNNode]
 
     func makeUIView(context: Context) -> SCNView {
         let sceneView = SCNView()
@@ -76,7 +86,7 @@ struct SceneKitView: UIViewRepresentable {
         scene.rootNode.addChildNode(cameraNode)
         sceneView.scene = scene
         sceneView.autoenablesDefaultLighting = true
-        node.forEach { item in
+        nodeList.forEach { item in
             scene.rootNode.addChildNode(item);
         }
         return sceneView
