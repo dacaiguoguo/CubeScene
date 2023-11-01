@@ -103,17 +103,23 @@ public struct SingleContentView2: View {
             }
         }
         parNode2.position = item.offset;
+        parNode2.customProperty = item.offset;
         parNode2.name = item.name;
+        parNode2.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
+        parNode2.physicsBody?.categoryBitMask = 1
+        parNode2.physicsBody?.contactTestBitMask = 1
         return parNode2
     }
 
 
     let segments = ["B 1", "B 2", "B 3", "B 4", "B 5", "B 6", "B 7"]
     @State private var dacai:String = "B 1"
-    
+    @State private var counter = 0
+
     public var body: some View {
         VStack {
             ScenekitSingleView2(nodeList: $nodeList)
+
             Picker("", selection: $selectedSegment) {
                 ForEach(0 ..< segments.count, id: \.self) {
                     Text(segments[$0])
@@ -147,6 +153,15 @@ public struct SingleContentView2: View {
                     }).first?.runAction(rotationAction)
                 }
                 Spacer()
+                Button(action: {
+                    counter += 1;
+                    nodeList.forEach{ node2 in
+                        node2.position = node2.customProperty ?? node2.position
+                        node2.rotation = SCNVector4(0, 0, 0, 1)
+                    }
+                }, label: {
+                    Text("重置\(counter)")
+                })
                 Text("步数:\(stepcount)")
             }
             StepperView()
@@ -234,5 +249,22 @@ struct CustomButton: View {
                 )
         } .background(Color.yellow)
             .cornerRadius(8)
+    }
+}
+
+
+// 创建一个扩展以为 SCNNode 添加自定义属性
+extension SCNNode {
+    private struct AssociatedKeys {
+        static var customProperty = "customProperty"
+    }
+
+    var customProperty: SCNVector3? {
+        get {
+            return objc_getAssociatedObject(self, &AssociatedKeys.customProperty) as? SCNVector3
+        }
+        set {
+            objc_setAssociatedObject(self, &AssociatedKeys.customProperty, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 }

@@ -77,6 +77,7 @@ struct ScenekitSingleView2 : UIViewRepresentable {
                     subNode.geometry?.firstMaterial?.diffuse.contents =  UIColor.blue;
                 }
             }
+            
         })
     }
 }
