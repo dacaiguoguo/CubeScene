@@ -11,7 +11,7 @@ import SceneKit
 
 extension SCNAction {
     class func rotate(to location: SCNVector3, duration: TimeInterval) -> SCNAction {
-        // print(location)
+         print(location)
         return SCNAction.rotateTo(x: CGFloat(location.x), y: CGFloat(location.y), z: CGFloat(location.z), duration: duration)
 //        let rotationVector =  // 绕Y轴旋转45度
 //        SCNAction.rotate(toX: CGFloat(location.x), y: CGFloat(location.y), z: CGFloat(location.z), duration: duration)
@@ -40,11 +40,31 @@ struct ScenekitSingleView2 : UIViewRepresentable {
     @Binding var dacai:String
     let dataList:[Matrix3DPoint]
 
+    // 创建坐标轴节点的函数
+    func createAxisNode(color: UIColor, vector: SCNVector4) -> SCNNode {
+        let cylinder = SCNCylinder(radius: 0.05, height: 10)
+        cylinder.firstMaterial?.diffuse.contents = color
+
+        let axisNode = SCNNode(geometry: cylinder)
+        axisNode.rotation = vector;
+        axisNode.position = SCNVector3Zero
+        return axisNode
+    }
+    
     func makeUIView(context: Context) -> SCNView {
         let scnView = SCNView()
         dataList.forEach { item in
             addNode(item)
         }
+        // 创建坐标轴节点
+        let xAxis = createAxisNode(color: .red, vector: SCNVector4(1, 0, 0, Float.pi/2))
+        let yAxis = createAxisNode(color: .green, vector: SCNVector4(0, 1, 0, Float.pi/2))
+        let zAxis = createAxisNode(color: .blue, vector: SCNVector4(0, 0, 1, Float.pi/2))
+
+        scene.rootNode.addChildNode(xAxis)
+        scene.rootNode.addChildNode(yAxis)
+        scene.rootNode.addChildNode(zAxis)
+
         scnView.scene = scene
         scnView.autoenablesDefaultLighting = true
         scnView.allowsCameraControl = true

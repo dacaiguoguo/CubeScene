@@ -8,6 +8,12 @@
 import SwiftUI
 import SceneKit
 
+enum Direction {
+  case               left;
+  case               up;
+  case               right;
+}
+
 struct Matrix3DPoint {
     let data: Matrix3D
     let name: String
@@ -18,9 +24,6 @@ struct Matrix3DPoint {
 public struct SingleContentView2: View {
 
     @EnvironmentObject var userData: UserData
-
-    @State private var isRouteEnabled = true
-
     @State private var selectedSegment = 0
 
     @State var dataList:[Matrix3DPoint] = [
@@ -88,37 +91,13 @@ public struct SingleContentView2: View {
                     print("Selected fruit: \(segments[newValue])")
                     dacai = segments[newValue];
                 }
-            if (isRouteEnabled) {
-                StepperViewR()
-            } else {
-                StepperView()
-            }
-            HStack{
-                Button(action: {
-                    isRouteEnabled.toggle()
-                }) {
-                    Text(isRouteEnabled ? "旋转" : "移动")
-                }
-            }
+            StepperViewRoute()
+            StepperView()
         }
         .padding()
     }
 
-    func decrementStep(a: Direction) {
-        if (isRouteEnabled) {
-            switch a {
-            case .left:
-                dataList[selectedSegment].rotationAngle.x += .pi / 2
-            case .right:
-                dataList[selectedSegment].rotationAngle.y += .pi / 2
-            case .up:
-                dataList[selectedSegment].rotationAngle.z += .pi / 2
-            }
-        }
-    }
-
-
-    func StepperViewR() -> some View {
+    func StepperViewRoute() -> some View {
         HStack {
             Stepper("X:", value: Binding(get: {
                 dataList[selectedSegment].rotationAngle.x / (.pi / 2)
