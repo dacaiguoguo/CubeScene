@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SceneKit
+import Combine
 
 struct StepperView: View {
     @State private var value = 0
@@ -22,20 +23,24 @@ struct StepperView: View {
         value -= 1
 //        if value < 0 { value = colors.count - 1 }
     }
+    @State private var selectedOption = 0
 
     var body: some View {
         Text("Value:\(value)")
 
-        Stepper {
-//            Text("Value: \(value) Color: \(colors[value].description)")
-
-        } onIncrement: {
-            incrementStep()
-        } onDecrement: {
-            decrementStep()
+        Picker("Select an option", selection: $selectedOption) {
+            ForEach(0..<colors.count, id: \.self) { index in
+                Text("\(index)")
+            }
+        }.pickerStyle(.segmented)
+        .onReceive(Just(selectedOption)) { newSelectedOption in
+            // 在选择更改时执行指定的方法
+            handleSelectionChange(newSelectedOption)
         }
-        .padding(5)
-//        .background(colors[value])
+    }
+
+    func handleSelectionChange(_ sss: Int) -> Void {
+        print("handleSelectionChange  \(sss)")
     }
 }
 

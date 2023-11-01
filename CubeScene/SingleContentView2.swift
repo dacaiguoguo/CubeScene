@@ -8,78 +8,93 @@
 import SwiftUI
 import SceneKit
 
-enum Direction {
-  case               left;
-  case               up;
-  case               right;
-}
-
-struct Matrix3DPoint {
+struct Block {
     let data: Matrix3D
     let name: String
-    var rotationAngle:SCNVector3
-    var offset:SCNVector3
+    var rotation:SCNVector3
+    var position:SCNVector3
+}
+
+extension SCNAction {
+    public class func routeXPI_2(duration: TimeInterval) -> SCNAction {
+        return SCNAction.rotate(by: .pi / 2, around: SCNVector3(1, 0, 0), duration: duration)
+    }
+    public class func routeYPI_2(duration: TimeInterval) -> SCNAction {
+        return SCNAction.rotate(by: .pi / 2, around: SCNVector3(0, 1, 0), duration: duration)
+    }
+    public class func routeZPI_2(duration: TimeInterval) -> SCNAction {
+        return SCNAction.rotate(by: .pi / 2, around: SCNVector3(0, 0, 1), duration: duration)
+    }
 }
 
 public struct SingleContentView2: View {
 
-    static var dataList:[Matrix3DPoint] = [
-        Matrix3DPoint(data: [[[1,-1,-1],],
-                             [[1,1,-1], ],
-                             [[-1,-1,-1],]],
-                      name: "B 1",
-                      rotationAngle: SCNVector3Zero,
-                      offset: SCNVector3(9, 0, -5)),
-        Matrix3DPoint(data: [[[2,-1,-1],],
-                             [[2,-1,-1],],
-                             [[2,2,-1],]],
-                      name: "B 2",
-                      rotationAngle: SCNVector3Zero,
-                      offset: SCNVector3(6, 0, -5)),
-        Matrix3DPoint(data: [[[3,-1,-1],],
-                             [[3,3,-1],],
-                             [[3,-1,-1],]],
-                      name: "B 3",
-                      rotationAngle: SCNVector3Zero,
-                      offset: SCNVector3(3, 0, -5)),
-        Matrix3DPoint(data: [[[4,-1,-1],],
-                             [[4,4,-1],],
-                             [[-1,4,-1],]],
-                      name: "B 4",
-                      rotationAngle: SCNVector3Zero,
-                      offset: SCNVector3(0, 0, -5)),
-        Matrix3DPoint(data: [[[5, -1,-1],[5,  5,-1], ],
-                             [[-1,-1,-1],[-1, 5,-1],],
-                             [[-1,-1,-1],[-1,-1,-1],]],
-                      name: "B 5",
-                      rotationAngle: SCNVector3Zero,
-                      offset: SCNVector3(3, 3, -5)),
-        Matrix3DPoint(data: [[[-1, 6,-1],[ 6, 6,-1], ],
-                             [[-1,-1,-1],[ 6,-1,-1],],
-                             [[-1,-1,-1],[-1,-1,-1],]],
-                      name: "B 6",
-                      rotationAngle: SCNVector3Zero,
-                      offset: SCNVector3(6, 3, -5)),
-        Matrix3DPoint(data: [[[ 7,-1,-1],[ 7, 7,-1], ],
-                             [[-1,-1,-1],[ 7,-1,-1],],
-                             [[-1,-1,-1],[-1,-1,-1],]],
-                      name: "B 7",
-                      rotationAngle: SCNVector3Zero,
-                      offset: SCNVector3(9, 3, -5)),
+    static let colors:[UIColor] = [UIColor(hex: "000000"),
+                                   UIColor(hex: "5B5B5B"),
+                                   UIColor(hex: "C25C1D"),
+                                   UIColor(hex: "2788e7"),
+                                   UIColor(hex: "FA2E34"),
+                                   UIColor(hex: "FB5BC2"),
+                                   UIColor(hex: "FCC633"),
+                                   UIColor(hex: "178E20")]
+    
+    static var dataList:[Block] = [
+        Block(data: [[[1,-1,-1],],
+                     [[1,1,-1], ],
+                     [[-1,-1,-1],]],
+              name: "块 1",
+              rotation: SCNVector3Zero,
+              position: SCNVector3(9, 0, -5)),
+        Block(data: [[[2,-1,-1],],
+                     [[2,-1,-1],],
+                     [[2,2,-1],]],
+              name: "块 2",
+              rotation: SCNVector3Zero,
+              position: SCNVector3(6, 0, -5)),
+        Block(data: [[[3,-1,-1],],
+                     [[3,3,-1],],
+                     [[3,-1,-1],]],
+              name: "块 3",
+              rotation: SCNVector3Zero,
+              position: SCNVector3(3, 0, -5)),
+        Block(data: [[[4,-1,-1],],
+                     [[4,4,-1],],
+                     [[-1,4,-1],]],
+              name: "块 4",
+              rotation: SCNVector3Zero,
+              position: SCNVector3(0, 0, -5)),
+        Block(data: [[[5, -1,-1],[5,  5,-1], ],
+                     [[-1,-1,-1],[-1, 5,-1],],
+                     [[-1,-1,-1],[-1,-1,-1],]],
+              name: "块 5",
+              rotation: SCNVector3Zero,
+              position: SCNVector3(3, 3, -5)),
+        Block(data: [[[-1, 6,-1],[ 6, 6,-1], ],
+                     [[-1,-1,-1],[ 6,-1,-1],],
+                     [[-1,-1,-1],[-1,-1,-1],]],
+              name: "块 6",
+              rotation: SCNVector3Zero,
+              position: SCNVector3(6, 3, -5)),
+        Block(data: [[[ 7,-1,-1],[ 7, 7,-1], ],
+                     [[-1,-1,-1],[ 7,-1,-1],],
+                     [[-1,-1,-1],[-1,-1,-1],]],
+              name: "块 7",
+              rotation: SCNVector3Zero,
+              position: SCNVector3(9, 3, -5)),
 
     ];
-
-    @EnvironmentObject var userData: UserData
+    let segments = {dataList.map { $0.name }}()
+    @State private var counter = 0
     @State private var selectedSegment = 0
+    @State private var nodeList:[SCNNode] = { dataList.map { addNode($0)} }()
 
-
-    @State private var nodeList:[SCNNode] = {
-        dataList.map { item in
-            addNode(item)
+    @State private var stepcount = 0 {
+        didSet {
+            triggerHapticFeedback()
         }
-    }()
+    }
 
-    static func addNode(_ item: Matrix3DPoint) -> SCNNode {
+    static func addNode(_ item: Block) -> SCNNode {
         let countOfRow = item.data.count
         let countOfLayer = item.data.first?.count ?? -1
         let countOfColum = item.data.first?.first?.count ?? -1
@@ -98,12 +113,13 @@ public struct SingleContentView2: View {
                     boxNode2.name = "\(value)"
                     // 由于默认y朝向上的，所以要取负值
                     boxNode2.position = SCNVector3Make(Float(x), Float(-y), Float(z))
+                    boxNode2.geometry?.firstMaterial?.diffuse.contents =  colors[value];
                     parNode2.addChildNode(boxNode2)
                 }
             }
         }
-        parNode2.position = item.offset;
-        parNode2.customProperty = item.offset;
+        parNode2.position = item.position;
+        parNode2.customProperty = item.position;
         parNode2.name = item.name;
         parNode2.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
         parNode2.physicsBody?.categoryBitMask = 1
@@ -111,70 +127,63 @@ public struct SingleContentView2: View {
         return parNode2
     }
 
-
-    let segments = ["B 1", "B 2", "B 3", "B 4", "B 5", "B 6", "B 7"]
-    @State private var dacai:String = "B 1"
-    @State private var counter = 0
-
     public var body: some View {
         VStack {
             ScenekitSingleView2(nodeList: $nodeList)
-
-            Picker("", selection: $selectedSegment) {
-                ForEach(0 ..< segments.count, id: \.self) {
-                    Text(segments[$0])
-                }
-            }.pickerStyle(SegmentedPickerStyle()).padding(.horizontal)
-                .onChange(of: selectedSegment) { newValue in
-                    // 在选项变化时执行操作
-                    print("Selected fruit: \(segments[newValue])")
-                    dacai = segments[newValue];
-                }
-            HStack {
-                CustomButton(title: "旋转X") {
-                    stepcount += 1;
-                    let rotationAction = SCNAction.rotate(by: .pi / 2, around: SCNVector3(1, 0, 0), duration: 0.2)
-                    nodeList.filter({ node in
-                        node.name == dacai
-                    }).first?.runAction(rotationAction)
-                }
-                CustomButton(title: "旋转Y") {
-                    stepcount += 1;
-                    let rotationAction = SCNAction.rotate(by: .pi / 2, around: SCNVector3(0, 1, 0), duration: 0.2)
-                    nodeList.filter({ node in
-                        node.name == dacai
-                    }).first?.runAction(rotationAction)
-                }
-                CustomButton(title: "旋转Z") {
-                    stepcount += 1;
-                    let rotationAction = SCNAction.rotate(by: .pi / 2, around: SCNVector3(0, 0, 1), duration: 0.2)
-                    nodeList.filter({ node in
-                        node.name == dacai
-                    }).first?.runAction(rotationAction)
-                }
-                Spacer()
-                Button(action: {
-                    counter += 1;
-                    nodeList.forEach{ node2 in
-                        node2.position = node2.customProperty ?? node2.position
-                        node2.rotation = SCNVector4(0, 0, 0, 1)
-                    }
-                }, label: {
-                    Text("重置\(counter)")
-                })
-                Text("步数:\(stepcount)")
-            }
-            StepperView()
+            pickerView()
+            rotationView()
+            stepperView()
         }
         .padding()
     }
-    @State private var stepcount = 0 {
-        didSet {
-            triggerHapticFeedback()
+
+    var blockName:String {
+        segments[selectedSegment]
+    }
+
+    func pickerView() -> some View {
+        Picker("", selection: Binding(get: {selectedSegment}, set: { newValue in triggerHapticFeedback(); selectedSegment = newValue})) {
+            ForEach(0 ..< segments.count, id: \.self) {
+                Text(segments[$0])
+            }
+        }.pickerStyle(SegmentedPickerStyle()).padding(.horizontal)
+    }
+
+    func rotationView() -> some View {
+        HStack {
+            CustomButton(title: "旋转X") {
+                stepcount += 1;
+                nodeList.filter({ node in
+                    node.name == blockName
+                }).first?.runAction(SCNAction.routeXPI_2(duration: 0.2))
+            }
+            CustomButton(title: "旋转Y") {
+                stepcount += 1;
+                nodeList.filter({ node in
+                    node.name == blockName
+                }).first?.runAction(SCNAction.routeYPI_2(duration: 0.2))
+            }
+            CustomButton(title: "旋转Z") {
+                stepcount += 1;
+                nodeList.filter({ node in
+                    node.name == blockName
+                }).first?.runAction(SCNAction.routeZPI_2(duration: 0.2))
+            }
+            Spacer()
+            Button(action: {
+                counter += 1;
+                nodeList.forEach{ node2 in
+                    node2.position = node2.customProperty ?? node2.position
+                    node2.rotation = SCNVector4(0, 0, 0, 1)
+                }
+            }, label: {
+                Text("重置\(counter)")
+            })
+            Text("步数:\(stepcount)")
         }
     }
 
-    func StepperView() -> some View {
+    func stepperView() -> some View {
         HStack {
             Stepper {
                 Text("X")
@@ -182,13 +191,13 @@ public struct SingleContentView2: View {
                 stepcount += 1;
 
                 nodeList.filter({ node in
-                    node.name == dacai
+                    node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(1.0, 0, 0), duration: 0.1))
             } onDecrement: {
                 stepcount += 1;
 
                 nodeList.filter({ node in
-                    node.name == dacai
+                    node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(-1.0, 0, 0), duration: 0.1))
             }
 
@@ -197,12 +206,12 @@ public struct SingleContentView2: View {
             } onIncrement :{
                 stepcount += 1;
                 nodeList.filter({ node in
-                    node.name == dacai
+                    node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 1.0, 0), duration: 0.1))
             } onDecrement: {
                 stepcount += 1;
                 nodeList.filter({ node in
-                    node.name == dacai
+                    node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, -1.0, 0), duration: 0.1))
             }
 
@@ -212,13 +221,13 @@ public struct SingleContentView2: View {
                 stepcount += 1;
 
                 nodeList.filter({ node in
-                    node.name == dacai
+                    node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 0, 1.0), duration: 0.1))
             } onDecrement: {
                 stepcount += 1;
 
                 nodeList.filter({ node in
-                    node.name == dacai
+                    node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 0, -1.0), duration: 0.1))
             }
         }

@@ -10,14 +10,7 @@ import SceneKit
 
 
 struct ScenekitSingleView2 : UIViewRepresentable {
-    let colors:[UIColor] = [UIColor(hex: "000000"),
-                           UIColor(hex: "5B5B5B"),
-                           UIColor(hex: "C25C1D"),
-                           UIColor(hex: "2788e7"),
-                           UIColor(hex: "FA2E34"),
-                           UIColor(hex: "FB5BC2"),
-                           UIColor(hex: "FCC633"),
-                           UIColor(hex: "178E20")]
+
     let scene : SCNScene = {
         let ret = SCNScene();
         // 添加照相机
@@ -68,18 +61,7 @@ struct ScenekitSingleView2 : UIViewRepresentable {
     }
     
 
-    func updateUIView(_ scnView: SCNView, context: Context) {
-        scnView.scene?.rootNode.childNodes.forEach({ node in
-            node.childNodes.forEach { subNode in
-                if let nodename = subNode.name, let value = Int(nodename) {
-                    subNode.geometry?.firstMaterial?.diffuse.contents =  colors[value];
-                } else {
-                    subNode.geometry?.firstMaterial?.diffuse.contents =  UIColor.blue;
-                }
-            }
-            
-        })
-    }
+    func updateUIView(_ scnView: SCNView, context: Context) {}
 }
 
 struct ScenekitSingleView2_Previews: PreviewProvider {
