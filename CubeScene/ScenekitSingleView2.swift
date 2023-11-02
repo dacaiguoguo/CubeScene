@@ -31,7 +31,7 @@ struct ScenekitSingleView2 : UIViewRepresentable {
 
     // 创建坐标轴节点的函数
     func createAxisNode(color: UIColor, vector: SCNVector4) -> SCNNode {
-        let cylinder = SCNCylinder(radius: 0.05, height: 10)
+        let cylinder = SCNCylinder(radius: 0.01, height: 100)
         cylinder.firstMaterial?.diffuse.contents = color
 
         let axisNode = SCNNode(geometry: cylinder)

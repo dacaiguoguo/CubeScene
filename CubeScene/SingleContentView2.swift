@@ -121,20 +121,41 @@ public struct SingleContentView2: View {
         parNode2.position = item.position;
         parNode2.customProperty = item.position;
         parNode2.name = item.name;
-        parNode2.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
-        parNode2.physicsBody?.categoryBitMask = 1
-        parNode2.physicsBody?.contactTestBitMask = 1
         return parNode2
     }
 
     public var body: some View {
         VStack {
-            ScenekitSingleView2(nodeList: $nodeList)
+            ZStack(alignment: .bottomTrailing) {
+                ScenekitSingleView2(nodeList: $nodeList)
+                HStack{
+                    Spacer()
+                    rotationView()
+                    stepperView()
+                }.frame(height: 150).padding()
+
+            }
             pickerView()
-            rotationView()
-            stepperView()
-        }
+            
+        }.navigationBarItems(trailing:completeStatus())
+
         .padding()
+    }
+    func completeStatus() -> some View {
+        Group {
+            HStack {
+                Button(action: {
+                    counter += 1;
+                    nodeList.forEach{ node2 in
+                        node2.position = node2.customProperty ?? node2.position
+                        node2.rotation = SCNVector4(0, 0, 0, 1)
+                    }
+                }, label: {
+                    Text("重置\(counter)")
+                })
+                Text("步数:\(stepcount)")
+            }
+        }
     }
 
     var blockName:String {
@@ -146,11 +167,11 @@ public struct SingleContentView2: View {
             ForEach(0 ..< segments.count, id: \.self) {
                 Text(segments[$0])
             }
-        }.pickerStyle(SegmentedPickerStyle()).padding(.horizontal)
+        }.pickerStyle(.segmented).padding(.horizontal)
     }
 
     func rotationView() -> some View {
-        HStack {
+        VStack {
             CustomButton(title: "旋转X") {
                 stepcount += 1;
                 nodeList.filter({ node in
@@ -169,22 +190,11 @@ public struct SingleContentView2: View {
                     node.name == blockName
                 }).first?.runAction(SCNAction.routeZPI_2(duration: 0.2))
             }
-            Spacer()
-            Button(action: {
-                counter += 1;
-                nodeList.forEach{ node2 in
-                    node2.position = node2.customProperty ?? node2.position
-                    node2.rotation = SCNVector4(0, 0, 0, 1)
-                }
-            }, label: {
-                Text("重置\(counter)")
-            })
-            Text("步数:\(stepcount)")
-        }
+        }.padding()
     }
 
     func stepperView() -> some View {
-        HStack {
+        VStack(alignment: .trailing) {
             Stepper {
                 Text("X")
             } onIncrement :{
@@ -230,7 +240,7 @@ public struct SingleContentView2: View {
                     node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 0, -1.0), duration: 0.1))
             }
-        }
+        }.frame(width: 120)
     }
 
     func triggerHapticFeedback() {
