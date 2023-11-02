@@ -141,9 +141,9 @@ public struct SingleContentView2: View {
             }
         }
         parNode2.position = item.position;
-        parNode2.customProperty = item.position;
-        parNode2.customProperty2 = item.rotationTo;
-        parNode2.customProperty3 = item.positionTo;
+        parNode2.orgPosition = item.position;
+        parNode2.rotationTo = item.rotationTo;
+        parNode2.positionTo = item.positionTo;
         parNode2.name = item.name;
         return parNode2
     }
@@ -161,27 +161,26 @@ public struct SingleContentView2: View {
             }
             pickerView()
             
-        }.navigationBarItems(trailing:completeStatus())
+        }.navigationBarItems(trailing:completeStatus()).navigationTitle(Text("步数:\(stepcount)"))
     }
     func completeStatus() -> some View {
         Group {
             HStack {
                 Button(action: {
                     counter += 1;
-                    //                        node2.position = node2.customProperty ?? node2.position
-                    //                        node2.rotation = SCNVector4(0, 0, 0, 1)
-                    //                        node2.rotation = node2.customProperty2 ?? SCNVector4(0, 0, 0, 1);
-                    //                        node2.position = node2.customProperty3 ?? SCNVector3Zero;
-//                    nodeList.forEach{ node2 in
-//                        let ra = SCNAction.rotate(toAxisAngle: node2.customProperty2 ?? SCNVector4(0, 0, 0, 1), duration: 0.1);
-//                        let rb = SCNAction.move(to: node2.customProperty3 ?? SCNVector3Zero, duration: 0.1);
-//                        node2.runAction(SCNAction.group([ra,rb]));
-//                    }
-                    actionmethod(index: 0)
+                    nodeList.forEach { node2 in
+                        node2.position = node2.orgPosition ?? node2.position
+                        node2.rotation = SCNVector4(0, 0, 0, 1)
+                    }
+
                 }, label: {
                     Text("重置\(counter)")
                 })
-                Text("步数:\(stepcount)")
+                Button(action: {
+                    actionmethod(index: 0)
+                }, label: {
+                    Text("演示")
+                })
             }
         }
     }
@@ -191,8 +190,8 @@ public struct SingleContentView2: View {
             print("over....\(index)")
             return
         }
-        let ra = SCNAction.rotate(toAxisAngle: nodeList[index].customProperty2 ?? SCNVector4(0, 0, 0, 1), duration: 1);
-        let rb = SCNAction.move(to: nodeList[index].customProperty3 ?? SCNVector3Zero, duration: 1);
+        let ra = SCNAction.rotate(toAxisAngle: nodeList[index].rotationTo ?? SCNVector4(0, 0, 0, 1), duration: 1);
+        let rb = SCNAction.move(to: nodeList[index].positionTo ?? SCNVector3Zero, duration: 1);
         nodeList[index].runAction(SCNAction.group([ra, rb]), completionHandler: {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 actionmethod(index: index + 1);
@@ -286,7 +285,7 @@ public struct SingleContentView2: View {
 
     func lognodeInfo() -> Void {
         nodeList.forEach { node in
-            print("node:\(node.name),rotation:\(node.rotation), position:\(node.position)")
+            print("node:\(node.name ?? ""),rotation:\(node.rotation), position:\(node.position)")
         }
     }
 
@@ -294,25 +293,7 @@ public struct SingleContentView2: View {
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.prepare()
         generator.impactOccurred()
-        lognodeInfo()
-
-//        // 创建一个SCNVector4对象
-//        let vector = SCNVector4(x: 1.0, y: 2.0, z: 3.0, w: 4.0)
-//
-//        // 获取文档目录路径
-//        if let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-//            // 拼接文件路径
-//            let filePath = documentsDirectory.appendingPathComponent("vectorData.dat")
-//
-//            do {
-//                // 归档SCNVector4对象并将其写入文件
-//                let data = try NSKeyedArchiver.archivedData(withRootObject: vector, requiringSecureCoding: false)
-//                try data.write(to: filePath)
-//                print("Vector data written to file")
-//            } catch {
-//                print("Error writing to file: \(error)")
-//            }
-//        }
+        // lognodeInfo()
     }
 }
 
@@ -341,34 +322,33 @@ struct CustomButton: View {
 // 创建一个扩展以为 SCNNode 添加自定义属性
 extension SCNNode {
     private struct AssociatedKeys {
-        static var customProperty = "customProperty"
-        static var customProperty2 = "customProperty2"
-        static var customProperty3 = "customProperty3"
-
+        static var orgPosition = "orgPosition"
+        static var rotationTo = "rotationTo"
+        static var positionTo = "positionTo"
     }
 
-    var customProperty: SCNVector3? {
+    var orgPosition: SCNVector3? {
         get {
-            return objc_getAssociatedObject(self, &AssociatedKeys.customProperty) as? SCNVector3
+            return objc_getAssociatedObject(self, &AssociatedKeys.orgPosition) as? SCNVector3
         }
         set {
-            objc_setAssociatedObject(self, &AssociatedKeys.customProperty, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &AssociatedKeys.orgPosition, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
-    var customProperty2: SCNVector4? {
+    var rotationTo: SCNVector4? {
         get {
-            return objc_getAssociatedObject(self, &AssociatedKeys.customProperty2) as? SCNVector4
+            return objc_getAssociatedObject(self, &AssociatedKeys.rotationTo) as? SCNVector4
         }
         set {
-            objc_setAssociatedObject(self, &AssociatedKeys.customProperty2, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &AssociatedKeys.rotationTo, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
-    var customProperty3: SCNVector3? {
+    var positionTo: SCNVector3? {
         get {
-            return objc_getAssociatedObject(self, &AssociatedKeys.customProperty3) as? SCNVector3
+            return objc_getAssociatedObject(self, &AssociatedKeys.positionTo) as? SCNVector3
         }
         set {
-            objc_setAssociatedObject(self, &AssociatedKeys.customProperty3, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &AssociatedKeys.positionTo, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 }
