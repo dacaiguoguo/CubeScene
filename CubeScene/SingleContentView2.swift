@@ -44,19 +44,19 @@ public struct SingleContentView2: View {
                      [[-1,-1,-1],]],
               name: "块 1",
               rotation: SCNVector3Zero,
-              position: SCNVector3(9, 0, -5)),
+              position: SCNVector3(6, 0, -5)),
         Block(data: [[[2,-1,-1],],
                      [[2,-1,-1],],
                      [[2,2,-1],]],
               name: "块 2",
               rotation: SCNVector3Zero,
-              position: SCNVector3(6, 0, -5)),
+              position: SCNVector3(3, 0, -5)),
         Block(data: [[[3,-1,-1],],
                      [[3,3,-1],],
                      [[3,-1,-1],]],
               name: "块 3",
               rotation: SCNVector3Zero,
-              position: SCNVector3(3, 0, -5)),
+              position: SCNVector3(-3, 0, -5)),
         Block(data: [[[4,-1,-1],],
                      [[4,4,-1],],
                      [[-1,4,-1],]],
@@ -68,19 +68,19 @@ public struct SingleContentView2: View {
                      [[-1,-1,-1],[-1,-1,-1],]],
               name: "块 5",
               rotation: SCNVector3Zero,
-              position: SCNVector3(3, 3, -5)),
+              position: SCNVector3(-3, 3, -5)),
         Block(data: [[[-1, 6,-1],[ 6, 6,-1], ],
                      [[-1,-1,-1],[ 6,-1,-1],],
                      [[-1,-1,-1],[-1,-1,-1],]],
               name: "块 6",
               rotation: SCNVector3Zero,
-              position: SCNVector3(6, 3, -5)),
+              position: SCNVector3(3, 3, -5)),
         Block(data: [[[ 7,-1,-1],[ 7, 7,-1], ],
                      [[-1,-1,-1],[ 7,-1,-1],],
                      [[-1,-1,-1],[-1,-1,-1],]],
               name: "块 7",
               rotation: SCNVector3Zero,
-              position: SCNVector3(9, 3, -5)),
+              position: SCNVector3(0, 3, -5)),
 
     ];
     let segments = {dataList.map { $0.name }}()
@@ -138,8 +138,6 @@ public struct SingleContentView2: View {
             pickerView()
             
         }.navigationBarItems(trailing:completeStatus())
-
-        .padding()
     }
     func completeStatus() -> some View {
         Group {

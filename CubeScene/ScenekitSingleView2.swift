@@ -15,7 +15,7 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         let ret = SCNScene();
         // 添加照相机
         let camera = SCNCamera()
-        camera.focalLength = 50;
+        camera.focalLength = 30;
         let cameraNode = SCNNode()
         cameraNode.camera = camera
         cameraNode.position = SCNVector3Make(-10.5, 7.5, 20)
