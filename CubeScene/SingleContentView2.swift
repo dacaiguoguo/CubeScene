@@ -168,18 +168,37 @@ public struct SingleContentView2: View {
             HStack {
                 Button(action: {
                     counter += 1;
-                    nodeList.forEach{ node2 in
-//                        node2.position = node2.customProperty ?? node2.position
-//                        node2.rotation = SCNVector4(0, 0, 0, 1)
-                        node2.rotation = node2.customProperty2 ?? SCNVector4(0, 0, 0, 1);
-                        node2.position = node2.customProperty3 ?? SCNVector3Zero;
-                    }
+                    //                        node2.position = node2.customProperty ?? node2.position
+                    //                        node2.rotation = SCNVector4(0, 0, 0, 1)
+                    //                        node2.rotation = node2.customProperty2 ?? SCNVector4(0, 0, 0, 1);
+                    //                        node2.position = node2.customProperty3 ?? SCNVector3Zero;
+//                    nodeList.forEach{ node2 in
+//                        let ra = SCNAction.rotate(toAxisAngle: node2.customProperty2 ?? SCNVector4(0, 0, 0, 1), duration: 0.1);
+//                        let rb = SCNAction.move(to: node2.customProperty3 ?? SCNVector3Zero, duration: 0.1);
+//                        node2.runAction(SCNAction.group([ra,rb]));
+//                    }
+                    actionmethod(index: 0)
                 }, label: {
                     Text("重置\(counter)")
                 })
                 Text("步数:\(stepcount)")
             }
         }
+    }
+
+    func actionmethod(index: Int) -> Void {
+        guard index < nodeList.count else {
+            print("over....\(index)")
+            return
+        }
+        let ra = SCNAction.rotate(toAxisAngle: nodeList[index].customProperty2 ?? SCNVector4(0, 0, 0, 1), duration: 1);
+        let rb = SCNAction.move(to: nodeList[index].customProperty3 ?? SCNVector3Zero, duration: 1);
+        nodeList[index].runAction(SCNAction.group([ra, rb]), completionHandler: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                actionmethod(index: index + 1);
+            }
+        })
+
     }
 
     var blockName:String {
