@@ -27,6 +27,34 @@ extension SCNAction {
     }
 }
 
+//如果两个节点的旋转轴和角度都不同，那么你需要执行更复杂的计算来旋转一个节点以匹配另一个节点的方向。下面是一种通用的方法，可以帮助你实现这一目标：
+//
+//```swift
+//import SceneKit
+//
+//// 创建第一个节点
+//let node1 = SCNNode()
+//let rotation1 = SCNQuaternion(x: 0, y: 1, z: 0, w: Float.pi / 4) // 旋转45度
+//node1.orientation = rotation1
+//
+//// 创建第二个节点
+//let node2 = SCNNode()
+//let rotation2 = SCNQuaternion(x: 1, y: 0, z: 0, w: -Float.pi / 4) // 旋转-45度
+//node2.orientation = rotation2
+//
+//// 计算从第一个节点到第二个节点的四元数旋转差异
+//let rotationDifference = node2.orientation * node1.orientation.inverted()
+//
+//// 使用四元数旋转差异来旋转第一个节点以匹配第二个节点的方向
+//node1.orientation = rotationDifference * node1.orientation
+//
+//// 你现在可以将 node1 添加到场景中
+//```
+//
+//在这个示例中，我们首先创建了两个 `SCNNode`，每个节点都具有不同的旋转轴和角度。然后，我们计算了从第一个节点到第二个节点的四元数旋转差异，将其应用于第一个节点，以使其方向匹配第二个节点。
+//
+//这个示例中使用了四元数来处理旋转，四元数对于处理复杂的旋转操作非常有用，因为它们可以避免万向锁等问题。请确保了解四元数的基本概念，以更好地理解这个示例。这个方法适用于不同旋转轴和不同角度的情况，但需要小心处理节点之间的坐标系和父子节点关系。
+
 public struct SingleContentView2: View {
 
     static let colors:[UIColor] = [UIColor(hex: "000000"),
