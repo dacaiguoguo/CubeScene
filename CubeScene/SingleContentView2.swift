@@ -190,9 +190,10 @@ public struct SingleContentView2: View {
             print("over....\(index)")
             return
         }
-        let ra = SCNAction.rotate(toAxisAngle: nodeList[index].rotationTo ?? SCNVector4(0, 0, 0, 1), duration: 1);
-        let rb = SCNAction.move(to: nodeList[index].positionTo ?? SCNVector3Zero, duration: 1);
-        nodeList[index].runAction(SCNAction.group([ra, rb]), completionHandler: {
+        let reIndex = [3,4,5,1,7,6,2][index] - 1
+        let ra = SCNAction.rotate(toAxisAngle: nodeList[reIndex].rotationTo!, duration: 1);
+        let rb = SCNAction.move(to: nodeList[reIndex].positionTo!, duration: 1);
+        nodeList[reIndex].runAction(SCNAction.group([ra, rb]), completionHandler: {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 actionmethod(index: index + 1);
             }
