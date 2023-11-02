@@ -65,21 +65,11 @@ struct ScenekitSingleView2 : UIViewRepresentable {
 }
 
 struct ScenekitSingleView2_Previews: PreviewProvider {
+    static private var nodeList:[SCNNode] = { SingleContentView2.dataList.map { SingleContentView2.addNode($0)} }()
+
     static var previews: some View {
         NavigationView {
-            ScenekitSingleView(dataModel:EnterItem(name: "测试", matrix: [[[2,4,3], [6,4,1], [6,6,1]],
-                                                                        [[2,3,3], [6,4,1], [7,4,5]],
-                                                                        [[2,2,3], [7,5,5], [7,7,5]]],
-                                                   isTaskComplete: true),
-                               colors: [UIColor(hex: "000000"),
-                                        UIColor(hex: "5B5B5B"),
-                                        UIColor(hex: "C25C1D"),
-                                        UIColor(hex: "2788e7"),
-                                        UIColor(hex: "FA2E34"),
-                                        UIColor(hex: "FB5BC2"),
-                                        UIColor(hex: "FCC633"),
-                                        UIColor(hex: "178E20")],
-                               numberImageList: getTextImageList())
+            ScenekitSingleView2(nodeList: .constant(nodeList))
             .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
             
         }

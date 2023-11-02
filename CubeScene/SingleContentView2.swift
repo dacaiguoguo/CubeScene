@@ -13,6 +13,8 @@ struct Block {
     let name: String
     var rotation:SCNVector3
     var position:SCNVector3
+    var rotationTo:SCNVector4
+    var positionTo:SCNVector3
 }
 
 extension SCNAction {
@@ -37,50 +39,70 @@ public struct SingleContentView2: View {
                                    UIColor(hex: "FB5BC2"),
                                    UIColor(hex: "FCC633"),
                                    UIColor(hex: "178E20")]
-    
+    // node:Optional("块 1"),rotation:SCNVector4(x: 0.5773504, y: -0.5773503, z: -0.5773501, w: 4.1887903), position:SCNVector3(x: 1.0, y: 0.0, z: 1.0)
+    // node:Optional("块 2"),rotation:SCNVector4(x: 0.5773504, y: -0.57735014, z: -0.5773502, w: 2.0943954), position:SCNVector3(x: 1.0, y: 2.0, z: 1.0000001)
+    // node:Optional("块 3"),rotation:SCNVector4(x: 0.0, y: 0.0, z: 0.99999994, w: 1.5707964), position:SCNVector3(x: -1.0, y: 0.0, z: -1.0)
+    // node:Optional("块 4"),rotation:SCNVector4(x: 0.5773504, y: 0.57735056, z: -0.5773499, w: 4.18879), position:SCNVector3(x: 1.0, y: 0.0, z: -1.0)
+    // node:Optional("块 5"),rotation:SCNVector4(x: 0.0, y: 0.99999994, z: 0.0, w: 1.5707964), position:SCNVector3(x: 0.0, y: 1.0, z: 1.0)
+    // node:Optional("块 6"),rotation:SCNVector4(x: 1.0, y: 1.2665981e-07, z: 1.0803336e-07, w: 3.1415927), position:SCNVector3(x: -1.0, y: 1.0, z: 0.0)
+    // node:Optional("块 7"),rotation:SCNVector4(x: 0.5773504, y: -0.57735014, z: -0.5773502, w: 2.0943954), position:SCNVector3(x: 1.0, y: 2.0, z: 0.0)
     static var dataList:[Block] = [
         Block(data: [[[1,-1,-1],],
                      [[1,1,-1], ],
                      [[-1,-1,-1],]],
               name: "块 1",
               rotation: SCNVector3Zero,
-              position: SCNVector3(6, 0, -5)),
+              position: SCNVector3(6, 0, -5),
+              rotationTo: SCNVector4(x: 0.5773504, y: -0.5773503, z: -0.5773501, w: 4.1887903),
+              positionTo: SCNVector3(x: 1, y: 0.0, z: 1)),
         Block(data: [[[2,-1,-1],],
                      [[2,-1,-1],],
                      [[2,2,-1],]],
               name: "块 2",
               rotation: SCNVector3Zero,
-              position: SCNVector3(3, 0, -5)),
+              position: SCNVector3(3, 0, -5),
+              rotationTo: SCNVector4(x: 0.5773504, y: -0.57735014, z: -0.5773502, w: 2.0943954),
+              positionTo: SCNVector3(x: 1, y: 2, z: 1)),
         Block(data: [[[3,-1,-1],],
                      [[3,3,-1],],
                      [[3,-1,-1],]],
               name: "块 3",
               rotation: SCNVector3Zero,
-              position: SCNVector3(-3, 0, -5)),
+              position: SCNVector3(-3, 0, -5),
+              rotationTo: SCNVector4(x: 0.0, y: 0.0, z: 0.99999994, w: 1.5707964),
+              positionTo: SCNVector3(x: -1, y: 0.0, z: -1)),
         Block(data: [[[4,-1,-1],],
                      [[4,4,-1],],
                      [[-1,4,-1],]],
               name: "块 4",
               rotation: SCNVector3Zero,
-              position: SCNVector3(0, 0, -5)),
+              position: SCNVector3(0, 0, -5),
+              rotationTo: SCNVector4(x: 0.5773504, y: 0.57735056, z: -0.5773499, w: 4.18879),
+              positionTo: SCNVector3(x: 1, y: 0.0, z: -1)),
         Block(data: [[[5, -1,-1],[5,  5,-1], ],
                      [[-1,-1,-1],[-1, 5,-1],],
                      [[-1,-1,-1],[-1,-1,-1],]],
               name: "块 5",
               rotation: SCNVector3Zero,
-              position: SCNVector3(-3, 3, -5)),
+              position: SCNVector3(-3, 3, -5),
+              rotationTo: SCNVector4(x: 0.0, y: 0.99999994, z: 0.0, w: 1.5707964),
+              positionTo: SCNVector3(x: 0, y: 1, z: 1)),
         Block(data: [[[-1, 6,-1],[ 6, 6,-1], ],
                      [[-1,-1,-1],[ 6,-1,-1],],
                      [[-1,-1,-1],[-1,-1,-1],]],
               name: "块 6",
               rotation: SCNVector3Zero,
-              position: SCNVector3(3, 3, -5)),
+              position: SCNVector3(3, 3, -5),
+              rotationTo: SCNVector4(x: 1.0, y: 1.2665981e-07, z: 1.0803336e-07, w: 3.1415927),
+              positionTo: SCNVector3(x: -1, y: 1.0, z: 0)),
         Block(data: [[[ 7,-1,-1],[ 7, 7,-1], ],
                      [[-1,-1,-1],[ 7,-1,-1],],
                      [[-1,-1,-1],[-1,-1,-1],]],
               name: "块 7",
               rotation: SCNVector3Zero,
-              position: SCNVector3(0, 3, -5)),
+              position: SCNVector3(0, 3, -5),
+              rotationTo: SCNVector4(x: 0.5773504, y: -0.57735014, z: -0.5773502, w: 2.0943954),
+              positionTo: SCNVector3(x: 1, y: 2, z: 0)),
 
     ];
     let segments = {dataList.map { $0.name }}()
@@ -120,6 +142,8 @@ public struct SingleContentView2: View {
         }
         parNode2.position = item.position;
         parNode2.customProperty = item.position;
+        parNode2.customProperty2 = item.rotationTo;
+        parNode2.customProperty3 = item.positionTo;
         parNode2.name = item.name;
         return parNode2
     }
@@ -145,8 +169,10 @@ public struct SingleContentView2: View {
                 Button(action: {
                     counter += 1;
                     nodeList.forEach{ node2 in
-                        node2.position = node2.customProperty ?? node2.position
-                        node2.rotation = SCNVector4(0, 0, 0, 1)
+//                        node2.position = node2.customProperty ?? node2.position
+//                        node2.rotation = SCNVector4(0, 0, 0, 1)
+                        node2.rotation = node2.customProperty2 ?? SCNVector4(0, 0, 0, 1);
+                        node2.position = node2.customProperty3 ?? SCNVector3Zero;
                     }
                 }, label: {
                     Text("重置\(counter)")
@@ -171,22 +197,22 @@ public struct SingleContentView2: View {
     func rotationView() -> some View {
         VStack {
             CustomButton(title: "旋转X") {
-                stepcount += 1;
                 nodeList.filter({ node in
                     node.name == blockName
                 }).first?.runAction(SCNAction.routeXPI_2(duration: 0.2))
+                stepcount += 1;
             }
             CustomButton(title: "旋转Y") {
-                stepcount += 1;
                 nodeList.filter({ node in
                     node.name == blockName
                 }).first?.runAction(SCNAction.routeYPI_2(duration: 0.2))
+                stepcount += 1;
             }
             CustomButton(title: "旋转Z") {
-                stepcount += 1;
                 nodeList.filter({ node in
                     node.name == blockName
                 }).first?.runAction(SCNAction.routeZPI_2(duration: 0.2))
+                stepcount += 1;
             }
         }.padding()
     }
@@ -196,17 +222,15 @@ public struct SingleContentView2: View {
             Stepper {
                 Text("X")
             } onIncrement :{
-                stepcount += 1;
-
                 nodeList.filter({ node in
                     node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(1.0, 0, 0), duration: 0.1))
-            } onDecrement: {
                 stepcount += 1;
-
+            } onDecrement: {
                 nodeList.filter({ node in
                     node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(-1.0, 0, 0), duration: 0.1))
+                stepcount += 1;
             }
 
             Stepper {
@@ -241,10 +265,35 @@ public struct SingleContentView2: View {
         }.frame(width: 120)
     }
 
+    func lognodeInfo() -> Void {
+        nodeList.forEach { node in
+            print("node:\(node.name),rotation:\(node.rotation), position:\(node.position)")
+        }
+    }
+
     func triggerHapticFeedback() {
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.prepare()
         generator.impactOccurred()
+        lognodeInfo()
+
+//        // 创建一个SCNVector4对象
+//        let vector = SCNVector4(x: 1.0, y: 2.0, z: 3.0, w: 4.0)
+//
+//        // 获取文档目录路径
+//        if let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+//            // 拼接文件路径
+//            let filePath = documentsDirectory.appendingPathComponent("vectorData.dat")
+//
+//            do {
+//                // 归档SCNVector4对象并将其写入文件
+//                let data = try NSKeyedArchiver.archivedData(withRootObject: vector, requiringSecureCoding: false)
+//                try data.write(to: filePath)
+//                print("Vector data written to file")
+//            } catch {
+//                print("Error writing to file: \(error)")
+//            }
+//        }
     }
 }
 
@@ -274,6 +323,9 @@ struct CustomButton: View {
 extension SCNNode {
     private struct AssociatedKeys {
         static var customProperty = "customProperty"
+        static var customProperty2 = "customProperty2"
+        static var customProperty3 = "customProperty3"
+
     }
 
     var customProperty: SCNVector3? {
@@ -282,6 +334,22 @@ extension SCNNode {
         }
         set {
             objc_setAssociatedObject(self, &AssociatedKeys.customProperty, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+    var customProperty2: SCNVector4? {
+        get {
+            return objc_getAssociatedObject(self, &AssociatedKeys.customProperty2) as? SCNVector4
+        }
+        set {
+            objc_setAssociatedObject(self, &AssociatedKeys.customProperty2, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+    var customProperty3: SCNVector3? {
+        get {
+            return objc_getAssociatedObject(self, &AssociatedKeys.customProperty3) as? SCNVector3
+        }
+        set {
+            objc_setAssociatedObject(self, &AssociatedKeys.customProperty3, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 }
