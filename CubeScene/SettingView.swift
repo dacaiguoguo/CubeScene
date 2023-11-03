@@ -88,7 +88,7 @@ public struct SettingView: View {
                 NavigationLink {
                     EnterListView(productList: produceData(resourceName: "SOMAX101")).navigationTitle("TabTitleNameX").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
-                            print("onAppear EnterListView !")
+                             
                         }.environmentObject(userData)
                 } label: {
                     HStack{
@@ -100,7 +100,7 @@ public struct SettingView: View {
                 NavigationLink {
                     EnterListView(productList: produceData(resourceName: "SOMAY101")).navigationTitle("自创形状Y").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
-                            print("onAppear EnterListView !")
+                             
                         }.environmentObject(userData)
                 } label: {
                     HStack{
@@ -113,7 +113,7 @@ public struct SettingView: View {
                 NavigationLink {
                     EnterListView(productList: produceData(resourceName: "SOMAW101")).navigationTitle("TabTitleNameW").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
-                            print("onAppear EnterListView !")
+                             
                         }.environmentObject(userData)
                 } label: {
                     HStack{
@@ -125,7 +125,7 @@ public struct SettingView: View {
                 NavigationLink {
                     EnterListView(productList: produceData(resourceName: "SOMAC3A101")).navigationTitle("SOMA C3A").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
-                            print("onAppear EnterListView !")
+                             
                         }.environmentObject(userData)
                 } label: {
                     HStack{
@@ -138,7 +138,7 @@ public struct SettingView: View {
                 NavigationLink {
                     EnterListView(productList: produceData(resourceName: "SOMAC3B101")).navigationTitle("SOMA C3B").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
-                            print("onAppear EnterListView !")
+                             
                         }.environmentObject(userData)
                 } label: {
                     HStack{
@@ -150,7 +150,7 @@ public struct SettingView: View {
                 NavigationLink {
                     EnterListView(productList: produceData(resourceName: "SOMAC3C101")).navigationTitle("SOMA C3C").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
-                            print("onAppear EnterListView !")
+                             
                         }.environmentObject(userData)
                 } label: {
                     HStack{
@@ -162,7 +162,7 @@ public struct SettingView: View {
                 NavigationLink {
                     EnterListView(productList: produceData(resourceName: "SOMAC3D101")).navigationTitle("SOMA C3D").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
-                            print("onAppear EnterListView !")
+                             
                         }.environmentObject(userData)
                 } label: {
                     HStack{
@@ -174,7 +174,7 @@ public struct SettingView: View {
                 NavigationLink {
                     EnterListView(productList: produceData(resourceName: "SOMAC4A101")).navigationTitle("SOMA C4A").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
-                            print("onAppear EnterListView !")
+                             
                         }.environmentObject(userData)
                 } label: {
                     HStack{

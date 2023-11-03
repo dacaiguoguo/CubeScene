@@ -49,7 +49,6 @@ struct ChaiZiView<T>: View where T:AbsEntity {
                                     item.isStarred.toggle()
                                     do {
                                         try viewContext.save()
-                                        print("Item marked as starred.")
                                     } catch {
                                         print("Error saving context: \(error)")
                                     }
@@ -100,7 +99,9 @@ struct ChaiZiView<T>: View where T:AbsEntity {
         }.pickerStyle(SegmentedPickerStyle()).padding(.horizontal)
             .onChange(of: selectedFruit) { newValue in
                 // 在选项变化时执行操作
+#if DEBUG
                 print("Selected fruit: \(newValue)")
+#endif
                 applyFilter()
             }
     }

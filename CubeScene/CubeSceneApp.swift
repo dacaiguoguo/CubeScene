@@ -24,7 +24,6 @@ import UIKit
 // no changes in your AppDelegate class
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        print(">> your code here !!")
         return true
     }
 }
@@ -39,7 +38,6 @@ struct CubeSceneApp: App {
                                     [[2,3,3], [6,4,1], [7,4,5]],
                                     [[2,2,3], [7,5,5], [7,7,5]]])
     //    init() {
-    //        print("init app\(demo.orderList())")
     //
     //    }
     //   @State var demo = EnterItem(name: "测试", matrix: [[[2,4,3], [6,4,1], [6,6,1]],
@@ -58,7 +56,7 @@ struct CubeSceneApp: App {
                 NavigationView {
                     EnterListView(productList: produceData(resourceName: "SOMA108")).navigationTitle("TitleName").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
-                            print("onAppear EnterListView !")
+                             
                         }.environmentObject(userData)
                 }
                 .navigationViewStyle(StackNavigationViewStyle()).tabItem {
@@ -78,7 +76,7 @@ struct CubeSceneApp: App {
                 NavigationView {
                     EnterListView(productList: produceData(resourceName: "SOMAT101")).navigationTitle("TitleName3").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
-                            print("onAppear EnterListView !")
+                             
                         }.environmentObject(userData)
                 }
                 .navigationViewStyle(StackNavigationViewStyle()).tabItem {
@@ -88,7 +86,7 @@ struct CubeSceneApp: App {
                 NavigationView {
                     SingleContentView2(nodeList: makeNode(with: result)).navigationTitle("TabTitleNameY").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
-                            print("onAppear EnterListView !")
+                             
                         }.environmentObject(userData)
                 }
                 .navigationViewStyle(StackNavigationViewStyle()).tabItem {
@@ -116,7 +114,6 @@ struct CubeSceneApp: App {
     
     func performLaunchTasks() {
         // 执行应用程序启动时的操作
-        print("App performLaunchTasks!")
         // ...
     }
 }

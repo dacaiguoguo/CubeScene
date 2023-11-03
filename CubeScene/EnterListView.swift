@@ -149,7 +149,6 @@ func produceData2(stringContent:String) -> [EnterItem]  {
                     if charactersOfV.contains(subSubItem) {
                         let character: Character = subSubItem
                         if let asciiValue = character.unicodeScalars.first?.value {
-                            // print("\(character)  :ASCII值为: \(asciiValue)")
                             return Int(asciiValue);
                         } else {
                             print("无法获取ASCII值")

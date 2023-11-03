@@ -69,7 +69,7 @@ class UserData: ObservableObject {
                     let fileURL = documentsDirectory.appendingPathComponent("blockside\(index).png")
                     do {
                         try imageData.write(to: fileURL)
-                        // print("Image saved successfully. File path: \(fileURL)")
+
                     } catch {
                         print("Error saving image: \(error)")
                     }
@@ -110,7 +110,6 @@ class UserData: ObservableObject {
                 let fileURL = documentsDirectory.appendingPathComponent("blockside\(index).png")
                 do {
                     try imageData.write(to: fileURL)
-                    print("Image saved successfully. File path: \(fileURL)")
                 } catch {
                     print("Error saving image: \(error)")
                 }

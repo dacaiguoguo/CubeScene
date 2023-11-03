@@ -99,7 +99,6 @@ func makeNode(with result: Matrix3D) -> [SCNNode] {
     let findResult = findUniqueValues(in: result).map { item in
         (item, findFirstOccurrence(of: item, in: result))
     };
-    print("findUniqueValues(in: result)\(findResult.map{$0.0})")
     return findResult.map { (value, location) in
         // 这是初始位置
         let positionOrgList = [[4,0,0],[4,0,4],[0,0,4],[-4,0,4],[-4,0,0],[-4,0,-4],[0,0,-4]].map{SCNVector3($0[0], $0[1], $0[2])}
@@ -122,7 +121,7 @@ func makeNode(with result: Matrix3D) -> [SCNNode] {
         yuanNode.positionTo = location
         yuanNode.position = positionOrgList[value]
         yuanNode.orgPosition = positionOrgList[value]
-        yuanNode.name = "块 \(value)"
+        yuanNode.name = "块 \(value + 1)"
         yuanNode.rotation = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: .pi / 2)
         let rows = result.count  // 第一维
         let columns = result.first?.count ?? 0  // 第二维
@@ -156,10 +155,8 @@ func makeNode(with result: Matrix3D) -> [SCNNode] {
 
 public struct SingleContentView2: View {
 
-    // 两个长度相同的数组 同时map到一个对象里
     let segments = {[1,2,3,4,5,6,7].map { index in
-        print("\(index + 1)")
-        return "块 \(index + 1)"
+        return "块 \(index)"
     }}()
 
     @State private var counter = 0
@@ -192,15 +189,12 @@ public struct SingleContentView2: View {
         Group {
             HStack {
                 Button(action: {
-                    counter += 1;
-                    nodeList.forEach { node2 in
-                        node2.position = node2.orgPosition ?? node2.position
-                        node2.rotation = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: .pi / 2)
-                    }
+                    reset()
                 }, label: {
                     Text("重置\(counter)")
                 })
                 Button(action: {
+                    reset()
                     actionRunAt(index: 0)
                 }, label: {
                     Text("演示")
@@ -209,10 +203,16 @@ public struct SingleContentView2: View {
         }
     }
 
+    func reset() {
+        counter += 1;
+        nodeList.forEach { node2 in
+            node2.position = node2.orgPosition ?? node2.position
+            node2.rotation = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: .pi / 2)
+        }
+    }
 
     func actionRunAt(index: Int) -> Void {
         guard index < nodeList.count else {
-            print("over....\(index)")
             return
         }
         var actionList:[SCNAction] = []
@@ -238,7 +238,7 @@ public struct SingleContentView2: View {
             ForEach(0 ..< segments.count, id: \.self) {
                 Text(segments[$0])
             }
-        }.pickerStyle(.segmented).padding(.horizontal)
+        }.pickerStyle(.segmented).padding()
     }
 
     func rotationMethod(_ axis: LVAxis) {
@@ -323,7 +323,7 @@ public struct SingleContentView2: View {
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.prepare()
         generator.impactOccurred()
-        lognodeInfo()
+        // lognodeInfo()
     }
 }
 

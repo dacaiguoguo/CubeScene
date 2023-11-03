@@ -261,7 +261,6 @@ struct ScenekitSingleView : UIViewRepresentable {
 //
 //    do {
 //        try imageData.write(to: fileURL)
-//        // print("Image saved successfully. File path: \(fileURL)")
 //    } catch {
 //        print("Error saving image: \(error)")
 //    }

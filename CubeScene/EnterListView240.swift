@@ -67,9 +67,7 @@ struct EnterListView240: View {
 //            // Write the JSON data to the file
 //            try jsonData.write(to: fileURL)
 //
-//            print("JSON data written to file successfully.")
 //        } catch {
-//            print("Error: \(error.localizedDescription)")
 //        }
 
 
