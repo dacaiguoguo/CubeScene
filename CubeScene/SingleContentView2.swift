@@ -94,6 +94,8 @@ public struct SingleContentView2: View {
     //node:块 5,rotation:SCNVector3(x: 0.0, y: 1.0, z: 0.0), position:SCNVector3(x: 3.874302e-07, y: 0.99999964, z: 0.99999964)
     //node:块 6,rotation:SCNVector3(x: 0.0, y: 3.0, z: 2.0), position:SCNVector3(x: -3.5762787e-07, y: 0.99999964, z: -1.4901161e-07)
     //node:块 7,rotation:SCNVector3(x: 0.0, y: 0.0, z: 2.0), position:SCNVector3(x: 1.0, y: 0.99999964, z: -1.0000001)
+
+    
     static var dataList:[Block] = [
         Block(data: [[[1,-1,-1],],
                      [[1,1,-1], ],
