@@ -98,7 +98,7 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
     print("findUniqueValues(in: result)\(findResult.map{$0.0})")
     return findResult.map { (value, location) in
         // 这是初始位置
-        let positionOrgList = [[4,0,0],[4,4,0],[0,4,0],[-4,4,0],[-4,0,0],[-4,-4,0],[0,-4,0]].map{SCNVector3($0[0], $0[1], $0[2])}
+        let positionOrgList = [[4,0,0],[4,0,4],[0,0,4],[-4,0,4],[-4,0,0],[-4,0,-4],[0,0,-4]].map{SCNVector3($0[0], $0[1], $0[2])}
 
 
         let colors:[UIColor] = [

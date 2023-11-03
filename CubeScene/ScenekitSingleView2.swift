@@ -22,19 +22,17 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         cameraNode.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
         ret.rootNode.addChildNode(cameraNode)
 
-//        // 创建地面
-//        let groundGeometry = SCNBox.init(width: 10, height: 10, length: 1, chamferRadius: 0.05)
-//        let groundNode = SCNNode(geometry: groundGeometry)
-//        groundNode.rotation = SCNVector4(x: 1, y: 0, z: 0, w: .pi * 3 / 2)
-//        groundNode.position = SCNVector3Make(0, -1, 0)
-//        ret.rootNode.addChildNode(groundNode)
-//
-//        // 设置地面材质
-//        let material = SCNMaterial()
-//        material.diffuse.contents = UIColor.lightGray
-////        Image(uiImage: UIImage(named: "wenli5")!)
-////            .resizable(resizingMode: .tile)
-//        groundGeometry.firstMaterial = material
+        //// 创建地面
+        //let groundGeometry = SCNBox.init(width: 3, height: 3, length: 1, chamferRadius: 0.05)
+        //let groundNode = SCNNode(geometry: groundGeometry)
+        //groundNode.rotation = SCNVector4(x: 1, y: 0, z: 0, w: .pi * 3 / 2)
+        //groundNode.position = SCNVector3Make(1, -1, 1)
+        //ret.rootNode.addChildNode(groundNode)
+        //
+        //// 设置地面材质
+        //let material = SCNMaterial()
+        //material.diffuse.contents = UIColor.lightGray
+        //groundGeometry.firstMaterial = material
 
         // let env = UIImage(named: "dijon_notre_dame.jpg")
         ret.background.contents = UIColor(hex: "00bfff");
