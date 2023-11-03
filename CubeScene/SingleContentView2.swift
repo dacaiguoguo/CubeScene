@@ -35,10 +35,7 @@ extension SCNAction {
     }
 }
 
-// 这里有个问题 就是三维数组 最前面的是最底层了，但是 其实应该是最上层。
-// 解决方法 最好是处理数据。
-// todo 自定义顺序
-func makeNode(with result2: Matrix3D) -> [SCNNode] {
+func transMatrix(with result2: Matrix3D) -> Matrix3D {
     let resulttmp = result2.map { mid in
         mid.map { innter in
             innter.map {value in return value - 1}
@@ -52,7 +49,14 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         let y = rows - 1 - j;
         result.append(Array(resulttmp[y].reversed()))
     }
+    return result
+}
 
+// 这里有个问题 就是三维数组 最前面的是最底层了，但是 其实应该是最上层。
+// 解决方法 最好是处理数据。
+// todo 自定义顺序
+func makeNode(with result: Matrix3D) -> [SCNNode] {
+    // let result = transMatrix(with: result2)
     func findFirstOccurrence(of value: Int, in array: Matrix3D) -> SCNVector3 {
         let rows = result.count  // 第一维
         let columns = result.first?.count ?? 0  // 第二维
@@ -83,9 +87,9 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
             let y = j;//columns - 1 - j;
             for i in 0..<rows {
                 for k in 0..<depth {
-                    let innerArray = result[i][y][k]
-                    if !uniqueValues.contains(innerArray) {
-                        uniqueValues.append(innerArray)
+                    let thenumber = result[i][y][k]
+                    if thenumber >= 0 && !uniqueValues.contains(thenumber) {
+                        uniqueValues.append(thenumber)
                     }
                 }
             }
@@ -112,9 +116,9 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
                                 UIColor(hex: "000000").withAlphaComponent(0.95),
         ]
 
-        let yuan = SCNSphere(radius: 0.5)
-        yuan.firstMaterial?.diffuse.contents = colors[value].withAlphaComponent(1)
-        let yuanNode = SCNNode(geometry: yuan)
+//        let yuan = SCNSphere(radius: 0.5)
+//        yuan.firstMaterial?.diffuse.contents = colors[value].withAlphaComponent(1)
+        let yuanNode = SCNNode()
         yuanNode.positionTo = location
         yuanNode.position = positionOrgList[value]
         yuanNode.orgPosition = positionOrgList[value]
@@ -128,14 +132,17 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         for i in 0..<rows {
             for j in 0..<columns {
                 for k in 0..<depth {
-                    let value2 = result[k][j][i]
+                    let value2 = result[i][j][k]
                     if value2 == value {
                         let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
                         box2.firstMaterial?.diffuse.contents = colors[value]
                         let boxNode2 = SCNNode()
                         boxNode2.geometry = box2
                         boxNode2.name = "\(value)"
-                        boxNode2.position = SCNVector3(x: Float(k - Int(location.x)), y: Float(j - Int(location.y)), z: Float(i - Int(location.z)));
+//                        boxNode2.position = SCNVector3(x: Float(k - Int(location.x)), y: Float(j - Int(location.y)), z: Float(i - Int(location.z)));
+                        boxNode2.position = SCNVector3(x: Float(k - Int(location.x)),
+                                                       y: Float(j - Int(location.y)),
+                                                       z: Float(i - Int(location.z)));
                         yuanNode.addChildNode(boxNode2)
                     }
                 }

@@ -35,9 +35,9 @@ struct CubeSceneApp: App {
     @Environment(\.scenePhase) var scenePhase
     
     let userData = UserData()
-    let result = [[[2,4,3], [6,4,1], [6,6,1]],
-                  [[2,3,3], [6,4,1], [7,4,5]],
-                  [[2,2,3], [7,5,5], [7,7,5]]]
+    let result = transMatrix(with: [[[2,4,3], [6,4,1], [6,6,1]],
+                                    [[2,3,3], [6,4,1], [7,4,5]],
+                                    [[2,2,3], [7,5,5], [7,7,5]]])
     //    init() {
     //        print("init app\(demo.orderList())")
     //

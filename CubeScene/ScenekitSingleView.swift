@@ -84,7 +84,7 @@ struct ScenekitSingleView : UIViewRepresentable {
                     // 盒子
                     let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
                     let value = dataItem[z][y][x];
-                    if value == -1 {
+                    if value < 0 {
                         continue
                     }
                     let boxNode2 = SCNNode()
@@ -95,7 +95,7 @@ struct ScenekitSingleView : UIViewRepresentable {
                 }
             }
         }
-        parNode2.position = SCNVector3Make(Float(-1), Float(1), Float(1))
+//        parNode2.position = SCNVector3Make(Float(-1), Float(1), Float(1))
         // 旋转此节点会导致 用手势旋转时有偏轴现象
         // parNode2.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
         scene.rootNode.addChildNode(parNode2)
@@ -275,14 +275,15 @@ struct ScenekitSingleView_Previews: PreviewProvider {
                                                                         [[2,3,3], [6,4,1], [7,4,5]],
                                                                         [[2,2,3], [7,5,5], [7,7,5]]],
                                                    isTaskComplete: true),
-                               colors: [UIColor(hex: "000000"),
+                               colors: [
                                                 UIColor(hex: "5B5B5B"),
                                                 UIColor(hex: "C25C1D"),
                                                 UIColor(hex: "2788e7"),
                                                 UIColor(hex: "FA2E34"),
                                                 UIColor(hex: "FB5BC2"),
                                                 UIColor(hex: "FCC633"),
-                                                UIColor(hex: "178E20")],
+                                                UIColor(hex: "178E20"),
+                                                UIColor(hex: "000000"),],
                                numberImageList: getTextImageList())
             .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
             

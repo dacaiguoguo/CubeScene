@@ -33,21 +33,21 @@ struct EnterItem: Decodable {
         self.matrix = matrix
         let temp = EnterItem.orderList(matrix: matrix)
         self.usedBlock = Array(Set(temp.map({ item in
-            switch item {
+            switch (item) {
             case 86:// V
-                return 1
+                return 0
             case 76:// L
-                return 2;
+                return 1;
             case 84:// T
-                return 3;
+                return 2;
             case 90:// Z
-                return 4;
+                return 3;
             case 65:// A
-                return 5;
+                return 4;
             case 66:// B
-                return 6;
+                return 5;
             case 80:// P
-                return 7;
+                return 6;
             default:
                 return item
             }
@@ -89,7 +89,7 @@ struct EnterItem: Decodable {
             for x in (0..<countOfColum).reversed() {
                 for z in (0..<countOfRow).reversed() {
                     let value = matrix[z][y][x];
-                    if value == -1 {
+                    if value < 0 {
                         continue
                     }
                     if !ret.contains(value) {
@@ -194,9 +194,9 @@ func produceData2(stringContent:String) -> [EnterItem]  {
         }
 
         if let name = firstLine {
-            return EnterItem(name: name, matrix: result, isTaskComplete: UserDefaults.standard.bool(forKey: name))
+            return EnterItem(name: name, matrix: transMatrix(with: result), isTaskComplete: UserDefaults.standard.bool(forKey: name))
         } else {
-            return EnterItem(name: "无名", matrix: result, isTaskComplete: false)
+            return EnterItem(name: "无名", matrix: transMatrix(with: result), isTaskComplete: false)
         }
     }
 }

@@ -93,19 +93,19 @@ class UserData: ObservableObject {
 //                     UIColor.purple];
 
         let array = [
-            UIColor(hex: "000000"),
             UIColor(hex: "5B5B5B"),
             UIColor(hex: "C25C1D"),
             UIColor(hex: "2788e7"),
             UIColor(hex: "FA2E34"),
             UIColor(hex: "FB5BC2"),
             UIColor(hex: "FCC633"),
-            UIColor(hex: "178E20")]
+            UIColor(hex: "178E20"),
+            UIColor(hex: "000000"),]
 
         // 根据颜色生成带数字的图片，写入ducument
         for (index, item) in array.enumerated() {
             UserDefaults.standard.register(defaults: ["block\(index)" : item.encode()!])
-            if let imageData = generateImage(color: item, text: "\(index)").pngData(),
+            if let imageData = generateImage(color: item, text: "\(index + 1)").pngData(),
                let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
                 let fileURL = documentsDirectory.appendingPathComponent("blockside\(index).png")
                 do {
