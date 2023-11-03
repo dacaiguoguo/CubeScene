@@ -68,6 +68,11 @@ public struct SingleContentView2: View {
                                    UIColor(hex: "FCC633").withAlphaComponent(0.5),
                                    UIColor(hex: "178E20").withAlphaComponent(0.5),
     ]
+    // 算出来的第一个点就是块的位置，有了位置也就进一步确定方向，时左还是右，上还是下，是否是镜像的
+    // 然后在把rotationTo改成x、y,z 旋转次数，再根据初始位置
+    // 用四元数算出旋转所需，，既然用四元数计算，那就不用上一步了，再就是要把一开始的遍历创建，改成按块，按角度创建，意思
+    // 就是创建一个空白的，在算两个node之间的旋转四元数
+    // action上再增加一个先移动到上方，再向下移动，防止互相穿过
     // node:Optional("块 1"),rotation:SCNVector4(x: 0.5773504, y: -0.5773503, z: -0.5773501, w: 4.1887903), position:SCNVector3(x: 1.0, y: 0.0, z: 1.0)
     // node:Optional("块 2"),rotation:SCNVector4(x: 0.5773504, y: -0.57735014, z: -0.5773502, w: 2.0943954), position:SCNVector3(x: 1.0, y: 2.0, z: 1.0000001)
     // node:Optional("块 3"),rotation:SCNVector4(x: 0.0, y: 0.0, z: 0.99999994, w: 1.5707964), position:SCNVector3(x: -1.0, y: 0.0, z: -1.0)
