@@ -38,8 +38,12 @@ extension SCNAction {
 // 这里有个问题 就是三维数组 最前面的是最底层了，但是 其实应该是最上层。
 // 解决方法 最好是处理数据。
 // todo 自定义顺序
-func makeNode(destPosition:[SCNVector3], result: Matrix3D) -> [SCNNode] {
-
+func makeNode(with result2: Matrix3D) -> [SCNNode] {
+    let result = result2.map { mid in
+        mid.map { innter in
+            innter.map {value in return value - 1}
+        }
+    }
     func findFirstOccurrence(of value: Int, in array: Matrix3D) -> SCNVector3 {
         let rows = result.count  // 第一维
         let columns = result.first?.count ?? 0  // 第二维
@@ -144,23 +148,16 @@ func makeNode(destPosition:[SCNVector3], result: Matrix3D) -> [SCNNode] {
 
 public struct SingleContentView2: View {
 
-
-    // 这里是块的位置，注意，z是第一个？？0，    1       2       3       4       5       6
-    // 目标postion好像并不重要。
-    static let positionlist = [[0,0,0],[2,0,0],[1,0,0],[0,2,1],[1,2,1],[1,0,2],[1,2,0]].map{SCNVector3($0[0], $0[1], $0[2])}
-    static let result =  [[[0,0,0],[2,3,0],[2,3,3]],
-                          [[2,5,5],[2,4,5],[6,4,4]],
-                          [[1,1,1],[6,1,5],[6,6,4]]];
-
     // 两个长度相同的数组 同时map到一个对象里
-    let segments = {positionlist.enumerated().map { index, fruit in
+    let segments = {[1,2,3,4,5,6,7].map { index in
         print("\(index + 1)")
         return "块 \(index + 1)"
     }}()
 
     @State private var counter = 0
     @State private var selectedSegment = 0
-    @State private var nodeList:[SCNNode] = { makeNode(destPosition: positionlist, result: result)}()
+    @State var nodeList:[SCNNode]
+//    { makeNode(with result: result)}()
 
     @State private var stepcount = 0 {
         didSet {
