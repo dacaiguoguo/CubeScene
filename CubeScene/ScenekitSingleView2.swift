@@ -105,7 +105,44 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         scene.rootNode.addChildNode(zAxis)
 //        nodeList.forEach { item in
 //            scene.rootNode.addChildNode(item)
-//        }
+//        }// 看起来是每一个形状 都有一个原点了，接下来就是理解rotation,看起来是某个形状在x。y。z 旋转的次数，
+        let rotation =  [
+            [
+                1,
+                1,
+                1
+            ],
+            [
+                1,
+                1,
+                1
+            ],
+            [
+                2,
+                2,
+                3
+            ],
+            [
+                1,
+                2,
+                2
+            ],
+            [
+                1,
+                2,
+                2
+            ],
+            [
+                1,
+                4,
+                4
+            ],
+            [
+                1,
+                1,
+                3
+            ]
+        ];
         mmlist.forEach { item in
             let yuan = SCNSphere(radius: 0.5)
             yuan.firstMaterial?.diffuse.contents = UIColor.black
