@@ -69,7 +69,7 @@ func makeNode(with result: Matrix3D) -> [SCNNode] {
                 for k in 0..<depth {
                     let innerArray = result[i][y][k]
                     if innerArray == value {
-                        return SCNVector3(i, y, k)
+                        return SCNVector3(k, y, i)
                     }
                 }
             }
@@ -105,19 +105,19 @@ func makeNode(with result: Matrix3D) -> [SCNNode] {
 
 
         let colors:[UIColor] = [
-                                UIColor(hex: "5B5B5B").withAlphaComponent(0.95),
-                                UIColor(hex: "C25C1D").withAlphaComponent(0.95),
-                                UIColor(hex: "2788e7").withAlphaComponent(0.95),
-                                UIColor(hex: "FA2E34").withAlphaComponent(0.95),
-                                UIColor(hex: "FB5BC2").withAlphaComponent(0.95),
-                                UIColor(hex: "FCC633").withAlphaComponent(0.95),
-                                UIColor(hex: "178E20").withAlphaComponent(0.95),
-                                UIColor(hex: "000000").withAlphaComponent(0.95),
+                                UIColor(hex: "5B5B5B").withAlphaComponent(0.85),
+                                UIColor(hex: "C25C1D").withAlphaComponent(0.85),
+                                UIColor(hex: "2788e7").withAlphaComponent(0.85),
+                                UIColor(hex: "FA2E34").withAlphaComponent(0.85),
+                                UIColor(hex: "FB5BC2").withAlphaComponent(0.85),
+                                UIColor(hex: "FCC633").withAlphaComponent(0.85),
+                                UIColor(hex: "178E20").withAlphaComponent(0.85),
+                                UIColor(hex: "000000").withAlphaComponent(0.85),
         ]
 
-//        let yuan = SCNSphere(radius: 0.5)
-//        yuan.firstMaterial?.diffuse.contents = colors[value].withAlphaComponent(1)
-        let yuanNode = SCNNode()
+        let yuan = SCNSphere(radius: 0.5)
+        yuan.firstMaterial?.diffuse.contents = colors[value].withAlphaComponent(1)
+        let yuanNode = SCNNode(geometry: yuan)
         yuanNode.positionTo = location
         yuanNode.position = positionOrgList[value]
         yuanNode.orgPosition = positionOrgList[value]
