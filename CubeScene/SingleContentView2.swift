@@ -46,7 +46,8 @@ public struct SingleContentView2: View {
                                    UIColor(hex: "FCC633").withAlphaComponent(0.95),
                                    UIColor(hex: "178E20").withAlphaComponent(0.95),
     ]
-    static let mmlist = [[0,0,0],[2,0,0],[1,0,0],[0,2,1],[1,2,1],[1,0,2],[1,2,0]];
+    // 这里是块的位置，注意，z是第一个？？？，
+    static let positionlist = [[0,0,0],[2,0,0],[1,0,0],[0,2,1],[1,2,1],[1,0,2],[1,2,0]];
     // [[[0,0,0],[2,3,0],[2,3,3]],
     //  [[2,5,5],[2,4,5],[6,4,4]],
     //  [[1,1,1],[6,1,5],[6,6,4]]],
@@ -56,8 +57,10 @@ public struct SingleContentView2: View {
          [[9,9,9],[9,9,0]]],
         [[[1,1,1],[9,1,9]],
          [[9,9,9],[9,9,9]]],
-        [[[2,2,9],[9,9,9]],
-         [[9,9,9],[2,2,9]]],
+        [[[2,9,9],[9,9,9]],
+         [[2,2,9],[9,9,9]],
+         [[9,2,9],[9,9,9]]
+        ],
         [[[3,3,9],[9,9,9]],
          [[3,9,9],[9,9,9]]],
     ];
@@ -65,14 +68,14 @@ public struct SingleContentView2: View {
 
     
     static var dataList:[Block] = {
-        let zippedArray = zip(zip(nodata, mmlist),rotation)
-        zippedArray.map {(tuple, item3) in
-            let (property1, property2) = tuple
-            Block(data: property1,
+        let zippedArray = zip(zip(nodata, positionlist),rotation)
+        return zippedArray.map {(tuple, rotai) in
+            let (data, posi) = tuple
+            return Block(data: data,
                   name: "块 1",
                   rotation: SCNVector3Zero,
-                  position: SCNVector3(6, 0, -5),
-                  rotationTo3: SCNVector3(x: 0.0, y: 1.0, z: 1.0),
+                  position: SCNVector3(posi[0], posi[1], posi[2]),
+                  rotationTo3: SCNVector3(rotai[0], rotai[1], rotai[2]),
                   positionTo: SCNVector3(x: 1, y: 0.0, z: 1))
         }
     }()
@@ -106,7 +109,7 @@ public struct SingleContentView2: View {
                     boxNode2.geometry = box2
                     boxNode2.name = "\(value)"
                     // 由于默认y朝向上的，所以要取负值
-                    boxNode2.position = SCNVector3Make(Float(x), Float(-y), Float(z))
+                    boxNode2.position = SCNVector3Make(Float(z), Float(y), Float(x))
                     boxNode2.geometry?.firstMaterial?.diffuse.contents =  colors[value];
                     parNode2.addChildNode(boxNode2)
                 }
