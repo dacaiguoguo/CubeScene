@@ -36,6 +36,34 @@ extension SCNAction {
 }
 
 func makeNode(destPosition:[SCNVector3], result: Matrix3D) -> [SCNNode] {
+
+    func findFirstOccurrence(of value: Int, in array: Matrix3D) -> (x: Int, y: Int, z: Int)? {
+        for (x, outerArray) in array.enumerated() {
+            for (y, middleArray) in outerArray.enumerated() {
+                for (z, innerArray) in middleArray.enumerated() {
+                    if innerArray == value {
+                        return (x, y, z)
+                    }
+                }
+            }
+        }
+        return nil
+    }
+    func findUniqueValues(in array: Matrix3D) -> [(Int, SCNVector3)] {
+        var uniqueValues:[(Int, SCNVector3)]  = []
+        for (x, outerArray) in array.enumerated() {
+            for (y, middleArray) in outerArray.enumerated() {
+                for (z, value) in middleArray.enumerated() {
+                    if uniqueValues.first(where: {item in item.0 == value}) == nil {
+                        uniqueValues.append((value, SCNVector3(z,y,x)))
+                    }
+                }
+            }
+        }
+        return uniqueValues
+    }
+    print("findUniqueValues(in: result)\(findUniqueValues(in: result))")
+
     return destPosition.enumerated().map {index, item in
         // 这是初始位置
         let positionOrgList = [[4,0,0],[4,4,0],[0,4,0],[-4,4,0],[-4,0,0],[-4,-4,0],[0,-4,0]].map{SCNVector3($0[0], $0[1], $0[2])}
