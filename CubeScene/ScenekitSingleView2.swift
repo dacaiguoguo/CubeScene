@@ -65,10 +65,13 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         scene.rootNode.addChildNode(xAxis)
         scene.rootNode.addChildNode(yAxis)
         scene.rootNode.addChildNode(zAxis)
+        let parNode2 = SCNNode()
 
         nodeList.forEach { item in
-            scene.rootNode.addChildNode(item)
+            parNode2.addChildNode(item)
         }
+        parNode2.position = SCNVector3Make(Float(-1), Float(-1), Float(-1))
+        scene.rootNode.addChildNode(parNode2)
         scnView.scene = scene
         scnView.autoenablesDefaultLighting = true
         scnView.allowsCameraControl = true

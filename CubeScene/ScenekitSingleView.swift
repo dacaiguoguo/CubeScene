@@ -95,7 +95,7 @@ struct ScenekitSingleView : UIViewRepresentable {
                 }
             }
         }
-//        parNode2.position = SCNVector3Make(Float(-1), Float(1), Float(1))
+        parNode2.position = SCNVector3Make(Float(-1), Float(-1), Float(-1))
         // 旋转此节点会导致 用手势旋转时有偏轴现象
         // parNode2.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
         scene.rootNode.addChildNode(parNode2)
