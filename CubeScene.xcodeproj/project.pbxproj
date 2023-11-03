@@ -152,6 +152,7 @@
 		9DF9380A2A417BA4001BD720 /* data1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = data1.txt; sourceTree = "<group>"; };
 		9DF9380C2A417BA4001BD720 /* data2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = data2.txt; sourceTree = "<group>"; };
 		9DF938102A417BAD001BD720 /* data3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = data3.txt; sourceTree = "<group>"; };
+		9DF98E3F2AF4C10200A04BB6 /* note.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = note.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -252,6 +253,7 @@
 				9DDEC0C52A614716001A0046 /* EnterListView240.swift */,
 				9D46D7242AF12F57002DE821 /* ScenekitSingleView2.swift */,
 				9D46D7232AF12F57002DE821 /* SingleContentView2.swift */,
+				9DF98E3F2AF4C10200A04BB6 /* note.md */,
 				9D04123D2A516F050083741B /* SingleContentView.swift */,
 				5934F66A2A65038B00AED0E9 /* ScenekitSingleView.swift */,
 				5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */,
