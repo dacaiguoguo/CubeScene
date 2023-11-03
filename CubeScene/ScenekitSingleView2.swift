@@ -125,7 +125,7 @@ struct ScenekitSingleView2 : UIViewRepresentable {
 }
 
 struct ScenekitSingleView2_Previews: PreviewProvider {
-    static private var nodeList:[SCNNode] = { SingleContentView2.dataList.map { SingleContentView2.addNode($0)} }()
+    static private var nodeList:[SCNNode] = []
 
     static var previews: some View {
         NavigationView {
