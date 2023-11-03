@@ -64,6 +64,7 @@ public struct SingleContentView2: View {
     ];
 
     static let rotation = [[1,1,1],[1,1,1],[2,2,3],[1,2,2],[1,2,2],[1,4,4],[1,1,3]].map{SCNVector3($0[0], $0[1], $0[2])}
+    static let positionDestlist = [[4,0,0],[4,4,0],[0,4,0],[-4,4,0],[-4,0,0],[-4,-4,0],[0,-4,0]].map{SCNVector3($0[0], $0[1], $0[2])}
 
     static var dataList:[Block] = {
         let zippedArray = zip(zip(nodata, positionlist),rotation)
@@ -85,8 +86,8 @@ public struct SingleContentView2: View {
         let yuan = SCNSphere(radius: 0.5)
         yuan.firstMaterial?.diffuse.contents = colors[index].withAlphaComponent(1)
         let yuanNode = SCNNode(geometry: yuan)
-        yuanNode.position = SCNVector3(item[0], item[1], item[2])
-
+        yuanNode.positionTo = SCNVector3(item[0], item[1], item[2])
+        yuanNode.position = positionDestlist[index]
         let rows = result.count  // 第一维
         let columns = result.first?.count ?? 0  // 第二维
         let depth = result.first?.first?.count ?? 0 // 第三维
@@ -200,23 +201,29 @@ public struct SingleContentView2: View {
             print("over....\(index)")
             return
         }
-        let positionDestlist = [[-4,0,0],[-4,4,0],[4,4,0],[0,0,4],[0,0,-4],[4,4,4],[-4,-4,-4]].map{SCNVector3($0[0], $0[1], $0[2])}
         let rotai = SingleContentView2.rotation[index];
-        let posi = positionDestlist[index];
+        let posi = nodeList[index].positionTo;
 
         var rolist:[SCNAction] = []
-        let rb = SCNAction.move(to: posi, duration: 1);
+
+//        if rotai.z > 1 {
+//            rolist.append(SCNAction.rotate(by: -.pi/2 * CGFloat(rotai.z - 1), around: SCNVector3(0, 0, 1), duration: 0.2));
+//        }
+//
+//        if rotai.y > 1 {
+//            rolist.append(SCNAction.rotate(by: -.pi/2 * CGFloat(rotai.y - 1), around: SCNVector3(0, 1, 0), duration: 0.2));
+//        }
+//        // 增加x,y,z旋转动作
+//        if rotai.x > 1 {
+//            rolist.append(SCNAction.rotate(by: -.pi/2 * CGFloat(rotai.x - 1), around: SCNVector3(1, 0, 0), duration: 0.1));
+//        }
+        var posi0 = nodeList[index].positionTo;
+        posi0.y += 5;
+        let rb0 = SCNAction.move(to: posi0, duration: 0.1);
+        rolist.append(rb0);
+
+        let rb = SCNAction.move(to: posi, duration: 0.1);
         rolist.append(rb);
-        // 增加x,y,z旋转动作
-        if rotai.x > 1 {
-            rolist.append(SCNAction.rotate(by: .pi/2 * CGFloat(rotai.x - 1), around: SCNVector3(1, 0, 0), duration: 0.1));
-        }
-        if rotai.y > 1 {
-            rolist.append(SCNAction.rotate(by: .pi/2 * CGFloat(rotai.y - 1), around: SCNVector3(0, 1, 0), duration: 0.2));
-        }
-        if rotai.z > 1 {
-            rolist.append(SCNAction.rotate(by: .pi/2 * CGFloat(rotai.z - 1), around: SCNVector3(0, 0, 1), duration: 0.2));
-        }
 
         nodeList[index].runAction(SCNAction.sequence(rolist), completionHandler: {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -228,39 +235,6 @@ public struct SingleContentView2: View {
     }
 
 
-    func actionmethod(index: Int) -> Void {
-        guard index < nodeList.count else {
-            print("over....\(index)")
-            return
-        }
-        let reIndex = [3,4,5,1,7,6,2][index] - 1
-
-        var rolist:[SCNAction] = []
-        // 先移动到目标位置上方
-        let rb0 = SCNAction.move(to: SCNVector3(nodeList[reIndex].positionTo.x, nodeList[reIndex].positionTo.y + 2, nodeList[reIndex].positionTo.z), duration: 1);
-        rolist.append(rb0);
-
-        // 增加x,y,z旋转动作
-        if nodeList[reIndex].rotationTo3.x > 0 {
-            rolist.append(SCNAction.rotate(by: .pi/2 * CGFloat(nodeList[reIndex].rotationTo3.x), around: SCNVector3(1, 0, 0), duration: 0.1));
-        }
-        if nodeList[reIndex].rotationTo3.y > 0 {
-            rolist.append(SCNAction.rotate(by: .pi/2 * CGFloat(nodeList[reIndex].rotationTo3.y), around: SCNVector3(0, 1, 0), duration: 0.2));
-        }
-        if nodeList[reIndex].rotationTo3.z > 0 {
-            rolist.append(SCNAction.rotate(by: .pi/2 * CGFloat(nodeList[reIndex].rotationTo3.z), around: SCNVector3(0, 0, 1), duration: 0.3));
-        }
-        // 再移动到目标位置
-        let rb = SCNAction.move(to: nodeList[reIndex].positionTo, duration: 1);
-        rolist.append(rb);
-        // 只能用sequence，group 就不对了
-        nodeList[reIndex].runAction(SCNAction.sequence(rolist), completionHandler: {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                actionmethod(index: index + 1);
-            }
-        })
-
-    }
 
     var blockName:String {
         segments[selectedSegment]
@@ -351,7 +325,7 @@ public struct SingleContentView2: View {
 
     func lognodeInfo() -> Void {
         nodeList.forEach { node in
-            print("node:\(node.name ?? ""),rotation:\(node.rotationTo3), position:\(node.position)")
+            print("node:\(node.name ?? ""),rotation:\(node.rotation), position:\(node.position)")
         }
     }
 
