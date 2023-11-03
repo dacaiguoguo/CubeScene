@@ -37,33 +37,58 @@ extension SCNAction {
 
 func makeNode(destPosition:[SCNVector3], result: Matrix3D) -> [SCNNode] {
 
-    func findFirstOccurrence(of value: Int, in array: Matrix3D) -> (x: Int, y: Int, z: Int)? {
-        for (x, outerArray) in array.enumerated() {
-            for (y, middleArray) in outerArray.enumerated() {
-                for (z, innerArray) in middleArray.enumerated() {
+    func findFirstOccurrence(of value: Int, in array: Matrix3D) -> SCNVector3 {
+        let rows = result.count  // 第一维
+        let columns = result.first?.count ?? 0  // 第二维
+        let depth = result.first?.first?.count ?? 0 // 第三维
+
+        // 遍历三维数组
+        for j in 0..<columns {
+            let y = j;//columns - 1 - j;
+            for i in 0..<rows {
+                for k in 0..<depth {
+                    let innerArray = result[i][y][k]
                     if innerArray == value {
-                        return (x, y, z)
+                        return SCNVector3(i, y, k)
                     }
                 }
             }
         }
-        return nil
+        return SCNVector3Zero
     }
-    func findUniqueValues(in array: Matrix3D) -> [(Int, SCNVector3)] {
-        var uniqueValues:[(Int, SCNVector3)]  = []
-        for (x, outerArray) in array.enumerated() {
-            for (y, middleArray) in outerArray.enumerated() {
-                for (z, value) in middleArray.enumerated() {
-                    if uniqueValues.first(where: {item in item.0 == value}) == nil {
-                        uniqueValues.append((value, SCNVector3(z,y,x)))
+    func findUniqueValues(in result: Matrix3D) -> [Int] {
+        let rows = result.count  // 第一维
+        let columns = result.first?.count ?? 0  // 第二维
+        let depth = result.first?.first?.count ?? 0 // 第三维
+
+        var uniqueValues:[Int]  = []
+        // 遍历三维数组
+        for j in 0..<columns {
+            let y = j;//columns - 1 - j;
+            for i in 0..<rows {
+                for k in 0..<depth {
+                    let innerArray = result[i][y][k]
+                    if !uniqueValues.contains(innerArray) {
+                        uniqueValues.append(innerArray)
                     }
                 }
             }
         }
+//        for (_, outerArray) in array.enumerated() {
+//            for (_, middleArray) in outerArray.enumerated() {
+//                for (_, value) in middleArray.enumerated() {
+//                    if !uniqueValues.contains(value) {
+//                        uniqueValues.append(value)
+//                    }
+//                }
+//            }
+//        }
         return uniqueValues
     }
-    let findResult = findUniqueValues(in: result);
-    print("findUniqueValues(in: result)\(findResult.count)")
+    let findResult = findUniqueValues(in: result).map { item in
+        (item, findFirstOccurrence(of: item, in: result))
+    };
+    print("findUniqueValues(in: result)\(findResult.map{$0.0})")
     return findResult.map { (value, location) in
         // 这是初始位置
         let positionOrgList = [[4,0,0],[4,4,0],[0,4,0],[-4,4,0],[-4,0,0],[-4,-4,0],[0,-4,0]].map{SCNVector3($0[0], $0[1], $0[2])}
