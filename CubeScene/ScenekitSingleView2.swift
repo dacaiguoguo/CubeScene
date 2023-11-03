@@ -67,9 +67,10 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         scene.rootNode.addChildNode(xAxis)
         scene.rootNode.addChildNode(yAxis)
         scene.rootNode.addChildNode(zAxis)
-//        nodeList.forEach { item in
-//            scene.rootNode.addChildNode(item)
-//        }// 看起来是每一个形状 都有一个原点了，接下来就是理解rotation,看起来是某个形状在x。y。z 旋转的次数，，就是没有理解4？？
+        nodeList.forEach { item in
+            scene.rootNode.addChildNode(item)
+        }
+// 看起来是每一个形状 都有一个原点了，接下来就是理解rotation,看起来是某个形状在x。y。z 旋转的次数，，就是没有理解4？？
         // 4 不就是转 一整圈了吗？？？position不重要，重要的是理解旋转，
         // 接下来把它拆开 找到初始位置和方向，也就是123，变成321的顺序 转回去，就找到初始角度了。
         //

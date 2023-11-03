@@ -37,21 +37,19 @@ extension SCNAction {
 
 public struct SingleContentView2: View {
 
-    static let colors:[UIColor] = [UIColor(hex: "000000").withAlphaComponent(0.95),
-                                   UIColor(hex: "5B5B5B").withAlphaComponent(0.95),
-                                   UIColor(hex: "C25C1D").withAlphaComponent(0.95),
-                                   UIColor(hex: "2788e7").withAlphaComponent(0.95),
-                                   UIColor(hex: "FA2E34").withAlphaComponent(0.95),
-                                   UIColor(hex: "FB5BC2").withAlphaComponent(0.95),
-                                   UIColor(hex: "FCC633").withAlphaComponent(0.95),
-                                   UIColor(hex: "178E20").withAlphaComponent(0.95),
+    static let colors:[UIColor] = [UIColor(hex: "000000").withAlphaComponent(0.65),
+                                   UIColor(hex: "5B5B5B").withAlphaComponent(0.65),
+                                   UIColor(hex: "C25C1D").withAlphaComponent(0.65),
+                                   UIColor(hex: "2788e7").withAlphaComponent(0.65),
+                                   UIColor(hex: "FA2E34").withAlphaComponent(0.65),
+                                   UIColor(hex: "FB5BC2").withAlphaComponent(0.65),
+                                   UIColor(hex: "FCC633").withAlphaComponent(0.65),
+                                   UIColor(hex: "178E20").withAlphaComponent(0.65),
     ]
-    // 这里是块的位置，注意，z是第一个？？？，
+    // 这里是块的位置，注意，z是第一个？？0，    1       2       3       4       5       6
     static let positionlist = [[0,0,0],[2,0,0],[1,0,0],[0,2,1],[1,2,1],[1,0,2],[1,2,0]];
-    // [[[0,0,0],[2,3,0],[2,3,3]],
-    //  [[2,5,5],[2,4,5],[6,4,4]],
-    //  [[1,1,1],[6,1,5],[6,6,4]]],
-    // 0 是形状2, 1是形状3， 2是4， 3是1
+    static let result =  [[[0,0,0],[2,3,0],[2,3,3]],[[2,5,5],[2,4,5],[6,4,4]],[[1,1,1],[6,1,5],[6,6,4]]];
+    // 0 是形状2, 1是形状3， 2是4， 3是1， 4是5， 5是6，6是7
     static let nodata = [
         [[[0,0,0],[9,9,0]],
          [[9,9,9],[9,9,0]]],
@@ -83,7 +81,37 @@ public struct SingleContentView2: View {
     let segments = {dataList.map { $0.name }}()
     @State private var counter = 0
     @State private var selectedSegment = 0
-    @State private var nodeList:[SCNNode] = { dataList.map { addNode($0)} }()
+    @State private var nodeList:[SCNNode] = { positionlist.enumerated().map { index, item in
+        let yuan = SCNSphere(radius: 0.5)
+        yuan.firstMaterial?.diffuse.contents = colors[index].withAlphaComponent(1)
+        let yuanNode = SCNNode(geometry: yuan)
+        yuanNode.position = SCNVector3(item[0], item[1], item[2])
+
+        let rows = result.count  // 第一维
+        let columns = result.first?.count ?? 0  // 第二维
+        let depth = result.first?.first?.count ?? 0 // 第三维
+        
+        // 遍历三维数组
+        for i in 0..<rows {
+            for j in 0..<columns {
+                for k in 0..<depth {
+                    let value = result[k][j][i]
+                    if value == index {
+                        let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
+                        box2.firstMaterial?.diffuse.contents = colors[index]
+                        let boxNode2 = SCNNode()
+                        boxNode2.geometry = box2
+                        boxNode2.name = "\(value)"
+                        boxNode2.position = SCNVector3(x: Float(k - item[0]), y: Float(j - item[1]), z: Float(i - item[2]));
+//                        SCNVector3(k,j,i) - SCNVector3Zero;
+                        yuanNode.addChildNode(boxNode2)
+                    }
+                    print("Element at (\(i), \(j), \(k)) is \(value)")
+                }
+            }
+        }
+        return yuanNode;
+    }}()
 
     @State private var stepcount = 0 {
         didSet {
@@ -102,7 +130,7 @@ public struct SingleContentView2: View {
                     // 盒子
                     let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
                     let value = item.data[z][y][x];
-                    if value == -1 {
+                    if value == -1 || value > 7 {
                         continue
                     }
                     let boxNode2 = SCNNode()
