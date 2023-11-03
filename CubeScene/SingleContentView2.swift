@@ -59,14 +59,15 @@ extension SCNAction {
 
 public struct SingleContentView2: View {
 
-    static let colors:[UIColor] = [UIColor(hex: "000000"),
-                                   UIColor(hex: "5B5B5B"),
-                                   UIColor(hex: "C25C1D"),
-                                   UIColor(hex: "2788e7"),
-                                   UIColor(hex: "FA2E34"),
-                                   UIColor(hex: "FB5BC2"),
-                                   UIColor(hex: "FCC633"),
-                                   UIColor(hex: "178E20")]
+    static let colors:[UIColor] = [UIColor(hex: "000000").withAlphaComponent(0.5),
+                                   UIColor(hex: "5B5B5B").withAlphaComponent(0.5),
+                                   UIColor(hex: "C25C1D").withAlphaComponent(0.5),
+                                   UIColor(hex: "2788e7").withAlphaComponent(0.5),
+                                   UIColor(hex: "FA2E34").withAlphaComponent(0.5),
+                                   UIColor(hex: "FB5BC2").withAlphaComponent(0.5),
+                                   UIColor(hex: "FCC633").withAlphaComponent(0.5),
+                                   UIColor(hex: "178E20").withAlphaComponent(0.5),
+    ]
     // node:Optional("块 1"),rotation:SCNVector4(x: 0.5773504, y: -0.5773503, z: -0.5773501, w: 4.1887903), position:SCNVector3(x: 1.0, y: 0.0, z: 1.0)
     // node:Optional("块 2"),rotation:SCNVector4(x: 0.5773504, y: -0.57735014, z: -0.5773502, w: 2.0943954), position:SCNVector3(x: 1.0, y: 2.0, z: 1.0000001)
     // node:Optional("块 3"),rotation:SCNVector4(x: 0.0, y: 0.0, z: 0.99999994, w: 1.5707964), position:SCNVector3(x: -1.0, y: 0.0, z: -1.0)
@@ -169,6 +170,11 @@ public struct SingleContentView2: View {
             }
         }
         parNode2.position = item.position;
+        let yuan = SCNSphere(radius: 0.5)
+        yuan.firstMaterial?.diffuse.contents = UIColor.black
+        let yuanNode = SCNNode(geometry: yuan)
+        yuanNode.position = SCNVector3(0, 0, 0)
+        parNode2.addChildNode(yuanNode)
         parNode2.orgPosition = item.position;
         parNode2.rotationTo = item.rotationTo;
         parNode2.positionTo = item.positionTo;
