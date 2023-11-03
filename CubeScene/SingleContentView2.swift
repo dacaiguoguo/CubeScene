@@ -66,14 +66,14 @@ extension SCNAction {
 
 public struct SingleContentView2: View {
 
-    static let colors:[UIColor] = [UIColor(hex: "000000").withAlphaComponent(0.85),
-                                   UIColor(hex: "5B5B5B").withAlphaComponent(0.85),
-                                   UIColor(hex: "C25C1D").withAlphaComponent(0.85),
-                                   UIColor(hex: "2788e7").withAlphaComponent(0.85),
-                                   UIColor(hex: "FA2E34").withAlphaComponent(0.85),
-                                   UIColor(hex: "FB5BC2").withAlphaComponent(0.85),
-                                   UIColor(hex: "FCC633").withAlphaComponent(0.85),
-                                   UIColor(hex: "178E20").withAlphaComponent(0.85),
+    static let colors:[UIColor] = [UIColor(hex: "000000").withAlphaComponent(0.95),
+                                   UIColor(hex: "5B5B5B").withAlphaComponent(0.95),
+                                   UIColor(hex: "C25C1D").withAlphaComponent(0.95),
+                                   UIColor(hex: "2788e7").withAlphaComponent(0.95),
+                                   UIColor(hex: "FA2E34").withAlphaComponent(0.95),
+                                   UIColor(hex: "FB5BC2").withAlphaComponent(0.95),
+                                   UIColor(hex: "FCC633").withAlphaComponent(0.95),
+                                   UIColor(hex: "178E20").withAlphaComponent(0.95),
     ]
     // 算出来的第一个点就是块的位置，有了位置也就进一步确定方向，时左还是右，上还是下，是否是镜像的
     // 然后在把rotationTo改成x、y,z 旋转次数，再根据初始位置
@@ -257,8 +257,9 @@ public struct SingleContentView2: View {
 //        let ra = SCNAction.rotate(toAxisAngle: nodeList[reIndex].rotationTo!, duration: 1);
 
         var rolist:[SCNAction] = []
-        let rb = SCNAction.move(to: nodeList[reIndex].positionTo, duration: 1);
-        rolist.append(rb);
+        let rb0 = SCNAction.move(to: SCNVector3(nodeList[reIndex].positionTo.x, nodeList[reIndex].positionTo.y + 2, nodeList[reIndex].positionTo.z), duration: 1);
+        rolist.append(rb0);
+
         if nodeList[reIndex].rotationTo3.x > 0 {
             rolist.append(SCNAction.rotate(by: .pi/2 * CGFloat(nodeList[reIndex].rotationTo3.x), around: SCNVector3(1, 0, 0), duration: 0.1));
         }
@@ -268,7 +269,8 @@ public struct SingleContentView2: View {
         if nodeList[reIndex].rotationTo3.z > 0 {
             rolist.append(SCNAction.rotate(by: .pi/2 * CGFloat(nodeList[reIndex].rotationTo3.z), around: SCNVector3(0, 0, 1), duration: 0.3));
         }
-
+        let rb = SCNAction.move(to: nodeList[reIndex].positionTo, duration: 1);
+        rolist.append(rb);
 
         nodeList[reIndex].runAction(SCNAction.sequence(rolist), completionHandler: {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
