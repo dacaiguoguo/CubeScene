@@ -8,15 +8,6 @@
 import SwiftUI
 import SceneKit
 
-struct Block {
-    let data: Matrix3D
-    let name: String
-    var rotation:SCNVector3
-    var position:SCNVector3
-    var rotationTo3:SCNVector3
-    var positionTo:SCNVector3
-}
-
 enum LVAxis {
     case x
     case y
