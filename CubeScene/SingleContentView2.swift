@@ -13,7 +13,6 @@ struct Block {
     let name: String
     var rotation:SCNVector3
     var position:SCNVector3
-    var rotationTo:SCNVector4
     var rotationTo3:SCNVector3
     var positionTo:SCNVector3
 }
@@ -102,7 +101,6 @@ public struct SingleContentView2: View {
               name: "块 1",
               rotation: SCNVector3Zero,
               position: SCNVector3(6, 0, -5),
-              rotationTo: SCNVector4(x: 0.5773504, y: -0.5773503, z: -0.5773501, w: 4.1887903),
               rotationTo3: SCNVector3(x: 0.0, y: 1.0, z: 1.0),
               positionTo: SCNVector3(x: 1, y: 0.0, z: 1)),
 
@@ -112,7 +110,6 @@ public struct SingleContentView2: View {
               name: "块 2",
               rotation: SCNVector3Zero,
               position: SCNVector3(3, 0, -5),
-              rotationTo: SCNVector4(x: 0.5773504, y: -0.57735014, z: -0.5773502, w: 2.0943954),
               rotationTo3: SCNVector3(x: 1.0, y: 0.0, z: 3.0),
               positionTo: SCNVector3(x: 1, y: 2, z: 1)),
         Block(data: [[[3,-1,-1],],
@@ -121,7 +118,6 @@ public struct SingleContentView2: View {
               name: "块 3",
               rotation: SCNVector3Zero,
               position: SCNVector3(-3, 0, -5),
-              rotationTo: SCNVector4(x: 0.0, y: 0.0, z: 0.99999994, w: 1.5707964),
               rotationTo3: SCNVector3(x: 0.0, y: 0.0, z: 1.0),
               positionTo: SCNVector3(x: -1, y: 0.0, z: -1)),
         Block(data: [[[4,-1,-1],],
@@ -130,7 +126,6 @@ public struct SingleContentView2: View {
               name: "块 4",
               rotation: SCNVector3Zero,
               position: SCNVector3(0, 0, -5),
-              rotationTo: SCNVector4(x: 0.5773504, y: 0.57735056, z: -0.5773499, w: 4.18879),
               rotationTo3: SCNVector3(x: 3.0, y: 0.0, z: 1.0),
               positionTo: SCNVector3(x: 1, y: 0.0, z: -1)),
         Block(data: [[[5, -1,-1],[5,  5,-1], ],
@@ -139,7 +134,6 @@ public struct SingleContentView2: View {
               name: "块 5",
               rotation: SCNVector3Zero,
               position: SCNVector3(-3, 3, -5),
-              rotationTo: SCNVector4(x: 0.0, y: 0.99999994, z: 0.0, w: 1.5707964),
               rotationTo3: SCNVector3(x: 0.0, y: 1.0, z: 0.0),
               positionTo: SCNVector3(x: 0, y: 1, z: 1)),
         Block(data: [[[6, -1,-1],[ 6,-1,-1], ],
@@ -147,8 +141,7 @@ public struct SingleContentView2: View {
                      [[-1,-1,-1],[-1,-1,-1],]],
               name: "块 6",
               rotation: SCNVector3Zero,
-              position: SCNVector3(3, 3, -5),
-              rotationTo: SCNVector4(x: 1.0, y: 1.2665981e-07, z: 1.0803336e-07, w: 3.1415927),
+              position: SCNVector3(-3, 3, 5),
               rotationTo3: SCNVector3(x: 0.0, y: 1.0, z: 2.0),
               positionTo: SCNVector3(x: 0, y: 1.0, z: 0)),
         Block(data: [[[ 7,-1,-1],[ 7, 7,-1], ],
@@ -157,7 +150,6 @@ public struct SingleContentView2: View {
               name: "块 7",
               rotation: SCNVector3Zero,
               position: SCNVector3(0, 3, -5),
-              rotationTo: SCNVector4(x: 0.5773504, y: -0.57735014, z: -0.5773502, w: 2.0943954),
               rotationTo3: SCNVector3(x: 0.0, y: 0.0, z: 2.0),
               positionTo: SCNVector3(x: 1, y: 1, z: -1)),
 
@@ -204,7 +196,6 @@ public struct SingleContentView2: View {
         yuanNode.position = SCNVector3(0, 0, 0)
         parNode2.addChildNode(yuanNode)
         parNode2.orgPosition = item.position;
-        parNode2.rotationTo = item.rotationTo;
         parNode2.rotationTo3 = item.rotationTo3;
         parNode2.positionTo = item.positionTo;
         parNode2.name = item.name;
@@ -409,7 +400,6 @@ struct CustomButton: View {
 extension SCNNode {
     private struct AssociatedKeys {
         static var orgPosition = "orgPosition"
-        static var rotationTo = "rotationTo"
         static var rotationTo3 = "rotationTo3"
         static var positionTo = "positionTo"
     }
@@ -420,14 +410,6 @@ extension SCNNode {
         }
         set {
             objc_setAssociatedObject(self, &AssociatedKeys.orgPosition, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-    }
-    var rotationTo: SCNVector4? {
-        get {
-            return objc_getAssociatedObject(self, &AssociatedKeys.rotationTo) as? SCNVector4
-        }
-        set {
-            objc_setAssociatedObject(self, &AssociatedKeys.rotationTo, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
     var rotationTo3: SCNVector3 {
