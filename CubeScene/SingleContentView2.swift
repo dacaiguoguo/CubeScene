@@ -37,14 +37,14 @@ extension SCNAction {
 
 public struct SingleContentView2: View {
 
-    static let colors:[UIColor] = [UIColor(hex: "000000").withAlphaComponent(0.65),
-                                   UIColor(hex: "5B5B5B").withAlphaComponent(0.65),
-                                   UIColor(hex: "C25C1D").withAlphaComponent(0.65),
-                                   UIColor(hex: "2788e7").withAlphaComponent(0.65),
-                                   UIColor(hex: "FA2E34").withAlphaComponent(0.65),
-                                   UIColor(hex: "FB5BC2").withAlphaComponent(0.65),
-                                   UIColor(hex: "FCC633").withAlphaComponent(0.65),
-                                   UIColor(hex: "178E20").withAlphaComponent(0.65),
+    static let colors:[UIColor] = [UIColor(hex: "000000").withAlphaComponent(0.95),
+                                   UIColor(hex: "5B5B5B").withAlphaComponent(0.95),
+                                   UIColor(hex: "C25C1D").withAlphaComponent(0.95),
+                                   UIColor(hex: "2788e7").withAlphaComponent(0.95),
+                                   UIColor(hex: "FA2E34").withAlphaComponent(0.95),
+                                   UIColor(hex: "FB5BC2").withAlphaComponent(0.95),
+                                   UIColor(hex: "FCC633").withAlphaComponent(0.95),
+                                   UIColor(hex: "178E20").withAlphaComponent(0.95),
     ]
     // 这里是块的位置，注意，z是第一个？？0，    1       2       3       4       5       6
     static let positionlist = [[0,0,0],[2,0,0],[1,0,0],[0,2,1],[1,2,1],[1,0,2],[1,2,0]];
@@ -88,6 +88,8 @@ public struct SingleContentView2: View {
         let yuanNode = SCNNode(geometry: yuan)
         yuanNode.positionTo = SCNVector3(item[0], item[1], item[2])
         yuanNode.position = positionDestlist[index]
+        yuanNode.rotation = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: .pi / 2)
+//        yuanNode.orientation = SCNQuaternion(x: 1, y: 0, z: 0, w: .pi / 2)
         let rows = result.count  // 第一维
         let columns = result.first?.count ?? 0  // 第二维
         let depth = result.first?.first?.count ?? 0 // 第三维
@@ -201,7 +203,7 @@ public struct SingleContentView2: View {
             print("over....\(index)")
             return
         }
-        let rotai = SingleContentView2.rotation[index];
+//        let rotai = SingleContentView2.rotation[index];
         let posi = nodeList[index].positionTo;
 
         var rolist:[SCNAction] = []
@@ -219,10 +221,10 @@ public struct SingleContentView2: View {
 //        }
         var posi0 = nodeList[index].positionTo;
         posi0.y += 5;
-        let rb0 = SCNAction.move(to: posi0, duration: 0.1);
+        let rb0 = SCNAction.move(to: posi0, duration: 0.2);
         rolist.append(rb0);
-
-        let rb = SCNAction.move(to: posi, duration: 0.1);
+        rolist.append(SCNAction.rotate(by: -.pi / 2, around: SCNVector3(1, 0, 0), duration: 0.2))
+        let rb = SCNAction.move(to: posi, duration: 0.2);
         rolist.append(rb);
 
         nodeList[index].runAction(SCNAction.sequence(rolist), completionHandler: {
