@@ -62,9 +62,9 @@ func makeNode(destPosition:[SCNVector3], result: Matrix3D) -> [SCNNode] {
         }
         return uniqueValues
     }
-    print("findUniqueValues(in: result)\(findUniqueValues(in: result))")
-
-    return destPosition.enumerated().map {index, item in
+    let findResult = findUniqueValues(in: result);
+    print("findUniqueValues(in: result)\(findResult.count)")
+    return findResult.map { (value, location) in
         // 这是初始位置
         let positionOrgList = [[4,0,0],[4,4,0],[0,4,0],[-4,4,0],[-4,0,0],[-4,-4,0],[0,-4,0]].map{SCNVector3($0[0], $0[1], $0[2])}
 
@@ -80,12 +80,12 @@ func makeNode(destPosition:[SCNVector3], result: Matrix3D) -> [SCNNode] {
         ]
 
         let yuan = SCNSphere(radius: 0.5)
-        yuan.firstMaterial?.diffuse.contents = colors[index].withAlphaComponent(1)
+        yuan.firstMaterial?.diffuse.contents = colors[value].withAlphaComponent(1)
         let yuanNode = SCNNode(geometry: yuan)
-        yuanNode.positionTo = item
-        yuanNode.position = positionOrgList[index]
-        yuanNode.orgPosition = positionOrgList[index]
-        yuanNode.name = "块 \(index)"
+        yuanNode.positionTo = location
+        yuanNode.position = positionOrgList[value]
+        yuanNode.orgPosition = positionOrgList[value]
+        yuanNode.name = "块 \(value)"
         yuanNode.rotation = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: .pi / 2)
         let rows = result.count  // 第一维
         let columns = result.first?.count ?? 0  // 第二维
@@ -95,20 +95,21 @@ func makeNode(destPosition:[SCNVector3], result: Matrix3D) -> [SCNNode] {
         for i in 0..<rows {
             for j in 0..<columns {
                 for k in 0..<depth {
-                    let value = result[k][j][i]
-                    if value == index {
+                    let value2 = result[k][j][i]
+                    if value2 == value {
                         let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
-                        box2.firstMaterial?.diffuse.contents = colors[index]
+                        box2.firstMaterial?.diffuse.contents = colors[value]
                         let boxNode2 = SCNNode()
                         boxNode2.geometry = box2
                         boxNode2.name = "\(value)"
-                        boxNode2.position = SCNVector3(x: Float(k - Int(item.x)), y: Float(j - Int(item.y)), z: Float(i - Int(item.z)));
+                        boxNode2.position = SCNVector3(x: Float(k - Int(location.x)), y: Float(j - Int(location.y)), z: Float(i - Int(location.z)));
                         yuanNode.addChildNode(boxNode2)
                     }
                 }
             }
         }
         return yuanNode
+
     }
 }
 
