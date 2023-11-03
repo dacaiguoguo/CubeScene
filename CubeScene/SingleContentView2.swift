@@ -62,9 +62,9 @@ public struct SingleContentView2: View {
         [[[3,3,9],[9,9,9]],
          [[3,9,9],[9,9,9]]],
     ];
-    static let rotation = [[1,1,1],[1,1,1],[2,2,3],[1,2,2],[1,2,2],[1,4,4],[1,1,3]];
 
-    
+    static let rotation = [[1,1,1],[1,1,1],[2,2,3],[1,2,2],[1,2,2],[1,4,4],[1,1,3]].map{SCNVector3($0[0], $0[1], $0[2])}
+
     static var dataList:[Block] = {
         let zippedArray = zip(zip(nodata, positionlist),rotation)
         return zippedArray.map {(tuple, rotai) in
@@ -73,7 +73,7 @@ public struct SingleContentView2: View {
                   name: "块 1",
                   rotation: SCNVector3Zero,
                   position: SCNVector3(posi[0], posi[1], posi[2]),
-                  rotationTo3: SCNVector3(rotai[0], rotai[1], rotai[2]),
+                  rotationTo3: rotai,
                   positionTo: SCNVector3(x: 1, y: 0.0, z: 1))
         }
     }()
@@ -185,13 +185,48 @@ public struct SingleContentView2: View {
                     Text("重置\(counter)")
                 })
                 Button(action: {
-                    actionmethod(index: 0)
+
+                    actionmethod2(index: 0)
                 }, label: {
                     Text("演示")
                 })
             }
         }
     }
+
+
+    func actionmethod2(index: Int) -> Void {
+        guard index < nodeList.count else {
+            print("over....\(index)")
+            return
+        }
+        let positionDestlist = [[-4,0,0],[-4,4,0],[4,4,0],[0,0,4],[0,0,-4],[4,4,4],[-4,-4,-4]].map{SCNVector3($0[0], $0[1], $0[2])}
+        let rotai = SingleContentView2.rotation[index];
+        let posi = positionDestlist[index];
+
+        var rolist:[SCNAction] = []
+        let rb = SCNAction.move(to: posi, duration: 1);
+        rolist.append(rb);
+        // 增加x,y,z旋转动作
+        if rotai.x > 1 {
+            rolist.append(SCNAction.rotate(by: .pi/2 * CGFloat(rotai.x - 1), around: SCNVector3(1, 0, 0), duration: 0.1));
+        }
+        if rotai.y > 1 {
+            rolist.append(SCNAction.rotate(by: .pi/2 * CGFloat(rotai.y - 1), around: SCNVector3(0, 1, 0), duration: 0.2));
+        }
+        if rotai.z > 1 {
+            rolist.append(SCNAction.rotate(by: .pi/2 * CGFloat(rotai.z - 1), around: SCNVector3(0, 0, 1), duration: 0.2));
+        }
+
+        nodeList[index].runAction(SCNAction.sequence(rolist), completionHandler: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                actionmethod2(index: index + 1);
+            }
+        })
+
+
+    }
+
 
     func actionmethod(index: Int) -> Void {
         guard index < nodeList.count else {
