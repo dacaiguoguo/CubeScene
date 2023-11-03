@@ -157,11 +157,14 @@ public struct SingleContentView: View {
     func completeStatus() -> some View {
         Group {
             HStack {
-                Button(action: {
-                    isOn.toggle()
-                }) {
-                    Image(systemName: isOn ? "eye.slash" : "eye.slash").foregroundColor(isOn ? .blue : .gray)
+                NavigationLink("Go") {
+                    SingleContentView2(nodeList: makeNode(with: dataModel.matrix))
                 }
+//                Button(action: {
+//                    isOn.toggle()
+//                }) {
+//                    Image(systemName: isOn ? "eye.slash" : "eye.slash").foregroundColor(isOn ? .blue : .gray)
+//                }
                 if isShowItems {
                     Button(action: {
                         dataModel.isTaskComplete.toggle()

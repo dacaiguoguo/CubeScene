@@ -39,11 +39,20 @@ extension SCNAction {
 // 解决方法 最好是处理数据。
 // todo 自定义顺序
 func makeNode(with result2: Matrix3D) -> [SCNNode] {
-    let result = result2.map { mid in
+    let resulttmp = result2.map { mid in
         mid.map { innter in
             innter.map {value in return value - 1}
         }
     }
+    let rows = resulttmp.count  // 第一维
+
+    var result:Matrix3D  = []
+    // 遍历三维数组
+    for j in 0..<rows {
+        let y = rows - 1 - j;
+        result.append(Array(resulttmp[y].reversed()))
+    }
+
     func findFirstOccurrence(of value: Int, in array: Matrix3D) -> SCNVector3 {
         let rows = result.count  // 第一维
         let columns = result.first?.count ?? 0  // 第二维
@@ -81,15 +90,6 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
                 }
             }
         }
-//        for (_, outerArray) in array.enumerated() {
-//            for (_, middleArray) in outerArray.enumerated() {
-//                for (_, value) in middleArray.enumerated() {
-//                    if !uniqueValues.contains(value) {
-//                        uniqueValues.append(value)
-//                    }
-//                }
-//            }
-//        }
         return uniqueValues
     }
     let findResult = findUniqueValues(in: result).map { item in
@@ -101,7 +101,7 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         let positionOrgList = [[4,0,0],[4,4,0],[0,4,0],[-4,4,0],[-4,0,0],[-4,-4,0],[0,-4,0]].map{SCNVector3($0[0], $0[1], $0[2])}
 
 
-        let colors:[UIColor] = [UIColor(hex: "000000").withAlphaComponent(0.95),
+        let colors:[UIColor] = [
                                 UIColor(hex: "5B5B5B").withAlphaComponent(0.95),
                                 UIColor(hex: "C25C1D").withAlphaComponent(0.95),
                                 UIColor(hex: "2788e7").withAlphaComponent(0.95),
@@ -109,6 +109,7 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
                                 UIColor(hex: "FB5BC2").withAlphaComponent(0.95),
                                 UIColor(hex: "FCC633").withAlphaComponent(0.95),
                                 UIColor(hex: "178E20").withAlphaComponent(0.95),
+                                UIColor(hex: "000000").withAlphaComponent(0.95),
         ]
 
         let yuan = SCNSphere(radius: 0.5)

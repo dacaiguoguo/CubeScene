@@ -30,7 +30,17 @@ struct ScenekitSingleView : UIViewRepresentable {
     private var dataItem: Matrix3D {
         dataModel.matrix
     }
-    
+    // 创建坐标轴节点的函数
+    func createAxisNode(color: UIColor, vector: SCNVector4) -> SCNNode {
+        let cylinder = SCNCylinder(radius: 0.01, height: 100)
+        cylinder.firstMaterial?.diffuse.contents = color
+
+        let axisNode = SCNNode(geometry: cylinder)
+        axisNode.rotation = vector;
+        axisNode.position = SCNVector3Zero
+        axisNode.name = "axisNode"
+        return axisNode
+    }
     init(dataModel: EnterItem, showType: ShowType = .singleColor, colors: [UIColor], numberImageList: [UIImage], showColor: [Int] = [], focalLength: CGFloat = 110) {
         self.dataModel = dataModel
         self.showType = showType
@@ -46,6 +56,8 @@ struct ScenekitSingleView : UIViewRepresentable {
         cameraNode.position = SCNVector3Make(-10.5, 7.5, 20)
         cameraNode.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
         ret.rootNode.addChildNode(cameraNode)
+
+
         self.scene = ret
     }
     
@@ -53,6 +65,14 @@ struct ScenekitSingleView : UIViewRepresentable {
     func makeUIView(context: Context) -> SCNView {
         // retrieve the SCNView
         let scnView = SCNView()
+        // 创建坐标轴节点
+        let xAxis = createAxisNode(color: .red, vector: SCNVector4(1, 0, 0, Float.pi/2))
+        let yAxis = createAxisNode(color: .green, vector: SCNVector4(0, 1, 0, Float.pi/2))
+        let zAxis = createAxisNode(color: .blue, vector: SCNVector4(0, 0, 1, Float.pi/2))
+
+        scene.rootNode.addChildNode(xAxis)
+        scene.rootNode.addChildNode(yAxis)
+        scene.rootNode.addChildNode(zAxis)
         let countOfRow = dataItem.count
         let countOfLayer = dataItem.first?.count ?? -1
         let countOfColum = dataItem.first?.first?.count ?? -1
@@ -70,7 +90,7 @@ struct ScenekitSingleView : UIViewRepresentable {
                     let boxNode2 = SCNNode()
                     boxNode2.geometry = box2
                     // 由于默认y朝向上的，所以要取负值
-                    boxNode2.position = SCNVector3Make(Float(x), Float(-y), Float(z))
+                    boxNode2.position = SCNVector3Make(Float(x), Float(y), Float(z))
                     parNode2.addChildNode(boxNode2)
                 }
             }
@@ -123,7 +143,7 @@ struct ScenekitSingleView : UIViewRepresentable {
                         continue
                     }
                     if let boxNodes = scnView.scene?.rootNode.childNodes(passingTest: { node, _ in
-                        node.position == SCNVector3Make(Float(x), Float(-y), Float(z))
+                        node.position == SCNVector3Make(Float(x), Float(y), Float(z)) && node.name != "axisNode"
                     }) {
                         // 输出符合条件的节点名称
                         for boxNode in boxNodes {

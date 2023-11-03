@@ -67,56 +67,14 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         scene.rootNode.addChildNode(xAxis)
         scene.rootNode.addChildNode(yAxis)
         scene.rootNode.addChildNode(zAxis)
+
         nodeList.forEach { item in
             scene.rootNode.addChildNode(item)
         }
-// 看起来是每一个形状 都有一个原点了，接下来就是理解rotation,看起来是某个形状在x。y。z 旋转的次数，，就是没有理解4？？
-        // 4 不就是转 一整圈了吗？？？position不重要，重要的是理解旋转，
-        // 接下来把它拆开 找到初始位置和方向，也就是123，变成321的顺序 转回去，就找到初始角度了。
-        //
-
-//        mmlist.forEach { item in
-//            let yuan = SCNSphere(radius: 0.5)
-//            yuan.firstMaterial?.diffuse.contents = UIColor.black
-//            let yuanNode = SCNNode(geometry: yuan)
-//            yuanNode.position = SCNVector3(item[2], item[1], item[0])
-//            scene.rootNode.addChildNode(yuanNode)
-//        }
-
-//        let colors:[UIColor] =        [UIColor(hex: "000000").withAlphaComponent(0.85),
-//                                       UIColor(hex: "5B5B5B").withAlphaComponent(0.85),
-//                                       UIColor(hex: "C25C1D").withAlphaComponent(0.85),
-//                                       UIColor(hex: "2788e7").withAlphaComponent(0.85),
-//                                       UIColor(hex: "FA2E34").withAlphaComponent(0.85),
-//                                       UIColor(hex: "FB5BC2").withAlphaComponent(0.85),
-//                                       UIColor(hex: "FCC633").withAlphaComponent(0.85),
-//                                       UIColor(hex: "178E20").withAlphaComponent(0.85),
-//        ]
-//        // 遍历三维数组
-//        let rows = 3  // 第一维
-//        let columns = 3  // 第二维
-//        let depth = 3  // 第三维
-//        for z in 0..<rows {
-//            for y in 0..<columns {
-//                for x in 0..<depth {
-//                    let value = nodata[z][y][x]
-//                    let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
-//                    if value == -1 {
-//                        continue
-//                    }
-//                    let boxNode2 = SCNNode()
-//                    boxNode2.geometry = box2
-//                    boxNode2.name = "\(value)"
-//                    // 由于默认y朝向上的，所以要取负值
-//                    boxNode2.position = SCNVector3Make(Float(x), Float(y), Float(z))
-//                    boxNode2.geometry?.firstMaterial?.diffuse.contents =  colors[value];
-//                    scene.rootNode.addChildNode(boxNode2)
-//                }
-//            }
-//        }
         scnView.scene = scene
         scnView.autoenablesDefaultLighting = true
         scnView.allowsCameraControl = true
+        
         return scnView
     }
     
