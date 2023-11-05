@@ -27,18 +27,12 @@ extension SCNAction {
 }
 
 func transMatrix(with result2: Matrix3D) -> Matrix3D {
-    let resulttmp = result2.map { mid in
-        mid.map { innter in
-            innter.map {value in return value - 1}
-        }
-    }
-    let rows = resulttmp.count  // 第一维
-
+    let rows = result2.count  // 第一维
     var result:Matrix3D  = []
     // 遍历三维数组
     for j in 0..<rows {
         let y = rows - 1 - j;
-        result.append(Array(resulttmp[y].reversed()))
+        result.append(Array(result2[y].reversed()))
     }
     return result
 }
