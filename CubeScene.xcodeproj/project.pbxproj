@@ -38,6 +38,8 @@
 		9D7D34C42AF7A88C009291BC /* PointInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7D34C32AF7A88C009291BC /* PointInfo.swift */; };
 		9D7D34C52AF7A8D4009291BC /* PointInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7D34C32AF7A88C009291BC /* PointInfo.swift */; };
 		9D7D34C62AF7AA35009291BC /* PointInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7D34C32AF7A88C009291BC /* PointInfo.swift */; };
+		9D7D34C82AF7C3D4009291BC /* TestEnter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7D34C72AF7C3D4009291BC /* TestEnter.swift */; };
+		9D7D34C92AF7C478009291BC /* TestEnter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7D34C72AF7C3D4009291BC /* TestEnter.swift */; };
 		9D7E411D2AA2356A00863C43 /* SOMAX101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411B2AA2356A00863C43 /* SOMAX101.txt */; };
 		9D7E411E2AA2356A00863C43 /* SOMAX101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411B2AA2356A00863C43 /* SOMAX101.txt */; };
 		9D7E411F2AA2356A00863C43 /* SOMAW101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411C2AA2356A00863C43 /* SOMAW101.txt */; };
@@ -135,6 +137,7 @@
 		9D7D34BA2AF7A86D009291BC /* CubeSceneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CubeSceneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D7D34BC2AF7A86D009291BC /* CubeSceneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeSceneTests.swift; sourceTree = "<group>"; };
 		9D7D34C32AF7A88C009291BC /* PointInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PointInfo.swift; sourceTree = "<group>"; };
+		9D7D34C72AF7C3D4009291BC /* TestEnter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestEnter.swift; sourceTree = "<group>"; };
 		9D7E411B2AA2356A00863C43 /* SOMAX101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAX101.txt; sourceTree = "<group>"; };
 		9D7E411C2AA2356A00863C43 /* SOMAW101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAW101.txt; sourceTree = "<group>"; };
 		9D890F9B2AD8EF3600E1EF0C /* SOMAC4A101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOMAC4A101.txt; sourceTree = "<group>"; };
@@ -280,6 +283,7 @@
 				9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */,
 				59CFCD422A6281F700E38F38 /* UserData.swift */,
 				9D04123B2A516AD30083741B /* EnterListView.swift */,
+				9D7D34C72AF7C3D4009291BC /* TestEnter.swift */,
 				9D7D34C32AF7A88C009291BC /* PointInfo.swift */,
 				9D89A1AE2AE37C0B008C6707 /* Persistence.swift */,
 				9DDEC0C52A614716001A0046 /* EnterListView240.swift */,
@@ -484,6 +488,7 @@
 				9D7D34C62AF7AA35009291BC /* PointInfo.swift in Sources */,
 				59524DB82A60FC590078EBB6 /* CubeSceneApp.swift in Sources */,
 				5934F66C2A65038B00AED0E9 /* ScenekitSingleView.swift in Sources */,
+				9D7D34C92AF7C478009291BC /* TestEnter.swift in Sources */,
 				59524DB92A60FC5C0078EBB6 /* EnterListView.swift in Sources */,
 				59CFCD442A62824000E38F38 /* UserData.swift in Sources */,
 				59524DC02A60FC7D0078EBB6 /* ConfigView.swift in Sources */,
@@ -515,6 +520,7 @@
 				9D7D34C42AF7A88C009291BC /* PointInfo.swift in Sources */,
 				9DBE04F02A56ECB70055AE14 /* ConfigView.swift in Sources */,
 				5934F66B2A65038B00AED0E9 /* ScenekitSingleView.swift in Sources */,
+				9D7D34C82AF7C3D4009291BC /* TestEnter.swift in Sources */,
 				9D04123E2A516F050083741B /* SingleContentView.swift in Sources */,
 				59CFCD432A6281F700E38F38 /* UserData.swift in Sources */,
 				9DDEC0C62A614716001A0046 /* EnterListView240.swift in Sources */,
