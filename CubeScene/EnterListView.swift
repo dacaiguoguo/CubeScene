@@ -33,24 +33,7 @@ struct EnterItem: Decodable {
         self.matrix = matrix
         let temp = EnterItem.orderList(matrix: matrix)
         self.usedBlock = Array(Set(temp.map({ item in
-            switch (item) {
-            case 86:// V
-                return 0
-            case 76:// L
-                return 1;
-            case 84:// T
-                return 2;
-            case 90:// Z
-                return 3;
-            case 65:// A
-                return 4;
-            case 66:// B
-                return 5;
-            case 80:// P
-                return 6;
-            default:
-                return item
-            }
+            mapColorIndex(item)
         }))).sorted(by: {$0 < $1})
 
         self.orderBlock = temp

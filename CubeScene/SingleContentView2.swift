@@ -27,14 +27,32 @@ extension SCNAction {
 }
 
 func transMatrix(with result2: Matrix3D) -> Matrix3D {
-    let rows = result2.count  // 第一维
     var result:Matrix3D  = []
-    // 遍历三维数组
-    for j in 0..<rows {
-        let y = rows - 1 - j;
-        result.append(Array(result2[y].reversed()))
+    result2.reversed().forEach { inner in
+        result.append(inner.reversed())
     }
     return result
+}
+
+func mapColorIndex(_ index:Int) -> Int {
+    switch (index) {
+    case 86:// V
+        return 1
+    case 76:// L
+        return 2;
+    case 84:// T
+        return 3;
+    case 90:// Z
+        return 4;
+    case 65:// A
+        return 5;
+    case 66:// B
+        return 6;
+    case 80:// P
+        return 7;
+    default:
+        return index
+    }
 }
 
 // 这里有个问题 就是三维数组 最前面的是最底层了，但是 其实应该是最上层。
@@ -84,29 +102,39 @@ func makeNode(with result: Matrix3D) -> [SCNNode] {
     let findResult = findUniqueValues(in: result).map { item in
         (item, findFirstOccurrence(of: item, in: result))
     };
+
+    func v3Add(left:SCNVector3, right:SCNVector3) -> SCNVector3 {
+        return SCNVector3(left.x + right.x, left.y + right.y, left.z + right.z)
+    }
+
     return findResult.map { (value, location) in
         // 这是初始位置
-        let positionOrgList = [[4,0,0],[4,0,4],[0,0,4],[-4,0,4],[-4,0,0],[-4,0,-4],[0,0,-4]].map{SCNVector3($0[0], $0[1], $0[2])}
+        let positionOrgList = [[4,0,-4],[4,0,0],[4,0,4],[0,0,4],[-4,0,4],[-4,0,0],[-4,0,-4],[0,0,-4]].map{SCNVector3($0[0], $0[1], $0[2])}
 
 
         let colors:[UIColor] = [
-                                UIColor(hex: "5B5B5B").withAlphaComponent(0.85),
-                                UIColor(hex: "C25C1D").withAlphaComponent(0.85),
-                                UIColor(hex: "2788e7").withAlphaComponent(0.85),
-                                UIColor(hex: "FA2E34").withAlphaComponent(0.85),
-                                UIColor(hex: "FB5BC2").withAlphaComponent(0.85),
-                                UIColor(hex: "FCC633").withAlphaComponent(0.85),
-                                UIColor(hex: "178E20").withAlphaComponent(0.85),
-                                UIColor(hex: "000000").withAlphaComponent(0.85),
+                                UIColor(hex: "000000"),
+                                UIColor(hex: "5B5B5B"),
+                                UIColor(hex: "C25C1D"),
+                                UIColor(hex: "2788e7"),
+                                UIColor(hex: "FA2E34"),
+                                UIColor(hex: "FB5BC2"),
+                                UIColor(hex: "FCC633"),
+                                UIColor(hex: "178E20"),
         ]
 
         let yuan = SCNSphere(radius: 0.5)
-        yuan.firstMaterial?.diffuse.contents = colors[value].withAlphaComponent(1)
+        let indexValue = mapColorIndex(value)
+        if value > colors.count - 1 {
+            yuan.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(0.85)
+        } else {
+            yuan.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(1)
+        }
         let yuanNode = SCNNode(geometry: yuan)
-        yuanNode.positionTo = location
-        yuanNode.position = positionOrgList[value]
-        yuanNode.orgPosition = positionOrgList[value]
-        yuanNode.name = "块 \(value + 1)"
+        yuanNode.positionTo = v3Add(left:location, right:SCNVector3Make(Float(-1), Float(-1), Float(-1)))
+        yuanNode.position = v3Add(left:positionOrgList[indexValue], right:SCNVector3Make(Float(-1), Float(-1), Float(-1)))
+        yuanNode.orgPosition = yuanNode.position
+        yuanNode.name = "块 \(value)"
         yuanNode.rotation = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: .pi / 2)
         let rows = result.count  // 第一维
         let columns = result.first?.count ?? 0  // 第二维
@@ -119,7 +147,11 @@ func makeNode(with result: Matrix3D) -> [SCNNode] {
                     let value2 = result[i][j][k]
                     if value2 == value {
                         let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
-                        box2.firstMaterial?.diffuse.contents = colors[value]
+                        if value > colors.count - 1 {
+                            box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(0.85)
+                        } else {
+                            box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(1)
+                        }
                         let boxNode2 = SCNNode()
                         boxNode2.geometry = box2
                         boxNode2.name = "\(value)"

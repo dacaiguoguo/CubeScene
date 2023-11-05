@@ -139,7 +139,7 @@ struct ScenekitSingleView : UIViewRepresentable {
             for y in 0..<countOfLayer {
                 for x in 0..<countOfColum {
                     let value = dataItem[z][y][x];
-                    if value == -1 {
+                    if value < 0 {
                         continue
                     }
                     if let boxNodes = scnView.scene?.rootNode.childNodes(passingTest: { node, _ in
