@@ -151,6 +151,7 @@ func checkPoint(_ currentPoint:PointInfo, with value: Int, akeyPath:ReferenceWri
             if back1.value == value && back2.value == value {
                 for akey in clist {
                     if let back3 = back2[keyPath:akey], back3.value == value {
+                        print("\(currentPoint) \(back1) \(back2) \(back3)")
                         return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)")
                     }
                 }
