@@ -193,6 +193,52 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
             if ret.2 == "right, down" {
                 yuanNode.rotationTo = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: -.pi/2)
             }
+            if ret.2 == "left, back" {
+                // 绕Z轴旋转180度
+                // 定义绕Z轴和X轴的旋转角度
+                let zRotationAngle = Float.pi / 2// 180度
+                let xRotationAngle = Float.pi / 2 // 90度
+
+                // 创建绕Z轴的旋转矩阵
+                let zRotationMatrix = SCNMatrix4MakeRotation(zRotationAngle, 0, 0, 1)
+
+                // 创建绕X轴的旋转矩阵
+                let xRotationMatrix = SCNMatrix4MakeRotation(xRotationAngle, 0, 1, 0)
+
+                // 将两个旋转矩阵相乘，顺序很重要
+                var combinedMatrix = SCNMatrix4Mult(zRotationMatrix,xRotationMatrix)
+                combinedMatrix.m41 = yuanNode.position.x
+                combinedMatrix.m42 = yuanNode.position.y
+                combinedMatrix.m43 = yuanNode.position.z
+
+                // 将组合矩阵应用到节点的变换中
+                yuanNode.transform = combinedMatrix
+                yuanNode.transformTo = combinedMatrix
+            }
+            if ret.2 == "left, front" {
+                // 绕Z轴旋转180度
+                // 定义绕Z轴和X轴的旋转角度
+                let zRotationAngle = Float.pi / 2  * 3// 180度
+                let xRotationAngle = Float.pi / 2 // 90度
+
+                // 创建绕Z轴的旋转矩阵
+                let zRotationMatrix = SCNMatrix4MakeRotation(zRotationAngle, 0, 1, 0)
+
+                // 创建绕X轴的旋转矩阵
+                let xRotationMatrix = SCNMatrix4MakeRotation(xRotationAngle, 1, 0, 0)
+
+                // 将两个旋转矩阵相乘，顺序很重要
+                var combinedMatrix = SCNMatrix4Mult(zRotationMatrix,xRotationMatrix)
+                combinedMatrix.m41 = yuanNode.position.x
+                combinedMatrix.m42 = yuanNode.position.y
+                combinedMatrix.m43 = yuanNode.position.z
+
+                // 将组合矩阵应用到节点的变换中
+                yuanNode.transform = combinedMatrix
+                yuanNode.transformTo = combinedMatrix
+
+            }
+
             if ret.2 == "right, front" {
                 // 绕Z轴旋转180度
                 // 定义绕Z轴和X轴的旋转角度
