@@ -34,8 +34,9 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         //material.diffuse.contents = UIColor.lightGray
         //groundGeometry.firstMaterial = material
 
-        // let env = UIImage(named: "dijon_notre_dame.jpg")
-        ret.background.contents = UIColor(hex: "00bfff");
+         let env = UIImage(named: "meadow_2_4k.hdr")
+        ret.lightingEnvironment.contents = env
+        ret.background.contents = env;//UIColor(hex: "00bfff");
         return ret;
     } ()
 

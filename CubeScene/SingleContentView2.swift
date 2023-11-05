@@ -105,14 +105,14 @@ func makeNode(with result: Matrix3D) -> [SCNNode] {
 
 
         let colors:[UIColor] = [
-                                UIColor(hex: "5B5B5B").withAlphaComponent(0.85),
-                                UIColor(hex: "C25C1D").withAlphaComponent(0.85),
-                                UIColor(hex: "2788e7").withAlphaComponent(0.85),
-                                UIColor(hex: "FA2E34").withAlphaComponent(0.85),
-                                UIColor(hex: "FB5BC2").withAlphaComponent(0.85),
-                                UIColor(hex: "FCC633").withAlphaComponent(0.85),
-                                UIColor(hex: "178E20").withAlphaComponent(0.85),
-                                UIColor(hex: "000000").withAlphaComponent(0.85),
+                                UIColor(hex: "5B5B5B").withAlphaComponent(0.95),//®
+                                UIColor(hex: "C25C1D").withAlphaComponent(0.95),//®
+                                UIColor(hex: "2788e7").withAlphaComponent(0.95),//®
+                                UIColor(hex: "FA2E34").withAlphaComponent(0.95),//®
+                                UIColor(hex: "FB5BC2").withAlphaComponent(0.95),//®
+                                UIColor(hex: "FCC633").withAlphaComponent(0.95),//®
+                                UIColor(hex: "178E20").withAlphaComponent(0.95),//®
+                                UIColor(hex: "000000").withAlphaComponent(0.95),//®
         ]
 
         let yuan = SCNSphere(radius: 0.5)

@@ -21,6 +21,7 @@
 		5971BA8C2A50547800CD6111 /* ArrayTool3D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */; };
 		59CFCD432A6281F700E38F38 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59CFCD422A6281F700E38F38 /* UserData.swift */; };
 		59CFCD442A62824000E38F38 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59CFCD422A6281F700E38F38 /* UserData.swift */; };
+		59D446D02AF641A200877191 /* meadow_2_4k.hdr in Resources */ = {isa = PBXBuildFile; fileRef = 59D446CF2AF6419F00877191 /* meadow_2_4k.hdr */; };
 		9D04123C2A516AD30083741B /* EnterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04123B2A516AD30083741B /* EnterListView.swift */; };
 		9D04123E2A516F050083741B /* SingleContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04123D2A516F050083741B /* SingleContentView.swift */; };
 		9D0412432A52881A0083741B /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0412412A52881A0083741B /* SettingView.swift */; };
@@ -107,6 +108,8 @@
 		5934F66A2A65038B00AED0E9 /* ScenekitSingleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenekitSingleView.swift; sourceTree = "<group>"; };
 		5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayTool3D.swift; sourceTree = "<group>"; };
 		59CFCD422A6281F700E38F38 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
+		59D446CF2AF6419F00877191 /* meadow_2_4k.hdr */ = {isa = PBXFileReference; lastKnownFileType = file; path = meadow_2_4k.hdr; sourceTree = "<group>"; };
+		59D446D12AF6425000877191 /* CubeScene.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CubeScene.entitlements; sourceTree = "<group>"; };
 		9D04123B2A516AD30083741B /* EnterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterListView.swift; sourceTree = "<group>"; };
 		9D04123D2A516F050083741B /* SingleContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleContentView.swift; sourceTree = "<group>"; };
 		9D0412412A52881A0083741B /* SettingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
@@ -243,6 +246,7 @@
 		9DF9206B2A404BBC001BD720 /* CubeScene */ = {
 			isa = PBXGroup;
 			children = (
+				59D446D12AF6425000877191 /* CubeScene.entitlements */,
 				9D46D72C2AF13610002DE821 /* support */,
 				9D89A1B12AE37C18008C6707 /* ChaiZiView.swift */,
 				9D89A1B42AE37C19008C6707 /* CoreDataTest.xcdatamodeld */,
@@ -252,6 +256,7 @@
 				9D89A1AE2AE37C0B008C6707 /* Persistence.swift */,
 				9DDEC0C52A614716001A0046 /* EnterListView240.swift */,
 				9D46D7242AF12F57002DE821 /* ScenekitSingleView2.swift */,
+				59D446CF2AF6419F00877191 /* meadow_2_4k.hdr */,
 				9D46D7232AF12F57002DE821 /* SingleContentView2.swift */,
 				9DF98E3F2AF4C10200A04BB6 /* note.md */,
 				9D04123D2A516F050083741B /* SingleContentView.swift */,
@@ -320,6 +325,11 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
+				KnownAssetTags = (
+					New,
+					"New-1",
+					"New-2",
+				);
 				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1420;
 				TargetAttributes = {
@@ -404,6 +414,7 @@
 				9D89A1BB2AE37C19008C6707 /* chaizi-gbk.txt in Resources */,
 				9D89A1B92AE37C19008C6707 /* chaizi-ft.txt in Resources */,
 				9DF9380F2A417BA4001BD720 /* data2.txt in Resources */,
+				59D446D02AF641A200877191 /* meadow_2_4k.hdr in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -671,6 +682,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CubeScene/CubeScene.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"CubeScene/Preview Content\"";
