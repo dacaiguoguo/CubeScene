@@ -37,6 +37,7 @@
 		9D7D34BD2AF7A86D009291BC /* CubeSceneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7D34BC2AF7A86D009291BC /* CubeSceneTests.swift */; };
 		9D7D34C42AF7A88C009291BC /* PointInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7D34C32AF7A88C009291BC /* PointInfo.swift */; };
 		9D7D34C52AF7A8D4009291BC /* PointInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7D34C32AF7A88C009291BC /* PointInfo.swift */; };
+		9D7D34C62AF7AA35009291BC /* PointInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7D34C32AF7A88C009291BC /* PointInfo.swift */; };
 		9D7E411D2AA2356A00863C43 /* SOMAX101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411B2AA2356A00863C43 /* SOMAX101.txt */; };
 		9D7E411E2AA2356A00863C43 /* SOMAX101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411B2AA2356A00863C43 /* SOMAX101.txt */; };
 		9D7E411F2AA2356A00863C43 /* SOMAW101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411C2AA2356A00863C43 /* SOMAW101.txt */; };
@@ -480,6 +481,7 @@
 				9D46D7282AF12F57002DE821 /* ScenekitSingleView2.swift in Sources */,
 				9D89A1BE2AE37C19008C6707 /* CoreDataTest.xcdatamodeld in Sources */,
 				59524DBE2A60FC760078EBB6 /* ArrayTool3D.swift in Sources */,
+				9D7D34C62AF7AA35009291BC /* PointInfo.swift in Sources */,
 				59524DB82A60FC590078EBB6 /* CubeSceneApp.swift in Sources */,
 				5934F66C2A65038B00AED0E9 /* ScenekitSingleView.swift in Sources */,
 				59524DB92A60FC5C0078EBB6 /* EnterListView.swift in Sources */,

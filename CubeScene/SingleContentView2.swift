@@ -55,23 +55,48 @@ func mapColorIndex(_ index:Int) -> Int {
     }
 }
 
+func findUniqueValues(in result: Matrix3D) -> [Int] {
+    let rows = result.count  // 第一维
+    let columns = result.first?.count ?? 0  // 第二维
+    let depth = result.first?.first?.count ?? 0 // 第三维
+
+    var uniqueValues:[Int]  = []
+    // 遍历三维数组
+    for j in 0..<columns {
+        let y = j;//columns - 1 - j;
+        for i in 0..<rows {
+            for k in 0..<depth {
+                let thenumber = result[i][y][k]
+                if thenumber >= 0 && !uniqueValues.contains(thenumber) {
+                    uniqueValues.append(thenumber)
+                }
+            }
+        }
+    }
+    return uniqueValues
+}
+
 // 这里有个问题 就是三维数组 最前面的是最底层了，但是 其实应该是最上层。
 // 解决方法 最好是处理数据。
 // todo 自定义顺序
-func makeNode(with result: Matrix3D) -> [SCNNode] {
+func makeNode(with result2: Matrix3D) -> [SCNNode] {
     // let result = transMatrix(with: result2)
-    func findFirstOccurrence(of value: Int, in array: Matrix3D) -> SCNVector3 {
-        let rows = result.count  // 第一维
-        let columns = result.first?.count ?? 0  // 第二维
-        let depth = result.first?.first?.count ?? 0 // 第三维
+
+    let pointInfo3DArray = mapTo3DPointInfo(array3d: result2);
+    let ret = hasContinuousEqualValues(pointInfo3DArray: pointInfo3DArray)
+    print(ret)
+    func findFirstOccurrence(of value: Int, in array: [[[PointInfo]]]) -> SCNVector3 {
+        let rows = array.count  // 第一维
+        let columns = array.first?.count ?? 0  // 第二维
+        let depth = array.first?.first?.count ?? 0 // 第三维
 
         // 遍历三维数组
         for j in 0..<columns {
             let y = j;//columns - 1 - j;
             for i in 0..<rows {
                 for k in 0..<depth {
-                    let innerArray = result[i][y][k]
-                    if innerArray == value {
+                    let innerArray = array[i][y][k]
+                    if innerArray.value == value {
                         return SCNVector3(k, y, i)
                     }
                 }
@@ -79,28 +104,9 @@ func makeNode(with result: Matrix3D) -> [SCNNode] {
         }
         return SCNVector3Zero
     }
-    func findUniqueValues(in result: Matrix3D) -> [Int] {
-        let rows = result.count  // 第一维
-        let columns = result.first?.count ?? 0  // 第二维
-        let depth = result.first?.first?.count ?? 0 // 第三维
 
-        var uniqueValues:[Int]  = []
-        // 遍历三维数组
-        for j in 0..<columns {
-            let y = j;//columns - 1 - j;
-            for i in 0..<rows {
-                for k in 0..<depth {
-                    let thenumber = result[i][y][k]
-                    if thenumber >= 0 && !uniqueValues.contains(thenumber) {
-                        uniqueValues.append(thenumber)
-                    }
-                }
-            }
-        }
-        return uniqueValues
-    }
-    let findResult = findUniqueValues(in: result).map { item in
-        (item, findFirstOccurrence(of: item, in: result))
+    let findResult = findUniqueValues(in: result2).map { item in
+        (item, findFirstOccurrence(of: item, in: pointInfo3DArray))
     };
 
     func v3Add(left:SCNVector3, right:SCNVector3) -> SCNVector3 {
@@ -135,17 +141,20 @@ func makeNode(with result: Matrix3D) -> [SCNNode] {
         yuanNode.position = v3Add(left:positionOrgList[indexValue], right:SCNVector3Make(Float(-1), Float(-1), Float(-1)))
         yuanNode.orgPosition = yuanNode.position
         yuanNode.name = "块 \(value)"
-//        yuanNode.rotation = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: .pi / 2)
-        let rows = result.count  // 第一维
-        let columns = result.first?.count ?? 0  // 第二维
-        let depth = result.first?.first?.count ?? 0 // 第三维
+        if ret.1?.value == 2 , ret.2 == "up, left" {
+            yuanNode.rotationTo = SCNVector4(x: 0.0, y: 0.0, z: 1.0, w: .pi)
+        }
+        yuanNode.rotation = SCNVector4(x: 0.0, y: 0.0, z: 1.0, w: .pi)
+        let rows = pointInfo3DArray.count  // 第一维
+        let columns = pointInfo3DArray.first?.count ?? 0  // 第二维
+        let depth = pointInfo3DArray.first?.first?.count ?? 0 // 第三维
 
         // 遍历三维数组
         for i in 0..<rows {
             for j in 0..<columns {
                 for k in 0..<depth {
-                    let value2 = result[i][j][k]
-                    if value2 == value {
+                    let value2 = pointInfo3DArray[i][j][k]
+                    if value2.value == value {
                         let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
                         if value > colors.count - 1 {
                             box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(0.85)
@@ -224,7 +233,7 @@ public struct SingleContentView2: View {
         counter += 1;
         nodeList.forEach { node2 in
             node2.position = node2.orgPosition ?? node2.position
-            node2.rotation = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: .pi / 2)
+            node2.rotation = node2.rotationTo ?? node2.rotation
         }
     }
 
@@ -236,8 +245,8 @@ public struct SingleContentView2: View {
         var topPosition = nodeList[index].positionTo!;
         topPosition.y += 5;
         actionList.append(SCNAction.move(to: topPosition, duration: 0.2));
-        actionList.append(SCNAction.rotate(by: -.pi / 2, around: SCNVector3(1, 0, 0), duration: 0.2))
         let destPosition = nodeList[index].positionTo!;
+        actionList.append(SCNAction.rotate(toAxisAngle: SCNVector4Zero, duration: 0.2));
         actionList.append(SCNAction.move(to: destPosition, duration: 0.2));
         nodeList[index].runAction(SCNAction.sequence(actionList), completionHandler: {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -371,6 +380,8 @@ extension SCNNode {
     private struct AssociatedKeys {
         static var orgPosition = "orgPosition"
         static var positionTo = "positionTo"
+        static var rotationTo = "rotationTo"
+
     }
 
     var orgPosition: SCNVector3? {
@@ -386,6 +397,14 @@ extension SCNNode {
         }
     }
 
+    var rotationTo: SCNVector4? {
+        get {
+            return objc_getAssociatedObject(self, &AssociatedKeys.rotationTo) as? SCNVector4
+        }
+        set {
+            objc_setAssociatedObject(self, &AssociatedKeys.rotationTo, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
 
     var positionTo: SCNVector3? {
         get {
