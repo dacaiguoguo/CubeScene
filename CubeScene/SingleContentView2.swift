@@ -76,6 +76,30 @@ func findUniqueValues(in result: Matrix3D) -> [Int] {
     return uniqueValues
 }
 
+func makeCombinedMatrix(order:[(String, Float)], position:SCNVector3) -> SCNMatrix4 {
+    // 绕Z轴旋转180度
+    // 定义绕Z轴和X轴的旋转角度
+    var vvv = SCNMatrix4Identity;
+    for somex in order {
+        if somex.0 == "x" , somex.1 > 0 {
+            // 创建绕X轴的旋转矩阵
+            vvv = SCNMatrix4Mult(vvv, SCNMatrix4MakeRotation(Float.pi / 2 * somex.1, 1, 0, 0))
+        }
+        if somex.0 == "y" , somex.1 > 0 {
+            // 创建绕X轴的旋转矩阵
+            vvv = SCNMatrix4Mult(vvv, SCNMatrix4MakeRotation(Float.pi / 2 * somex.1, 0, 1, 0))
+        }
+        if somex.0 == "z" , somex.1 > 0 {
+            // 创建绕X轴的旋转矩阵
+            vvv = SCNMatrix4Mult(vvv, SCNMatrix4MakeRotation(Float.pi / 2 * somex.1, 0, 0, 1))
+        }
+    }
+    vvv.m41 = position.x
+    vvv.m42 = position.y
+    vvv.m43 = position.z
+    return vvv
+}
+
 // 这里有个问题 就是三维数组 最前面的是最底层了，但是 其实应该是最上层。
 // 解决方法 最好是处理数据。
 // todo 自定义顺序
@@ -141,54 +165,28 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         yuanNode.position = v3Add(left:positionOrgList[indexValue], right:SCNVector3Make(Float(-1), Float(-1), Float(-1)))
         yuanNode.orgPosition = yuanNode.position
         yuanNode.name = "块 \(value)"
+
+
+
         if ret.1?.value == 2 {
             if ret.2 == "up, left" {
                 yuanNode.rotationTo = SCNVector4(x: 0.0, y: 0.0, z: 1.0, w: .pi)
             }
+            if ret.2 == "left, up" {
+                yuanNode.transform = makeCombinedMatrix(order: [("x", 1.0), ], position: yuanNode.position);
+                yuanNode.transformTo = yuanNode.transform
+            }
             if ret.2 == "right, up" {
-                // 绕Z轴旋转180度
-                // 定义绕Z轴和X轴的旋转角度
-                let zRotationAngle = Float.pi // 180度
-                let xRotationAngle = Float.pi / 2 // 90度
-
-                // 创建绕Z轴的旋转矩阵
-                let zRotationMatrix = SCNMatrix4MakeRotation(zRotationAngle, 0, 0, 1)
-
-                // 创建绕X轴的旋转矩阵
-                let xRotationMatrix = SCNMatrix4MakeRotation(xRotationAngle, 1, 0, 0)
-
-                // 将两个旋转矩阵相乘，顺序很重要
-                var combinedMatrix = SCNMatrix4Mult(zRotationMatrix, xRotationMatrix)
-                combinedMatrix.m41 = yuanNode.position.x
-                combinedMatrix.m42 = yuanNode.position.y
-                combinedMatrix.m43 = yuanNode.position.z
-
-                // 将组合矩阵应用到节点的变换中
-                yuanNode.transform = combinedMatrix
-                yuanNode.transformTo = combinedMatrix
-
+                yuanNode.transform = makeCombinedMatrix(order: [("z", 2.0),("x", 1.0), ], position: yuanNode.position);
+                yuanNode.transformTo = yuanNode.transform
             }
             if ret.2 == "right, back" {
-                // 绕Z轴旋转180度
-                // 定义绕Z轴和X轴的旋转角度
-                let zRotationAngle = Float.pi / 2 // 180度
-                let xRotationAngle = Float.pi / 2 * 3 // 90度
-
-                // 创建绕Z轴的旋转矩阵
-                let zRotationMatrix = SCNMatrix4MakeRotation(zRotationAngle, 0, 0, 1)
-
-                // 创建绕X轴的旋转矩阵
-                let xRotationMatrix = SCNMatrix4MakeRotation(xRotationAngle, 1, 0, 0)
-
-                // 将两个旋转矩阵相乘，顺序很重要
-                var combinedMatrix = SCNMatrix4Mult(xRotationMatrix, zRotationMatrix)
-                combinedMatrix.m41 = yuanNode.position.x
-                combinedMatrix.m42 = yuanNode.position.y
-                combinedMatrix.m43 = yuanNode.position.z
-
-                // 将组合矩阵应用到节点的变换中
-                yuanNode.transform = combinedMatrix
-                yuanNode.transformTo = combinedMatrix
+                yuanNode.transform = makeCombinedMatrix(order: [("x", 3.0),("z", 1.0), ], position: yuanNode.position);
+                yuanNode.transformTo = yuanNode.transform
+            }
+            if ret.2 == "left, down" {
+                yuanNode.transform = makeCombinedMatrix(order: [("y", 2.0),("x", 1.0), ], position: yuanNode.position);
+                yuanNode.transformTo = yuanNode.transform
             }
             if ret.2 == "right, down" {
                 yuanNode.rotationTo = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: -.pi/2)
