@@ -28,7 +28,7 @@ extension SCNAction {
 
 func transMatrix(with result2: Matrix3D) -> Matrix3D {
     var result:Matrix3D  = []
-    result2.reversed().forEach { inner in
+    result2.forEach { inner in
         result.append(inner.reversed())
     }
     return result
@@ -135,7 +135,7 @@ func makeNode(with result: Matrix3D) -> [SCNNode] {
         yuanNode.position = v3Add(left:positionOrgList[indexValue], right:SCNVector3Make(Float(-1), Float(-1), Float(-1)))
         yuanNode.orgPosition = yuanNode.position
         yuanNode.name = "块 \(value)"
-        yuanNode.rotation = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: .pi / 2)
+//        yuanNode.rotation = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: .pi / 2)
         let rows = result.count  // 第一维
         let columns = result.first?.count ?? 0  // 第二维
         let depth = result.first?.first?.count ?? 0 // 第三维
