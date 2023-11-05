@@ -141,10 +141,41 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         yuanNode.position = v3Add(left:positionOrgList[indexValue], right:SCNVector3Make(Float(-1), Float(-1), Float(-1)))
         yuanNode.orgPosition = yuanNode.position
         yuanNode.name = "块 \(value)"
-        if ret.1?.value == 2 , ret.2 == "up, left" {
-            yuanNode.rotationTo = SCNVector4(x: 0.0, y: 0.0, z: 1.0, w: .pi)
+        if ret.1?.value == 2 {
+            if ret.2 == "up, left" {
+                yuanNode.rotationTo = SCNVector4(x: 0.0, y: 0.0, z: 1.0, w: .pi)
+            }
+            if ret.2 == "right, up" {
+                // 绕Z轴旋转180度
+                // 定义绕Z轴和X轴的旋转角度
+                let zRotationAngle = Float.pi // 180度
+                let xRotationAngle = Float.pi / 2 // 90度
+
+                // 创建绕Z轴的旋转矩阵
+                let zRotationMatrix = SCNMatrix4MakeRotation(zRotationAngle, 0, 0, 1)
+
+                // 创建绕X轴的旋转矩阵
+                let xRotationMatrix = SCNMatrix4MakeRotation(xRotationAngle, 1, 0, 0)
+
+                // 将两个旋转矩阵相乘，顺序很重要
+                var combinedMatrix = SCNMatrix4Mult(zRotationMatrix, xRotationMatrix)
+                combinedMatrix.m41 = yuanNode.position.x
+                combinedMatrix.m42 = yuanNode.position.y
+                combinedMatrix.m43 = yuanNode.position.z
+
+                // 将组合矩阵应用到节点的变换中
+                yuanNode.transform = combinedMatrix
+                yuanNode.transformTo = combinedMatrix
+
+            }
+            if ret.2 == "right, down" {
+//                yuanNode.rotationTo = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: .pi/2)
+
+            }
         }
-        yuanNode.rotation = SCNVector4(x: 0.0, y: 0.0, z: 1.0, w: .pi)
+        if let rt = yuanNode.rotationTo {
+            yuanNode.rotation = rt
+        }
         let rows = pointInfo3DArray.count  // 第一维
         let columns = pointInfo3DArray.first?.count ?? 0  // 第二维
         let depth = pointInfo3DArray.first?.first?.count ?? 0 // 第三维
@@ -234,6 +265,7 @@ public struct SingleContentView2: View {
         nodeList.forEach { node2 in
             node2.position = node2.orgPosition ?? node2.position
             node2.rotation = node2.rotationTo ?? node2.rotation
+            node2.transform = node2.transformTo ?? node2.transform;
         }
     }
 
@@ -246,6 +278,7 @@ public struct SingleContentView2: View {
         topPosition.y += 5;
         actionList.append(SCNAction.move(to: topPosition, duration: 0.2));
         let destPosition = nodeList[index].positionTo!;
+//        actionList.append(SCNAction.rotate(toAxisAngle: SCNVector4Zero, duration: 0.2));
         actionList.append(SCNAction.rotate(toAxisAngle: SCNVector4Zero, duration: 0.2));
         actionList.append(SCNAction.move(to: destPosition, duration: 0.2));
         nodeList[index].runAction(SCNAction.sequence(actionList), completionHandler: {
@@ -381,6 +414,8 @@ extension SCNNode {
         static var orgPosition = "orgPosition"
         static var positionTo = "positionTo"
         static var rotationTo = "rotationTo"
+        static var transformTo = "transformTo"
+
 
     }
 
@@ -403,6 +438,15 @@ extension SCNNode {
         }
         set {
             objc_setAssociatedObject(self, &AssociatedKeys.rotationTo, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+
+    var transformTo: SCNMatrix4? {
+        get {
+            return objc_getAssociatedObject(self, &AssociatedKeys.transformTo) as? SCNMatrix4
+        }
+        set {
+            objc_setAssociatedObject(self, &AssociatedKeys.transformTo, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
