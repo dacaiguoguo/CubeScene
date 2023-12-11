@@ -358,10 +358,14 @@ extension SCNNode {
 
     var orgPosition: SCNVector3? {
         get {
-            return objc_getAssociatedObject(self, &AssociatedKeys.orgPosition) as? SCNVector3
+            withUnsafePointer(to: &AssociatedKeys.orgPosition) { po in
+                return  objc_getAssociatedObject(self, po) as? SCNVector3
+            }
         }
         set {
-            objc_setAssociatedObject(self, &AssociatedKeys.orgPosition, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            withUnsafePointer(to: &AssociatedKeys.orgPosition) { po in
+                objc_setAssociatedObject(self, po, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            }
         }
     }
 
