@@ -109,6 +109,7 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
     let pointInfo3DArray = mapTo3DPointInfo(array3d: result2);
     let ret = hasContinuousEqualValues(pointInfo3DArray: pointInfo3DArray)
     print(ret)
+    // 问题就出在这里，找到三维数组的第一个，并不一定是块的原点》〉》〉
     func findFirstOccurrence(of value: Int, in array: [[[PointInfo]]]) -> SCNVector3 {
         let rows = array.count  // 第一维
         let columns = array.first?.count ?? 0  // 第二维

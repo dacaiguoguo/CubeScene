@@ -118,7 +118,11 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> (Bool, Point
                 if value < 0 {
                     continue
                 }
-                for akey in PointInfo.allKeyList {
+                for akey in PointInfo.allKeyList {// 检查当前点在up方向上是否存在L
+                    // allKeyList 也就是要检查6个方向，akey 就是当前检查的方向
+                    // 根据当前检查的方向获取到 其他4个方向，也就是说检查上的时候，不用检查上和下拐弯的情况 L
+                    // checkPoint再根据当前value 和 akey方向上连续两个，加起来也就是三个点的Value相等
+                    // 再用checkList来遍历也就获取到了 L 形状。至此 L形状判断和方向都已经获取到了。
                     let ret = checkPoint(currentPoint, with: value, akeyPath: akey)
                     if ret.0  {
                         return ret
