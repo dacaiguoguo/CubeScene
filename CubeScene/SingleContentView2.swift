@@ -8,15 +8,6 @@
 import SwiftUI
 import SceneKit
 
-struct Block {
-    let data: Matrix3D
-    let name: String
-    var rotation:SCNVector3
-    var position:SCNVector3
-    var rotationTo3:SCNVector3
-    var positionTo:SCNVector3
-}
-
 enum LVAxis {
     case x
     case y
@@ -36,39 +27,100 @@ extension SCNAction {
 }
 
 func transMatrix(with result2: Matrix3D) -> Matrix3D {
-    let resulttmp = result2.map { mid in
-        mid.map { innter in
-            innter.map {value in return value - 1}
-        }
-    }
-    let rows = resulttmp.count  // 第一维
-
     var result:Matrix3D  = []
-    // 遍历三维数组
-    for j in 0..<rows {
-        let y = rows - 1 - j;
-        result.append(Array(resulttmp[y].reversed()))
+    result2.forEach { inner in
+        result.append(inner.reversed())
     }
     return result
+}
+
+func mapColorIndex(_ index:Int) -> Int {
+    switch (index) {
+    case 86:// V
+        return 1
+    case 76:// L
+        return 2;
+    case 84:// T
+        return 3;
+    case 90:// Z
+        return 4;
+    case 65:// A
+        return 5;
+    case 66:// B
+        return 6;
+    case 80:// P
+        return 7;
+    default:
+        return index
+    }
+}
+
+func findUniqueValues(in result: Matrix3D) -> [Int] {
+    let rows = result.count  // 第一维
+    let columns = result.first?.count ?? 0  // 第二维
+    let depth = result.first?.first?.count ?? 0 // 第三维
+
+    var uniqueValues:[Int]  = []
+    // 遍历三维数组
+    for j in 0..<columns {
+        let y = j;//columns - 1 - j;
+        for i in 0..<rows {
+            for k in 0..<depth {
+                let thenumber = result[i][y][k]
+                if thenumber >= 0 && !uniqueValues.contains(thenumber) {
+                    uniqueValues.append(thenumber)
+                }
+            }
+        }
+    }
+    return uniqueValues
+}
+
+func makeCombinedMatrix(order:[(String, Float)], position:SCNVector3) -> SCNMatrix4 {
+    // 绕Z轴旋转180度
+    // 定义绕Z轴和X轴的旋转角度
+    var vvv = SCNMatrix4Identity;
+    for somex in order {
+        if somex.0 == "x" , somex.1 > 0 {
+            // 创建绕X轴的旋转矩阵
+            vvv = SCNMatrix4Mult(vvv, SCNMatrix4MakeRotation(Float.pi / 2 * somex.1, 1, 0, 0))
+        }
+        if somex.0 == "y" , somex.1 > 0 {
+            // 创建绕X轴的旋转矩阵
+            vvv = SCNMatrix4Mult(vvv, SCNMatrix4MakeRotation(Float.pi / 2 * somex.1, 0, 1, 0))
+        }
+        if somex.0 == "z" , somex.1 > 0 {
+            // 创建绕X轴的旋转矩阵
+            vvv = SCNMatrix4Mult(vvv, SCNMatrix4MakeRotation(Float.pi / 2 * somex.1, 0, 0, 1))
+        }
+    }
+    vvv.m41 = position.x
+    vvv.m42 = position.y
+    vvv.m43 = position.z
+    return vvv
 }
 
 // 这里有个问题 就是三维数组 最前面的是最底层了，但是 其实应该是最上层。
 // 解决方法 最好是处理数据。
 // todo 自定义顺序
-func makeNode(with result: Matrix3D) -> [SCNNode] {
+func makeNode(with result2: Matrix3D) -> [SCNNode] {
     // let result = transMatrix(with: result2)
-    func findFirstOccurrence(of value: Int, in array: Matrix3D) -> SCNVector3 {
-        let rows = result.count  // 第一维
-        let columns = result.first?.count ?? 0  // 第二维
-        let depth = result.first?.first?.count ?? 0 // 第三维
+
+    let pointInfo3DArray = mapTo3DPointInfo(array3d: result2);
+    let ret = hasContinuousEqualValues(pointInfo3DArray: pointInfo3DArray)
+    print(ret)
+    func findFirstOccurrence(of value: Int, in array: [[[PointInfo]]]) -> SCNVector3 {
+        let rows = array.count  // 第一维
+        let columns = array.first?.count ?? 0  // 第二维
+        let depth = array.first?.first?.count ?? 0 // 第三维
 
         // 遍历三维数组
         for j in 0..<columns {
             let y = j;//columns - 1 - j;
             for i in 0..<rows {
                 for k in 0..<depth {
-                    let innerArray = result[i][y][k]
-                    if innerArray == value {
+                    let innerArray = array[i][y][k]
+                    if innerArray.value == value {
                         return SCNVector3(k, y, i)
                     }
                 }
@@ -76,65 +128,110 @@ func makeNode(with result: Matrix3D) -> [SCNNode] {
         }
         return SCNVector3Zero
     }
-    func findUniqueValues(in result: Matrix3D) -> [Int] {
-        let rows = result.count  // 第一维
-        let columns = result.first?.count ?? 0  // 第二维
-        let depth = result.first?.first?.count ?? 0 // 第三维
 
-        var uniqueValues:[Int]  = []
-        // 遍历三维数组
-        for j in 0..<columns {
-            let y = j;//columns - 1 - j;
-            for i in 0..<rows {
-                for k in 0..<depth {
-                    let thenumber = result[i][y][k]
-                    if thenumber >= 0 && !uniqueValues.contains(thenumber) {
-                        uniqueValues.append(thenumber)
-                    }
-                }
-            }
-        }
-        return uniqueValues
-    }
-    let findResult = findUniqueValues(in: result).map { item in
-        (item, findFirstOccurrence(of: item, in: result))
+    let findResult = findUniqueValues(in: result2).map { item in
+        (item, findFirstOccurrence(of: item, in: pointInfo3DArray))
     };
+
+    func v3Add(left:SCNVector3, right:SCNVector3) -> SCNVector3 {
+        return SCNVector3(left.x + right.x, left.y + right.y, left.z + right.z)
+    }
+
     return findResult.map { (value, location) in
         // 这是初始位置
-        let positionOrgList = [[4,0,0],[4,0,4],[0,0,4],[-4,0,4],[-4,0,0],[-4,0,-4],[0,0,-4]].map{SCNVector3($0[0], $0[1], $0[2])}
+        let positionOrgList = [[4,0,-4],[4,0,0],[4,0,4],[0,0,4],[-4,0,4],[-4,0,0],[-4,0,-4],[0,0,-4]].map{SCNVector3($0[0], $0[1], $0[2])}
 
 
         let colors:[UIColor] = [
-                                UIColor(hex: "5B5B5B").withAlphaComponent(0.85),
-                                UIColor(hex: "C25C1D").withAlphaComponent(0.85),
-                                UIColor(hex: "2788e7").withAlphaComponent(0.85),
-                                UIColor(hex: "FA2E34").withAlphaComponent(0.85),
-                                UIColor(hex: "FB5BC2").withAlphaComponent(0.85),
-                                UIColor(hex: "FCC633").withAlphaComponent(0.85),
-                                UIColor(hex: "178E20").withAlphaComponent(0.85),
-                                UIColor(hex: "000000").withAlphaComponent(0.85),
+                                UIColor(hex: "000000"),
+                                UIColor(hex: "5B5B5B"),
+                                UIColor(hex: "C25C1D"),
+                                UIColor(hex: "2788e7"),
+                                UIColor(hex: "FA2E34"),
+                                UIColor(hex: "FB5BC2"),
+                                UIColor(hex: "FCC633"),
+                                UIColor(hex: "178E20"),
         ]
 
         let yuan = SCNSphere(radius: 0.5)
-        yuan.firstMaterial?.diffuse.contents = colors[value].withAlphaComponent(1)
+        let indexValue = mapColorIndex(value)
+        if value > colors.count - 1 {
+            yuan.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(0.85)
+        } else {
+            yuan.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(1)
+        }
         let yuanNode = SCNNode(geometry: yuan)
-        yuanNode.positionTo = location
-        yuanNode.position = positionOrgList[value]
-        yuanNode.orgPosition = positionOrgList[value]
-        yuanNode.name = "块 \(value + 1)"
-        yuanNode.rotation = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: .pi / 2)
-        let rows = result.count  // 第一维
-        let columns = result.first?.count ?? 0  // 第二维
-        let depth = result.first?.first?.count ?? 0 // 第三维
+        yuanNode.positionTo = v3Add(left:location, right:SCNVector3Make(Float(-1), Float(-1), Float(-1)))
+        yuanNode.position = v3Add(left:positionOrgList[indexValue], right:SCNVector3Make(Float(-1), Float(-1), Float(-1)))
+        yuanNode.orgPosition = yuanNode.position
+        yuanNode.name = "块 \(value)"
+
+
+
+        if ret.1?.value == 2 {
+            if ret.2 == "up, left" {
+                yuanNode.rotationTo = SCNVector4(x: 0.0, y: 0.0, z: 1.0, w: .pi)
+            }
+
+            if ret.2 == "front, left" {
+                yuanNode.transform = makeCombinedMatrix(order: [("y", 1.0), ("x", 2.0),], position: yuanNode.position);
+                yuanNode.transformTo = yuanNode.transform
+            }
+            if ret.2 == "back, up" {
+                yuanNode.transform = makeCombinedMatrix(order: [("z", 3.0), ("x", 1.0),], position: yuanNode.position);
+                yuanNode.transformTo = yuanNode.transform
+            }
+            if ret.2 == "left, up" {
+                yuanNode.transform = makeCombinedMatrix(order: [("x", 1.0), ], position: yuanNode.position);
+                yuanNode.transformTo = yuanNode.transform
+            }
+            if ret.2 == "left, back" {
+                yuanNode.transform = makeCombinedMatrix(order: [("z", 1.0),("y", 1.0), ], position: yuanNode.position);
+                yuanNode.transformTo = yuanNode.transform
+            }
+            if ret.2 == "left, front" {
+                yuanNode.transform = makeCombinedMatrix(order: [("y", 3.0),("x", 1.0), ], position: yuanNode.position);
+                yuanNode.transformTo = yuanNode.transform
+            }
+            if ret.2 == "left, down" {
+                yuanNode.transform = makeCombinedMatrix(order: [("y", 2.0),("x", 1.0), ], position: yuanNode.position);
+                yuanNode.transformTo = yuanNode.transform
+            }
+            if ret.2 == "right, up" {
+                yuanNode.transform = makeCombinedMatrix(order: [("z", 2.0),("x", 1.0), ], position: yuanNode.position);
+                yuanNode.transformTo = yuanNode.transform
+            }
+            if ret.2 == "right, back" {
+                yuanNode.transform = makeCombinedMatrix(order: [("x", 3.0),("z", 1.0), ], position: yuanNode.position);
+                yuanNode.transformTo = yuanNode.transform
+            }
+            if ret.2 == "right, down" {
+                yuanNode.rotationTo = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: -.pi/2)
+            }
+            if ret.2 == "right, front" {
+                yuanNode.transform = makeCombinedMatrix(order: [("y", 1.0),("x", 3.0), ], position: yuanNode.position);
+                yuanNode.transformTo = yuanNode.transform
+            }
+        }
+        if let rt = yuanNode.rotationTo {
+            yuanNode.rotation = rt
+        }
+        let rows = pointInfo3DArray.count  // 第一维
+        let columns = pointInfo3DArray.first?.count ?? 0  // 第二维
+        let depth = pointInfo3DArray.first?.first?.count ?? 0 // 第三维
 
         // 遍历三维数组
         for i in 0..<rows {
             for j in 0..<columns {
                 for k in 0..<depth {
-                    let value2 = result[i][j][k]
-                    if value2 == value {
+                    let value2 = pointInfo3DArray[i][j][k]
+                    if value2.value == value {
                         let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
-                        box2.firstMaterial?.diffuse.contents = colors[value]
+                        if value > colors.count - 1 {
+                            box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(0.85)
+                        } else {
+                            box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(1)
+                        }
                         let boxNode2 = SCNNode()
                         boxNode2.geometry = box2
                         boxNode2.name = "\(value)"
@@ -207,7 +304,8 @@ public struct SingleContentView2: View {
         counter += 1;
         nodeList.forEach { node2 in
             node2.position = node2.orgPosition ?? node2.position
-            node2.rotation = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: .pi / 2)
+            node2.rotation = node2.rotationTo ?? node2.rotation
+            node2.transform = node2.transformTo ?? node2.transform;
         }
     }
 
@@ -219,8 +317,8 @@ public struct SingleContentView2: View {
         var topPosition = nodeList[index].positionTo!;
         topPosition.y += 5;
         actionList.append(SCNAction.move(to: topPosition, duration: 0.2));
-        actionList.append(SCNAction.rotate(by: -.pi / 2, around: SCNVector3(1, 0, 0), duration: 0.2))
         let destPosition = nodeList[index].positionTo!;
+        actionList.append(SCNAction.rotate(toAxisAngle: SCNVector4Zero, duration: 0.2));
         actionList.append(SCNAction.move(to: destPosition, duration: 0.2));
         nodeList[index].runAction(SCNAction.sequence(actionList), completionHandler: {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -354,6 +452,10 @@ extension SCNNode {
     private struct AssociatedKeys {
         static var orgPosition = "orgPosition"
         static var positionTo = "positionTo"
+        static var rotationTo = "rotationTo"
+        static var transformTo = "transformTo"
+
+
     }
 
     var orgPosition: SCNVector3? {
@@ -369,6 +471,23 @@ extension SCNNode {
         }
     }
 
+    var rotationTo: SCNVector4? {
+        get {
+            return objc_getAssociatedObject(self, &AssociatedKeys.rotationTo) as? SCNVector4
+        }
+        set {
+            objc_setAssociatedObject(self, &AssociatedKeys.rotationTo, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+
+    var transformTo: SCNMatrix4? {
+        get {
+            return objc_getAssociatedObject(self, &AssociatedKeys.transformTo) as? SCNMatrix4
+        }
+        set {
+            objc_setAssociatedObject(self, &AssociatedKeys.transformTo, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
 
     var positionTo: SCNVector3? {
         get {

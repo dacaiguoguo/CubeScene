@@ -25,7 +25,7 @@ struct EnterListView240: View {
 //                        Image("Cube").frame(width: 80, height: 80)
 //                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))
 //                            .disabled(true)
-                        ScenekitSingleView(dataModel:item, showType: .colorFul, colors: userData.colorSaveList, numberImageList: userData.textImageList, showColor: [0, 1, 2, 3, 4, 5, 6]).frame(width: 100, height: 100)
+                        ScenekitSingleView(dataModel:item, showType: .colorFul, colors: userData.colorSaveList, numberImageList: userData.textImageList, showColor: [1, 2, 3, 4, 5, 6, 7]).frame(width: 100, height: 100)
                             .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
                             .disabled(true)
                         VStack(alignment: .leading){

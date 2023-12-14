@@ -34,9 +34,14 @@ struct CubeSceneApp: App {
     @Environment(\.scenePhase) var scenePhase
     
     let userData = UserData()
-    let result = transMatrix(with: [[[2,4,3], [6,4,1], [6,6,1]],
-                                    [[2,3,3], [6,4,1], [7,4,5]],
-                                    [[2,2,3], [7,5,5], [7,7,5]]])
+    let result = transMatrix(with:
+//                                [[[2,4,3], [6,4,1], [6,6,1]],
+//                                 [[2,3,3], [6,4,1], [7,4,5]],
+//                                 [[2,2,3], [7,5,5], [7,7,5]]]
+                                [[[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]],
+                                 [[-1, 2, 2], [-1, 2, -1], [-1, 2, -1]],
+                                 [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]],]
+    )
     //    init() {
     //
     //    }
@@ -84,9 +89,9 @@ struct CubeSceneApp: App {
                     Text("TabTitleName3")
                 }.tag(2)
                 NavigationView {
-                    SingleContentView2(nodeList: makeNode(with: result)).navigationTitle("TabTitleNameY").navigationBarTitleDisplayMode(.inline)
+                    TestEnter().navigationTitle("TabTitleNameY").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
-                             
+
                         }.environmentObject(userData)
                 }
                 .navigationViewStyle(StackNavigationViewStyle()).tabItem {
