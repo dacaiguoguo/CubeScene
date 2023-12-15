@@ -65,7 +65,7 @@ func findUniqueValues(in result: Matrix3D) -> [Int] {
     let rows = result.count  // 第一维
     let columns = result.first?.count ?? 0  // 第二维
     let depth = result.first?.first?.count ?? 0 // 第三维
-
+    
     var uniqueValues:[Int]  = []
     // 遍历三维数组
     for j in 0..<columns {
@@ -111,39 +111,37 @@ func makeCombinedMatrix(order:[(String, Float)], position:SCNVector3) -> SCNMatr
 // todo 自定义顺序
 func makeNode(with result2: Matrix3D) -> [SCNNode] {
     // let result = transMatrix(with: result2)
-
+    
     let pointInfo3DArray = mapTo3DPointInfo(array3d: result2);
-    let lResult = hasContinuousEqualValues(pointInfo3DArray: pointInfo3DArray)
+    let lResult:[PointInfo] = hasContinuousEqualValues(pointInfo3DArray: pointInfo3DArray)
     print(lResult)
     
-
+    
     func v3Add(left:SCNVector3, right:SCNVector3) -> SCNVector3 {
         return SCNVector3(left.x + right.x, left.y + right.y, left.z + right.z)
     }
-
-    return lResult.map { lpoint in
+    let maped =  lResult.map { lpoint in
         let value = lpoint.value
         let location = lpoint.location
         print("boxNode2.position value:\(value) \(location)")
-
+        
         // 这是初始位置
         let positionOrgList = [[4,0,-4],[4,0,0],[4,0,4],[0,0,4],[-4,0,4],[-4,0,0],[-4,0,-4],[0,0,-4]].map{SCNVector3($0[0], $0[1], $0[2])}
-
-
         let colors:[UIColor] = [
-                                UIColor(hex: "000000"),
-                                UIColor(hex: "5B5B5B"),
-                                UIColor(hex: "C25C1D"),
-                                UIColor(hex: "2788e7"),
-                                UIColor(hex: "FA2E34"),
-                                UIColor(hex: "FB5BC2"),
-                                UIColor(hex: "FCC633"),
-                                UIColor(hex: "178E20"),
+            UIColor(hex: "000000"),
+            UIColor(hex: "5B5B5B"),
+            UIColor(hex: "C25C1D"),
+            UIColor(hex: "2788e7"),
+            UIColor(hex: "FA2E34"),
+            UIColor(hex: "FB5BC2"),
+            UIColor(hex: "FCC633"),
+            UIColor(hex: "178E20"),
         ]
-
-//         let yuan = SCNSphere(radius: 0.5)
+        
+        
+        //         let yuan = SCNSphere(radius: 0.5)
         let yuan = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
-
+        
         let indexValue = mapColorIndex(value)
         if value > colors.count - 1 {
             yuan.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(0.85)
@@ -155,12 +153,11 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         yuanNode.position = v3Add(left:positionOrgList[indexValue], right:SCNVector3Make(Float(-1), Float(-1), Float(-1)))
         yuanNode.orgPosition = yuanNode.position
         yuanNode.name = "块 \(value)"
-
         if lpoint.value == 2 {
             if lpoint.des == "up, left" {
                 yuanNode.rotationTo = SCNVector4(x: 0.0, y: 0.0, z: 1.0, w: .pi)
             }
-
+            
             if lpoint.des == "front, left" {
                 yuanNode.transform = makeCombinedMatrix(order: [("y", 1.0), ("x", 2.0),], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
@@ -204,54 +201,52 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         if let rt = yuanNode.rotationTo {
             yuanNode.rotation = rt
         }
-        // 利用pointinfo 添加块的点
-        var currentP = lpoint;
-        lpoint.pathlist.forEach { akeypath in
+        lpoint.pathlist.forEach { child in
             // 根据keypath查找下一个点
-            if let temp = currentP[keyPath: akeypath] {
-                currentP = temp;
-                let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
-                if value > colors.count - 1 {
-                    box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(0.85)
-                } else {
-                    box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(0.71)
-                }
-                let boxNode2 = SCNNode()
-                boxNode2.geometry = box2
-                boxNode2.name = "\(value)"
-                
-                boxNode2.position = SCNVector3(x: Float(temp.x - Int(location.x)),
-                                               y: Float(temp.y - Int(location.y)),
-                                               z: Float(temp.z - Int(location.z)));
-                print("boxNode21.position  value:\(value) \(boxNode2.position)")
-                yuanNode.addChildNode(boxNode2)
+            let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
+            if value > colors.count - 1 {
+                box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(0.85)
+            } else {
+                box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(0.71)
             }
+            let boxNode2 = SCNNode()
+            boxNode2.geometry = box2
+            boxNode2.name = "\(value)"
+            
+            boxNode2.position = SCNVector3(x: Float(child.x - Int(location.x)),
+                                           y: Float(child.y - Int(location.y)),
+                                           z: Float(child.z - Int(location.z)));
+            print("boxNode21.position  value:\(value) \(boxNode2.position)")
+            yuanNode.addChildNode(boxNode2)
+            
         }
         
         print("boxNode2.position over")
+        
         return yuanNode
-
     }
+    return maped
+    
 }
 
 
 public struct SingleContentView2: View {
-
+    
     let segments = {[1,2,3,4,5,6,7].map { index in
         return "块 \(index)"
     }}()
-
+    
     @State private var counter = 0
     @State private var selectedSegment = 0
     @State var nodeList:[SCNNode]
-//    { makeNode(with result: result)}()
-
+    //    { makeNode(with result: result)}()
+    
     @State private var stepcount = 0 {
         didSet {
             triggerHapticFeedback()
         }
     }
-
+    
     public var body: some View {
         VStack {
             ZStack(alignment: .bottomTrailing) {
@@ -261,10 +256,10 @@ public struct SingleContentView2: View {
                     rotationView()
                     stepperView()
                 }.frame(height: 150).padding()
-
+                
             }
             pickerView()
-
+            
         }.navigationBarItems(trailing:completeStatus()).navigationTitle(Text("步数:\(stepcount)"))
     }
     func completeStatus() -> some View {
@@ -284,7 +279,7 @@ public struct SingleContentView2: View {
             }
         }
     }
-
+    
     func reset() {
         counter += 1;
         nodeList.forEach { node2 in
@@ -293,7 +288,7 @@ public struct SingleContentView2: View {
             node2.transform = node2.transformTo ?? node2.transform;
         }
     }
-
+    
     func actionRunAt(index: Int) -> Void {
         guard index < nodeList.count else {
             return
@@ -311,11 +306,11 @@ public struct SingleContentView2: View {
             }
         })
     }
-
+    
     var blockName:String {
         segments[selectedSegment]
     }
-
+    
     func pickerView() -> some View {
         Picker("", selection: Binding(get: {selectedSegment}, set: { newValue in triggerHapticFeedback(); selectedSegment = newValue})) {
             ForEach(0 ..< segments.count, id: \.self) {
@@ -323,7 +318,7 @@ public struct SingleContentView2: View {
             }
         }.pickerStyle(.segmented).padding()
     }
-
+    
     func rotationMethod(_ axis: LVAxis) {
         if let cnode = nodeList.filter({ node in
             node.name == blockName
@@ -339,7 +334,7 @@ public struct SingleContentView2: View {
         }
         stepcount += 1;
     }
-
+    
     func rotationView() -> some View {
         VStack {
             CustomButton(title: "旋转X") {rotationMethod(.x)}
@@ -347,7 +342,7 @@ public struct SingleContentView2: View {
             CustomButton(title: "旋转Z")  {rotationMethod(.z)}
         }.padding()
     }
-
+    
     func stepperView() -> some View {
         VStack(alignment: .trailing) {
             Stepper {
@@ -363,7 +358,7 @@ public struct SingleContentView2: View {
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(-1.0, 0, 0), duration: 0.1))
                 stepcount += 1;
             }
-
+            
             Stepper {
                 Text("Y")
             } onIncrement :{
@@ -377,31 +372,31 @@ public struct SingleContentView2: View {
                     node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, -1.0, 0), duration: 0.1))
             }
-
+            
             Stepper {
                 Text("Z")
             } onIncrement :{
                 stepcount += 1;
-
+                
                 nodeList.filter({ node in
                     node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 0, 1.0), duration: 0.1))
             } onDecrement: {
                 stepcount += 1;
-
+                
                 nodeList.filter({ node in
                     node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 0, -1.0), duration: 0.1))
             }
         }.frame(width: 120)
     }
-
+    
     func lognodeInfo() -> Void {
         nodeList.forEach { node in
             print("node:\(node.name ?? ""),rotation:\(node.rotation), position:\(node.position)")
         }
     }
-
+    
     func triggerHapticFeedback() {
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.prepare()
@@ -414,7 +409,7 @@ public struct SingleContentView2: View {
 struct CustomButton: View {
     let title: String
     let action: () -> Void
-
+    
     var body: some View {
         Button(action: action) {
             Text(title)
@@ -438,7 +433,7 @@ extension SCNNode {
         static var rotationTo: UInt8 = 0
         static var transformTo: UInt8 = 0
     }
-
+    
     var orgPosition: SCNVector3? {
         get {
             return withUnsafePointer(to: &AssociatedKeys.orgPosition) { pointer in
@@ -451,7 +446,7 @@ extension SCNNode {
             }
         }
     }
-
+    
     var rotationTo: SCNVector4? {
         get {
             return withUnsafePointer(to: &AssociatedKeys.rotationTo) { pointer in
@@ -464,7 +459,7 @@ extension SCNNode {
             }
         }
     }
-
+    
     var transformTo: SCNMatrix4? {
         get {
             return withUnsafePointer(to: &AssociatedKeys.transformTo) { pointer in
@@ -477,7 +472,7 @@ extension SCNNode {
             }
         }
     }
-
+    
     var positionTo: SCNVector3? {
         get {
             return withUnsafePointer(to: &AssociatedKeys.positionTo) { pointer in

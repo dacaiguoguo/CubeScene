@@ -19,7 +19,7 @@ class PointInfo : CustomDebugStringConvertible  {
     var back: PointInfo?
     
     var des: String = ""
-    var pathlist: [ReferenceWritableKeyPath<PointInfo, PointInfo?>] = []
+    var pathlist: [PointInfo] = []
     
     static let preList = [[\PointInfo.up,
                             \PointInfo.down,],
@@ -109,7 +109,7 @@ func mapTo3DPointInfo(array3d: [[[Int]]]) -> [[[PointInfo]]] {
     return pointInfoArray
 }
 
-func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> ([PointInfo]) {
+func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] {
     let rows = pointInfo3DArray.count
     let cols = pointInfo3DArray[0].count
     let depth = pointInfo3DArray[0][0].count
@@ -135,14 +135,14 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> ([PointInfo]
                         break
                     }
                 }
-//                for akey in PointInfo.allKeyList {
-//                    let ret = checkPoint2(currentPoint, with: 2, akeyPath: akey)
-//                    if ret.0, let aa = ret.1 {
-//                        aa.des = ret.2
-//                        aa.pathlist = ret.3
-//                        retlist.append(aa)
-//                    }
-//                }
+                for akey in PointInfo.allKeyList {
+                    let ret = checkPoint2(currentPoint, with: 2, akeyPath: akey)
+                    if ret.0, let aa = ret.1 {
+                        aa.des = ret.2
+                        aa.pathlist = ret.3
+                        retlist.append(aa)
+                    }
+                }
             }
         }
     }
@@ -163,15 +163,18 @@ extension ReferenceWritableKeyPath where Root == PointInfo {
         }
     }
 }
-func checkPoint2(_ currentPoint:PointInfo, with value: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [ReferenceWritableKeyPath<PointInfo, PointInfo?>]) {
+func checkPoint2(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
+    if currentPoint.value != checkValue {
+        return (false, nil, "none", [])
+    }
     let clist = PointInfo.checkList(akeyPath)
     if let back1 = currentPoint[keyPath:akeyPath] {
         if let back2 = back1[keyPath:akeyPath] {
-            if back1.value == value && back2.value == value {
+            if back1.value == checkValue && back2.value == checkValue {
                 for akey in clist {
-                    if let back3 = back2[keyPath:akey], back3.value == value {
+                    if let back3 = back2[keyPath:akey], back3.value == checkValue {
                         print("\(currentPoint) \(back1) \(back2) \(back3)")
-                        return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [akeyPath, akeyPath, akey])
+                        return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back3])
                     }
                 }
             }
@@ -180,16 +183,16 @@ func checkPoint2(_ currentPoint:PointInfo, with value: Int, akeyPath:ReferenceWr
     return (false, nil, "none", [])
 }
 
-func checkPoint1(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [ReferenceWritableKeyPath<PointInfo, PointInfo?>]) {
+func checkPoint1(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
     if currentPoint.value != checkValue {
         return (false, nil, "none", [])
     }
     let clist = PointInfo.checkList(akeyPath)
     if let back1 = currentPoint[keyPath:akeyPath] , back1.value == checkValue {
         for akey in clist {
-            if let back3 = back1[keyPath:akey], back3.value == checkValue {
+            if let back3 = currentPoint[keyPath:akey], back3.value == checkValue {
                 print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back3)")
-                return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [akeyPath, akey])
+                return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back3])
             }
         }
         
