@@ -44,6 +44,16 @@ class PointInfo : CustomDebugStringConvertible  {
         return ret
     }
     
+    class func checkList3(_ ss:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> [[ReferenceWritableKeyPath<PointInfo, PointInfo?>]] {
+        var ret:[[ReferenceWritableKeyPath<PointInfo, PointInfo?>]] = []
+        for aa in preList {
+            if !aa.contains(ss) {
+                ret.append(aa)
+            }
+        }
+        return ret
+    }
+    
     init(x: Int, y: Int, z: Int, value: Int) {
         self.x = x
         self.y = y
@@ -141,6 +151,16 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
                         aa.des = ret.2
                         aa.pathlist = ret.3
                         retlist.append(aa)
+                        break
+                    }
+                }
+                for akey in PointInfo.allKeyList {
+                    let ret = checkPoint3(currentPoint, with: 3, akeyPath: akey)
+                    if ret.0, let aa = ret.1 {
+                        aa.des = ret.2
+                        aa.pathlist = ret.3
+                        retlist.append(aa)
+                        break
                     }
                 }
             }
@@ -193,6 +213,41 @@ func checkPoint1(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:Refere
             if let back3 = currentPoint[keyPath:akey], back3.value == checkValue {
                 print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back3)")
                 return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back3])
+            }
+        }
+        
+    }
+    return (false, nil, "none", [])
+}
+
+func checkPoint3(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
+    if currentPoint.value != checkValue {
+        return (false, nil, "none", [])
+    }
+    let clist = PointInfo.checkList3(akeyPath)
+    if let back1 = currentPoint[keyPath:akeyPath] , back1.value == checkValue {
+        for akey3 in clist {
+            if akey3.allSatisfy({ akey in
+                if let back3 = currentPoint[keyPath:akey], back3.value == checkValue {
+                    return true
+                } else {
+                    return false
+                }
+            }) {
+                var children = [currentPoint]
+                let sidepoint:[PointInfo] = akey3.map { akey in
+                    currentPoint[keyPath: akey]!
+                }
+                children.append(back1)
+                children.append(contentsOf: sidepoint)
+                
+                return (true, currentPoint, "\(akeyPath.stringValue))", children)
+
+            }
+            for akey in akey3 {
+                if let back3 = currentPoint[keyPath:akey], back3.value == checkValue {
+                    print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back3)")
+                }
             }
         }
         
