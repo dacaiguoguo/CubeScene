@@ -18,6 +18,9 @@ class PointInfo : CustomDebugStringConvertible  {
     var front: PointInfo?
     var back: PointInfo?
     
+    var des: String = ""
+    var pathlist: [ReferenceWritableKeyPath<PointInfo, PointInfo?>] = []
+    
     static let preList = [[\PointInfo.up,
                             \PointInfo.down,],
                           [\PointInfo.left,
@@ -106,11 +109,11 @@ func mapTo3DPointInfo(array3d: [[[Int]]]) -> [[[PointInfo]]] {
     return pointInfoArray
 }
 
-func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> (Bool, PointInfo?, String, [ReferenceWritableKeyPath<PointInfo, PointInfo?>]) {
+func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> ([PointInfo]) {
     let rows = pointInfo3DArray.count
     let cols = pointInfo3DArray[0].count
     let depth = pointInfo3DArray[0][0].count
-
+    var retlist:[PointInfo] = []
     for i in 0..<rows {
         for j in 0..<cols {
             for k in 0..<depth {
@@ -124,16 +127,27 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> (Bool, Point
                     // 根据当前检查的方向获取到 其他4个方向，也就是说检查上的时候，不用检查上和下拐弯的情况 L
                     // checkPoint再根据当前value 和 akey方向上连续两个，加起来也就是三个点的Value相等
                     // 再用checkList来遍历也就获取到了 L 形状。至此 L形状判断和方向都已经获取到了。
-                    let ret = checkPoint(currentPoint, with: value, akeyPath: akey)
-                    if ret.0  {
-                        return ret
+                    let ret = checkPoint1(currentPoint, with: 1, akeyPath: akey)
+                    if ret.0, let aa = ret.1 {
+                        aa.des = ret.2
+                        aa.pathlist = ret.3
+                        retlist.append(aa)
+                        break
                     }
                 }
+//                for akey in PointInfo.allKeyList {
+//                    let ret = checkPoint2(currentPoint, with: 2, akeyPath: akey)
+//                    if ret.0, let aa = ret.1 {
+//                        aa.des = ret.2
+//                        aa.pathlist = ret.3
+//                        retlist.append(aa)
+//                    }
+//                }
             }
         }
     }
 
-    return (false, nil, "none", [])
+    return retlist
 }
 extension ReferenceWritableKeyPath where Root == PointInfo {
     var stringValue: String {
@@ -149,7 +163,7 @@ extension ReferenceWritableKeyPath where Root == PointInfo {
         }
     }
 }
-func checkPoint(_ currentPoint:PointInfo, with value: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [ReferenceWritableKeyPath<PointInfo, PointInfo?>]) {
+func checkPoint2(_ currentPoint:PointInfo, with value: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [ReferenceWritableKeyPath<PointInfo, PointInfo?>]) {
     let clist = PointInfo.checkList(akeyPath)
     if let back1 = currentPoint[keyPath:akeyPath] {
         if let back2 = back1[keyPath:akeyPath] {
@@ -162,6 +176,23 @@ func checkPoint(_ currentPoint:PointInfo, with value: Int, akeyPath:ReferenceWri
                 }
             }
         }
+    }
+    return (false, nil, "none", [])
+}
+
+func checkPoint1(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [ReferenceWritableKeyPath<PointInfo, PointInfo?>]) {
+    if currentPoint.value != checkValue {
+        return (false, nil, "none", [])
+    }
+    let clist = PointInfo.checkList(akeyPath)
+    if let back1 = currentPoint[keyPath:akeyPath] , back1.value == checkValue {
+        for akey in clist {
+            if let back3 = back1[keyPath:akey], back3.value == checkValue {
+                print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back3)")
+                return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [akeyPath, akey])
+            }
+        }
+        
     }
     return (false, nil, "none", [])
 }

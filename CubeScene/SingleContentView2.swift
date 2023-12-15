@@ -121,10 +121,10 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         return SCNVector3(left.x + right.x, left.y + right.y, left.z + right.z)
     }
 
-    return [lResult].map { (_, lpoint, des, keypathlist) in
-        let value = lpoint?.value ?? 0
-        let location = lpoint?.location ?? SCNVector3Zero
-        print("boxNode2.position \(location)")
+    return lResult.map { lpoint in
+        let value = lpoint.value
+        let location = lpoint.location
+        print("boxNode2.position value:\(value) \(location)")
 
         // 这是初始位置
         let positionOrgList = [[4,0,-4],[4,0,0],[4,0,4],[0,0,4],[-4,0,4],[-4,0,0],[-4,0,-4],[0,0,-4]].map{SCNVector3($0[0], $0[1], $0[2])}
@@ -156,47 +156,47 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         yuanNode.orgPosition = yuanNode.position
         yuanNode.name = "块 \(value)"
 
-        if lResult.1?.value == 2 {
-            if lResult.2 == "up, left" {
+        if lpoint.value == 2 {
+            if lpoint.des == "up, left" {
                 yuanNode.rotationTo = SCNVector4(x: 0.0, y: 0.0, z: 1.0, w: .pi)
             }
 
-            if lResult.2 == "front, left" {
+            if lpoint.des == "front, left" {
                 yuanNode.transform = makeCombinedMatrix(order: [("y", 1.0), ("x", 2.0),], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }
-            if lResult.2 == "back, up" {
+            if lpoint.des == "back, up" {
                 yuanNode.transform = makeCombinedMatrix(order: [("z", 3.0), ("x", 1.0),], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }
-            if lResult.2 == "left, up" {
+            if lpoint.des == "left, up" {
                 yuanNode.transform = makeCombinedMatrix(order: [("x", 1.0), ], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }
-            if lResult.2 == "left, back" {
+            if lpoint.des == "left, back" {
                 yuanNode.transform = makeCombinedMatrix(order: [("z", 1.0),("y", 1.0), ], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }
-            if lResult.2 == "left, front" {
+            if lpoint.des == "left, front" {
                 yuanNode.transform = makeCombinedMatrix(order: [("y", 3.0),("x", 1.0), ], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }
-            if lResult.2 == "left, down" {
+            if lpoint.des == "left, down" {
                 yuanNode.transform = makeCombinedMatrix(order: [("y", 2.0),("x", 1.0), ], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }
-            if lResult.2 == "right, up" {
+            if lpoint.des == "right, up" {
                 yuanNode.transform = makeCombinedMatrix(order: [("z", 2.0),("x", 1.0), ], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }
-            if lResult.2 == "right, back" {
+            if lpoint.des == "right, back" {
                 yuanNode.transform = makeCombinedMatrix(order: [("x", 3.0),("z", 1.0), ], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }
-            if lResult.2 == "right, down" {
+            if lpoint.des == "right, down" {
                 yuanNode.rotationTo = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: -.pi/2)
             }
-            if lResult.2 == "right, front" {
+            if lpoint.des == "right, front" {
                 yuanNode.transform = makeCombinedMatrix(order: [("y", 1.0),("x", 3.0), ], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }
@@ -206,9 +206,9 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         }
         // 利用pointinfo 添加块的点
         var currentP = lpoint;
-        keypathlist.forEach { akeypath in
+        lpoint.pathlist.forEach { akeypath in
             // 根据keypath查找下一个点
-            if let temp = currentP?[keyPath: akeypath] {
+            if let temp = currentP[keyPath: akeypath] {
                 currentP = temp;
                 let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
                 if value > colors.count - 1 {
@@ -223,7 +223,7 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
                 boxNode2.position = SCNVector3(x: Float(temp.x - Int(location.x)),
                                                y: Float(temp.y - Int(location.y)),
                                                z: Float(temp.z - Int(location.z)));
-                print("boxNode21.position \(boxNode2.position)")
+                print("boxNode21.position  value:\(value) \(boxNode2.position)")
                 yuanNode.addChildNode(boxNode2)
             }
         }
