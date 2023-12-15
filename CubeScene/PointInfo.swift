@@ -342,6 +342,19 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
                         break
                     }
                 }
+                for akey in PointInfo.allKeyList {
+                    let ret = checkPoint7(currentPoint, with: 7, akeyPath: akey)
+                    if ret.0, let aa = ret.1 {
+                        aa.des = ret.2
+                        aa.pathlist = ret.3
+                        if retlist.filter({ ap in
+                            ap.value == 7
+                        }).first == nil {
+                            retlist.append(aa)
+                        }
+                        break
+                    }
+                }
             }
         }
     }
@@ -484,6 +497,27 @@ func checkPoint6(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:Refere
         for akey in clist {
             if let back2 = currentPoint[keyPath:akey], back2.value == checkValue {
                 if let zuo = PointInfo.calculateThirdKeyPath6(akeyPath, akey), let back4 = back2[keyPath:zuo], back4.value == checkValue {
+                    print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
+                    return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
+                }
+            }
+        }
+    }
+    return (false, nil, "none", [])
+}
+
+
+func checkPoint7(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
+    if currentPoint.value != checkValue {
+        return (false, nil, "none", [])
+    }
+    let clist = PointInfo.checkList(akeyPath)
+    if let back1 = currentPoint[keyPath:akeyPath] , back1.value == checkValue {
+        for akey in clist {
+            if let back2 = currentPoint[keyPath:akey], back2.value == checkValue {
+                if let zuo = PointInfo.calculateThirdKeyPath6(akeyPath, akey), 
+                    let back4 = currentPoint[keyPath:zuo],
+                   back4.value == checkValue {
                     print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
                     return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
                 }
