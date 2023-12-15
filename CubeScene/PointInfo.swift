@@ -106,7 +106,7 @@ func mapTo3DPointInfo(array3d: [[[Int]]]) -> [[[PointInfo]]] {
     return pointInfoArray
 }
 
-func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> (Bool, PointInfo?, String) {
+func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> (Bool, PointInfo?, String, [ReferenceWritableKeyPath<PointInfo, PointInfo?>]) {
     let rows = pointInfo3DArray.count
     let cols = pointInfo3DArray[0].count
     let depth = pointInfo3DArray[0][0].count
@@ -133,7 +133,7 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> (Bool, Point
         }
     }
 
-    return (false, nil, "none")
+    return (false, nil, "none", [])
 }
 extension ReferenceWritableKeyPath where Root == PointInfo {
     var stringValue: String {
@@ -149,7 +149,7 @@ extension ReferenceWritableKeyPath where Root == PointInfo {
         }
     }
 }
-func checkPoint(_ currentPoint:PointInfo, with value: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String) {
+func checkPoint(_ currentPoint:PointInfo, with value: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [ReferenceWritableKeyPath<PointInfo, PointInfo?>]) {
     let clist = PointInfo.checkList(akeyPath)
     if let back1 = currentPoint[keyPath:akeyPath] {
         if let back2 = back1[keyPath:akeyPath] {
@@ -157,11 +157,11 @@ func checkPoint(_ currentPoint:PointInfo, with value: Int, akeyPath:ReferenceWri
                 for akey in clist {
                     if let back3 = back2[keyPath:akey], back3.value == value {
                         print("\(currentPoint) \(back1) \(back2) \(back3)")
-                        return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)")
+                        return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [akeyPath, akeyPath, akey])
                     }
                 }
             }
         }
     }
-    return (false, nil, "none")
+    return (false, nil, "none", [])
 }

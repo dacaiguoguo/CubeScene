@@ -121,9 +121,11 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         return SCNVector3(left.x + right.x, left.y + right.y, left.z + right.z)
     }
 
-    return [lResult].map { (_, lpoint, des) in
+    return [lResult].map { (_, lpoint, des, keypathlist) in
         let value = lpoint?.value ?? 0
         let location = lpoint?.location ?? SCNVector3Zero
+        print("boxNode2.position \(location)")
+
         // 这是初始位置
         let positionOrgList = [[4,0,-4],[4,0,0],[4,0,4],[0,0,4],[-4,0,4],[-4,0,0],[-4,0,-4],[0,0,-4]].map{SCNVector3($0[0], $0[1], $0[2])}
 
@@ -139,20 +141,20 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
                                 UIColor(hex: "178E20"),
         ]
 
-        let yuan = SCNSphere(radius: 0.5)
+//         let yuan = SCNSphere(radius: 0.5)
+        let yuan = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
+
         let indexValue = mapColorIndex(value)
         if value > colors.count - 1 {
             yuan.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(0.85)
         } else {
-            yuan.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(1)
+            yuan.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(1.0)
         }
         let yuanNode = SCNNode(geometry: yuan)
         yuanNode.positionTo = v3Add(left:location, right:SCNVector3Make(Float(-1), Float(-1), Float(-1)))
         yuanNode.position = v3Add(left:positionOrgList[indexValue], right:SCNVector3Make(Float(-1), Float(-1), Float(-1)))
         yuanNode.orgPosition = yuanNode.position
         yuanNode.name = "块 \(value)"
-
-
 
         if lResult.1?.value == 2 {
             if lResult.2 == "up, left" {
@@ -202,34 +204,31 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         if let rt = yuanNode.rotationTo {
             yuanNode.rotation = rt
         }
-        let rows = pointInfo3DArray.count  // 第一维
-        let columns = pointInfo3DArray.first?.count ?? 0  // 第二维
-        let depth = pointInfo3DArray.first?.first?.count ?? 0 // 第三维
 
-        // 遍历三维数组
-        for i in 0..<rows {
-            for j in 0..<columns {
-                for k in 0..<depth {
-                    let value2 = pointInfo3DArray[i][j][k]
-                    if value2.value == value {
-                        let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
-                        if value > colors.count - 1 {
-                            box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(0.85)
-                        } else {
-                            box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(1)
-                        }
-                        let boxNode2 = SCNNode()
-                        boxNode2.geometry = box2
-                        boxNode2.name = "\(value)"
-//                        boxNode2.position = SCNVector3(x: Float(k - Int(location.x)), y: Float(j - Int(location.y)), z: Float(i - Int(location.z)));
-                        boxNode2.position = SCNVector3(x: Float(k - Int(location.x)),
-                                                       y: Float(j - Int(location.y)),
-                                                       z: Float(i - Int(location.z)));
-                        yuanNode.addChildNode(boxNode2)
-                    }
+        var currentP = lpoint;
+        keypathlist.forEach { akeypath in
+            // 根据keypath查找下一个点
+            if let temp = currentP?[keyPath: akeypath] {
+                currentP = temp;
+                let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
+                if value > colors.count - 1 {
+                    box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(0.85)
+                } else {
+                    box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(0.71)
                 }
+                let boxNode2 = SCNNode()
+                boxNode2.geometry = box2
+                boxNode2.name = "\(value)"
+                
+                boxNode2.position = SCNVector3(x: Float(temp.x - Int(location.x)),
+                                               y: Float(temp.y - Int(location.y)),
+                                               z: Float(temp.z - Int(location.z)));
+                print("boxNode21.position \(boxNode2.position)")
+                yuanNode.addChildNode(boxNode2)
             }
         }
+        
+        print("boxNode2.position over")
         return yuanNode
 
     }
@@ -432,55 +431,63 @@ struct CustomButton: View {
     }
 }
 
-
-// 创建一个扩展以为 SCNNode 添加自定义属性
 extension SCNNode {
     private struct AssociatedKeys {
-        static var orgPosition = "orgPosition"
-        static var positionTo = "positionTo"
-        static var rotationTo = "rotationTo"
-        static var transformTo = "transformTo"
-
-
+        static var orgPosition: UInt8 = 0
+        static var positionTo: UInt8 = 0
+        static var rotationTo: UInt8 = 0
+        static var transformTo: UInt8 = 0
     }
 
     var orgPosition: SCNVector3? {
         get {
-            withUnsafePointer(to: &AssociatedKeys.orgPosition) { po in
-                return  objc_getAssociatedObject(self, po) as? SCNVector3
+            return withUnsafePointer(to: &AssociatedKeys.orgPosition) { pointer in
+                return objc_getAssociatedObject(self, pointer) as? SCNVector3
             }
         }
         set {
-            withUnsafePointer(to: &AssociatedKeys.orgPosition) { po in
-                objc_setAssociatedObject(self, po, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            withUnsafePointer(to: &AssociatedKeys.orgPosition) { pointer in
+                objc_setAssociatedObject(self, pointer, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             }
         }
     }
 
     var rotationTo: SCNVector4? {
         get {
-            return objc_getAssociatedObject(self, &AssociatedKeys.rotationTo) as? SCNVector4
+            return withUnsafePointer(to: &AssociatedKeys.rotationTo) { pointer in
+                return objc_getAssociatedObject(self, pointer) as? SCNVector4
+            }
         }
         set {
-            objc_setAssociatedObject(self, &AssociatedKeys.rotationTo, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            withUnsafePointer(to: &AssociatedKeys.rotationTo) { pointer in
+                objc_setAssociatedObject(self, pointer, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            }
         }
     }
 
     var transformTo: SCNMatrix4? {
         get {
-            return objc_getAssociatedObject(self, &AssociatedKeys.transformTo) as? SCNMatrix4
+            return withUnsafePointer(to: &AssociatedKeys.transformTo) { pointer in
+                return objc_getAssociatedObject(self, pointer) as? SCNMatrix4
+            }
         }
         set {
-            objc_setAssociatedObject(self, &AssociatedKeys.transformTo, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            withUnsafePointer(to: &AssociatedKeys.transformTo) { pointer in
+                objc_setAssociatedObject(self, pointer, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            }
         }
     }
 
     var positionTo: SCNVector3? {
         get {
-            return objc_getAssociatedObject(self, &AssociatedKeys.positionTo) as? SCNVector3
+            return withUnsafePointer(to: &AssociatedKeys.positionTo) { pointer in
+                return objc_getAssociatedObject(self, pointer) as? SCNVector3
+            }
         }
         set {
-            objc_setAssociatedObject(self, &AssociatedKeys.positionTo, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            withUnsafePointer(to: &AssociatedKeys.positionTo) { pointer in
+                objc_setAssociatedObject(self, pointer, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            }
         }
     }
 }
