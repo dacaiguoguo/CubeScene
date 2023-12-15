@@ -201,7 +201,7 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         if let rt = yuanNode.rotationTo {
             yuanNode.rotation = rt
         }
-        lpoint.pathlist.forEach { child in
+        lpoint.children.forEach { child in
             // 根据keypath查找下一个点
             let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
             if value > colors.count - 1 {

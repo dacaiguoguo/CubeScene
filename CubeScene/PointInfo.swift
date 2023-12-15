@@ -19,7 +19,7 @@ class PointInfo : CustomDebugStringConvertible  {
     var back: PointInfo?
     
     var des: String = ""
-    var pathlist: [PointInfo] = []
+    var children: [PointInfo] = []
     
     static let preList = [[\PointInfo.up,
                             \PointInfo.down,],
@@ -280,7 +280,7 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
                     let ret = checkPoint1(currentPoint, with: 1, akeyPath: akey)
                     if ret.0, let aa = ret.1 {
                         aa.des = ret.2
-                        aa.pathlist = ret.3
+                        aa.children = ret.3
                         retlist.append(aa)
                         break
                     }
@@ -289,7 +289,7 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
                     let ret = checkPoint2(currentPoint, with: 2, akeyPath: akey)
                     if ret.0, let aa = ret.1 {
                         aa.des = ret.2
-                        aa.pathlist = ret.3
+                        aa.children = ret.3
                         retlist.append(aa)
                         break
                     }
@@ -298,7 +298,7 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
                     let ret = checkPoint3(currentPoint, with: 3, akeyPath: akey)
                     if ret.0, let aa = ret.1 {
                         aa.des = ret.2
-                        aa.pathlist = ret.3
+                        aa.children = ret.3
                         retlist.append(aa)
                         break
                     }
@@ -307,7 +307,7 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
                     let ret = checkPoint4(currentPoint, with: 4, akeyPath: akey)
                     if ret.0, let aa = ret.1 {
                         aa.des = ret.2
-                        aa.pathlist = ret.3
+                        aa.children = ret.3
                         if retlist.filter({ ap in
                             ap.value == 4
                         }).first == nil {
@@ -320,7 +320,7 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
                     let ret = checkPoint5(currentPoint, with: 5, akeyPath: akey)
                     if ret.0, let aa = ret.1 {
                         aa.des = ret.2
-                        aa.pathlist = ret.3
+                        aa.children = ret.3
                         if retlist.filter({ ap in
                             ap.value == 5
                         }).first == nil {
@@ -333,7 +333,7 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
                     let ret = checkPoint6(currentPoint, with: 6, akeyPath: akey)
                     if ret.0, let aa = ret.1 {
                         aa.des = ret.2
-                        aa.pathlist = ret.3
+                        aa.children = ret.3
                         if retlist.filter({ ap in
                             ap.value == 6
                         }).first == nil {
@@ -346,7 +346,7 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
                     let ret = checkPoint7(currentPoint, with: 7, akeyPath: akey)
                     if ret.0, let aa = ret.1 {
                         aa.des = ret.2
-                        aa.pathlist = ret.3
+                        aa.children = ret.3
                         if retlist.filter({ ap in
                             ap.value == 7
                         }).first == nil {
