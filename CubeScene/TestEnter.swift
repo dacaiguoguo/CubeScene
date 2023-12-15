@@ -31,11 +31,17 @@ extension TestEnterModel : Identifiable {
 struct TestEnter: View {
     
     let items:[TestEnterModel] = [
+       
         TestEnterModel("right, up",
                        transMatrix(with:
-                                    [[[-1, 2, -1], [-1, -1, -1], [-1, -1, -1]],
-                                     [[1, 2, -1], [-1, 2, -1], [-1, 2, -1]],
-                                     [[1, 1, -1], [3, 3, 3], [-1, 3, -1]],])),
+                                    [[[2,4,3], [6,4,1], [6,6,1]],
+                                     [[2,3,3], [6,4,1], [7,4,5]],
+                                     [[2,2,3], [7,5,5], [7,7,5]]])),
+//        TestEnterModel("right, up",
+//                       transMatrix(with:
+//                                    [[[-1, 2, -1], [-1, -1, -1], [-1, -1, -1]],
+//                                     [[1, 2, -1], [-1, 2, -1], [-1, 2, -1]],
+//                                     [[1, 1, -1], [3, 3, 3], [-1, 3, -1]],])),
 //        TestEnterModel("right, down",
 //                       transMatrix(with:
 //                                    [[[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]],
