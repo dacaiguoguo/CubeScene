@@ -204,7 +204,7 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         if let rt = yuanNode.rotationTo {
             yuanNode.rotation = rt
         }
-
+        // 利用pointinfo 添加块的点
         var currentP = lpoint;
         keypathlist.forEach { akeypath in
             // 根据keypath查找下一个点
