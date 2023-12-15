@@ -14,6 +14,12 @@ enum LVAxis {
     case z
 }
 
+extension PointInfo {
+    var location: SCNVector3 {
+        SCNVector3(x, y, z)
+    }
+}
+
 extension SCNAction {
     public class func routeXPI_2(duration: TimeInterval) -> SCNAction {
         return SCNAction.rotate(by: .pi / 2, around: SCNVector3(1, 0, 0), duration: duration)
@@ -107,38 +113,17 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
     // let result = transMatrix(with: result2)
 
     let pointInfo3DArray = mapTo3DPointInfo(array3d: result2);
-    let ret = hasContinuousEqualValues(pointInfo3DArray: pointInfo3DArray)
-    print(ret)
-    // 问题就出在这里，找到三维数组的第一个，并不一定是块的原点》〉》〉
-    func findFirstOccurrence(of value: Int, in array: [[[PointInfo]]]) -> SCNVector3 {
-        let rows = array.count  // 第一维
-        let columns = array.first?.count ?? 0  // 第二维
-        let depth = array.first?.first?.count ?? 0 // 第三维
-
-        // 遍历三维数组
-        for j in 0..<columns {
-            let y = j;//columns - 1 - j;
-            for i in 0..<rows {
-                for k in 0..<depth {
-                    let innerArray = array[i][y][k]
-                    if innerArray.value == value {
-                        return SCNVector3(k, y, i)
-                    }
-                }
-            }
-        }
-        return SCNVector3Zero
-    }
-
-    let findResult = findUniqueValues(in: result2).map { item in
-        (item, findFirstOccurrence(of: item, in: pointInfo3DArray))
-    };
+    let lResult = hasContinuousEqualValues(pointInfo3DArray: pointInfo3DArray)
+    print(lResult)
+    
 
     func v3Add(left:SCNVector3, right:SCNVector3) -> SCNVector3 {
         return SCNVector3(left.x + right.x, left.y + right.y, left.z + right.z)
     }
 
-    return findResult.map { (value, location) in
+    return [lResult].map { (_, lpoint, des) in
+        let value = lpoint?.value ?? 0
+        let location = lpoint?.location ?? SCNVector3Zero
         // 这是初始位置
         let positionOrgList = [[4,0,-4],[4,0,0],[4,0,4],[0,0,4],[-4,0,4],[-4,0,0],[-4,0,-4],[0,0,-4]].map{SCNVector3($0[0], $0[1], $0[2])}
 
@@ -169,47 +154,47 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
 
 
 
-        if ret.1?.value == 2 {
-            if ret.2 == "up, left" {
+        if lResult.1?.value == 2 {
+            if lResult.2 == "up, left" {
                 yuanNode.rotationTo = SCNVector4(x: 0.0, y: 0.0, z: 1.0, w: .pi)
             }
 
-            if ret.2 == "front, left" {
+            if lResult.2 == "front, left" {
                 yuanNode.transform = makeCombinedMatrix(order: [("y", 1.0), ("x", 2.0),], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }
-            if ret.2 == "back, up" {
+            if lResult.2 == "back, up" {
                 yuanNode.transform = makeCombinedMatrix(order: [("z", 3.0), ("x", 1.0),], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }
-            if ret.2 == "left, up" {
+            if lResult.2 == "left, up" {
                 yuanNode.transform = makeCombinedMatrix(order: [("x", 1.0), ], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }
-            if ret.2 == "left, back" {
+            if lResult.2 == "left, back" {
                 yuanNode.transform = makeCombinedMatrix(order: [("z", 1.0),("y", 1.0), ], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }
-            if ret.2 == "left, front" {
+            if lResult.2 == "left, front" {
                 yuanNode.transform = makeCombinedMatrix(order: [("y", 3.0),("x", 1.0), ], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }
-            if ret.2 == "left, down" {
+            if lResult.2 == "left, down" {
                 yuanNode.transform = makeCombinedMatrix(order: [("y", 2.0),("x", 1.0), ], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }
-            if ret.2 == "right, up" {
+            if lResult.2 == "right, up" {
                 yuanNode.transform = makeCombinedMatrix(order: [("z", 2.0),("x", 1.0), ], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }
-            if ret.2 == "right, back" {
+            if lResult.2 == "right, back" {
                 yuanNode.transform = makeCombinedMatrix(order: [("x", 3.0),("z", 1.0), ], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }
-            if ret.2 == "right, down" {
+            if lResult.2 == "right, down" {
                 yuanNode.rotationTo = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: -.pi/2)
             }
-            if ret.2 == "right, front" {
+            if lResult.2 == "right, front" {
                 yuanNode.transform = makeCombinedMatrix(order: [("y", 1.0),("x", 3.0), ], position: yuanNode.position);
                 yuanNode.transformTo = yuanNode.transform
             }

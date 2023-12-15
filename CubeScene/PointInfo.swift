@@ -17,14 +17,14 @@ class PointInfo : CustomDebugStringConvertible  {
     var right: PointInfo?
     var front: PointInfo?
     var back: PointInfo?
-
+    
     static let preList = [[\PointInfo.up,
                             \PointInfo.down,],
                           [\PointInfo.left,
                             \PointInfo.right],
                           [\PointInfo.front,
                             \PointInfo.back,]]
-
+    
     static let allKeyList = [\PointInfo.up,
                               \PointInfo.down,
                               \PointInfo.left,
@@ -40,18 +40,19 @@ class PointInfo : CustomDebugStringConvertible  {
         }
         return ret
     }
-
+    
     init(x: Int, y: Int, z: Int, value: Int) {
         self.x = x
         self.y = y
         self.z = z
         self.value = value
     }
-
+    
     var debugDescription: String {
         "(x:\(x), y:\(y), z:\(z), value:\(value))"
     }
 }
+
 
 func mapTo3DPointInfo(array3d: [[[Int]]]) -> [[[PointInfo]]] {
     let rows = array3d.count
