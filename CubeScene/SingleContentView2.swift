@@ -139,7 +139,9 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         ]
         
         
-        //         let yuan = SCNSphere(radius: 0.5)
+        let yuanInner = SCNSphere(radius: 0.6)
+        yuanInner.firstMaterial?.diffuse.contents = UIColor.black
+
         let yuan = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
         
         let indexValue = mapColorIndex(value)
@@ -149,65 +151,23 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
             yuan.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(1.0)
         }
         let yuanNode = SCNNode(geometry: yuan)
+        let yuanNodeInner = SCNNode(geometry: yuanInner)
+
         yuanNode.positionTo = v3Add(left:location, right:SCNVector3Make(Float(-1), Float(-1), Float(-1)))
         yuanNode.position = v3Add(left:positionOrgList[indexValue], right:SCNVector3Make(Float(-1), Float(-1), Float(-1)))
         yuanNode.orgPosition = yuanNode.position
+        yuanNode.addChildNode(yuanNodeInner)
         yuanNode.name = "块 \(value)"
-        if lpoint.value == 2 {
-            if lpoint.des == "up, left" {
-                yuanNode.rotationTo = SCNVector4(x: 0.0, y: 0.0, z: 1.0, w: .pi)
-            }
-            
-            if lpoint.des == "front, left" {
-                yuanNode.transform = makeCombinedMatrix(order: [("y", 1.0), ("x", 2.0),], position: yuanNode.position);
-                yuanNode.transformTo = yuanNode.transform
-            }
-            if lpoint.des == "back, up" {
-                yuanNode.transform = makeCombinedMatrix(order: [("z", 3.0), ("x", 1.0),], position: yuanNode.position);
-                yuanNode.transformTo = yuanNode.transform
-            }
-            if lpoint.des == "left, up" {
-                yuanNode.transform = makeCombinedMatrix(order: [("x", 1.0), ], position: yuanNode.position);
-                yuanNode.transformTo = yuanNode.transform
-            }
-            if lpoint.des == "left, back" {
-                yuanNode.transform = makeCombinedMatrix(order: [("z", 1.0),("y", 1.0), ], position: yuanNode.position);
-                yuanNode.transformTo = yuanNode.transform
-            }
-            if lpoint.des == "left, front" {
-                yuanNode.transform = makeCombinedMatrix(order: [("y", 3.0),("x", 1.0), ], position: yuanNode.position);
-                yuanNode.transformTo = yuanNode.transform
-            }
-            if lpoint.des == "left, down" {
-                yuanNode.transform = makeCombinedMatrix(order: [("y", 2.0),("x", 1.0), ], position: yuanNode.position);
-                yuanNode.transformTo = yuanNode.transform
-            }
-            if lpoint.des == "right, up" {
-                yuanNode.transform = makeCombinedMatrix(order: [("z", 2.0),("x", 1.0), ], position: yuanNode.position);
-                yuanNode.transformTo = yuanNode.transform
-            }
-            if lpoint.des == "right, back" {
-                yuanNode.transform = makeCombinedMatrix(order: [("x", 3.0),("z", 1.0), ], position: yuanNode.position);
-                yuanNode.transformTo = yuanNode.transform
-            }
-            if lpoint.des == "right, down" {
-                yuanNode.rotationTo = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: -.pi/2)
-            }
-            if lpoint.des == "right, front" {
-                yuanNode.transform = makeCombinedMatrix(order: [("y", 1.0),("x", 3.0), ], position: yuanNode.position);
-                yuanNode.transformTo = yuanNode.transform
-            }
-        }
-        if let rt = yuanNode.rotationTo {
-            yuanNode.rotation = rt
-        }
+        
+        zhuanNode(lpoint, yuanNode: yuanNode)
+        
         lpoint.children.forEach { child in
             // 根据keypath查找下一个点
             let box2 = SCNBox.init(width: 1, height: 1, length: 1, chamferRadius: 0.05)
             if value > colors.count - 1 {
                 box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(0.85)
             } else {
-                box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(0.71)
+                box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(1.0)
             }
             let boxNode2 = SCNNode()
             boxNode2.geometry = box2
@@ -229,6 +189,57 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
     
 }
 
+
+func zhuanNode(_ lpoint: PointInfo, yuanNode: SCNNode) -> Void {
+    if lpoint.value == 2 {
+        if lpoint.des == "up, left" {
+            yuanNode.rotationTo = SCNVector4(x: 0.0, y: 0.0, z: 1.0, w: .pi)
+        }
+        
+        if lpoint.des == "front, left" {
+            yuanNode.transform = makeCombinedMatrix(order: [("y", 1.0), ("x", 2.0),], position: yuanNode.position);
+            yuanNode.transformTo = yuanNode.transform
+        }
+        if lpoint.des == "back, up" {
+            yuanNode.transform = makeCombinedMatrix(order: [("z", 3.0), ("x", 1.0),], position: yuanNode.position);
+            yuanNode.transformTo = yuanNode.transform
+        }
+        if lpoint.des == "left, up" {
+            yuanNode.transform = makeCombinedMatrix(order: [("x", 1.0), ], position: yuanNode.position);
+            yuanNode.transformTo = yuanNode.transform
+        }
+        if lpoint.des == "left, back" {
+            yuanNode.transform = makeCombinedMatrix(order: [("z", 1.0),("y", 1.0), ], position: yuanNode.position);
+            yuanNode.transformTo = yuanNode.transform
+        }
+        if lpoint.des == "left, front" {
+            yuanNode.transform = makeCombinedMatrix(order: [("y", 3.0),("x", 1.0), ], position: yuanNode.position);
+            yuanNode.transformTo = yuanNode.transform
+        }
+        if lpoint.des == "left, down" {
+            yuanNode.transform = makeCombinedMatrix(order: [("y", 2.0),("x", 1.0), ], position: yuanNode.position);
+            yuanNode.transformTo = yuanNode.transform
+        }
+        if lpoint.des == "right, up" {
+            yuanNode.transform = makeCombinedMatrix(order: [("z", 2.0),("x", 1.0), ], position: yuanNode.position);
+            yuanNode.transformTo = yuanNode.transform
+        }
+        if lpoint.des == "right, back" {
+            yuanNode.transform = makeCombinedMatrix(order: [("x", 3.0),("z", 1.0), ], position: yuanNode.position);
+            yuanNode.transformTo = yuanNode.transform
+        }
+        if lpoint.des == "right, down" {
+            yuanNode.rotationTo = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: -.pi/2)
+        }
+        if lpoint.des == "right, front" {
+            yuanNode.transform = makeCombinedMatrix(order: [("y", 1.0),("x", 3.0), ], position: yuanNode.position);
+            yuanNode.transformTo = yuanNode.transform
+        }
+    }
+    if let rt = yuanNode.rotationTo {
+        yuanNode.rotation = rt
+    }
+}
 
 public struct SingleContentView2: View {
     
@@ -337,9 +348,9 @@ public struct SingleContentView2: View {
     
     func rotationView() -> some View {
         VStack {
-            CustomButton(title: "旋转X") {rotationMethod(.x)}
-            CustomButton(title: "旋转Y") {rotationMethod(.y)}
-            CustomButton(title: "旋转Z")  {rotationMethod(.z)}
+            CustomButton(title: "旋转X", titleColor:.blue) {rotationMethod(.x)}
+            CustomButton(title: "旋转Y", titleColor:.green) {rotationMethod(.y)}
+            CustomButton(title: "旋转Z", titleColor:.red)  {rotationMethod(.z)}
         }.padding()
     }
     
@@ -408,18 +419,19 @@ public struct SingleContentView2: View {
 
 struct CustomButton: View {
     let title: String
+    let titleColor: Color//  = .white
     let action: () -> Void
     
     var body: some View {
         Button(action: action) {
             Text(title)
                 .padding(6)
-                .background(Color.blue)
-                .foregroundColor(.white)
+                .background(Color.white)
+                .foregroundColor(titleColor)
                 .cornerRadius(10)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.blue, lineWidth: 2)
+                        .stroke(titleColor, lineWidth: 2)
                 )
         } .background(Color.yellow)
             .cornerRadius(8)
