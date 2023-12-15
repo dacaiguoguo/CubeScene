@@ -159,7 +159,7 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         yuanNode.addChildNode(yuanNodeInner)
         yuanNode.name = "块 \(value)"
         
-        zhuanNode(lpoint, yuanNode: yuanNode)
+        // zhuanNode(lpoint, yuanNode: yuanNode)
         
         lpoint.children.forEach { child in
             // 根据keypath查找下一个点

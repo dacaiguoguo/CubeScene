@@ -218,7 +218,8 @@ func mapTo3DPointInfo(array3d: [[[Int]]]) -> [[[PointInfo]]] {
         for j in 0..<cols {
             for k in 0..<depth {
                 let value = array3d[i][j][k]
-                pointInfoArray[i][j][k] = PointInfo(x: i, y: j, z: k, value: value)
+                // 注意 这里 k是x， i 是z，反了就镜像了 而且旋转了
+                pointInfoArray[i][j][k] = PointInfo(x: k, y: j, z: i, value: value)
             }
         }
     }

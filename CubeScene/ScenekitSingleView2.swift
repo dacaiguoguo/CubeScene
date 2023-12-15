@@ -69,10 +69,6 @@ struct ScenekitSingleView2 : UIViewRepresentable {
 
         nodeList.forEach { item in
             parNode2.addChildNode(item)
-            // item.position = SCNVector3Zero;
-//            item.childNodes.forEach({ anode in
-//                print(anode.position)
-//            })
         }
         scene.rootNode.addChildNode(parNode2)
         scnView.scene = scene
