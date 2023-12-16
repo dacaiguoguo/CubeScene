@@ -15,17 +15,17 @@ enum Direction {
     case forward
     case backward
     case bottomRotation90Degrees(BottomRotationDirection)
-
+    
     enum BottomRotationDirection {
         case clockwise
         case counterclockwise
         case forward
         case backward
     }
-
+    
     static var allCases: [Direction] {
         return [.up, .down, .left, .right, .forward, .backward] +
-            BottomRotationDirection.allCases.map { .bottomRotation90Degrees($0) }
+        BottomRotationDirection.allCases.map { .bottomRotation90Degrees($0) }
     }
 }
 
@@ -291,7 +291,7 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
     let cols = pointInfo3DArray[0].count
     let depth = pointInfo3DArray[0][0].count
     var retlist: [PointInfo] = []
-
+    
     // 定义闭包数组
     let checkPointClosures: [(PointInfo, Int, ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo])] = [
         checkPoint1,
@@ -299,10 +299,11 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
         checkPoint3,
         checkPoint4,
         checkPoint5,
-        checkPoint6,
+        checkPoint6,// 奇怪 6 找出来的是5
+        // 5找出来的是6，可能和镜像有关系吧
         checkPoint7
     ]
-
+    
     for i in 0..<rows {
         for j in 0..<cols {
             for k in 0..<depth {
@@ -311,16 +312,16 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
                 if value < 0 {
                     continue
                 }
-
+                
                 // 遍历闭包数组并调用每个闭包
-                for checkPointClosure in checkPointClosures {
+                for (closureIndex, checkPointClosure) in checkPointClosures.enumerated() {
                     for akey in PointInfo.allKeyList {
-                        let ret = checkPointClosure(currentPoint, value, akey)
+                        let ret = checkPointClosure(currentPoint, closureIndex + 1, akey)
                         if ret.0, let aa = ret.1 {
                             aa.des = ret.2
                             aa.children = ret.3
                             if retlist.filter({ ap in
-                                ap.value == value
+                                ap.value == closureIndex + 1
                             }).first == nil {
                                 retlist.append(aa)
                             }
@@ -331,7 +332,7 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
             }
         }
     }
-
+    
     return retlist
 }
 
@@ -349,6 +350,25 @@ extension ReferenceWritableKeyPath where Root == PointInfo {
         }
     }
 }
+
+
+func checkPoint1(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
+    if currentPoint.value != checkValue {
+        return (false, nil, "none", [])
+    }
+    let clist = PointInfo.checkList(akeyPath)
+    if let back1 = currentPoint[keyPath:akeyPath] , back1.value == checkValue {
+        for akey in clist {
+            if let back3 = currentPoint[keyPath:akey], back3.value == checkValue {
+                // print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back3)")
+                return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back3])
+            }
+        }
+        
+    }
+    return (false, nil, "none", [])
+}
+
 func checkPoint2(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
     if currentPoint.value != checkValue {
         return (false, nil, "none", [])
@@ -359,29 +379,12 @@ func checkPoint2(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:Refere
             if back1.value == checkValue && back2.value == checkValue {
                 for akey in clist {
                     if let back3 = back2[keyPath:akey], back3.value == checkValue {
-                        print("\(currentPoint) \(back1) \(back2) \(back3)")
+                        // print("\(currentPoint) \(back1) \(back2) \(back3)")
                         return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back3])
                     }
                 }
             }
         }
-    }
-    return (false, nil, "none", [])
-}
-
-func checkPoint1(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
-    if currentPoint.value != checkValue {
-        return (false, nil, "none", [])
-    }
-    let clist = PointInfo.checkList(akeyPath)
-    if let back1 = currentPoint[keyPath:akeyPath] , back1.value == checkValue {
-        for akey in clist {
-            if let back3 = currentPoint[keyPath:akey], back3.value == checkValue {
-                print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back3)")
-                return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back3])
-            }
-        }
-        
     }
     return (false, nil, "none", [])
 }
@@ -412,7 +415,7 @@ func checkPoint3(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:Refere
             }
             for akey in akey3 {
                 if let back3 = currentPoint[keyPath:akey], back3.value == checkValue {
-                    print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back3)")
+                    // print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back3)")
                 }
             }
         }
@@ -431,7 +434,7 @@ func checkPoint4(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:Refere
         for akey in clist {
             if let back2 = currentPoint[keyPath:akey], back2.value == checkValue {
                 if let back4 = back2[keyPath:PointInfo.checkList4(akeyPath)], back4.value == checkValue {
-                    print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
+                    // print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
                     return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
                 }
             }
@@ -446,19 +449,20 @@ func checkPoint5(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:Refere
     if currentPoint.value != checkValue {
         return (false, nil, "none", [])
     }
+    print("currentPoint: value-\(5), \(currentPoint)")
     let clist = PointInfo.checkList(akeyPath)
     if let back1 = currentPoint[keyPath:akeyPath] , back1.value == checkValue {
         for akey in clist {
             if let back2 = currentPoint[keyPath:akey], back2.value == checkValue {
                 if let zuo = PointInfo.calculateThirdKeyPath5(akeyPath, akey), let back4 = back2[keyPath:zuo] {
                     if back4.value == checkValue {
-                        print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
+                        // print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
                         return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
                     }
                 }
                 if let zuo = PointInfo.calculateThirdKeyPath5(akey, akeyPath), let back4 = back1[keyPath:zuo] {
                     if back4.value == checkValue {
-                        print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
+                        // print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
                         return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
                     }
                 }
@@ -479,11 +483,11 @@ func checkPoint6(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:Refere
         for akey in clist {
             if let back2 = currentPoint[keyPath:akey], back2.value == checkValue {
                 if let zuo = PointInfo.calculateThirdKeyPath6(akeyPath, akey), let back4 = back2[keyPath:zuo], back4.value == checkValue{
-                    print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
+                    // print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
                     return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
                 }
                 if let zuo = PointInfo.calculateThirdKeyPath6(akey, akeyPath), let back4 = back1[keyPath:zuo], back4.value == checkValue{
-                    print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
+                    // print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
                     return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
                 }
             }
@@ -501,10 +505,10 @@ func checkPoint7(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:Refere
     if let back1 = currentPoint[keyPath:akeyPath] , back1.value == checkValue {
         for akey in clist {
             if let back2 = currentPoint[keyPath:akey], back2.value == checkValue {
-                if let zuo = PointInfo.calculateThirdKeyPath6(akeyPath, akey), 
-                    let back4 = currentPoint[keyPath:zuo],
+                if let zuo = PointInfo.calculateThirdKeyPath6(akeyPath, akey),
+                   let back4 = currentPoint[keyPath:zuo],
                    back4.value == checkValue {
-                    print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
+                    // print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
                     return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
                 }
             }

@@ -37,7 +37,7 @@ func transMatrix(with result2: Matrix3D) -> Matrix3D {
     result2.forEach { inner in
         result.append(inner.reversed())
     }
-    return result
+    return result2
 }
 
 func mapColorIndex(_ index:Int) -> Int {
@@ -110,7 +110,6 @@ func makeCombinedMatrix(order:[(String, Float)], position:SCNVector3) -> SCNMatr
 // 解决方法 最好是处理数据。
 // todo 自定义顺序
 func makeNode(with result2: Matrix3D) -> [SCNNode] {
-    // let result = transMatrix(with: result2)
     
     let pointInfo3DArray = mapTo3DPointInfo(array3d: result2);
     let lResult:[PointInfo] = hasContinuousEqualValues(pointInfo3DArray: pointInfo3DArray)
