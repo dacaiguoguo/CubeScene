@@ -97,7 +97,8 @@ extension EnterItem: Identifiable {
 /// - Returns: 形状数组
 func produceData(resourceName:String) -> [EnterItem]  {
     let stringContent = try! String(contentsOf: Bundle.main.url(forResource: resourceName, withExtension: "txt")!, encoding: .utf8)
-    return produceData2(stringContent: stringContent)
+    let ret = produceData2(stringContent: stringContent)
+    return ret
 }
 
 /// 解析字符串得到要展示的形状数据数组

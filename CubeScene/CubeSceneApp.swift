@@ -77,7 +77,7 @@ struct CubeSceneApp: App {
     
     let userData = UserData()
     let result = transMatrix(with:
-                                [[[2,4,3], [6,4,1], [6,6,1]],
+                                [[[2,6,3], [6,6,1], [6,6,1]],
                                  [[2,3,3], [6,4,1], [7,4,5]],
                                  [[2,2,3], [7,5,5], [7,7,5]]]
                              //                             [[[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]],
@@ -92,63 +92,12 @@ struct CubeSceneApp: App {
     //                                                    [[2,2,3], [7,5,5], [7,7,5]]], usedBlock: [1,2,3,4,5,6,7], isTaskComplete: true)
     var body: some Scene {
         WindowGroup {
-            //            NavigationView {
-            //                SingleContentView(dataModel:$demo, showColor: [])
-            //                .environmentObject(userData)
-            //                .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
-            //
-            //            }
-            //            .navigationViewStyle(StackNavigationViewStyle())
             TabView {
-                NavigationView {
-                    EnterListView(productList: produceData(resourceName: "SOMA108")).navigationTitle("TitleName").navigationBarTitleDisplayMode(.inline)
-                        .onAppear {
-                            
-                        }.environmentObject(userData)
-                }
-                .navigationViewStyle(StackNavigationViewStyle()).tabItem {
-                    Image(systemName: "cube")
-                    Text("TabTitleName")
-                }.tag(0)
-                
-                NavigationView {
-                    EnterListView240().environmentObject(userData)
-                        .navigationBarTitleDisplayMode(.inline)
-                        .navigationTitle("TitleName2")
-                }
-                .navigationViewStyle(StackNavigationViewStyle()).tabItem {
-                    Image(systemName: "cube.transparent")
-                    Text("TabTitleName2")
-                }.tag(1)
-                NavigationView {
-                    EnterListView(productList: produceData(resourceName: "SOMAT101")).navigationTitle("TitleName3").navigationBarTitleDisplayMode(.inline)
-                        .onAppear {
-                            
-                        }.environmentObject(userData)
-                }
-                .navigationViewStyle(StackNavigationViewStyle()).tabItem {
-                    Image(systemName: "scribble.variable")
-                    Text("TabTitleName3")
-                }.tag(2)
-                NavigationView {
-                    SingleContentView2(nodeList: makeNode(with: result)).navigationTitle("TabTitleNameY").navigationBarTitleDisplayMode(.inline)
-                        .onAppear {
-                            
-                        }.environmentObject(userData)
-                }
-                .navigationViewStyle(StackNavigationViewStyle()).tabItem {
-                    Image(systemName: "highlighter")
-                    Text("TabTitleNameY")
-                }.tag(3)
-                
-                NavigationView {
-                    SettingView().environmentObject(userData)
-                        .navigationBarTitleDisplayMode(.inline)
-                        .navigationTitle("TitleName4")
-                }.navigationViewStyle(StackNavigationViewStyle()).tabItem {
-                    Image(systemName: "ellipsis.circle")
-                    Text("TabTitleName4")
-                }.tag(4)
+//                tab0() // 108
+                tab1() // 240
+//                tab2() // T
+//                tab3() // try
+//                tab4() // more
             }
             
         }.onChange(of: scenePhase) { phase in
@@ -157,6 +106,67 @@ struct CubeSceneApp: App {
                 performLaunchTasks()
             }
         }
+    }
+    func tab0() -> some View {
+        NavigationView {
+            EnterListView(productList: produceData(resourceName: "SOMA108")).navigationTitle("TitleName").navigationBarTitleDisplayMode(.inline)
+                .onAppear {
+                    
+                }.environmentObject(userData)
+        }
+        .navigationViewStyle(StackNavigationViewStyle()).tabItem {
+            Image(systemName: "cube")
+            Text("TabTitleName")
+        }.tag(0)
+    }
+    
+    func tab1() -> some View {
+        NavigationView {
+            EnterListView240().environmentObject(userData)
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationTitle("TitleName2")
+        }
+        .navigationViewStyle(StackNavigationViewStyle()).tabItem {
+            Image(systemName: "cube.transparent")
+            Text("TabTitleName2")
+        }.tag(1)
+    }
+    
+    func tab2() -> some View {
+        NavigationView {
+            EnterListView(productList: produceData(resourceName: "SOMAT101")).navigationTitle("TitleName3").navigationBarTitleDisplayMode(.inline)
+                .onAppear {
+                    
+                }.environmentObject(userData)
+        }
+        .navigationViewStyle(StackNavigationViewStyle()).tabItem {
+            Image(systemName: "scribble.variable")
+            Text("TabTitleName3")
+        }.tag(2)
+    }
+    
+    func tab3() -> some View {
+        NavigationView {
+            SingleContentView2(nodeList:makeNode(with: produceData(resourceName: "data1").first!.matrix)).navigationTitle("TabTitleNameY").navigationBarTitleDisplayMode(.inline)
+                .onAppear {
+                    
+                }.environmentObject(userData)
+        }
+        .navigationViewStyle(StackNavigationViewStyle()).tabItem {
+            Image(systemName: "highlighter")
+            Text("TabTitleNameY")
+        }.tag(3)
+    }
+    
+    func tab4() -> some View {
+        NavigationView {
+            SettingView().environmentObject(userData)
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationTitle("TitleName4")
+        }.navigationViewStyle(StackNavigationViewStyle()).tabItem {
+            Image(systemName: "ellipsis.circle")
+            Text("TabTitleName4")
+        }.tag(4)
     }
     
     func performLaunchTasks() {

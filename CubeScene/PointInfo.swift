@@ -112,9 +112,9 @@ class PointInfo : CustomDebugStringConvertible  {
         case (\PointInfo.down, \PointInfo.left):
             return \PointInfo.back
         case (\PointInfo.down, \PointInfo.front):
-            return \PointInfo.right
-        case (\PointInfo.down, \PointInfo.back):
             return \PointInfo.left
+        case (\PointInfo.down, \PointInfo.back):
+            return \PointInfo.right
             
         case (\PointInfo.left, \PointInfo.up):
             return \PointInfo.back
@@ -130,23 +130,23 @@ class PointInfo : CustomDebugStringConvertible  {
         case (\PointInfo.right, \PointInfo.down):
             return \PointInfo.back
         case (\PointInfo.right, \PointInfo.front):
-            return \PointInfo.up
-        case (\PointInfo.right, \PointInfo.back):
             return \PointInfo.down
+        case (\PointInfo.right, \PointInfo.back):
+            return \PointInfo.up
             
         case (\PointInfo.front, \PointInfo.up):
-            return \PointInfo.right
-        case (\PointInfo.front, \PointInfo.down):
             return \PointInfo.left
+        case (\PointInfo.front, \PointInfo.down):
+            return \PointInfo.right
         case (\PointInfo.front, \PointInfo.left):
-            return \PointInfo.up
-        case (\PointInfo.front, \PointInfo.right):
             return \PointInfo.down
+        case (\PointInfo.front, \PointInfo.right):
+            return \PointInfo.up
             
         case (\PointInfo.back, \PointInfo.up):
-            return \PointInfo.left
-        case (\PointInfo.back, \PointInfo.down):
             return \PointInfo.right
+        case (\PointInfo.back, \PointInfo.down):
+            return \PointInfo.left
         case (\PointInfo.back, \PointInfo.left):
             return \PointInfo.up
         case (\PointInfo.back, \PointInfo.right):
@@ -180,18 +180,18 @@ class PointInfo : CustomDebugStringConvertible  {
             return \PointInfo.left
             
         case (\PointInfo.left, \PointInfo.up):
-            return \PointInfo.back
-        case (\PointInfo.left, \PointInfo.down):
             return \PointInfo.front
+        case (\PointInfo.left, \PointInfo.down):
+            return \PointInfo.back
         case (\PointInfo.left, \PointInfo.front):
-            return \PointInfo.up
-        case (\PointInfo.left, \PointInfo.back):
             return \PointInfo.down
+        case (\PointInfo.left, \PointInfo.back):
+            return \PointInfo.up
             
         case (\PointInfo.right, \PointInfo.up):
-            return \PointInfo.front
-        case (\PointInfo.right, \PointInfo.down):
             return \PointInfo.back
+        case (\PointInfo.right, \PointInfo.down):
+            return \PointInfo.front
         case (\PointInfo.right, \PointInfo.front):
             return \PointInfo.up
         case (\PointInfo.right, \PointInfo.back):
@@ -211,9 +211,9 @@ class PointInfo : CustomDebugStringConvertible  {
         case (\PointInfo.back, \PointInfo.down):
             return \PointInfo.right
         case (\PointInfo.back, \PointInfo.left):
-            return \PointInfo.up
-        case (\PointInfo.back, \PointInfo.right):
             return \PointInfo.down
+        case (\PointInfo.back, \PointInfo.right):
+            return \PointInfo.up
             
         default:
             return nil
@@ -388,6 +388,7 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
     
     return retlist
 }
+
 extension ReferenceWritableKeyPath where Root == PointInfo {
     var stringValue: String {
         switch self {
@@ -503,9 +504,17 @@ func checkPoint5(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:Refere
     if let back1 = currentPoint[keyPath:akeyPath] , back1.value == checkValue {
         for akey in clist {
             if let back2 = currentPoint[keyPath:akey], back2.value == checkValue {
-                if let zuo = PointInfo.calculateThirdKeyPath5(akeyPath, akey), let back4 = back2[keyPath:zuo], back4.value == checkValue {
-                    print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
-                    return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
+                if let zuo = PointInfo.calculateThirdKeyPath5(akeyPath, akey), let back4 = back2[keyPath:zuo] {
+                    if back4.value == checkValue {
+                        print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
+                        return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
+                    }
+                }
+                if let zuo = PointInfo.calculateThirdKeyPath5(akey, akeyPath), let back4 = back1[keyPath:zuo] {
+                    if back4.value == checkValue {
+                        print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
+                        return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
+                    }
                 }
             }
         }
@@ -523,7 +532,11 @@ func checkPoint6(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:Refere
     if let back1 = currentPoint[keyPath:akeyPath] , back1.value == checkValue {
         for akey in clist {
             if let back2 = currentPoint[keyPath:akey], back2.value == checkValue {
-                if let zuo = PointInfo.calculateThirdKeyPath6(akeyPath, akey), let back4 = back2[keyPath:zuo], back4.value == checkValue {
+                if let zuo = PointInfo.calculateThirdKeyPath6(akeyPath, akey), let back4 = back2[keyPath:zuo], back4.value == checkValue{
+                    print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
+                    return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
+                }
+                if let zuo = PointInfo.calculateThirdKeyPath6(akey, akeyPath), let back4 = back1[keyPath:zuo], back4.value == checkValue{
                     print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
                     return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
                 }

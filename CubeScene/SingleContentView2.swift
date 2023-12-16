@@ -114,7 +114,7 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
     
     let pointInfo3DArray = mapTo3DPointInfo(array3d: result2);
     let lResult:[PointInfo] = hasContinuousEqualValues(pointInfo3DArray: pointInfo3DArray)
-    print(lResult)
+    // assert(lResult.count == 7)
     
     
     func v3Add(left:SCNVector3, right:SCNVector3) -> SCNVector3 {
@@ -123,7 +123,7 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
     let maped =  lResult.map { lpoint in
         let value = lpoint.value
         let location = lpoint.location
-        print("boxNode2.position value:\(value) \(location)")
+        // print("boxNode2.position value:\(value) \(location)")
         
         // 这是初始位置
         let positionOrgList = [[4,0,-4],[4,0,0],[4,0,4],[0,0,4],[-4,0,4],[-4,0,0],[-4,0,-4],[0,0,-4]].map{SCNVector3($0[0], $0[1], $0[2])}
@@ -133,8 +133,8 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
             UIColor(hex: "C25C1D"),
             UIColor(hex: "2788e7"),
             UIColor(hex: "FA2E34"),
-            UIColor(hex: "FB5BC2"),
-            UIColor(hex: "FCC633"),
+            UIColor.blue,
+            UIColor.yellow,
             UIColor(hex: "178E20"),
         ]
         
@@ -179,12 +179,12 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
             boxNode2.position = SCNVector3(x: Float(child.x - Int(location.x)),
                                            y: Float(child.y - Int(location.y)),
                                            z: Float(child.z - Int(location.z)));
-            print("boxNode21.position  value:\(value) \(boxNode2.position)")
+            // print("boxNode21.position  value:\(value) \(boxNode2.position)")
             yuanNode.addChildNode(boxNode2)
             
         }
         
-        print("boxNode2.position over")
+        // print("boxNode2.position over")
         
         return yuanNode
     }
