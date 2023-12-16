@@ -106,7 +106,7 @@ class UserData: ObservableObject {
         // 根据颜色生成带数字的图片，写入ducument
         for (index, item) in array.enumerated() {
             UserDefaults.standard.register(defaults: ["block\(index)" : item.encode()!])
-            if let imageData = generateImage(color: item, text: "\(index + 1)").pngData(),
+            if let imageData = generateImage(color: item, text: "\(index)").pngData(),
                let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
                 let fileURL = documentsDirectory.appendingPathComponent("blockside\(index).png")
                 do {

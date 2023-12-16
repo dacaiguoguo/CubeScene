@@ -22,20 +22,15 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         cameraNode.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
         ret.rootNode.addChildNode(cameraNode)
 
-        //// 创建地面
-        //let groundGeometry = SCNBox.init(width: 3, height: 3, length: 1, chamferRadius: 0.05)
-        //let groundNode = SCNNode(geometry: groundGeometry)
-        //groundNode.rotation = SCNVector4(x: 1, y: 0, z: 0, w: .pi * 3 / 2)
-        //groundNode.position = SCNVector3Make(1, -1, 1)
-        //ret.rootNode.addChildNode(groundNode)
-        //
-        //// 设置地面材质
-        //let material = SCNMaterial()
-        //material.diffuse.contents = UIColor.lightGray
-        //groundGeometry.firstMaterial = material
-
-        // let env = UIImage(named: "dijon_notre_dame.jpg")
-        ret.background.contents = UIColor(hex: "00bfff");
+        // 设置 Procedural Sky 作为背景
+        ret.background.contents = MDLSkyCubeTexture(name: "sky",
+                                                  channelEncoding: .float16,
+                                                textureDimensions: vector_int2(128, 128),
+                                                        turbidity: 0,
+                                                     sunElevation: 1.5,
+                                        upperAtmosphereScattering: 0.5,
+                                                     groundAlbedo: 0.5)
+//        ret.lightingEnvironment.contents = ret.background.contents
         return ret;
     } ()
 

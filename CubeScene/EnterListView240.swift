@@ -20,7 +20,7 @@ struct EnterListView240: View {
         List{
             ForEach(productList.indices, id: \.self) { index in
                 let item = productList[index]
-                NavigationLink(destination: SingleContentView(showType:.colorFul, dataModel: $productList[index], isShowItems: false).environmentObject(userData)) {
+                NavigationLink(destination: SingleContentView2(nodeList: makeNode(with: item.matrix)).environmentObject(userData)) {
                     HStack{
 //                        Image("Cube").frame(width: 80, height: 80)
 //                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))

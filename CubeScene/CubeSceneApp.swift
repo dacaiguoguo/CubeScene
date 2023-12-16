@@ -34,6 +34,16 @@ struct ContentView2: View {
         lightNode.light = light
         lightNode.position = SCNVector3(x: 0, y: 5, z: 5) // 光源位置
         ret.rootNode.addChildNode(lightNode)
+        // 设置 Procedural Sky 作为背景
+        ret.background.contents = MDLSkyCubeTexture(name: "sky",
+                                                  channelEncoding: .float16,
+                                                textureDimensions: vector_int2(128, 128),
+                                                        turbidity: 0,
+                                                     sunElevation: 1.5,
+                                        upperAtmosphereScattering: 0.5,
+                                                     groundAlbedo: 0.5)
+        ret.lightingEnvironment.contents = ret.background.contents
+
         return ret;
     }
     
@@ -67,12 +77,12 @@ struct CubeSceneApp: App {
     
     let userData = UserData()
     let result = transMatrix(with:
-                                //                                [[[2,4,3], [6,4,1], [6,6,1]],
-                             //                                 [[2,3,3], [6,4,1], [7,4,5]],
-                             //                                 [[2,2,3], [7,5,5], [7,7,5]]]
-                             [[[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]],
-                              [[-1, 2, 2], [-1, 2, -1], [-1, 2, -1]],
-                              [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]],]
+                                [[[2,4,3], [6,4,1], [6,6,1]],
+                                 [[2,3,3], [6,4,1], [7,4,5]],
+                                 [[2,2,3], [7,5,5], [7,7,5]]]
+                             //                             [[[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]],
+                             //                              [[-1, 2, 2], [-1, 2, -1], [-1, 2, -1]],
+                             //                              [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]],]
     )
     //    init() {
     //
@@ -121,7 +131,7 @@ struct CubeSceneApp: App {
                     Text("TabTitleName3")
                 }.tag(2)
                 NavigationView {
-                    ContentView2().navigationTitle("TabTitleNameY").navigationBarTitleDisplayMode(.inline)
+                    SingleContentView2(nodeList: makeNode(with: result)).navigationTitle("TabTitleNameY").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
                             
                         }.environmentObject(userData)
