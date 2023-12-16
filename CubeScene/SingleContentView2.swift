@@ -79,6 +79,7 @@ func makeCombinedMatrix(order:[(String, Float)], position:SCNVector3) -> SCNMatr
     return vvv
 }
 
+// TODO: 这里要找出再底部层 最多的一个，按照由多到少排序
 func findUniqueValues(in result: Matrix3D) -> [Int] {
     let rows = result.count  // 第一维
     let columns = result.first?.count ?? 0  // 第二维
