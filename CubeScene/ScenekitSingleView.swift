@@ -21,8 +21,8 @@ struct ScenekitSingleView : UIViewRepresentable {
     private let numberImageList: [UIImage]
     private let showColor:[Int]
     private let scene : SCNScene
-
-   
+    
+    
     
     private var imageName:String {
         dataModel.name
@@ -34,7 +34,7 @@ struct ScenekitSingleView : UIViewRepresentable {
     func createAxisNode(color: UIColor, vector: SCNVector4) -> SCNNode {
         let cylinder = SCNCylinder(radius: 0.01, height: 100)
         cylinder.firstMaterial?.diffuse.contents = color
-
+        
         let axisNode = SCNNode(geometry: cylinder)
         axisNode.rotation = vector;
         axisNode.position = SCNVector3Zero
@@ -56,20 +56,22 @@ struct ScenekitSingleView : UIViewRepresentable {
         cameraNode.position = SCNVector3Make(-10.5, 7.5, 20)
         cameraNode.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
         ret.rootNode.addChildNode(cameraNode)
-
-
+        
+        
         self.scene = ret
     }
     
-
+    
     func makeUIView(context: Context) -> SCNView {
         // retrieve the SCNView
         let scnView = SCNView()
+        
+        
         // 创建坐标轴节点
         let xAxis = createAxisNode(color: .red, vector: SCNVector4(1, 0, 0, Float.pi/2))
         let yAxis = createAxisNode(color: .green, vector: SCNVector4(0, 1, 0, Float.pi/2))
         let zAxis = createAxisNode(color: .blue, vector: SCNVector4(0, 0, 1, Float.pi/2))
-
+        
         scene.rootNode.addChildNode(xAxis)
         scene.rootNode.addChildNode(yAxis)
         scene.rootNode.addChildNode(zAxis)
@@ -77,7 +79,7 @@ struct ScenekitSingleView : UIViewRepresentable {
         let countOfLayer = dataItem.first?.count ?? -1
         let countOfColum = dataItem.first?.first?.count ?? -1
         let parNode2 = SCNNode()
-
+        
         for z in 0..<countOfRow {
             for y in 0..<countOfLayer {
                 for x in 0..<countOfColum {
@@ -89,8 +91,9 @@ struct ScenekitSingleView : UIViewRepresentable {
                     }
                     let boxNode2 = SCNNode()
                     boxNode2.geometry = box2
+                    boxNode2.name = "\(value)";
                     // 由于默认y朝向上的，所以要取负值
-                    boxNode2.position = SCNVector3Make(Float(x), Float(y), Float(z))
+                    boxNode2.position = SCNVector3Make(Float(x), Float(-y+countOfRow), Float(z))
                     parNode2.addChildNode(boxNode2)
                 }
             }
@@ -105,8 +108,8 @@ struct ScenekitSingleView : UIViewRepresentable {
         scnView.backgroundColor = .clear
         return scnView
     }
-
-
+    
+    
     /// 单色时用的 效果不太好，改成切图了
     /// - Returns: 各个面的颜色，上下白色，侧边灰色
     func singleMaterial() -> [SCNMaterial] {
@@ -131,112 +134,98 @@ struct ScenekitSingleView : UIViewRepresentable {
     }
     
     func updateUIView(_ scnView: SCNView, context: Context) {
-        let countOfRow = dataItem.count
-        let countOfLayer = dataItem.first?.count ?? -1
-        let countOfColum = dataItem.first?.first?.count ?? -1
         
-        for z in 0..<countOfRow {
-            for y in 0..<countOfLayer {
-                for x in 0..<countOfColum {
-                    let value = dataItem[z][y][x];
-                    if value < 0 {
-                        continue
-                    }
-                    if let boxNodes = scnView.scene?.rootNode.childNodes(passingTest: { node, _ in
-                        node.position == SCNVector3Make(Float(x), Float(y), Float(z)) && node.name != "axisNode"
-                    }) {
-                        // 输出符合条件的节点名称
-                        for boxNode in boxNodes {
-                            switch showType {
-                            case .singleColor:
-                                //                                boxNode.geometry?.firstMaterial = nil
-                                //                                boxNode.geometry?.materials = singleMaterial()
-                                let material = SCNMaterial()
-                                material.diffuse.contents = UIImage(named: "border")!
-                                boxNode.geometry?.firstMaterial = material
-                            case .colorFul:
-                                let material = SCNMaterial()
-                                if showColor.contains(value) {
-                                    switch value {
-                                    case 86:
-//                                        return 1
-                                        material.diffuse.contents = colors[1].withAlphaComponent(0.81)
-                                    case 76:
-//                                        return 2;
-                                        material.diffuse.contents = colors[2].withAlphaComponent(0.81)
-                                    case 84:
-//                                        return 3;
-                                        material.diffuse.contents = colors[3].withAlphaComponent(0.81)
-
-                                    case 90:
-//                                        return 4;
-                                        material.diffuse.contents = colors[4].withAlphaComponent(0.81)
-
-                                    case 65:
-//                                        return 5;
-                                        material.diffuse.contents = colors[5].withAlphaComponent(0.81)
-
-                                    case 66:
-//                                        return 6;
-                                        material.diffuse.contents = colors[6].withAlphaComponent(0.81)
-
-                                    case 80:
-//                                        return 7;
-                                        material.diffuse.contents = colors[7].withAlphaComponent(0.81)
-
-                                    default:
-                                        material.diffuse.contents = colors[value]
-                                    }
-
-                                } else {
-                                    material.diffuse.contents = UIColor.clear
-                                }
-                                //                                material.diffuse.contents = colors[value]
-                                material.locksAmbientWithDiffuse = true
-                                boxNode.geometry?.materials = [];
-                                boxNode.geometry?.firstMaterial = material
-                            case .number:
-                                let material = SCNMaterial()
-                                switch value {
-                                case 86:
-                                    //                                        return 1
-                                    material.diffuse.contents = generateImage(color: colors[1].withAlphaComponent(0.8), text: "V")
-                                case 76:
-                                    //                                        return 2;
-                                    material.diffuse.contents = generateImage(color: colors[2].withAlphaComponent(0.8), text: "L")
-                                case 84:
-                                    //                                        return 3;
-                                    material.diffuse.contents = generateImage(color: colors[3].withAlphaComponent(0.8), text: "T")
-
-                                case 90:
-                                    //                                        return 4;
-                                    material.diffuse.contents = generateImage(color: colors[4].withAlphaComponent(0.8), text: "Z")
-
-                                case 65:
-                                    //                                        return 5;
-                                    material.diffuse.contents = generateImage(color: colors[5].withAlphaComponent(0.8), text: "A")
-
-                                case 66:
-                                    //                                        return 6;
-                                    material.diffuse.contents = generateImage(color: colors[6].withAlphaComponent(0.8), text: "B")
-
-                                case 80:
-                                    //                                        return 7;
-                                    material.diffuse.contents = generateImage(color: colors[7].withAlphaComponent(0.8), text: "P")
-
-                                default:
-                                    material.diffuse.contents = numberImageList[value]
-                                }
-                                material.locksAmbientWithDiffuse = true
-                                boxNode.geometry?.materials = [];
-                                boxNode.geometry?.firstMaterial = material
-                            }
+        // 使用enumerateHierarchy遍历场景中的所有节点
+        scnView.scene?.rootNode.enumerateHierarchy { (boxNode, _) in
+            // 处理当前节点
+            if let value = Int(boxNode.name ?? "") {
+                switch showType {
+                case .singleColor:
+                    //                                boxNode.geometry?.firstMaterial = nil
+                    //                                boxNode.geometry?.materials = singleMaterial()
+                    let material = SCNMaterial()
+                    material.diffuse.contents = UIImage(named: "border")!
+                    boxNode.geometry?.firstMaterial = material
+                case .colorFul:
+                    let material = SCNMaterial()
+                    if showColor.contains(value) {
+                        switch value {
+                        case 86:
+                            //                                        return 1
+                            material.diffuse.contents = colors[1].withAlphaComponent(0.81)
+                        case 76:
+                            //                                        return 2;
+                            material.diffuse.contents = colors[2].withAlphaComponent(0.81)
+                        case 84:
+                            //                                        return 3;
+                            material.diffuse.contents = colors[3].withAlphaComponent(0.81)
+                            
+                        case 90:
+                            //                                        return 4;
+                            material.diffuse.contents = colors[4].withAlphaComponent(0.81)
+                            
+                        case 65:
+                            //                                        return 5;
+                            material.diffuse.contents = colors[5].withAlphaComponent(0.81)
+                            
+                        case 66:
+                            //                                        return 6;
+                            material.diffuse.contents = colors[6].withAlphaComponent(0.81)
+                            
+                        case 80:
+                            //                                        return 7;
+                            material.diffuse.contents = colors[7].withAlphaComponent(0.81)
+                            
+                        default:
+                            material.diffuse.contents = colors[value]
                         }
+                        
+                    } else {
+                        material.diffuse.contents = UIColor.clear
                     }
-                    
+                    //                                material.diffuse.contents = colors[value]
+                    material.locksAmbientWithDiffuse = true
+                    boxNode.geometry?.materials = [];
+                    boxNode.geometry?.firstMaterial = material
+                case .number:
+                    let material = SCNMaterial()
+                    switch value {
+                    case 86:
+                        //                                        return 1
+                        material.diffuse.contents = generateImage(color: colors[1].withAlphaComponent(0.8), text: "V")
+                    case 76:
+                        //                                        return 2;
+                        material.diffuse.contents = generateImage(color: colors[2].withAlphaComponent(0.8), text: "L")
+                    case 84:
+                        //                                        return 3;
+                        material.diffuse.contents = generateImage(color: colors[3].withAlphaComponent(0.8), text: "T")
+                        
+                    case 90:
+                        //                                        return 4;
+                        material.diffuse.contents = generateImage(color: colors[4].withAlphaComponent(0.8), text: "Z")
+                        
+                    case 65:
+                        //                                        return 5;
+                        material.diffuse.contents = generateImage(color: colors[5].withAlphaComponent(0.8), text: "A")
+                        
+                    case 66:
+                        //                                        return 6;
+                        material.diffuse.contents = generateImage(color: colors[6].withAlphaComponent(0.8), text: "B")
+                        
+                    case 80:
+                        //                                        return 7;
+                        material.diffuse.contents = generateImage(color: colors[7].withAlphaComponent(0.8), text: "P")
+                        
+                    default:
+                        material.diffuse.contents = numberImageList[value]
+                    }
+                    material.locksAmbientWithDiffuse = true
+                    boxNode.geometry?.materials = [];
+                    boxNode.geometry?.firstMaterial = material
                 }
             }
         }
+        
         //        TODO: 改成由变量控制，点击按钮生成图像
         //        辅助任务 保存图片到document 为了性能优化
         // DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
@@ -275,14 +264,14 @@ struct ScenekitSingleView_Previews: PreviewProvider {
                                                                         [[2,2,3], [7,5,5], [7,7,5]]],
                                                    isTaskComplete: true),
                                colors: [
-                                                UIColor(hex: "5B5B5B"),
-                                                UIColor(hex: "C25C1D"),
-                                                UIColor(hex: "2788e7"),
-                                                UIColor(hex: "FA2E34"),
-                                                UIColor(hex: "FB5BC2"),
-                                                UIColor(hex: "FCC633"),
-                                                UIColor(hex: "178E20"),
-                                                UIColor(hex: "000000"),],
+                                UIColor(hex: "5B5B5B"),
+                                UIColor(hex: "C25C1D"),
+                                UIColor(hex: "2788e7"),
+                                UIColor(hex: "FA2E34"),
+                                UIColor(hex: "FB5BC2"),
+                                UIColor(hex: "FCC633"),
+                                UIColor(hex: "178E20"),
+                                UIColor(hex: "000000"),],
                                numberImageList: getTextImageList())
             .navigationTitle("索玛立方体").navigationBarTitleDisplayMode(.inline)
             

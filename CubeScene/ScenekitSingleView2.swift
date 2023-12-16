@@ -51,7 +51,6 @@ struct ScenekitSingleView2 : UIViewRepresentable {
     
     func makeUIView(context: Context) -> SCNView {
         let scnView = SCNView()
-
         // 创建坐标轴节点
         let xAxis = createAxisNode(color: .red, vector: SCNVector4(1, 0, 0, Float.pi/2))
         let yAxis = createAxisNode(color: .green, vector: SCNVector4(0, 1, 0, Float.pi/2))

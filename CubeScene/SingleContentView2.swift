@@ -32,13 +32,6 @@ extension SCNAction {
     }
 }
 
-func transMatrix(with result2: Matrix3D) -> Matrix3D {
-    var result:Matrix3D  = []
-    result2.forEach { inner in
-        result.append(inner.reversed())
-    }
-    return result2
-}
 
 func mapColorIndex(_ index:Int) -> Int {
     switch (index) {
@@ -110,14 +103,15 @@ func makeCombinedMatrix(order:[(String, Float)], position:SCNVector3) -> SCNMatr
 // 解决方法 最好是处理数据。
 // todo 自定义顺序
 func makeNode(with result2: Matrix3D) -> [SCNNode] {
-    
+    let rows = result2.count  // 第一维
+
     let pointInfo3DArray = mapTo3DPointInfo(array3d: result2);
     let lResult:[PointInfo] = hasContinuousEqualValues(pointInfo3DArray: pointInfo3DArray)
     // assert(lResult.count == 7)
     
     
     func v3Add(left:SCNVector3, right:SCNVector3) -> SCNVector3 {
-        return SCNVector3(left.x + right.x, left.y + right.y, left.z + right.z)
+        return SCNVector3(left.x + right.x, -left.y + right.y, left.z + right.z)
     }
     let maped =  lResult.map { lpoint in
         let value = lpoint.value
@@ -150,8 +144,8 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         let yuanNode = SCNNode(geometry: yuan)
   
 
-        yuanNode.positionTo = v3Add(left:location, right:SCNVector3Make(Float(-1), Float(-1), Float(-1)))
-        yuanNode.position = v3Add(left:positionOrgList[indexValue], right:SCNVector3Make(Float(-1), Float(-1), Float(-1)))
+        yuanNode.positionTo = v3Add(left:location, right:SCNVector3Make(Float(-1), Float(rows-1), Float(-1)))
+        yuanNode.position = v3Add(left:positionOrgList[indexValue], right:SCNVector3Make(Float(-1), Float(rows-1), Float(-1)))
         yuanNode.orgPosition = yuanNode.position
         #if DEBUG
         let yuanInner = SCNSphere(radius: 0.6)
@@ -176,7 +170,7 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
             boxNode2.name = "\(value)"
             
             boxNode2.position = SCNVector3(x: Float(child.x - Int(location.x)),
-                                           y: Float(child.y - Int(location.y)),
+                                           y: -Float(child.y - Int(location.y)),
                                            z: Float(child.z - Int(location.z)));
             // print("boxNode21.position  value:\(value) \(boxNode2.position)")
             yuanNode.addChildNode(boxNode2)

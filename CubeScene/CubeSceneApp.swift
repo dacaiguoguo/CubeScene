@@ -171,7 +171,7 @@ struct CubeSceneApp: App {
 
     @ViewBuilder
     private func singleContentView(with dataName: String, title: String) -> some View {
-        SingleContentView2(nodeList: makeNode(with: transMatrix(with: produceData(resourceName: dataName).first!.matrix)))
+        SingleContentView2(nodeList: makeNode(with: produceData(resourceName: dataName).first!.matrix))
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
             .environmentObject(userData)

@@ -177,9 +177,9 @@ func produceData2(stringContent:String) -> [EnterItem]  {
         }
 
         if let name = firstLine {
-            return EnterItem(name: name, matrix: transMatrix(with: result), isTaskComplete: UserDefaults.standard.bool(forKey: name))
+            return EnterItem(name: name, matrix: result, isTaskComplete: UserDefaults.standard.bool(forKey: name))
         } else {
-            return EnterItem(name: "无名", matrix: transMatrix(with: result), isTaskComplete: false)
+            return EnterItem(name: "无名", matrix: result, isTaskComplete: false)
         }
     }
 }
