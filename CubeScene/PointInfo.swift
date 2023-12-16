@@ -238,18 +238,14 @@ func mapTo3DPointInfo(array3d: [[[Int]]]) -> [[[PointInfo]]] {
     let cols = array3d[0].count
     let depth = array3d[0][0].count
     
-    var pointInfoArray: [[[PointInfo]]] = Array(repeating: Array(repeating: Array(repeating: PointInfo(x: 0, y: 0, z: 0, value: 0), count: depth), count: cols), count: rows)
-    
-    for i in 0..<rows {
-        for j in 0..<cols {
-            for k in 0..<depth {
-                let value = array3d[i][j][k]
-                // 注意 这里 k是x， i 是z，反了就镜像了 而且旋转了
-                pointInfoArray[i][j][k] = PointInfo(x: k, y: j, z: i, value: value)
+    var pointInfoArray: [[[PointInfo]]] = array3d.enumerated().map { (i, row2) in
+        return row2.enumerated().map { (j, col2) in
+            return col2.enumerated().map { (k, value) in
+                // 注意 这里 k 是 x，i 是 z，反了就镜像了而且旋转了
+                return PointInfo(x: k, y: j, z: i, value: value)
             }
         }
     }
-    
     // 设置每个点的上、下、左、右、前、后指向
     for i in 0..<rows {
         for j in 0..<cols {
@@ -299,8 +295,7 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
         checkPoint3,
         checkPoint4,
         checkPoint5,
-        checkPoint6,// 奇怪 6 找出来的是5
-        // 5找出来的是6，可能和镜像有关系吧
+        checkPoint6,
         checkPoint7
     ]
     
@@ -332,7 +327,7 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
             }
         }
     }
-    
+    // retlist 有必要排序一下，上面找出来的顺序太乱了。
     return retlist
 }
 
@@ -413,11 +408,6 @@ func checkPoint3(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:Refere
                 return (true, currentPoint, "\(akeyPath.stringValue))", children)
                 
             }
-            for akey in akey3 {
-                if let back3 = currentPoint[keyPath:akey], back3.value == checkValue {
-                    // print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back3)")
-                }
-            }
         }
         
     }
@@ -449,7 +439,6 @@ func checkPoint5(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:Refere
     if currentPoint.value != checkValue {
         return (false, nil, "none", [])
     }
-    print("currentPoint: value-\(5), \(currentPoint)")
     let clist = PointInfo.checkList(akeyPath)
     if let back1 = currentPoint[keyPath:akeyPath] , back1.value == checkValue {
         for akey in clist {

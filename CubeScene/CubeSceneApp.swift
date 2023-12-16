@@ -79,11 +79,11 @@ struct CubeSceneApp: App {
     var body: some Scene {
         WindowGroup {
             TabView {
-                tabFor108()
+//                tabFor108()
                 tabFor240()
-                tabForT()
-                tabForTry()
-                tabForMore()
+//                tabForT()
+//                tabForTry()
+//                tabForMore()
             }
         }
         .onChange(of: scenePhase) { phase in
