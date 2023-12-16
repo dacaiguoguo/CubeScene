@@ -74,103 +74,116 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct CubeSceneApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @Environment(\.scenePhase) var scenePhase
-    
     let userData = UserData()
-    let result = transMatrix(with:
-                                [[[2,6,3], [6,6,1], [6,6,1]],
-                                 [[2,3,3], [6,4,1], [7,4,5]],
-                                 [[2,2,3], [7,5,5], [7,7,5]]]
-                             //                             [[[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]],
-                             //                              [[-1, 2, 2], [-1, 2, -1], [-1, 2, -1]],
-                             //                              [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]],]
-    )
-    //    init() {
-    //
-    //    }
-    //   @State var demo = EnterItem(name: "测试", matrix: [[[2,4,3], [6,4,1], [6,6,1]],
-    //                                                    [[2,3,3], [6,4,1], [7,4,5]],
-    //                                                    [[2,2,3], [7,5,5], [7,7,5]]], usedBlock: [1,2,3,4,5,6,7], isTaskComplete: true)
+
     var body: some Scene {
         WindowGroup {
             TabView {
-//                tab0() // 108
-                tab1() // 240
-//                tab2() // T
-//                tab3() // try
-//                tab4() // more
+                tabFor108()
+                tabFor240()
+                tabForT()
+                tabForTry()
+                tabForMore()
             }
-            
-        }.onChange(of: scenePhase) { phase in
+        }
+        .onChange(of: scenePhase) { phase in
             if phase == .active {
-                // Perform launch tasks
                 performLaunchTasks()
             }
         }
     }
-    func tab0() -> some View {
+
+    // MARK: - Tabs
+
+    func tabFor108() -> some View {
         NavigationView {
-            EnterListView(productList: produceData(resourceName: "SOMA108")).navigationTitle("TitleName").navigationBarTitleDisplayMode(.inline)
-                .onAppear {
-                    
-                }.environmentObject(userData)
+            enterListView(with: "SOMA108", title: "TitleName", tabTitle: "TabTitleName")
         }
-        .navigationViewStyle(StackNavigationViewStyle()).tabItem {
+        .navigationViewStyle(StackNavigationViewStyle())
+        .tabItem {
             Image(systemName: "cube")
             Text("TabTitleName")
-        }.tag(0)
+        }
+        .tag(0)
     }
-    
-    func tab1() -> some View {
+
+    func tabFor240() -> some View {
         NavigationView {
             EnterListView240().environmentObject(userData)
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationTitle("TitleName2")
         }
-        .navigationViewStyle(StackNavigationViewStyle()).tabItem {
+        .navigationViewStyle(StackNavigationViewStyle())
+        .tabItem {
             Image(systemName: "cube.transparent")
             Text("TabTitleName2")
-        }.tag(1)
-    }
-    
-    func tab2() -> some View {
-        NavigationView {
-            EnterListView(productList: produceData(resourceName: "SOMAT101")).navigationTitle("TitleName3").navigationBarTitleDisplayMode(.inline)
-                .onAppear {
-                    
-                }.environmentObject(userData)
         }
-        .navigationViewStyle(StackNavigationViewStyle()).tabItem {
+        .tag(1)
+    }
+
+    func tabForT() -> some View {
+        NavigationView {
+            enterListView(with: "SOMAT101", title: "TitleName3", tabTitle: "TabTitleName3")
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
+        .tabItem {
             Image(systemName: "scribble.variable")
             Text("TabTitleName3")
-        }.tag(2)
-    }
-    
-    func tab3() -> some View {
-        NavigationView {
-            SingleContentView2(nodeList:makeNode(with: produceData(resourceName: "data1").first!.matrix)).navigationTitle("TabTitleNameY").navigationBarTitleDisplayMode(.inline)
-                .onAppear {
-                    
-                }.environmentObject(userData)
         }
-        .navigationViewStyle(StackNavigationViewStyle()).tabItem {
+        .tag(2)
+    }
+
+    func tabForTry() -> some View {
+        NavigationView {
+            singleContentView(with: "data1", title: "TabTitleNameY")
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
+        .tabItem {
             Image(systemName: "highlighter")
             Text("TabTitleNameY")
-        }.tag(3)
+        }
+        .tag(3)
     }
-    
-    func tab4() -> some View {
+
+    func tabForMore() -> some View {
         NavigationView {
             SettingView().environmentObject(userData)
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationTitle("TitleName4")
-        }.navigationViewStyle(StackNavigationViewStyle()).tabItem {
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
+        .tabItem {
             Image(systemName: "ellipsis.circle")
             Text("TabTitleName4")
-        }.tag(4)
+        }
+        .tag(4)
     }
-    
-    func performLaunchTasks() {
+
+    // MARK: - Shared View Functions
+
+    @ViewBuilder
+    private func enterListView(with resourceName: String, title: String, tabTitle: String) -> some View {
+        EnterListView(productList: produceData(resourceName: resourceName))
+            .navigationTitle(title)
+            .navigationBarTitleDisplayMode(.inline)
+            .environmentObject(userData)
+    }
+
+    @ViewBuilder
+    private func singleContentView(with dataName: String, title: String) -> some View {
+        SingleContentView2(nodeList: makeNode(with: produceData(resourceName: dataName).first!.matrix))
+            .navigationTitle(title)
+            .navigationBarTitleDisplayMode(.inline)
+            .environmentObject(userData)
+    }
+
+   
+
+    // MARK: - Launch Tasks
+
+    private func performLaunchTasks() {
         // 执行应用程序启动时的操作
         // ...
     }
 }
+

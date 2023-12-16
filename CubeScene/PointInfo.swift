@@ -290,7 +290,19 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
     let rows = pointInfo3DArray.count
     let cols = pointInfo3DArray[0].count
     let depth = pointInfo3DArray[0][0].count
-    var retlist:[PointInfo] = []
+    var retlist: [PointInfo] = []
+
+    // 定义闭包数组
+    let checkPointClosures: [(PointInfo, Int, ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo])] = [
+        checkPoint1,
+        checkPoint2,
+        checkPoint3,
+        checkPoint4,
+        checkPoint5,
+        checkPoint6,
+        checkPoint7
+    ]
+
     for i in 0..<rows {
         for j in 0..<cols {
             for k in 0..<depth {
@@ -299,93 +311,27 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
                 if value < 0 {
                     continue
                 }
-                for akey in PointInfo.allKeyList {// 检查当前点在up方向上是否存在L
-                    // allKeyList 也就是要检查6个方向，akey 就是当前检查的方向
-                    // 根据当前检查的方向获取到 其他4个方向，也就是说检查上的时候，不用检查上和下拐弯的情况 L
-                    // checkPoint再根据当前value 和 akey方向上连续两个，加起来也就是三个点的Value相等
-                    // 再用checkList来遍历也就获取到了 L 形状。至此 L形状判断和方向都已经获取到了。
-                    let ret = checkPoint1(currentPoint, with: 1, akeyPath: akey)
-                    if ret.0, let aa = ret.1 {
-                        aa.des = ret.2
-                        aa.children = ret.3
-                        retlist.append(aa)
-                        break
-                    }
-                }
-                for akey in PointInfo.allKeyList {
-                    let ret = checkPoint2(currentPoint, with: 2, akeyPath: akey)
-                    if ret.0, let aa = ret.1 {
-                        aa.des = ret.2
-                        aa.children = ret.3
-                        retlist.append(aa)
-                        break
-                    }
-                }
-                for akey in PointInfo.allKeyList {
-                    let ret = checkPoint3(currentPoint, with: 3, akeyPath: akey)
-                    if ret.0, let aa = ret.1 {
-                        aa.des = ret.2
-                        aa.children = ret.3
-                        retlist.append(aa)
-                        break
-                    }
-                }
-                for akey in PointInfo.allKeyList {
-                    let ret = checkPoint4(currentPoint, with: 4, akeyPath: akey)
-                    if ret.0, let aa = ret.1 {
-                        aa.des = ret.2
-                        aa.children = ret.3
-                        if retlist.filter({ ap in
-                            ap.value == 4
-                        }).first == nil {
-                            retlist.append(aa)
+
+                // 遍历闭包数组并调用每个闭包
+                for checkPointClosure in checkPointClosures {
+                    for akey in PointInfo.allKeyList {
+                        let ret = checkPointClosure(currentPoint, value, akey)
+                        if ret.0, let aa = ret.1 {
+                            aa.des = ret.2
+                            aa.children = ret.3
+                            if retlist.filter({ ap in
+                                ap.value == value
+                            }).first == nil {
+                                retlist.append(aa)
+                            }
+                            break
                         }
-                        break
-                    }
-                }
-                for akey in PointInfo.allKeyList {
-                    let ret = checkPoint5(currentPoint, with: 5, akeyPath: akey)
-                    if ret.0, let aa = ret.1 {
-                        aa.des = ret.2
-                        aa.children = ret.3
-                        if retlist.filter({ ap in
-                            ap.value == 5
-                        }).first == nil {
-                            retlist.append(aa)
-                        }
-                        break
-                    }
-                }
-                for akey in PointInfo.allKeyList {
-                    let ret = checkPoint6(currentPoint, with: 6, akeyPath: akey)
-                    if ret.0, let aa = ret.1 {
-                        aa.des = ret.2
-                        aa.children = ret.3
-                        if retlist.filter({ ap in
-                            ap.value == 6
-                        }).first == nil {
-                            retlist.append(aa)
-                        }
-                        break
-                    }
-                }
-                for akey in PointInfo.allKeyList {
-                    let ret = checkPoint7(currentPoint, with: 7, akeyPath: akey)
-                    if ret.0, let aa = ret.1 {
-                        aa.des = ret.2
-                        aa.children = ret.3
-                        if retlist.filter({ ap in
-                            ap.value == 7
-                        }).first == nil {
-                            retlist.append(aa)
-                        }
-                        break
                     }
                 }
             }
         }
     }
-    
+
     return retlist
 }
 
