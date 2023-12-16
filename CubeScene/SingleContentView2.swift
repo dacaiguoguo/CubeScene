@@ -251,7 +251,7 @@ public struct SingleContentView2: View {
         return "块 \(index)"
     }}()
     
-    @State private var counter = 0
+    @State private var counter:Double = 0
     @State private var selectedSegment = 0
     @State var nodeList:[SCNNode]
     //    { makeNode(with result: result)}()
@@ -283,10 +283,11 @@ public struct SingleContentView2: View {
                 Button(action: {
                     reset()
                 }, label: {
-                    Text("重置\(counter)")
+                    Text("重置\(Int(floor(counter)))")
                 })
                 Button(action: {
                     reset()
+                    counter += 0.001;
                     actionRunAt(index: 0)
                 }, label: {
                     Text("演示")
@@ -296,7 +297,7 @@ public struct SingleContentView2: View {
     }
     
     func reset() {
-        counter += 1;
+        counter = floor(counter) + 1;
         nodeList.forEach { node2 in
             node2.position = node2.orgPosition ?? node2.position
             node2.rotation = node2.rotationTo ?? node2.rotation
@@ -305,6 +306,10 @@ public struct SingleContentView2: View {
     }
     
     func actionRunAt(index: Int) -> Void {
+        // 判断是否存在小数
+        guard counter.truncatingRemainder(dividingBy: 1) != 0 else {
+            return
+        }
         guard index < nodeList.count else {
             return
         }
@@ -316,9 +321,15 @@ public struct SingleContentView2: View {
         actionList.append(SCNAction.rotate(toAxisAngle: SCNVector4Zero, duration: 0.2));
         actionList.append(SCNAction.move(to: destPosition, duration: 0.2));
         nodeList[index].runAction(SCNAction.sequence(actionList), completionHandler: {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                actionRunAt(index: index + 1);
+            // 判断是否存在小数
+            if counter.truncatingRemainder(dividingBy: 1) != 0 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    actionRunAt(index: index + 1);
+                }
+            } else {
+                print("没有小数")
             }
+      
         })
     }
     

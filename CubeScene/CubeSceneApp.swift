@@ -97,7 +97,7 @@ struct CubeSceneApp: App {
 
     func tabFor108() -> some View {
         NavigationView {
-            enterListView(with: "SOMA108", title: "TitleName", tabTitle: "TabTitleName")
+            enterListView(with: "SOMA108", title: "TitleName")
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .tabItem {
@@ -123,7 +123,7 @@ struct CubeSceneApp: App {
 
     func tabForT() -> some View {
         NavigationView {
-            enterListView(with: "SOMAT101", title: "TitleName3", tabTitle: "TabTitleName3")
+            enterListView(with: "SOMAT101", title: "TitleName3")
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .tabItem {
@@ -162,9 +162,9 @@ struct CubeSceneApp: App {
     // MARK: - Shared View Functions
 
     @ViewBuilder
-    private func enterListView(with resourceName: String, title: String, tabTitle: String) -> some View {
+    private func enterListView(with resourceName: String, title: String) -> some View {
         EnterListView(productList: produceData(resourceName: resourceName))
-            .navigationTitle(title)
+            .navigationTitle(LocalizedStringKey(title))
             .navigationBarTitleDisplayMode(.inline)
             .environmentObject(userData)
     }
