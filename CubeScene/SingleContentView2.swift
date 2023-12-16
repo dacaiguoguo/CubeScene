@@ -54,26 +54,6 @@ func mapColorIndex(_ index:Int) -> Int {
     }
 }
 
-func findUniqueValues(in result: Matrix3D) -> [Int] {
-    let rows = result.count  // 第一维
-    let columns = result.first?.count ?? 0  // 第二维
-    let depth = result.first?.first?.count ?? 0 // 第三维
-    
-    var uniqueValues:[Int]  = []
-    // 遍历三维数组
-    for j in 0..<columns {
-        let y = j;//columns - 1 - j;
-        for i in 0..<rows {
-            for k in 0..<depth {
-                let thenumber = result[i][y][k]
-                if thenumber >= 0 && !uniqueValues.contains(thenumber) {
-                    uniqueValues.append(thenumber)
-                }
-            }
-        }
-    }
-    return uniqueValues
-}
 
 func makeCombinedMatrix(order:[(String, Float)], position:SCNVector3) -> SCNMatrix4 {
     // 绕Z轴旋转180度
@@ -99,14 +79,39 @@ func makeCombinedMatrix(order:[(String, Float)], position:SCNVector3) -> SCNMatr
     return vvv
 }
 
+func findUniqueValues(in result: Matrix3D) -> [Int] {
+    let rows = result.count  // 第一维
+    let columns = result.first?.count ?? 0  // 第二维
+    let depth = result.first?.first?.count ?? 0 // 第三维
+    
+    var uniqueValues:[Int]  = []
+    // 遍历三维数组
+    for j in 0..<columns {
+        let y = columns - 1 - j;
+        for i in 0..<rows {
+            for k in 0..<depth {
+                let thenumber = result[i][y][k]
+                if thenumber >= 0 && !uniqueValues.contains(thenumber) {
+                    uniqueValues.append(thenumber)
+                }
+            }
+        }
+    }
+    return uniqueValues
+}
+
 // todo 自定义顺序
 func makeNode(with result2: Matrix3D) -> [SCNNode] {
     let rows = result2.count  // 第一维
 
     let pointInfo3DArray = mapTo3DPointInfo(array3d: result2);
-    let lResult:[PointInfo] = hasContinuousEqualValues(pointInfo3DArray: pointInfo3DArray)
+    let lResulttemp:[PointInfo] = hasContinuousEqualValues(pointInfo3DArray: pointInfo3DArray)
     // assert(lResult.count == 7)
+    let sort = findUniqueValues(in:result2);
     
+    let lResult = lResulttemp.sorted { ap, bp in
+        (sort.firstIndex(of: ap.value) ?? 0) < (sort.firstIndex(of: bp.value) ?? 0);
+    }
     
     func v3Add(left:SCNVector3, right:SCNVector3) -> SCNVector3 {
         return SCNVector3(left.x + right.x, -left.y + right.y, left.z + right.z)

@@ -238,7 +238,7 @@ func mapTo3DPointInfo(array3d: [[[Int]]]) -> [[[PointInfo]]] {
     let cols = array3d[0].count
     let depth = array3d[0][0].count
     
-    var pointInfoArray: [[[PointInfo]]] = array3d.enumerated().map { (i, row2) in
+    let pointInfoArray: [[[PointInfo]]] = array3d.enumerated().map { (i, row2) in
         return row2.enumerated().map { (j, col2) in
             return col2.enumerated().map { (k, value) in
                 // 注意 这里 k 是 x，i 是 z，反了就镜像了而且旋转了
@@ -330,6 +330,8 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
     // retlist 有必要排序一下，上面找出来的顺序太乱了。
     return retlist
 }
+
+
 
 extension ReferenceWritableKeyPath where Root == PointInfo {
     var stringValue: String {
