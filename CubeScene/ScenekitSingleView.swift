@@ -93,7 +93,7 @@ struct ScenekitSingleView : UIViewRepresentable {
                     boxNode2.geometry = box2
                     boxNode2.name = "\(value)";
                     // 由于默认y朝向上的，所以要取负值
-                    boxNode2.position = SCNVector3Make(Float(x), Float(-y+countOfRow), Float(z))
+                    boxNode2.position = SCNVector3Make(Float(x), Float(-y+countOfRow/2), Float(z))
                     parNode2.addChildNode(boxNode2)
                 }
             }

@@ -99,8 +99,6 @@ func makeCombinedMatrix(order:[(String, Float)], position:SCNVector3) -> SCNMatr
     return vvv
 }
 
-// 这里有个问题 就是三维数组 最前面的是最底层了，但是 其实应该是最上层。
-// 解决方法 最好是处理数据。
 // todo 自定义顺序
 func makeNode(with result2: Matrix3D) -> [SCNNode] {
     let rows = result2.count  // 第一维

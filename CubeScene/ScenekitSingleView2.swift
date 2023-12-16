@@ -18,7 +18,7 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         camera.focalLength = 30;
         let cameraNode = SCNNode()
         cameraNode.camera = camera
-        cameraNode.position = SCNVector3Make(-10.5, 7.5, 20)
+        cameraNode.position = SCNVector3Make(-10.5, 10.5, 20)
         cameraNode.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
         ret.rootNode.addChildNode(cameraNode)
 
@@ -26,7 +26,7 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         ret.background.contents = MDLSkyCubeTexture(name: "sky",
                                                   channelEncoding: .float16,
                                                 textureDimensions: vector_int2(128, 128),
-                                                        turbidity: 0,
+                                                    turbidity: 0.2,
                                                      sunElevation: 1.5,
                                         upperAtmosphereScattering: 0.5,
                                                      groundAlbedo: 0.5)

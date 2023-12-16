@@ -10,7 +10,7 @@ import SwiftUI
 struct EnterListView240: View {
     @EnvironmentObject var userData: UserData
 //    static private var resourceName = "solutions"
-    static private let resourceName = "solutionsMaped6"
+    static private let resourceName = "solutionsMaped"
 
 
     @State var productList: [EnterItem] = produceData()
