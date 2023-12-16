@@ -194,58 +194,55 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
 
 
 func zhuanNode(_ lpoint: PointInfo, yuanNode: SCNNode) -> Void {
-    yuanNode.rotationTo = SCNVector4(x: 0.0, y: 0.0, z: 1.0, w: .pi / 2 )
+    
+    if lpoint.value == 2 {
+        if lpoint.des == "up, left" {
+            yuanNode.rotationTo = SCNVector4(x: 0.0, y: 0.0, z: 1.0, w: .pi)
+        }
+        
+        if lpoint.des == "front, left" {
+            yuanNode.transformTo = makeCombinedMatrix(order: [("y", 1.0), ("x", 2.0),], position: yuanNode.position);
+        }
+        if lpoint.des == "back, up" {
+            yuanNode.transformTo = makeCombinedMatrix(order: [("z", 3.0), ("x", 1.0),], position: yuanNode.position);
+        }
+        if lpoint.des == "left, up" {
+            yuanNode.transformTo = makeCombinedMatrix(order: [("x", 1.0), ], position: yuanNode.position);
+        }
+        if lpoint.des == "left, back" {
+            yuanNode.transformTo = makeCombinedMatrix(order: [("z", 1.0),("y", 1.0), ], position: yuanNode.position);
+        }
+        if lpoint.des == "left, front" {
+            yuanNode.transformTo = makeCombinedMatrix(order: [("y", 3.0),("x", 1.0), ], position: yuanNode.position);
+        }
+        if lpoint.des == "left, down" {
+            yuanNode.transformTo = makeCombinedMatrix(order: [("y", 2.0),("x", 1.0), ], position: yuanNode.position);
+        }
+        if lpoint.des == "right, up" {
+            yuanNode.transformTo = makeCombinedMatrix(order: [("z", 2.0),("x", 1.0), ], position: yuanNode.position);
+        }
+        if lpoint.des == "right, back" {
+            yuanNode.transformTo = makeCombinedMatrix(order: [("x", 3.0),("z", 1.0), ], position: yuanNode.position);
+        }
+        if lpoint.des == "down, back" {
+            yuanNode.transformTo = makeCombinedMatrix(order: [("x", 3.0),("z", 1.0), ], position: yuanNode.position);
+        }
+        
+        if lpoint.des == "right, down" {
+            yuanNode.rotationTo = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: -.pi/2)
+        }
+        if lpoint.des == "right, front" {
+            yuanNode.transformTo = makeCombinedMatrix(order: [("y", 1.0),("x", 3.0), ], position: yuanNode.position);
+        }
+    } else {
+        yuanNode.rotationTo = SCNVector4(x: 0.0, y: 0.0, z: 1.0, w: .pi / 2 )
+    }
     if let rt = yuanNode.rotationTo {
         yuanNode.rotation = rt
     }
-//    if lpoint.value == 2 {
-//        if lpoint.des == "up, left" {
-//            yuanNode.rotationTo = SCNVector4(x: 0.0, y: 0.0, z: 1.0, w: .pi)
-//        }
-//        
-//        if lpoint.des == "front, left" {
-//            yuanNode.transform = makeCombinedMatrix(order: [("y", 1.0), ("x", 2.0),], position: yuanNode.position);
-//            yuanNode.transformTo = yuanNode.transform
-//        }
-//        if lpoint.des == "back, up" {
-//            yuanNode.transform = makeCombinedMatrix(order: [("z", 3.0), ("x", 1.0),], position: yuanNode.position);
-//            yuanNode.transformTo = yuanNode.transform
-//        }
-//        if lpoint.des == "left, up" {
-//            yuanNode.transform = makeCombinedMatrix(order: [("x", 1.0), ], position: yuanNode.position);
-//            yuanNode.transformTo = yuanNode.transform
-//        }
-//        if lpoint.des == "left, back" {
-//            yuanNode.transform = makeCombinedMatrix(order: [("z", 1.0),("y", 1.0), ], position: yuanNode.position);
-//            yuanNode.transformTo = yuanNode.transform
-//        }
-//        if lpoint.des == "left, front" {
-//            yuanNode.transform = makeCombinedMatrix(order: [("y", 3.0),("x", 1.0), ], position: yuanNode.position);
-//            yuanNode.transformTo = yuanNode.transform
-//        }
-//        if lpoint.des == "left, down" {
-//            yuanNode.transform = makeCombinedMatrix(order: [("y", 2.0),("x", 1.0), ], position: yuanNode.position);
-//            yuanNode.transformTo = yuanNode.transform
-//        }
-//        if lpoint.des == "right, up" {
-//            yuanNode.transform = makeCombinedMatrix(order: [("z", 2.0),("x", 1.0), ], position: yuanNode.position);
-//            yuanNode.transformTo = yuanNode.transform
-//        }
-//        if lpoint.des == "right, back" {
-//            yuanNode.transform = makeCombinedMatrix(order: [("x", 3.0),("z", 1.0), ], position: yuanNode.position);
-//            yuanNode.transformTo = yuanNode.transform
-//        }
-//        if lpoint.des == "right, down" {
-//            yuanNode.rotationTo = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: -.pi/2)
-//        }
-//        if lpoint.des == "right, front" {
-//            yuanNode.transform = makeCombinedMatrix(order: [("y", 1.0),("x", 3.0), ], position: yuanNode.position);
-//            yuanNode.transformTo = yuanNode.transform
-//        }
-//    }
-//    if let rt = yuanNode.rotationTo {
-//        yuanNode.rotation = rt
-//    }
+    if let rt = yuanNode.transformTo {
+        yuanNode.transform = rt
+    }
 }
 
 public struct SingleContentView2: View {

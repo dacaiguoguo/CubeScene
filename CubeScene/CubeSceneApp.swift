@@ -19,7 +19,39 @@
 import SwiftUI
 import UIKit
 
-
+import SceneKit
+struct ContentView2: View {
+    var scene:SCNScene {
+        let ret =  SCNScene(named: "cube2.scn")!
+        // 创建光源
+        let light = SCNLight()
+        light.type = .omni // 或者使用 .directional
+        light.intensity = 1000.0 // 光强度
+        light.color = UIColor.white // 漫反射颜色
+        
+        // 创建光源节点
+        let lightNode = SCNNode()
+        lightNode.light = light
+        lightNode.position = SCNVector3(x: 0, y: 5, z: 5) // 光源位置
+        ret.rootNode.addChildNode(lightNode)
+        return ret;
+    }
+    
+    
+    //    allowsCameraControl
+    var cameraNode: SCNNode? {
+        let ret = scene.rootNode.childNode(withName: "Camera", recursively: false)
+        return ret;
+    }
+    
+    var body: some View {
+        SceneView(
+            scene: scene,
+            pointOfView: cameraNode,
+            options: [.allowsCameraControl]
+        )
+    }
+}
 
 // no changes in your AppDelegate class
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -35,12 +67,12 @@ struct CubeSceneApp: App {
     
     let userData = UserData()
     let result = transMatrix(with:
-//                                [[[2,4,3], [6,4,1], [6,6,1]],
-//                                 [[2,3,3], [6,4,1], [7,4,5]],
-//                                 [[2,2,3], [7,5,5], [7,7,5]]]
-                                [[[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]],
-                                 [[-1, 2, 2], [-1, 2, -1], [-1, 2, -1]],
-                                 [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]],]
+                                //                                [[[2,4,3], [6,4,1], [6,6,1]],
+                             //                                 [[2,3,3], [6,4,1], [7,4,5]],
+                             //                                 [[2,2,3], [7,5,5], [7,7,5]]]
+                             [[[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]],
+                              [[-1, 2, 2], [-1, 2, -1], [-1, 2, -1]],
+                              [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]],]
     )
     //    init() {
     //
@@ -61,7 +93,7 @@ struct CubeSceneApp: App {
                 NavigationView {
                     EnterListView(productList: produceData(resourceName: "SOMA108")).navigationTitle("TitleName").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
-                             
+                            
                         }.environmentObject(userData)
                 }
                 .navigationViewStyle(StackNavigationViewStyle()).tabItem {
@@ -81,7 +113,7 @@ struct CubeSceneApp: App {
                 NavigationView {
                     EnterListView(productList: produceData(resourceName: "SOMAT101")).navigationTitle("TitleName3").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
-                             
+                            
                         }.environmentObject(userData)
                 }
                 .navigationViewStyle(StackNavigationViewStyle()).tabItem {
@@ -89,16 +121,16 @@ struct CubeSceneApp: App {
                     Text("TabTitleName3")
                 }.tag(2)
                 NavigationView {
-                    TestEnter().navigationTitle("TabTitleNameY").navigationBarTitleDisplayMode(.inline)
+                    ContentView2().navigationTitle("TabTitleNameY").navigationBarTitleDisplayMode(.inline)
                         .onAppear {
-
+                            
                         }.environmentObject(userData)
                 }
                 .navigationViewStyle(StackNavigationViewStyle()).tabItem {
                     Image(systemName: "highlighter")
                     Text("TabTitleNameY")
                 }.tag(3)
-
+                
                 NavigationView {
                     SettingView().environmentObject(userData)
                         .navigationBarTitleDisplayMode(.inline)

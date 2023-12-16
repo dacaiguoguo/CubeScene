@@ -6,6 +6,32 @@
 //
 
 import Foundation
+
+enum Direction {
+    case up
+    case down
+    case left
+    case right
+    case forward
+    case backward
+    case bottomRotation90Degrees(BottomRotationDirection)
+
+    enum BottomRotationDirection {
+        case clockwise
+        case counterclockwise
+        case forward
+        case backward
+    }
+
+    static var allCases: [Direction] {
+        return [.up, .down, .left, .right, .forward, .backward] +
+            BottomRotationDirection.allCases.map { .bottomRotation90Degrees($0) }
+    }
+}
+
+extension Direction.BottomRotationDirection: CaseIterable {}
+
+
 class PointInfo : CustomDebugStringConvertible  {
     let x: Int
     let y: Int

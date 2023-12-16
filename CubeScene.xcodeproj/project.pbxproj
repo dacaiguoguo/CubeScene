@@ -21,6 +21,8 @@
 		5971BA8C2A50547800CD6111 /* ArrayTool3D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */; };
 		59CFCD432A6281F700E38F38 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59CFCD422A6281F700E38F38 /* UserData.swift */; };
 		59CFCD442A62824000E38F38 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59CFCD422A6281F700E38F38 /* UserData.swift */; };
+		5B6FE7622B2D42E30035DD0F /* cube2.scn in Resources */ = {isa = PBXBuildFile; fileRef = 5B6FE7612B2D42E30035DD0F /* cube2.scn */; };
+		5B6FE7632B2D42E30035DD0F /* cube2.scn in Resources */ = {isa = PBXBuildFile; fileRef = 5B6FE7612B2D42E30035DD0F /* cube2.scn */; };
 		9D04123C2A516AD30083741B /* EnterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04123B2A516AD30083741B /* EnterListView.swift */; };
 		9D04123E2A516F050083741B /* SingleContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04123D2A516F050083741B /* SingleContentView.swift */; };
 		9D0412432A52881A0083741B /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0412412A52881A0083741B /* SettingView.swift */; };
@@ -120,6 +122,7 @@
 		5934F66A2A65038B00AED0E9 /* ScenekitSingleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenekitSingleView.swift; sourceTree = "<group>"; };
 		5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayTool3D.swift; sourceTree = "<group>"; };
 		59CFCD422A6281F700E38F38 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
+		5B6FE7612B2D42E30035DD0F /* cube2.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = cube2.scn; sourceTree = "<group>"; };
 		9D04123B2A516AD30083741B /* EnterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterListView.swift; sourceTree = "<group>"; };
 		9D04123D2A516F050083741B /* SingleContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleContentView.swift; sourceTree = "<group>"; };
 		9D0412412A52881A0083741B /* SettingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
@@ -286,6 +289,7 @@
 				9D7D34C72AF7C3D4009291BC /* TestEnter.swift */,
 				9D7D34C32AF7A88C009291BC /* PointInfo.swift */,
 				9D89A1AE2AE37C0B008C6707 /* Persistence.swift */,
+				5B6FE7612B2D42E30035DD0F /* cube2.scn */,
 				9DDEC0C52A614716001A0046 /* EnterListView240.swift */,
 				9D46D7242AF12F57002DE821 /* ScenekitSingleView2.swift */,
 				9D46D7232AF12F57002DE821 /* SingleContentView2.swift */,
@@ -415,6 +419,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B6FE7632B2D42E30035DD0F /* cube2.scn in Resources */,
 				9DDEC0D32A6178DF001A0046 /* SOMAT101.txt in Resources */,
 				9D2D85B62A602AE600B11A7D /* Preview Assets.xcassets in Resources */,
 				9DDEC0CC2A614F69001A0046 /* solutionsMaped.json in Resources */,
@@ -459,6 +464,7 @@
 				9DB0AAB52AC1DEAB0093A611 /* SOMAC3B101.txt in Resources */,
 				9DBE04F92A57D7BC0055AE14 /* Localizable.strings in Resources */,
 				9D6DC3E52AA168460068C807 /* SOMAY101.txt in Resources */,
+				5B6FE7622B2D42E30035DD0F /* cube2.scn in Resources */,
 				9D9448812AB43E0E0005FD11 /* SOMAC3A101.txt in Resources */,
 				9DA001872AD6390100FDACFE /* SOMAC3C101.txt in Resources */,
 				9DF9380D2A417BA4001BD720 /* data1.txt in Resources */,
