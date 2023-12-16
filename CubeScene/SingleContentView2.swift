@@ -122,15 +122,15 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         // print("boxNode2.position value:\(value) \(location)")
         
         // 这是初始位置
-        let positionOrgList = [[4,0,-4],[4,0,0],[4,0,4],[0,0,4],[-4,0,4],[-4,0,0],[-4,0,-4],[0,0,-4]].map{SCNVector3($0[0], $0[1], $0[2])}
+        let positionOrgList = [[5,0,-5],[5,0,0],[5,0,5],[0,0,5],[-5,0,5],[-5,0,0],[-5,0,-5],[0,0,-5]].map{SCNVector3($0[0], $0[1], $0[2])}
         let colors:[UIColor] = [
             UIColor(hex: "000000"),
             UIColor(hex: "5B5B5B"),
             UIColor(hex: "C25C1D"),
             UIColor(hex: "2788e7"),
             UIColor(hex: "FA2E34"),
-            UIColor.blue,
-            UIColor.yellow,
+            UIColor(hex: "FB5BC2"),
+            UIColor(hex: "FCC633"),
             UIColor(hex: "178E20"),
         ]
         
