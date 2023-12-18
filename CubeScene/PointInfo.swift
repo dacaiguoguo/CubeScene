@@ -43,7 +43,7 @@ class PointInfo : CustomDebugStringConvertible  {
     var right: PointInfo?
     var front: PointInfo?
     var back: PointInfo?
-    
+    var name: String = ""
     var des: String = ""
     var children: [PointInfo] = []
     
@@ -314,6 +314,7 @@ func hasContinuousEqualValues(pointInfo3DArray: [[[PointInfo]]]) -> [PointInfo] 
                         let ret = checkPointClosure(currentPoint, closureIndex + 1, akey)
                         if ret.0, let aa = ret.1 {
                             aa.des = ret.2
+                            aa.name = "块 \(closureIndex + 1)"
                             aa.children = ret.3
                             if retlist.filter({ ap in
                                 ap.value == closureIndex + 1
