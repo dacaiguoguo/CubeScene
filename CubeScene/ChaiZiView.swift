@@ -135,7 +135,21 @@ struct ChaiZiView<T>: View where T:AbsEntity {
         Button("详细") {
             if let url = item.url {
                 let sc = SFSafariViewController(url: url)
-                UIApplication.shared.windows.first?.rootViewController?.present(sc, animated: true, completion: nil)
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                    let windowsInScene = windowScene.windows
+
+                    // Now you can work with windowsInScene
+                    for window in windowsInScene {
+                        // Perform operations with each window
+                        if let www = window.rootViewController {
+                            www.present(sc, animated: true, completion: nil)
+                            break
+                        }
+                        
+                    }
+                }
+
+                
             }
         }.foregroundColor(.blue).font(.subheadline)
     }

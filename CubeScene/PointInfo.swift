@@ -60,39 +60,25 @@ class PointInfo : CustomDebugStringConvertible  {
                               \PointInfo.right,
                               \PointInfo.front,
                               \PointInfo.back,]
-    class func checkList(_ ss:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> [ ReferenceWritableKeyPath<PointInfo, PointInfo?>] {
-        var ret:[ReferenceWritableKeyPath<PointInfo, PointInfo?>] = []
-        for aa in preList {
-            if !aa.contains(ss) {
-                ret.append(contentsOf: aa)
-            }
-        }
-        return ret
-    }
+    
+    class func checkList(_ ss: ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> [ReferenceWritableKeyPath<PointInfo, PointInfo?>] {
+         return preList.flatMap { aa in
+             aa.contains(ss) ? [] : aa
+         }
+     }
     
     class func checkList3(_ ss:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> [[ReferenceWritableKeyPath<PointInfo, PointInfo?>]] {
-        var ret:[[ReferenceWritableKeyPath<PointInfo, PointInfo?>]] = []
+        return preList.filter { !($0.contains(ss)) }
+    }
+
+    class func checkList4(_ ss: ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> ReferenceWritableKeyPath<PointInfo, PointInfo?> {
         for aa in preList {
-            if !aa.contains(ss) {
-                ret.append(aa)
+            if aa.contains(ss), let temp = aa.filter({ ap in ap != ss }).first {
+                return temp
             }
         }
-        return ret
+        fatalError("Unexpected situation")
     }
-    class func checkList4(_ ss:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> ReferenceWritableKeyPath<PointInfo, PointInfo?> {
-        for aa in preList {
-            if aa.contains(ss) {
-                if let temp = aa.filter({ ap in
-                    ap != ss
-                }).first {
-                    return temp
-                }
-            }
-        }
-        assert(false)
-        return \PointInfo.up
-    }
-    
     
     // 根据两个 KeyPath 计算第三个 KeyPath 的方法
     class func calculateThirdKeyPath5(_ firstKeyPath: ReferenceWritableKeyPath<PointInfo, PointInfo?>,
@@ -350,161 +336,188 @@ extension ReferenceWritableKeyPath where Root == PointInfo {
 }
 
 
-func checkPoint1(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
-    if currentPoint.value != checkValue {
+func checkPoint1(_ currentPoint: PointInfo, with checkValue: Int, akeyPath: ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
+    guard currentPoint.value == checkValue, let back1 = currentPoint[keyPath: akeyPath], back1.value == checkValue else {
         return (false, nil, "none", [])
     }
+
     let clist = PointInfo.checkList(akeyPath)
-    if let back1 = currentPoint[keyPath:akeyPath] , back1.value == checkValue {
-        for akey in clist {
-            if let back3 = currentPoint[keyPath:akey], back3.value == checkValue {
-                // print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back3)")
-                return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back3])
-            }
+    
+    for akey in clist {
+        if let back3 = currentPoint[keyPath: akey], back3.value == checkValue {
+            let resultString = "\(akeyPath.stringValue), \(akey.stringValue)"
+            let resultArray = [currentPoint, back1, back3]
+            return (true, currentPoint, resultString, resultArray)
         }
-        
     }
+
     return (false, nil, "none", [])
 }
 
-func checkPoint2(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
-    if currentPoint.value != checkValue {
+
+func checkPoint2(_ currentPoint: PointInfo, with checkValue: Int, akeyPath: ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
+    guard currentPoint.value == checkValue,
+          let back1 = currentPoint[keyPath: akeyPath],
+          let back2 = back1[keyPath: akeyPath],
+          back1.value == checkValue,
+          back2.value == checkValue else {
         return (false, nil, "none", [])
     }
+
     let clist = PointInfo.checkList(akeyPath)
-    if let back1 = currentPoint[keyPath:akeyPath] {
-        if let back2 = back1[keyPath:akeyPath] {
-            if back1.value == checkValue && back2.value == checkValue {
-                for akey in clist {
-                    if let back3 = back2[keyPath:akey], back3.value == checkValue {
-                        // print("\(currentPoint) \(back1) \(back2) \(back3)")
-                        return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back3])
-                    }
-                }
-            }
+    
+    for akey in clist {
+        if let back3 = back2[keyPath: akey], back3.value == checkValue {
+            let resultString = "\(akeyPath.stringValue), \(akey.stringValue)"
+            let resultArray = [currentPoint, back1, back2, back3]
+            return (true, currentPoint, resultString, resultArray)
         }
     }
+
     return (false, nil, "none", [])
 }
 
-func checkPoint3(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
-    if currentPoint.value != checkValue {
+
+func checkPoint3(_ currentPoint: PointInfo, with checkValue: Int, akeyPath: ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
+    guard currentPoint.value == checkValue, let back1 = currentPoint[keyPath: akeyPath], back1.value == checkValue else {
         return (false, nil, "none", [])
     }
+
     let clist = PointInfo.checkList3(akeyPath)
-    if let back1 = currentPoint[keyPath:akeyPath] , back1.value == checkValue {
-        for akey3 in clist {
-            if akey3.allSatisfy({ akey in
-                if let back3 = currentPoint[keyPath:akey], back3.value == checkValue {
-                    return true
-                } else {
-                    return false
-                }
-            }) {
-                var children = [currentPoint]
-                let sidepoint:[PointInfo] = akey3.map { akey in
-                    currentPoint[keyPath: akey]!
-                }
-                children.append(back1)
-                children.append(contentsOf: sidepoint)
-                
-                return (true, currentPoint, "\(akeyPath.stringValue))", children)
-                
-            }
-        }
-        
-    }
-    return (false, nil, "none", [])
-}
 
+    for akey3 in clist {
+        let pointInfos = akey3.compactMap { currentPoint[keyPath: $0] }
 
-func checkPoint4(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
-    if currentPoint.value != checkValue {
-        return (false, nil, "none", [])
-    }
-    let clist = PointInfo.checkList(akeyPath)
-    if let back1 = currentPoint[keyPath:akeyPath] , back1.value == checkValue {
-        for akey in clist {
-            if let back2 = currentPoint[keyPath:akey], back2.value == checkValue {
-                if let back4 = back2[keyPath:PointInfo.checkList4(akeyPath)], back4.value == checkValue {
-                    // print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
-                    return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
-                }
-            }
+        guard pointInfos.count == 2, pointInfos.allSatisfy({ $0.value == checkValue }) else {
+            continue
         }
+
+        let children = [currentPoint, back1] + pointInfos
+        assert(children.count == 4)
+        return (true, currentPoint, "\(akeyPath.stringValue)", children)
     }
+
     return (false, nil, "none", [])
 }
 
 
 
-func checkPoint5(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
-    if currentPoint.value != checkValue {
+func checkPoint4(_ currentPoint: PointInfo, with checkValue: Int, akeyPath: ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
+    guard currentPoint.value == checkValue,
+          let back1 = currentPoint[keyPath: akeyPath],
+          back1.value == checkValue else {
         return (false, nil, "none", [])
     }
+
     let clist = PointInfo.checkList(akeyPath)
-    if let back1 = currentPoint[keyPath:akeyPath] , back1.value == checkValue {
-        for akey in clist {
-            if let back2 = currentPoint[keyPath:akey], back2.value == checkValue {
-                if let zuo = PointInfo.calculateThirdKeyPath5(akeyPath, akey), let back4 = back2[keyPath:zuo] {
-                    if back4.value == checkValue {
-                        // print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
-                        return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
-                    }
-                }
-                if let zuo = PointInfo.calculateThirdKeyPath5(akey, akeyPath), let back4 = back1[keyPath:zuo] {
-                    if back4.value == checkValue {
-                        // print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
-                        return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
-                    }
-                }
-            }
+
+    for akey in clist {
+        guard let back2 = currentPoint[keyPath: akey],
+              back2.value == checkValue,
+              let back4 = back2[keyPath: PointInfo.checkList4(akeyPath)],
+              back4.value == checkValue else {
+            continue
         }
+
+        let resultString = "\(akeyPath.stringValue), \(akey.stringValue)"
+        let resultArray = [currentPoint, back1, back2, back4]
+        return (true, currentPoint, resultString, resultArray)
     }
+
     return (false, nil, "none", [])
 }
 
 
 
-func checkPoint6(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
-    if currentPoint.value != checkValue {
+
+func checkPoint5(_ currentPoint: PointInfo, with checkValue: Int, akeyPath: ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
+    guard currentPoint.value == checkValue,
+          let back1 = currentPoint[keyPath: akeyPath],
+          back1.value == checkValue else {
         return (false, nil, "none", [])
     }
+
     let clist = PointInfo.checkList(akeyPath)
-    if let back1 = currentPoint[keyPath:akeyPath] , back1.value == checkValue {
-        for akey in clist {
-            if let back2 = currentPoint[keyPath:akey], back2.value == checkValue {
-                if let zuo = PointInfo.calculateThirdKeyPath6(akeyPath, akey), let back4 = back2[keyPath:zuo], back4.value == checkValue{
-                    // print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
-                    return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
-                }
-                if let zuo = PointInfo.calculateThirdKeyPath6(akey, akeyPath), let back4 = back1[keyPath:zuo], back4.value == checkValue{
-                    // print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
-                    return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
-                }
-            }
+
+    for akey in clist {
+        guard let back2 = currentPoint[keyPath: akey], back2.value == checkValue else {
+            continue
+        }
+
+        if let zuo = PointInfo.calculateThirdKeyPath5(akeyPath, akey), let back4 = back2[keyPath: zuo], back4.value == checkValue {
+            let resultString = "\(akeyPath.stringValue), \(akey.stringValue)"
+            let resultArray = [currentPoint, back1, back2, back4]
+            return (true, currentPoint, resultString, resultArray)
+        }
+
+        if let zuo = PointInfo.calculateThirdKeyPath5(akey, akeyPath), let back4 = back1[keyPath: zuo], back4.value == checkValue {
+            let resultString = "\(akeyPath.stringValue), \(akey.stringValue)"
+            let resultArray = [currentPoint, back1, back2, back4]
+            return (true, currentPoint, resultString, resultArray)
         }
     }
+
     return (false, nil, "none", [])
 }
 
 
-func checkPoint7(_ currentPoint:PointInfo, with checkValue: Int, akeyPath:ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
-    if currentPoint.value != checkValue {
+
+
+func checkPoint6(_ currentPoint: PointInfo, with checkValue: Int, akeyPath: ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
+    guard currentPoint.value == checkValue,
+          let back1 = currentPoint[keyPath: akeyPath],
+          back1.value == checkValue else {
         return (false, nil, "none", [])
     }
+
     let clist = PointInfo.checkList(akeyPath)
-    if let back1 = currentPoint[keyPath:akeyPath] , back1.value == checkValue {
-        for akey in clist {
-            if let back2 = currentPoint[keyPath:akey], back2.value == checkValue {
-                if let zuo = PointInfo.calculateThirdKeyPath6(akeyPath, akey),
-                   let back4 = currentPoint[keyPath:zuo],
-                   back4.value == checkValue {
-                    // print("currentPoint: value-\(checkValue), \(currentPoint) \(back1) \(back2)")
-                    return (true, currentPoint, "\(akeyPath.stringValue), \(akey.stringValue)", [currentPoint, back1, back2, back4])
-                }
-            }
+
+    for akey in clist {
+        guard let back2 = currentPoint[keyPath: akey], back2.value == checkValue else {
+            continue
+        }
+
+        if let zuo = PointInfo.calculateThirdKeyPath6(akeyPath, akey),
+           let back4 = back2[keyPath: zuo],
+           back4.value == checkValue {
+            let resultString = "\(akeyPath.stringValue), \(akey.stringValue)"
+            let resultArray = [currentPoint, back1, back2, back4]
+            return (true, currentPoint, resultString, resultArray)
+        }
+
+        if let zuo = PointInfo.calculateThirdKeyPath6(akey, akeyPath),
+           let back4 = back1[keyPath: zuo],
+           back4.value == checkValue {
+            let resultString = "\(akeyPath.stringValue), \(akey.stringValue)"
+            let resultArray = [currentPoint, back1, back2, back4]
+            return (true, currentPoint, resultString, resultArray)
         }
     }
+
+    return (false, nil, "none", [])
+}
+func checkPoint7(_ currentPoint: PointInfo, with checkValue: Int, akeyPath: ReferenceWritableKeyPath<PointInfo, PointInfo?>) -> (Bool, PointInfo?, String, [PointInfo]) {
+    guard currentPoint.value == checkValue,
+          let back1 = currentPoint[keyPath: akeyPath],
+          back1.value == checkValue else {
+        return (false, nil, "none", [])
+    }
+
+    let clist = PointInfo.checkList(akeyPath)
+
+    for akey in clist {
+        guard let back2 = currentPoint[keyPath: akey], back2.value == checkValue else {
+            continue
+        }
+
+        if let zuo = PointInfo.calculateThirdKeyPath6(akeyPath, akey),
+           let back4 = currentPoint[keyPath: zuo],
+           back4.value == checkValue {
+            let resultString = "\(akeyPath.stringValue), \(akey.stringValue)"
+            let resultArray = [currentPoint, back1, back2, back4]
+            return (true, currentPoint, resultString, resultArray)
+        }
+    }
+
     return (false, nil, "none", [])
 }
