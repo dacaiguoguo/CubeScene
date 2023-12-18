@@ -31,11 +31,11 @@
 		5B99C3D42B302F5A003E37B5 /* SCNNode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B99C3D12B302F5A003E37B5 /* SCNNode+Extensions.swift */; };
 		5B99C3D52B302F5A003E37B5 /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B99C3D22B302F5A003E37B5 /* Dictionary+Extensions.swift */; };
 		5B99C3D62B302F5A003E37B5 /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B99C3D22B302F5A003E37B5 /* Dictionary+Extensions.swift */; };
-		5B99C3D92B302F71003E37B5 /* RenderOutlineTechnique.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5B99C3D72B302F71003E37B5 /* RenderOutlineTechnique.plist */; };
-		5B99C3DA2B302F71003E37B5 /* RenderOutlineTechnique.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5B99C3D72B302F71003E37B5 /* RenderOutlineTechnique.plist */; };
-		5B99C3DB2B302F71003E37B5 /* RenderOutlineShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 5B99C3D82B302F71003E37B5 /* RenderOutlineShaders.metal */; };
-		5B99C3DC2B302F71003E37B5 /* RenderOutlineShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 5B99C3D82B302F71003E37B5 /* RenderOutlineShaders.metal */; };
 		5BB65C482B2D705F00E97777 /* solutionsMaped6.json in Resources */ = {isa = PBXBuildFile; fileRef = 5BB65C472B2D705F00E97777 /* solutionsMaped6.json */; };
+		5BCBDB7F2B30499A004DDFD2 /* NodeTechnique.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5BCBDB7D2B30499A004DDFD2 /* NodeTechnique.plist */; };
+		5BCBDB802B30499A004DDFD2 /* NodeTechnique.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5BCBDB7D2B30499A004DDFD2 /* NodeTechnique.plist */; };
+		5BCBDB812B30499A004DDFD2 /* NodeRender.metal in Sources */ = {isa = PBXBuildFile; fileRef = 5BCBDB7E2B30499A004DDFD2 /* NodeRender.metal */; };
+		5BCBDB822B30499A004DDFD2 /* NodeRender.metal in Sources */ = {isa = PBXBuildFile; fileRef = 5BCBDB7E2B30499A004DDFD2 /* NodeRender.metal */; };
 		9D04123C2A516AD30083741B /* EnterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04123B2A516AD30083741B /* EnterListView.swift */; };
 		9D04123E2A516F050083741B /* SingleContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04123D2A516F050083741B /* SingleContentView.swift */; };
 		9D0412432A52881A0083741B /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0412412A52881A0083741B /* SettingView.swift */; };
@@ -140,9 +140,9 @@
 		5B99C3C82B302332003E37B5 /* Origin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Origin.swift; sourceTree = "<group>"; };
 		5B99C3D12B302F5A003E37B5 /* SCNNode+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SCNNode+Extensions.swift"; path = "extensions/SCNNode+Extensions.swift"; sourceTree = "<group>"; };
 		5B99C3D22B302F5A003E37B5 /* Dictionary+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Dictionary+Extensions.swift"; path = "extensions/Dictionary+Extensions.swift"; sourceTree = "<group>"; };
-		5B99C3D72B302F71003E37B5 /* RenderOutlineTechnique.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = RenderOutlineTechnique.plist; path = scene_techniques/RenderOutlineTechnique.plist; sourceTree = "<group>"; };
-		5B99C3D82B302F71003E37B5 /* RenderOutlineShaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = RenderOutlineShaders.metal; path = scene_techniques/RenderOutlineShaders.metal; sourceTree = "<group>"; };
 		5BB65C472B2D705F00E97777 /* solutionsMaped6.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = solutionsMaped6.json; sourceTree = "<group>"; };
+		5BCBDB7D2B30499A004DDFD2 /* NodeTechnique.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = NodeTechnique.plist; sourceTree = "<group>"; };
+		5BCBDB7E2B30499A004DDFD2 /* NodeRender.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = NodeRender.metal; sourceTree = "<group>"; };
 		9D04123B2A516AD30083741B /* EnterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterListView.swift; sourceTree = "<group>"; };
 		9D04123D2A516F050083741B /* SingleContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleContentView.swift; sourceTree = "<group>"; };
 		9D0412412A52881A0083741B /* SettingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
@@ -304,8 +304,8 @@
 				9D46D72C2AF13610002DE821 /* support */,
 				9D89A1B12AE37C18008C6707 /* ChaiZiView.swift */,
 				5B99C3D22B302F5A003E37B5 /* Dictionary+Extensions.swift */,
-				5B99C3D82B302F71003E37B5 /* RenderOutlineShaders.metal */,
-				5B99C3D72B302F71003E37B5 /* RenderOutlineTechnique.plist */,
+				5BCBDB7E2B30499A004DDFD2 /* NodeRender.metal */,
+				5BCBDB7D2B30499A004DDFD2 /* NodeTechnique.plist */,
 				5B99C3D12B302F5A003E37B5 /* SCNNode+Extensions.swift */,
 				5B99C3C82B302332003E37B5 /* Origin.swift */,
 				9D89A1B42AE37C19008C6707 /* CoreDataTest.xcdatamodeld */,
@@ -455,7 +455,6 @@
 				59524DBC2A60FC6F0078EBB6 /* InfoPlist.strings in Resources */,
 				9DA0018A2AD6390100FDACFE /* SOMAC3D101.txt in Resources */,
 				9D89A1BA2AE37C19008C6707 /* chaizi-ft.txt in Resources */,
-				5B99C3DA2B302F71003E37B5 /* RenderOutlineTechnique.plist in Resources */,
 				9D890F9D2AD8EF3600E1EF0C /* SOMAC4A101.txt in Resources */,
 				9D7E41202AA2356A00863C43 /* SOMAW101.txt in Resources */,
 				59524DBB2A60FC630078EBB6 /* Localizable.strings in Resources */,
@@ -463,6 +462,7 @@
 				9D89A1C02AE37C19008C6707 /* chaizi-jt.txt in Resources */,
 				9D2D85B32A602AE600B11A7D /* Assets.xcassets in Resources */,
 				59524DC12A60FC970078EBB6 /* Assets.xcassets in Resources */,
+				5BCBDB802B30499A004DDFD2 /* NodeTechnique.plist in Resources */,
 				9D7E411E2AA2356A00863C43 /* SOMAX101.txt in Resources */,
 				9D6DC3E62AA168460068C807 /* SOMAY101.txt in Resources */,
 				9D9448822AB43E0E0005FD11 /* SOMAC3A101.txt in Resources */,
@@ -486,6 +486,7 @@
 				9D890F9C2AD8EF3600E1EF0C /* SOMAC4A101.txt in Resources */,
 				9D7E411F2AA2356A00863C43 /* SOMAW101.txt in Resources */,
 				9DBE04F32A57D6560055AE14 /* InfoPlist.strings in Resources */,
+				5BCBDB7F2B30499A004DDFD2 /* NodeTechnique.plist in Resources */,
 				9D7E411D2AA2356A00863C43 /* SOMAX101.txt in Resources */,
 				9DDEC0D22A6178DF001A0046 /* SOMAT101.txt in Resources */,
 				9DF938112A417BAD001BD720 /* data3.txt in Resources */,
@@ -504,7 +505,6 @@
 				9DF920712A404BBF001BD720 /* Assets.xcassets in Resources */,
 				9D89A1BB2AE37C19008C6707 /* chaizi-gbk.txt in Resources */,
 				9D89A1B92AE37C19008C6707 /* chaizi-ft.txt in Resources */,
-				5B99C3D92B302F71003E37B5 /* RenderOutlineTechnique.plist in Resources */,
 				9DF9380F2A417BA4001BD720 /* data2.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -520,7 +520,6 @@
 				9D46D7262AF12F57002DE821 /* SingleContentView2.swift in Sources */,
 				9D46D7282AF12F57002DE821 /* ScenekitSingleView2.swift in Sources */,
 				9D89A1BE2AE37C19008C6707 /* CoreDataTest.xcdatamodeld in Sources */,
-				5B99C3DC2B302F71003E37B5 /* RenderOutlineShaders.metal in Sources */,
 				59524DBE2A60FC760078EBB6 /* ArrayTool3D.swift in Sources */,
 				5B99C3CA2B302332003E37B5 /* Origin.swift in Sources */,
 				9D7D34C62AF7AA35009291BC /* PointInfo.swift in Sources */,
@@ -531,6 +530,7 @@
 				59524DB92A60FC5C0078EBB6 /* EnterListView.swift in Sources */,
 				59CFCD442A62824000E38F38 /* UserData.swift in Sources */,
 				5B7C065C2B2FEA5B0040942C /* ToolsFunc.swift in Sources */,
+				5BCBDB822B30499A004DDFD2 /* NodeRender.metal in Sources */,
 				59524DC02A60FC7D0078EBB6 /* ConfigView.swift in Sources */,
 				9DDEC0C92A614757001A0046 /* EnterListView240.swift in Sources */,
 				59524DBF2A60FC790078EBB6 /* SettingView.swift in Sources */,
@@ -557,7 +557,6 @@
 				9D46D7252AF12F57002DE821 /* SingleContentView2.swift in Sources */,
 				9D46D7272AF12F57002DE821 /* ScenekitSingleView2.swift in Sources */,
 				9D89A1BD2AE37C19008C6707 /* CoreDataTest.xcdatamodeld in Sources */,
-				5B99C3DB2B302F71003E37B5 /* RenderOutlineShaders.metal in Sources */,
 				5971BA8C2A50547800CD6111 /* ArrayTool3D.swift in Sources */,
 				5B99C3C92B302332003E37B5 /* Origin.swift in Sources */,
 				9D7D34C42AF7A88C009291BC /* PointInfo.swift in Sources */,
@@ -568,6 +567,7 @@
 				9D04123E2A516F050083741B /* SingleContentView.swift in Sources */,
 				59CFCD432A6281F700E38F38 /* UserData.swift in Sources */,
 				5B7C065B2B2FEA570040942C /* ToolsFunc.swift in Sources */,
+				5BCBDB812B30499A004DDFD2 /* NodeRender.metal in Sources */,
 				9DDEC0C62A614716001A0046 /* EnterListView240.swift in Sources */,
 				9D0412432A52881A0083741B /* SettingView.swift in Sources */,
 				9DF9206D2A404BBC001BD720 /* CubeSceneApp.swift in Sources */,

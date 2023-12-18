@@ -11,6 +11,19 @@ import SceneKit
 fileprivate let highlightMaskValue: Int = 2
 fileprivate let normalMaskValue: Int = 1
 
+extension SCNNode {
+    func setHighlighted( _ highlighted : Bool = true, _ highlightedBitMask : Int = 2 ) {
+        if highlighted {
+            categoryBitMask = highlightedBitMask
+            for child in self.childNodes {
+                child.setHighlighted()
+            }
+        } else {
+            categoryBitMask = 1
+        }
+      
+    }
+}
 
 // 这些是 SceneKit 中的调试选项，用于在 `SCNView` 中显示不同的调试信息。这些选项可用于开发和调试 3D  场景。以下是每个选项的简要解释：
 //
@@ -97,30 +110,18 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleTap(_:)))
            sceneView.addGestureRecognizer(tapGesture)
         
-        // Here we load the technique we'll use to achieve a highlight effect around
-        // selected nodes
-        if let fileUrl = Bundle.main.url(forResource: "RenderOutlineTechnique", withExtension: "plist"), let data = try? Data(contentsOf: fileUrl) {
-          if var result = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any] { // [String: Any] which ever it is
-            
-            // Here we update the size and scale factor in the original technique file
-            // to whichever size and scale factor the current device is so that
-            // we avoid crazy aliasing
-            let nativePoints = UIScreen.main.bounds
-            let nativeScale = UIScreen.main.nativeScale
-            result[keyPath: "targets.MASK.size"] = "\(nativePoints.width)x\(nativePoints.height)"
-            result[keyPath: "targets.MASK.scaleFactor"] = nativeScale
-            
-            guard let technique = SCNTechnique(dictionary: result) else {
-              fatalError("This shouldn't be happening! 🤔")
-            }
+        if let path = Bundle.main.path(forResource: "NodeTechnique", ofType: "plist") {
+            if let dict = NSDictionary(contentsOfFile: path)  {
+                let dict2 = dict as! [String : AnyObject]
+                let technique = SCNTechnique(dictionary:dict2)
 
-              sceneView.technique = technique
-          }
+                // set the glow color to yellow
+                let color = SCNVector3(1.0, 1.0, 0.0)
+                technique?.setValue(NSValue(scnVector3: color), forKeyPath: "glowColorSymbol")
+
+                self.sceneView.technique = technique
+            }
         }
-        else {
-          fatalError("This shouldn't be happening! Has someone been naughty and deleted the file? 🤔")
-        }
-        
         return sceneView
     }
     
@@ -156,12 +157,14 @@ struct ScenekitSingleView2 : UIViewRepresentable {
                 }
                 if let scene = sceneView.scene {
                     scene.rootNode.enumerateHierarchy { (acnnode, _) in
-                        acnnode.setCategoryBitMaskForAllHierarchy(normalMaskValue)
+                        acnnode.setHighlighted(false)
                     }
                 }
                 // Highlight parent node an all child
                 parentNode.childNodes.forEach { acnnode in
-                    acnnode.setCategoryBitMaskForAllHierarchy(highlightMaskValue)
+                    if let name = acnnode.name, name != "yuanNode" {
+                        acnnode.setHighlighted(true)
+                    }
                 }
             }
         }
