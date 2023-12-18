@@ -8,6 +8,10 @@
 import SwiftUI
 import SceneKit
 
+fileprivate let highlightMaskValue: Int = 2
+fileprivate let normalMaskValue: Int = 1
+
+
 // 这些是 SceneKit 中的调试选项，用于在 `SCNView` 中显示不同的调试信息。这些选项可用于开发和调试 3D  场景。以下是每个选项的简要解释：
 //
 // 1. `.showPhysicsShapes`: 在场景中显示物理形状，以便查看物理引擎中的碰撞体积。
@@ -78,19 +82,45 @@ struct ScenekitSingleView2 : UIViewRepresentable {
     @Binding var selectedSegment:Int
 
     func makeUIView(context: Context) -> SCNView {
-        sceneView.debugOptions = [.showCameras, SCNDebugOptions(rawValue: 2048)]
+        // sceneView.debugOptions = [.showCameras, SCNDebugOptions(rawValue: 2048)]
         // scnView.showsStatistics = true
         let parNode2 = SCNNode()
 
         nodeList.forEach { item in
             parNode2.addChildNode(item)
         }
+        scene.rootNode.addChildNode(Origin(length: 10))
         scene.rootNode.addChildNode(parNode2)
         sceneView.scene = scene
         sceneView.autoenablesDefaultLighting = true
         sceneView.allowsCameraControl = true
         let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleTap(_:)))
            sceneView.addGestureRecognizer(tapGesture)
+        
+        // Here we load the technique we'll use to achieve a highlight effect around
+        // selected nodes
+        if let fileUrl = Bundle.main.url(forResource: "RenderOutlineTechnique", withExtension: "plist"), let data = try? Data(contentsOf: fileUrl) {
+          if var result = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any] { // [String: Any] which ever it is
+            
+            // Here we update the size and scale factor in the original technique file
+            // to whichever size and scale factor the current device is so that
+            // we avoid crazy aliasing
+            let nativePoints = UIScreen.main.bounds
+            let nativeScale = UIScreen.main.nativeScale
+            result[keyPath: "targets.MASK.size"] = "\(nativePoints.width)x\(nativePoints.height)"
+            result[keyPath: "targets.MASK.scaleFactor"] = nativeScale
+            
+            guard let technique = SCNTechnique(dictionary: result) else {
+              fatalError("This shouldn't be happening! 🤔")
+            }
+
+              sceneView.technique = technique
+          }
+        }
+        else {
+          fatalError("This shouldn't be happening! Has someone been naughty and deleted the file? 🤔")
+        }
+        
         return sceneView
     }
     
@@ -126,12 +156,12 @@ struct ScenekitSingleView2 : UIViewRepresentable {
                 }
                 if let scene = sceneView.scene {
                     scene.rootNode.enumerateHierarchy { (acnnode, _) in
-                        acnnode.geometry?.firstMaterial?.emission.contents = UIColor.black
+                        acnnode.setCategoryBitMaskForAllHierarchy(normalMaskValue)
                     }
                 }
                 // Highlight parent node an all child
                 parentNode.childNodes.forEach { acnnode in
-                    acnnode.geometry?.firstMaterial?.emission.contents = UIColor.lightGray.withAlphaComponent(0.2)
+                    acnnode.setCategoryBitMaskForAllHierarchy(highlightMaskValue)
                 }
             }
         }

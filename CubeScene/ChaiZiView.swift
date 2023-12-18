@@ -38,37 +38,51 @@ struct ChaiZiView<T>: View where T:AbsEntity {
             VStack {
                 pickerView()
                 inputView()
-                ScrollView {
-                    LazyVStack(alignment: .leading) {
-                        ForEach(items) { item in
-                            HStack{
-                                content(item)
-                                Spacer()
-                                Text(getPinyin(from: String((item.name?.first)!) ) ?? "")
-                                Button(action: {
-                                    item.isStarred.toggle()
-                                    do {
-                                        try viewContext.save()
-                                    } catch {
-                                        print("Error saving context: \(error)")
-                                    }
-
-                                }) {
-                                    Image(systemName: item.isStarred ? "star.fill" : "star")
-                                        .foregroundColor(item.isStarred ? .yellow : .gray)
-                                }
-                                .frame(width: 60)
-                                detailButton(item)
-                            }.padding()
-                            Divider()
-                        }
-                    }
-                }
+                contentList()
             }
-            .navigationTitle(titleStr).navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(titleStr)
+            .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: Image("AppIconSmall"))
             .onAppear(perform: addAllItem)
-        }.navigationViewStyle(StackNavigationViewStyle())
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
+    }
+
+    private func contentList() -> some View {
+        ScrollView {
+            LazyVStack(alignment: .leading) {
+                ForEach(items) { item in
+                    contentRow(for: item)
+                    Divider()
+                }
+            }
+        }
+    }
+
+    private func contentRow(for item: T) -> some View {
+        HStack {
+            content(item)
+            Spacer()
+            Text(getPinyin(from: String(item.name?.first ?? Character("")) ) ?? "")
+            starButton(for: item)
+            detailButton(item)
+        }
+        .padding()
+    }
+
+    private func starButton(for item: T) -> some View {
+        Button(action: {
+            item.isStarred.toggle()
+            do {
+                try viewContext.save()
+            } catch {
+                print("Error saving context: \(error)")
+            }
+        }) {
+            Image(systemName: item.isStarred ? "star.fill" : "star")
+                .foregroundColor(item.isStarred ? .yellow : .gray)
+        }
+        .frame(width: 60)
     }
 
 

@@ -10,30 +10,26 @@ import SwiftUI
 
 struct ItemColor: Decodable {
     var index:Int = 0
-    var colorData:Data = try! NSKeyedArchiver.archivedData(withRootObject: UIColor.black, requiringSecureCoding: false)
+    var colorData:Data = UIColor.black.encode()!
 
 
     init(index: Int, uicolor: UIColor) {
         self.index = index
-        self.colorData = try! NSKeyedArchiver.archivedData(withRootObject: uicolor, requiringSecureCoding: false)
+        self.colorData = uicolor.encode()!
     }
 
     init(index: Int, color: Color) {
         self.index = index
-        self.colorData = try! NSKeyedArchiver.archivedData(withRootObject: UIColor(color), requiringSecureCoding: false)
+        self.colorData = UIColor(color).encode()!
     }
 
     var uicolor: UIColor {
-        do {
-            if let colorret = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(colorData) as? UIColor {
-                // Use the color
-                //                print("colorret:\(colorret)")
-                return colorret
-            } else {
-                print("Failed to convert data to UIColor")
-            }
-        } catch {
-            print("Failed to convert data to UIColor: \(error)")
+        if let colorret = UIColor.decode(data: colorData) {
+            // Use the color
+            //                print("colorret:\(colorret)")
+            return colorret
+        } else {
+            print("Failed to convert data to UIColor")
         }
         return UIColor.black
     }

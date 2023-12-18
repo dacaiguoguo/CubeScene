@@ -196,7 +196,7 @@ public struct SettingView: View {
             Section(content: {
 
                 NavigationLink {
-                    ChaiZiView<FtItem>(filename: "chaizi-jt", titleStr: "简体拆字字典")
+                    ChaiZiView<JtItem>(filename: "chaizi-jt", titleStr: "简体拆字字典")
                         .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 } label: {
                     HStack{
