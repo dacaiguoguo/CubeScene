@@ -203,12 +203,12 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         yuanNode.position = v3Add(left:positionOrgList[indexValue], right:SCNVector3Make(Float(-1), Float(rows-1), Float(-1)))
         yuanNode.name = "yuanNode"
         yuanNode.orgPosition = yuanNode.position
-        #if DEBUG
+        
         let yuanInner = SCNSphere(radius: 0.55)
         yuanInner.firstMaterial?.diffuse.contents = UIColor.black
         let yuanNodeInner = SCNNode(geometry: yuanInner)
         yuanNode.addChildNode(yuanNodeInner)
-        #endif
+        
         yuanNode.name = lpoint.name
         zhuanNode(lpoint, yuanNode: yuanNode)
         

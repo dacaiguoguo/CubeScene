@@ -37,7 +37,7 @@ vertex out_vertex_t mask_vertex(custom_vertex_t in [[stage_in]],
 fragment half4 mask_fragment(out_vertex_t in [[stage_in]],
                                           texture2d<float, access::sample> colorSampler [[texture(0)]])
 {
-    constexpr sampler sampler2d(coord::normalized, filter::linear, address::repeat);
+    // constexpr sampler sampler2d(coord::normalized, filter::linear, address::repeat);
     return half4(1.0);
 };
 
@@ -75,6 +75,10 @@ fragment half4 combine_fragment(out_vertex_t vert [[stage_in]],
     float3 glowColor = inputs.glowColor;
     
     float alpha = maskColor.r;
+//    变成实线
+//    if (alpha > 0.0) {
+//      alpha = 1;
+//    }
     float3 out = FragmentColor.rgb * ( 1.0 - alpha ) + alpha * glowColor;
     return half4( float4(out.rgb, 1.0) );
     
@@ -91,7 +95,9 @@ vertex out_vertex_t blur_vertex(custom_vertex_t in [[stage_in]])
 };
 
 // http://rastergrid.com/blog/2010/09/efficient-gaussian-blur-with-linear-sampling/
-constant float offset[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
+// 默认值 太细了 我改成 2、4、6、8 变宽了，为啥不知道
+// constant float offset[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
+constant float offset[] = { 0.0, 2.0, 4.0, 6.0, 8.0 };
 constant float weight[] = { 0.2270270270, 0.1945945946, 0.1216216216, 0.0540540541, 0.0162162162 };
 constant float bufferSize = 512.0;
 
