@@ -20,6 +20,33 @@ extension PointInfo {
     }
 }
 
+extension UIColor {
+    func darker(by percentage: CGFloat = 20.0) -> UIColor {
+        return adjust(by: -abs(percentage))
+    }
+
+    func lighter(by percentage: CGFloat = 20.0) -> UIColor {
+        return adjust(by: abs(percentage))
+    }
+
+    private func adjust(by percentage: CGFloat) -> UIColor {
+        var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        if getHue(&h, saturation: &s, brightness: &b, alpha: &a) {
+            return UIColor(hue: h,
+                           saturation: s,
+                           brightness: min(max(b + percentage/100.0, 0.0), 1.0),
+                           alpha: a)
+        } else {
+            return self
+        }
+    }
+}
+
+// 使用示例
+let originalColor = UIColor(hex: "5B5B5B")
+let darkerColor = originalColor.darker(by: 20.0)
+let lighterColor = originalColor.lighter(by: 20.0)
+
 
 extension SCNNode {
     private struct AssociatedKeys {
@@ -205,7 +232,7 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         yuanNode.orgPosition = yuanNode.position
         
         let yuanInner = SCNSphere(radius: 0.55)
-        yuanInner.firstMaterial?.diffuse.contents = UIColor.black
+        yuanInner.firstMaterial?.diffuse.contents = colors[indexValue].darker()
         let yuanNodeInner = SCNNode(geometry: yuanInner)
         yuanNode.addChildNode(yuanNodeInner)
         
@@ -220,7 +247,14 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
             } else {
                 box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(1.0)
             }
+            
+            let yuanInner = SCNSphere(radius: 0.55)
+            yuanInner.firstMaterial?.diffuse.contents = colors[indexValue].darker()
+            let yuanNodeInner = SCNNode(geometry: yuanInner)
+            
             let boxNode2 = SCNNode()
+            boxNode2.addChildNode(yuanNodeInner)
+
             boxNode2.geometry = box2
             boxNode2.name = "\(value)"
             

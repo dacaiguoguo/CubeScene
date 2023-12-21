@@ -8,6 +8,41 @@
 import SwiftUI
 import SceneKit
 
+struct CustomStepper: View {
+    var onIncrement: (() -> Void)?
+    var onDecrement: (() -> Void)?
+    var leftButtonText: String
+    var rightButtonText: String
+    let titleColor: Color//  = .white
+
+    var body: some View {
+        HStack {
+            Button(action: {
+                self.onDecrement?()
+            }) {
+                Text(leftButtonText).foregroundColor(titleColor).padding(EdgeInsets(top: 6, leading: 10, bottom: 6, trailing: 10))
+                .background(Color.white)
+
+
+            }.cornerRadius(8).overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(titleColor, lineWidth: 2)
+            )  // 设置按钮的圆角
+            Button(action: {
+                self.onIncrement?()
+            }) {
+                Text(rightButtonText).foregroundColor(titleColor).padding(EdgeInsets(top: 6, leading: 10, bottom: 6, trailing: 10))
+                    .background(Color.white)
+            }.cornerRadius(8).overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(titleColor, lineWidth: 2)
+            )  // 设置按钮的圆角 .frame(width: 44, height: 33)
+        }
+    }
+}
+
+
+
 public struct SingleContentView2: View {
     
     let segments = {[1,2,3,4,5,6,7].map { index in
@@ -36,7 +71,7 @@ public struct SingleContentView2: View {
                 }.frame(height: 150).padding()
                 
             }
-            pickerView()
+            // pickerView()
             
         }.navigationBarItems(trailing:completeStatus()).navigationTitle(Text("步数:\(stepcount)"))
     }
@@ -134,49 +169,43 @@ public struct SingleContentView2: View {
     
     func stepperView() -> some View {
         VStack(alignment: .trailing) {
-            Stepper {
-                Text("X")
-            } onIncrement :{
+            CustomStepper(onIncrement: {
                 nodeList.filter({ node in
                     node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(1.0, 0, 0), duration: 0.1))
                 stepcount += 1;
-            } onDecrement: {
+            }, onDecrement: {
                 nodeList.filter({ node in
                     node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(-1.0, 0, 0), duration: 0.1))
                 stepcount += 1;
-            }
+            }, leftButtonText: "左", rightButtonText: "右", titleColor: .blue)
             
-            Stepper {
-                Text("Y")
-            } onIncrement :{
+            CustomStepper(onIncrement :{
                 stepcount += 1;
                 nodeList.filter({ node in
                     node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 1.0, 0), duration: 0.1))
-            } onDecrement: {
+            }, onDecrement: {
                 stepcount += 1;
                 nodeList.filter({ node in
                     node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, -1.0, 0), duration: 0.1))
-            }
+            }, leftButtonText: "下", rightButtonText: "上", titleColor: .green)
+ 
             
-            Stepper {
-                Text("Z")
-            } onIncrement :{
+            CustomStepper(onIncrement :{
                 stepcount += 1;
-                
                 nodeList.filter({ node in
                     node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 0, 1.0), duration: 0.1))
-            } onDecrement: {
+            }, onDecrement: {
                 stepcount += 1;
                 
                 nodeList.filter({ node in
                     node.name == blockName
                 }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 0, -1.0), duration: 0.1))
-            }
+            }, leftButtonText: "后", rightButtonText: "前", titleColor: .red)
         }.frame(width: 120)
     }
     
@@ -206,13 +235,12 @@ struct CustomButton: View {
                 .padding(6)
                 .background(Color.white)
                 .foregroundColor(titleColor)
-                .cornerRadius(10)
+                .cornerRadius(8)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 10)
+                    RoundedRectangle(cornerRadius: 8)
                         .stroke(titleColor, lineWidth: 2)
                 )
-        } .background(Color.yellow)
-            .cornerRadius(8)
+        }
     }
 }
 

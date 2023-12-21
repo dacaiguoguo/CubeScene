@@ -27,8 +27,6 @@
 		5B7C065C2B2FEA5B0040942C /* ToolsFunc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C065A2B2FEA570040942C /* ToolsFunc.swift */; };
 		5B99C3C92B302332003E37B5 /* Origin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B99C3C82B302332003E37B5 /* Origin.swift */; };
 		5B99C3CA2B302332003E37B5 /* Origin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B99C3C82B302332003E37B5 /* Origin.swift */; };
-		5B99C3D32B302F5A003E37B5 /* SCNNode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B99C3D12B302F5A003E37B5 /* SCNNode+Extensions.swift */; };
-		5B99C3D42B302F5A003E37B5 /* SCNNode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B99C3D12B302F5A003E37B5 /* SCNNode+Extensions.swift */; };
 		5B99C3D52B302F5A003E37B5 /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B99C3D22B302F5A003E37B5 /* Dictionary+Extensions.swift */; };
 		5B99C3D62B302F5A003E37B5 /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B99C3D22B302F5A003E37B5 /* Dictionary+Extensions.swift */; };
 		5BB65C482B2D705F00E97777 /* solutionsMaped6.json in Resources */ = {isa = PBXBuildFile; fileRef = 5BB65C472B2D705F00E97777 /* solutionsMaped6.json */; };
@@ -138,7 +136,6 @@
 		5B6FE7612B2D42E30035DD0F /* cube2.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = cube2.scn; sourceTree = "<group>"; };
 		5B7C065A2B2FEA570040942C /* ToolsFunc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsFunc.swift; sourceTree = "<group>"; };
 		5B99C3C82B302332003E37B5 /* Origin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Origin.swift; sourceTree = "<group>"; };
-		5B99C3D12B302F5A003E37B5 /* SCNNode+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SCNNode+Extensions.swift"; path = "extensions/SCNNode+Extensions.swift"; sourceTree = "<group>"; };
 		5B99C3D22B302F5A003E37B5 /* Dictionary+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Dictionary+Extensions.swift"; path = "extensions/Dictionary+Extensions.swift"; sourceTree = "<group>"; };
 		5BB65C472B2D705F00E97777 /* solutionsMaped6.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = solutionsMaped6.json; sourceTree = "<group>"; };
 		5BCBDB7D2B30499A004DDFD2 /* NodeTechnique.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = NodeTechnique.plist; sourceTree = "<group>"; };
@@ -306,7 +303,6 @@
 				5B99C3D22B302F5A003E37B5 /* Dictionary+Extensions.swift */,
 				5BCBDB7E2B30499A004DDFD2 /* NodeRender.metal */,
 				5BCBDB7D2B30499A004DDFD2 /* NodeTechnique.plist */,
-				5B99C3D12B302F5A003E37B5 /* SCNNode+Extensions.swift */,
 				5B99C3C82B302332003E37B5 /* Origin.swift */,
 				9D89A1B42AE37C19008C6707 /* CoreDataTest.xcdatamodeld */,
 				9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */,
@@ -536,7 +532,6 @@
 				59524DBF2A60FC790078EBB6 /* SettingView.swift in Sources */,
 				9D89A1B82AE37C19008C6707 /* ChaiZiView.swift in Sources */,
 				59524DBA2A60FC5F0078EBB6 /* SingleContentView.swift in Sources */,
-				5B99C3D42B302F5A003E37B5 /* SCNNode+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -573,7 +568,6 @@
 				9DF9206D2A404BBC001BD720 /* CubeSceneApp.swift in Sources */,
 				9D89A1B72AE37C19008C6707 /* ChaiZiView.swift in Sources */,
 				9D04123C2A516AD30083741B /* EnterListView.swift in Sources */,
-				5B99C3D32B302F5A003E37B5 /* SCNNode+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
