@@ -42,10 +42,17 @@ extension UIColor {
     }
 }
 
-// 使用示例
-let originalColor = UIColor(hex: "5B5B5B")
-let darkerColor = originalColor.darker(by: 20.0)
-let lighterColor = originalColor.lighter(by: 20.0)
+//// 使用示例
+//let originalColor = UIColor(hex: "5B5B5B")
+//let darkerColor = originalColor.darker(by: 20.0)
+//let lighterColor = originalColor.lighter(by: 20.0)
+
+extension SCNVector3 {
+    static func + (lhs: SCNVector3, rhs: SCNVector3) -> SCNVector3 {
+        return SCNVector3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z)
+    }
+}
+
 
 
 extension SCNNode {

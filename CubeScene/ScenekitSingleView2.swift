@@ -19,7 +19,10 @@ extension SCNNode {
                 child.setHighlighted()
             }
         } else {
-            categoryBitMask = 1
+            categoryBitMask = normalMaskValue
+            for child in self.childNodes {
+                child.setHighlighted(false)
+            }
         }
       
     }

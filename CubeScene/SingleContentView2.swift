@@ -100,36 +100,39 @@ public struct SingleContentView2: View {
             node2.position = node2.orgPosition ?? node2.position
             node2.rotation = node2.rotationTo ?? node2.rotation
             node2.transform = node2.transformTo ?? node2.transform;
+            node2.setHighlighted(false)
         }
     }
     
-    func actionRunAt(index: Int) -> Void {
+    func actionRunAt(index: Int) {
         // 判断是否存在小数
         guard counter.truncatingRemainder(dividingBy: 1) != 0 else {
             return
         }
+
         guard index < nodeList.count else {
             return
         }
-        var actionList:[SCNAction] = []
-        var topPosition = nodeList[index].positionTo!;
-        topPosition.y += 5;
-        actionList.append(SCNAction.move(to: topPosition, duration: 0.2));
-        let destPosition = nodeList[index].positionTo!;
-        actionList.append(SCNAction.rotate(toAxisAngle: SCNVector4Zero, duration: 0.2));
-        actionList.append(SCNAction.move(to: destPosition, duration: 0.2));
-        nodeList[index].runAction(SCNAction.sequence(actionList), completionHandler: {
+
+        var actionList: [SCNAction] = []
+
+        let topPosition = nodeList[index].positionTo! + SCNVector3(0, 5, 0)
+        actionList.append(SCNAction.move(to: topPosition, duration: 0.2))
+        actionList.append(SCNAction.rotate(toAxisAngle: SCNVector4Zero, duration: 0.2))
+        actionList.append(SCNAction.move(to: nodeList[index].positionTo!, duration: 0.2))
+
+        nodeList[index].runAction(SCNAction.sequence(actionList)) {
             // 判断是否存在小数
             if counter.truncatingRemainder(dividingBy: 1) != 0 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    actionRunAt(index: index + 1);
+                    actionRunAt(index: index + 1)
                 }
             } else {
                 print("没有小数")
             }
-      
-        })
+        }
     }
+
     
     var blockName:String {
         segments[selectedSegment]
@@ -161,53 +164,48 @@ public struct SingleContentView2: View {
     
     func rotationView() -> some View {
         VStack {
-            CustomButton(title: "旋转X", titleColor:.blue) {rotationMethod(.x)}
-            CustomButton(title: "旋转Y", titleColor:.green) {rotationMethod(.y)}
-            CustomButton(title: "旋转Z", titleColor:.red)  {rotationMethod(.z)}
-        }.padding()
+            ForEach([("旋转X", .blue, .x), ("旋转Y", .green, .y), ("旋转Z", .red, .z)], id: \.0) { title, color, axis in
+                CustomButton(title: title, titleColor: color) {
+                    rotationMethod(axis)
+                }
+            }
+        }
+        .padding()
     }
+
     
+    enum Direction {
+        case left, right, up, down, forward, backward
+
+        var vector: SCNVector3 {
+            switch self {
+            case .left: return SCNVector3Make(-1.0, 0, 0)
+            case .right: return SCNVector3Make(1.0, 0, 0)
+            case .up: return SCNVector3Make(0, 1.0, 0)
+            case .down: return SCNVector3Make(0, -1.0, 0)
+            case .forward: return SCNVector3Make(0, 0, 1.0)
+            case .backward: return SCNVector3Make(0, 0, -1.0)
+            }
+        }
+    }
+
+    func moveNode(in direction: Direction) {
+        guard let node = nodeList.first(where: { $0.name == blockName }) else { return }
+        node.runAction(SCNAction.move(by: direction.vector, duration: 0.1))
+        stepcount += 1
+    }
+
     func stepperView() -> some View {
         VStack(alignment: .trailing) {
-            CustomStepper(onIncrement: {
-                nodeList.filter({ node in
-                    node.name == blockName
-                }).first?.runAction(SCNAction.move(by: SCNVector3Make(1.0, 0, 0), duration: 0.1))
-                stepcount += 1;
-            }, onDecrement: {
-                nodeList.filter({ node in
-                    node.name == blockName
-                }).first?.runAction(SCNAction.move(by: SCNVector3Make(-1.0, 0, 0), duration: 0.1))
-                stepcount += 1;
-            }, leftButtonText: "左", rightButtonText: "右", titleColor: .blue)
+            CustomStepper(onIncrement: { moveNode(in: .right) }, onDecrement: { moveNode(in: .left) }, leftButtonText: "左", rightButtonText: "右", titleColor: .blue)
             
-            CustomStepper(onIncrement :{
-                stepcount += 1;
-                nodeList.filter({ node in
-                    node.name == blockName
-                }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 1.0, 0), duration: 0.1))
-            }, onDecrement: {
-                stepcount += 1;
-                nodeList.filter({ node in
-                    node.name == blockName
-                }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, -1.0, 0), duration: 0.1))
-            }, leftButtonText: "下", rightButtonText: "上", titleColor: .green)
- 
+            CustomStepper(onIncrement: { moveNode(in: .up) }, onDecrement: { moveNode(in: .down) }, leftButtonText: "下", rightButtonText: "上", titleColor: .green)
             
-            CustomStepper(onIncrement :{
-                stepcount += 1;
-                nodeList.filter({ node in
-                    node.name == blockName
-                }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 0, 1.0), duration: 0.1))
-            }, onDecrement: {
-                stepcount += 1;
-                
-                nodeList.filter({ node in
-                    node.name == blockName
-                }).first?.runAction(SCNAction.move(by: SCNVector3Make(0, 0, -1.0), duration: 0.1))
-            }, leftButtonText: "后", rightButtonText: "前", titleColor: .red)
-        }.frame(width: 120)
+            CustomStepper(onIncrement: { moveNode(in: .forward) }, onDecrement: { moveNode(in: .backward) }, leftButtonText: "后", rightButtonText: "前", titleColor: .red)
+        }
+        .frame(width: 120)
     }
+
     
     func lognodeInfo() -> Void {
         nodeList.forEach { node in
