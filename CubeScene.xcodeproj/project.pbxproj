@@ -544,7 +544,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# 定义 InfoPlist.strings 文件的路径\ninfoPlistStringsEN=\"${SRCROOT}/CubeScene/support/en.lproj/InfoPlist.strings\"\ninfoPlistStringsZH=\"${SRCROOT}/CubeScene/support/zh-Hans.lproj/InfoPlist.strings\"\n\n# 根据构建配置更新文件\nif [ \"${prod}\" == \"Debug\" ]; then\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABoxDebug\\\";\" > $infoPlistStringsEN\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABoxDebug\\\";\" > $infoPlistStringsZH\nelif [ \"${CONFIGURATION}\" == \"Release\" ]; then\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABoxRelease\\\";\" > $infoPlistStringsEN\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABoxRelease\\\";\" > $infoPlistStringsZH\nelse\n    echo \"Unknown configuration: ${CONFIGURATION}\"\nfi\n";
+			shellScript = "# 定义 InfoPlist.strings 文件的路径\ninfoPlistStringsEN=\"${SRCROOT}/CubeScene/support/en.lproj/InfoPlist.strings\"\ninfoPlistStringsZH=\"${SRCROOT}/CubeScene/support/zh-Hans.lproj/InfoPlist.strings\"\n\n# 根据构建配置更新文件\nif [ \"${prod}\" == \"Debug\" ]; then\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABoxDebug\\\";\" > $infoPlistStringsEN\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABoxDebug\\\";\" > $infoPlistStringsZH\nelif [ \"${prod}\" == \"Release\" ]; then\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABoxRelease\\\";\" > $infoPlistStringsEN\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABoxRelease\\\";\" > $infoPlistStringsZH\nelse\n    echo \"Unknown configuration: ${CONFIGURATION}\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
