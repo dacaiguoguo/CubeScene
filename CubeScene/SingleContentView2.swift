@@ -8,6 +8,22 @@
 import SwiftUI
 import SceneKit
 
+enum CSDirection {
+    case left, right, up, down, forward, backward
+
+    var vector: SCNVector3 {
+        switch self {
+        case .left: return SCNVector3Make(-1.0, 0, 0)
+        case .right: return SCNVector3Make(1.0, 0, 0)
+        case .up: return SCNVector3Make(0, 1.0, 0)
+        case .down: return SCNVector3Make(0, -1.0, 0)
+        case .forward: return SCNVector3Make(0, 0, 1.0)
+        case .backward: return SCNVector3Make(0, 0, -1.0)
+        }
+    }
+}
+
+
 struct CustomStepper: View {
     var onIncrement: (() -> Void)?
     var onDecrement: (() -> Void)?
@@ -15,25 +31,49 @@ struct CustomStepper: View {
     var rightButtonText: String
     let titleColor: Color//  = .white
 
+    func imageName(_ text:String) -> String {
+        switch text {
+        case "左":
+            return "arrow.left.circle"
+        case "右":
+            return "arrow.right.circle"
+        case "上":
+            return "arrow.up.circle"
+        case "下":
+            return "arrow.down.circle"
+        case "前":
+            return "f.circle"
+        case "后":
+            return "b.circle"
+        default:
+            return ""
+        }
+    }
+    
     var body: some View {
         HStack {
             Button(action: {
                 self.onDecrement?()
             }) {
-                Text(leftButtonText).foregroundColor(titleColor).padding(EdgeInsets(top: 6, leading: 10, bottom: 6, trailing: 10))
+                HStack{
+                    Text(leftButtonText).foregroundColor(titleColor)
+                    Image(systemName: imageName(leftButtonText))
+                }
+                .padding(10)
                 .background(Color.white)
-
-
-            }.cornerRadius(8).overlay(
+            }.background(Color.white).cornerRadius(8).overlay(
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(titleColor, lineWidth: 2)
             )  // 设置按钮的圆角
             Button(action: {
                 self.onIncrement?()
             }) {
-                Text(rightButtonText).foregroundColor(titleColor).padding(EdgeInsets(top: 6, leading: 10, bottom: 6, trailing: 10))
-                    .background(Color.white)
-            }.cornerRadius(8).overlay(
+                HStack{
+                    Text(rightButtonText).foregroundColor(titleColor)
+                    Image(systemName: imageName(rightButtonText))
+                }.padding(10)
+                
+            }.background(Color.white).cornerRadius(8).overlay(
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(titleColor, lineWidth: 2)
             )  // 设置按钮的圆角 .frame(width: 44, height: 33)
@@ -174,22 +214,8 @@ public struct SingleContentView2: View {
     }
 
     
-    enum Direction {
-        case left, right, up, down, forward, backward
-
-        var vector: SCNVector3 {
-            switch self {
-            case .left: return SCNVector3Make(-1.0, 0, 0)
-            case .right: return SCNVector3Make(1.0, 0, 0)
-            case .up: return SCNVector3Make(0, 1.0, 0)
-            case .down: return SCNVector3Make(0, -1.0, 0)
-            case .forward: return SCNVector3Make(0, 0, 1.0)
-            case .backward: return SCNVector3Make(0, 0, -1.0)
-            }
-        }
-    }
-
-    func moveNode(in direction: Direction) {
+    
+    func moveNode(in direction: CSDirection) {
         guard let node = nodeList.first(where: { $0.name == blockName }) else { return }
         node.runAction(SCNAction.move(by: direction.vector, duration: 0.1))
         stepcount += 1
@@ -203,7 +229,7 @@ public struct SingleContentView2: View {
             
             CustomStepper(onIncrement: { moveNode(in: .forward) }, onDecrement: { moveNode(in: .backward) }, leftButtonText: "后", rightButtonText: "前", titleColor: .red)
         }
-        .frame(width: 120)
+        .frame(width: 150)
     }
 
     
@@ -230,7 +256,7 @@ struct CustomButton: View {
     var body: some View {
         Button(action: action) {
             Text(title)
-                .padding(6)
+                .padding(10)
                 .background(Color.white)
                 .foregroundColor(titleColor)
                 .cornerRadius(8)
