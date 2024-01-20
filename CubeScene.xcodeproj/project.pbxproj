@@ -379,6 +379,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9DF920772A404BBF001BD720 /* Build configuration list for PBXNativeTarget "CubeScene" */;
 			buildPhases = (
+				5B2FF4CE2B5B434800AC3351 /* appname */,
+				5B2FF4CD2B5B412800AC3351 /* appicon */,
 				9DF920652A404BBC001BD720 /* Sources */,
 				9DF920662A404BBC001BD720 /* Frameworks */,
 				9DF920672A404BBC001BD720 /* Resources */,
@@ -506,6 +508,45 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5B2FF4CD2B5B412800AC3351 /* appicon */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = appicon;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# 根据环境变量设置 App Icon\nrm -rf \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset\"\n\nif [ \"${CONFIGURATION}\" == \"Release\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.release.appiconset\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset\"\nelif [ \"${CONFIGURATION}\" == \"Debug\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.debug.appiconset\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset\"\nelse\n    echo \"Unknown configuration: ${CONFIGURATION}\"\nfi\n";
+		};
+		5B2FF4CE2B5B434800AC3351 /* appname */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = appname;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# 定义 InfoPlist.strings 文件的路径\ninfoPlistStringsEN=\"${SRCROOT}/CubeScene/support/en.lproj/InfoPlist.strings\"\ninfoPlistStringsZH=\"${SRCROOT}/CubeScene/support/zh-Hans.lproj/InfoPlist.strings\"\n\n# 根据构建配置更新文件\nif [ \"${prod}\" == \"Debug\" ]; then\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABoxDebug\\\";\" > $infoPlistStringsEN\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABoxDebug\\\";\" > $infoPlistStringsZH\nelif [ \"${CONFIGURATION}\" == \"Release\" ]; then\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABoxRelease\\\";\" > $infoPlistStringsEN\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABoxRelease\\\";\" > $infoPlistStringsZH\nelse\n    echo \"Unknown configuration: ${CONFIGURATION}\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9D2D85A82A602AE400B11A7D /* Sources */ = {
@@ -847,6 +888,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"CubeScene/Preview Content\"";
 				DEVELOPMENT_TEAM = AJG2826637;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CubeScene/support/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "索玛立方体";
@@ -885,6 +927,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"CubeScene/Preview Content\"";
 				DEVELOPMENT_TEAM = AJG2826637;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CubeScene/support/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "索玛立方体";
