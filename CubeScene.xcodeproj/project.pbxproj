@@ -526,7 +526,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# 根据环境变量设置 App Icon\nrm -rf \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset\"\n\nif [ \"${CONFIGURATION}\" == \"Release\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.release.appiconset\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset\"\nelif [ \"${CONFIGURATION}\" == \"Debug\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.debug.appiconset\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset\"\nelse\n    echo \"Unknown configuration: ${CONFIGURATION}\"\nfi\n";
+			shellScript = "# 根据环境变量设置 App Icon\nrm -rf \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset\"\n\nif [ \"${prod}\" == \"Release\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.release.appiconset\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset\"\nelif [ \"${prod}\" == \"Debug\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.debug.appiconset\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset\"\nelse\n    echo \"Unknown configuration: ${CONFIGURATION}\"\nfi\n";
 		};
 		5B2FF4CE2B5B434800AC3351 /* appname */ = {
 			isa = PBXShellScriptBuildPhase;
