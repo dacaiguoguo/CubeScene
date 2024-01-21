@@ -135,12 +135,12 @@ struct CubeSceneApp: App {
 
     func tabForTry() -> some View {
         NavigationView {
-            singleContentView(with: "data1", title: "TabTitleNameY")
+            singleContentView(with: "data1", title: "TabTitleNameTry")
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .tabItem {
             Image(systemName: "highlighter")
-            Text("TabTitleNameY")
+            Text("TabTitleNameTry")
         }
         .tag(3)
     }

@@ -56,7 +56,7 @@ struct CustomStepper: View {
                 self.onDecrement?()
             }) {
                 HStack{
-                    Text(leftButtonText).foregroundColor(titleColor)
+                    Text(LocalizedStringKey(leftButtonText)).foregroundColor(titleColor)
                     Image(systemName: imageName(leftButtonText))
                 }
                 .padding(10)
@@ -69,7 +69,7 @@ struct CustomStepper: View {
                 self.onIncrement?()
             }) {
                 HStack{
-                    Text(rightButtonText).foregroundColor(titleColor)
+                    Text(LocalizedStringKey(rightButtonText)).foregroundColor(titleColor)
                     Image(systemName: imageName(rightButtonText))
                 }.padding(10)
                 
@@ -113,7 +113,7 @@ public struct SingleContentView2: View {
             }
             // pickerView()
             
-        }.navigationBarItems(trailing:completeStatus()).navigationTitle(Text("步数:\(stepcount)"))
+        }.navigationBarItems(trailing:completeStatus()).navigationTitle(LocalizedStringKey("StepCount:\(stepcount)"))
     }
     func completeStatus() -> some View {
         Group {
@@ -121,17 +121,23 @@ public struct SingleContentView2: View {
                 Button(action: {
                     reset()
                 }, label: {
-                    Text("重置\(Int(floor(counter)))")
+                    resetText()
+                    // Text( "\(LocalizedStringKey("Reset")\(Int(floor(counter))"))
                 })
                 Button(action: {
                     reset()
                     counter += 0.001;
                     actionRunAt(index: 0)
                 }, label: {
-                    Text("演示")
+                    Text("DemoShow")
                 })
             }
         }
+    }
+    
+    func resetText() -> some View {
+        let key = LocalizedStringKey("Reset \(Int(floor(counter)))")
+        return Text(key)
     }
     
     func reset() {
@@ -204,7 +210,7 @@ public struct SingleContentView2: View {
     
     func rotationView() -> some View {
         VStack {
-            ForEach([("旋转X", .blue, .x), ("旋转Y", .green, .y), ("旋转Z", .red, .z)], id: \.0) { title, color, axis in
+            ForEach([("RouteX", .blue, .x), ("RouteY", .green, .y), ("RouteZ", .red, .z)], id: \.0) { title, color, axis in
                 CustomButton(title: title, titleColor: color) {
                     rotationMethod(axis)
                 }
@@ -222,14 +228,14 @@ public struct SingleContentView2: View {
     }
 
     func stepperView() -> some View {
-        VStack(alignment: .trailing) {
+        VStack(alignment: .center, spacing: 10) {
             CustomStepper(onIncrement: { moveNode(in: .right) }, onDecrement: { moveNode(in: .left) }, leftButtonText: "左", rightButtonText: "右", titleColor: .blue)
             
             CustomStepper(onIncrement: { moveNode(in: .up) }, onDecrement: { moveNode(in: .down) }, leftButtonText: "下", rightButtonText: "上", titleColor: .green)
             
             CustomStepper(onIncrement: { moveNode(in: .forward) }, onDecrement: { moveNode(in: .backward) }, leftButtonText: "后", rightButtonText: "前", titleColor: .red)
         }
-        .frame(width: 150)
+//        .frame(width: 150)
     }
 
     
@@ -255,7 +261,7 @@ struct CustomButton: View {
     
     var body: some View {
         Button(action: action) {
-            Text(title)
+            Text(LocalizedStringKey(title))
                 .padding(10)
                 .background(Color.white)
                 .foregroundColor(titleColor)

@@ -229,20 +229,13 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
                                [0,0,-5]].map{SCNVector3($0[0], $0[1], $0[2])}
         let colors:[UIColor] = [
             UIColor(hex: "000000"),
-            UIColor.red,
-            .orange,
-            .yellow,
-            .green,
-            .cyan,
-            .blue,
-            .purple
-//            UIColor(hex: "5B5B5B"),
-//            UIColor(hex: "C25C1D"),
-//            UIColor(hex: "2788e7"),
-//            UIColor(hex: "FA2E34"),
-//            UIColor(hex: "FB5BC2"),
-//            UIColor(hex: "FCC633"),
-//            UIColor(hex: "178E20"),
+            UIColor(hex: "5B5B5B"),
+            UIColor(hex: "C25C1D"),
+            UIColor(hex: "2788e7"),
+            UIColor(hex: "FA2E34"),
+            UIColor(hex: "FB5BC2"),
+            UIColor(hex: "FCC633"),
+            UIColor(hex: "178E20"),
         ]
         
         let indexValue = mapColorIndex(value)

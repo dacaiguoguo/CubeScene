@@ -29,13 +29,20 @@ struct EnterListView240: View {
                             .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
                             .disabled(true)
                         VStack(alignment: .leading){
-                            Text(item.name).foregroundColor(.primary).font(.title2)
-                                .padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
+                            indeText(item)
                         }
                     }
                 }
             }
         }
+    }
+    
+    func indeText(_ item:EnterItem) -> some View {
+        let key = LocalizedStringKey("Kind")
+        return HStack{
+            Text(key).foregroundColor(.primary).font(.title2)
+            Text("\(item.name)").foregroundColor(.primary).font(.title2)
+        }.padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
     }
 
     static func produceData() -> [EnterItem]  {
@@ -74,7 +81,7 @@ struct EnterListView240: View {
 
         return (jsonContentData as! [[[[Int]]]]).enumerated().map { index, item in
             
-            return EnterItem(name: "第\(index+1)种", matrix: item,isTaskComplete: false)
+            return EnterItem(name: "\(index + 1)", matrix: item,isTaskComplete: false)
         }
     }
 }

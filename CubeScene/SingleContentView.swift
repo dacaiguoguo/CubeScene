@@ -98,7 +98,7 @@ public struct SingleContentView: View {
                         }
                         Spacer()
                         HStack{
-                            Text("单指旋转\n双指滑动来平移\n双指捏合或张开来放大缩小").font(.subheadline).foregroundColor(.secondary)
+                            Text("SomaDes").font(.subheadline).foregroundColor(.secondary)
                             Spacer()
                         }
                     }
@@ -119,7 +119,7 @@ public struct SingleContentView: View {
                         Button(action: {
                             isTimerRunning.toggle()
                         }) {
-                            Text(isTimerRunning ? "暂停播放" : "自动播放")
+                            Text(isTimerRunning ? "Pause Playback" : "Auto Play")
                                 .font(.custom("Menlo", size: 18))
                                 .foregroundColor(.white)
                                 .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
@@ -127,7 +127,7 @@ public struct SingleContentView: View {
                                 .cornerRadius(8)
                         }.frame(height: 44.0).padding(EdgeInsets(top: 5, leading: 8, bottom: 5, trailing: 5))
                         Spacer()
-                        Stepper("步骤\(value)", onIncrement: incrementStep, onDecrement: decrementStep)
+                        Stepper(LocalizedStringKey("StepSm:\(value)"), onIncrement: incrementStep, onDecrement: decrementStep)
                             .padding(5)
                             .background(Color.white)
                     }
@@ -137,11 +137,12 @@ public struct SingleContentView: View {
             }
            
             if isShowItems {
-                Picker("显示模式", selection: $showType) {
-                    Text("彩色答案").tag(ShowType.colorFul)
-                    Text("出题模式").tag(ShowType.singleColor)
-                    Text("数字模式").tag(ShowType.number)
+                Picker("Display Mode", selection: $showType) {
+                    Text("Colorful Answers").tag(ShowType.colorFul)
+                    Text("Question Mode").tag(ShowType.singleColor)
+                    Text("Number Mode").tag(ShowType.number)
                 }.pickerStyle(.segmented)
+
             }
         }
         .onReceive(timer) { _ in
