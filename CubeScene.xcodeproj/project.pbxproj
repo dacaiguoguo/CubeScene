@@ -526,7 +526,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# 根据环境变量设置 App Icon\nexit 0\nrm -rf \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset\"\n\nif [ \"${prod}\" == \"Release\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.release.appiconset\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset\"\nelif [ \"${prod}\" == \"Debug\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.debug.appiconset\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset\"\nelse\n    echo \"Unknown configuration: ${CONFIGURATION}\"\nfi\n";
+			shellScript = "# 根据环境变量设置 App Icon\n\nif [ \"${prod}\" == \"Release\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.release.appiconset/AppIcon1024.png\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png\"\nelif [ \"${prod}\" == \"Debug\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.debug.appiconset/AppIcon1024.png\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png\"\nelse\n    cp -r \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.release.appiconset/AppIcon1024.png\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png\"\nfi\n";
 		};
 		5B2FF4CE2B5B434800AC3351 /* appname */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -544,7 +544,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# 定义 InfoPlist.strings 文件的路径\ninfoPlistStringsEN=\"${SRCROOT}/CubeScene/support/en.lproj/InfoPlist.strings\"\ninfoPlistStringsZH=\"${SRCROOT}/CubeScene/support/zh-Hans.lproj/InfoPlist.strings\"\n\n# 根据构建配置更新文件\nif [ \"${prod}\" == \"Debug\" ]; then\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABoxDebug\\\";\" > $infoPlistStringsEN\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"索玛立方体Dev\\\";\" > $infoPlistStringsZH\nelif [ \"${prod}\" == \"Release\" ]; then\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"索玛立方体\\\";\" > $infoPlistStringsEN\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABox\\\";\" > $infoPlistStringsZH\nelse\n    echo \"Unknown configuration: ${CONFIGURATION}\"\nfi\n";
+			shellScript = "# 定义 InfoPlist.strings 文件的路径\ninfoPlistStringsEN=\"${SRCROOT}/CubeScene/support/en.lproj/InfoPlist.strings\"\ninfoPlistStringsZH=\"${SRCROOT}/CubeScene/support/zh-Hans.lproj/InfoPlist.strings\"\n\n# 根据构建配置更新文件\nif [ \"${prod}\" == \"Debug\" ]; then\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABoxDebug\\\";\" > $infoPlistStringsEN\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"索玛立方体Dev\\\";\" > $infoPlistStringsZH\nelif [ \"${prod}\" == \"Release\" ]; then\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABox\\\";\" > $infoPlistStringsEN\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"索玛立方体\\\";\" > $infoPlistStringsZH\nelse\n    echo \"Unknown configuration: ${CONFIGURATION}\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
