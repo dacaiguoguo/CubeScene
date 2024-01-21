@@ -79,15 +79,28 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         
         scene.rootNode.addChildNode(cameraNode)
         
-        scene.background.contents = MDLSkyCubeTexture(
-            name: "sky",
-            channelEncoding: .float16,
-            textureDimensions: vector_int2(128, 128),
-            turbidity: 0.2,
-            sunElevation: 1.5,
-            upperAtmosphereScattering: 0.5,
-            groundAlbedo: 0.5
-        )
+//        scene.background.contents = MDLSkyCubeTexture(
+//            name: "sky",
+//            channelEncoding: .float16,
+//            textureDimensions: vector_int2(128, 128),
+//            turbidity: 0.2,
+//            sunElevation: 1.5,
+//            upperAtmosphereScattering: 0.5,
+//            groundAlbedo: 0.5
+//        )
+        // 创建包含六个面的天空盒贴图数组
+        let skyboxImages = [
+            "wenli5.png",   // 右
+            "wenli5.png",    // 左
+            "wenli5.png",     // 上
+            "bgmuban.png",  // 下（这里应使用棕色填充的图像）
+            "wenli5.png",   // 前
+            "wenli5.png"     // 后
+        ].map{UIImage(named: $0)}
+
+        // 将天空盒贴图设置为场景的背景
+        scene.background.contents = skyboxImages
+
         
         return scene
     }()

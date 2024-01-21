@@ -157,7 +157,7 @@ public struct SingleContentView: View {
     func completeStatus() -> some View {
         Group {
             HStack {
-                NavigationLink("Go") {
+                NavigationLink("GoAction") {
                     SingleContentView2(nodeList: makeNode(with: dataModel.matrix))
                 }
 //                Button(action: {
