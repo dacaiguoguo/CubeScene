@@ -526,7 +526,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# 根据环境变量设置 App Icon\n\nif [ \"${prod}\" == \"Release\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.release.appiconset/AppIcon1024.png\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png\"\nelif [ \"${prod}\" == \"Debug\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.debug.appiconset/AppIcon1024.png\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png\"\nelse\n    cp -r \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.debug.appiconset/AppIcon1024.png\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png\"\nfi\n";
+			shellScript = "# 根据环境变量设置 App Icon\n\nif [ \"${prod}\" == \"Release\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/AppIcon.debug.appiconset/AppIcon1024.png\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png\"\nelif [ \"${prod}\" == \"Debug\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/AppIcon.release.appiconset/AppIcon1024.png\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png\"\nelse\n    cp -r \"${SRCROOT}/CubeScene/AppIcon.debug.appiconset/AppIcon1024.png\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png\"\nfi\n";
 		};
 		5B2FF4CE2B5B434800AC3351 /* appname */ = {
 			isa = PBXShellScriptBuildPhase;
