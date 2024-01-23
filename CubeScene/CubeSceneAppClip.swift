@@ -18,7 +18,6 @@
 
 import SwiftUI
 import UIKit
-import RevenueCat
 
 // no changes in your AppDelegate class
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -139,15 +138,7 @@ struct CubeSceneApp: App {
     // MARK: - Launch Tasks
 
     private func performLaunchTasks() {
-        // 执行应用程序启动时的操作
-        Purchases.logLevel = .debug
-        Purchases.configure(withAPIKey: "appl_lNBhYAAESbCcENhLTzCZUYXgoHU")
-        // Using Completion Blocks
-        Purchases.shared.getCustomerInfo { (customerInfo, error) in
-            if customerInfo?.entitlements.all["SOMABox"]?.isActive == true {
-                // User is "premium"f
-            }
-        }
+        // 执行应用程序启动时的操作        
     }
 }
 

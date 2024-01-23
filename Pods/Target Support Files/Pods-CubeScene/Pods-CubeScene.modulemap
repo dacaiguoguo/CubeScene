@@ -1,0 +1,6 @@
+framework module Pods_CubeScene {
+  umbrella header "Pods-CubeScene-umbrella.h"
+
+  export *
+  module * { export * }
+}
