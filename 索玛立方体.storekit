@@ -10,7 +10,7 @@
     "_applicationInternalID" : "6450415992",
     "_developerTeamID" : "AJG2826637",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 727714382.79305398,
+    "_lastSynchronizedDate" : 727791744.25335801,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
@@ -82,6 +82,11 @@
           "internalID" : "6476528713",
           "introductoryOffer" : null,
           "localizations" : [
+            {
+              "description" : "Soma solutions and Idea",
+              "displayName" : "SomaBox",
+              "locale" : "en_US"
+            },
             {
               "description" : "索玛立方体各种玩法",
               "displayName" : "索玛立方体",

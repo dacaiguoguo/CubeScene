@@ -143,6 +143,12 @@ struct CubeSceneApp: App {
         Purchases.logLevel = .debug
         Purchases.configure(withAPIKey: "appl_lNBhYAAESbCcENhLTzCZUYXgoHU")
         // Using Completion Blocks
+        Purchases.shared.getProducts(["6450415992001"]) { stlist in
+            print("\(stlist)")
+        }
+        Purchases.shared.getOfferings(completion: { offers, err in
+            print("\(offers)")
+        })
         Purchases.shared.getCustomerInfo { (customerInfo, error) in
             if customerInfo?.entitlements.all["SOMABox"]?.isActive == true {
                 // User is "premium"f
