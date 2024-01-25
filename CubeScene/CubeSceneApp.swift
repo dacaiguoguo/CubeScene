@@ -18,14 +18,7 @@
 
 import SwiftUI
 import UIKit
-import RevenueCat
 
-// no changes in your AppDelegate class
-class AppDelegate: NSObject, UIApplicationDelegate {
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        return true
-    }
-}
 
 @main
 struct CubeSceneApp: App {
@@ -38,7 +31,16 @@ struct CubeSceneApp: App {
             TabView {
                 tabFor108()
                 tabFor240()
-                tabForT()
+                tabForT().presentPaywallIfNeeded(
+                    requiredEntitlementIdentifier: "soma_t",
+                    purchaseCompleted: { customerInfo in
+                        print("Purchase completed: \(customerInfo.entitlements)")
+                    },
+                    restoreCompleted: { customerInfo in
+                        // Paywall will be dismissed automatically if "pro" is now active.
+                        print("Purchases restored: \(customerInfo.entitlements)")
+                    }
+                )
                 tabForTry()
                 tabForMore()
             }
@@ -139,21 +141,13 @@ struct CubeSceneApp: App {
     // MARK: - Launch Tasks
 
     private func performLaunchTasks() {
-        // 执行应用程序启动时的操作
-        Purchases.logLevel = .debug
-        Purchases.configure(withAPIKey: "appl_lNBhYAAESbCcENhLTzCZUYXgoHU")
-        // Using Completion Blocks
-        Purchases.shared.getProducts(["6450415992001"]) { stlist in
-            print("\(stlist)")
-        }
-        Purchases.shared.getOfferings(completion: { offers, err in
-            print("\(offers)")
-        })
-        Purchases.shared.getCustomerInfo { (customerInfo, error) in
-            if customerInfo?.entitlements.all["SOMABox"]?.isActive == true {
-                // User is "premium"f
-            }
-        }
+       
     }
 }
+
+
+import SwiftUI
+
+import RevenueCat
+import RevenueCatUI
 

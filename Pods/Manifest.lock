@@ -1,16 +1,21 @@
 PODS:
   - RevenueCat (4.32.1)
+  - RevenueCatUI (4.32.1):
+    - RevenueCat (= 4.32.1)
 
 DEPENDENCIES:
   - RevenueCat
+  - RevenueCatUI
 
 SPEC REPOS:
   trunk:
     - RevenueCat
+    - RevenueCatUI
 
 SPEC CHECKSUMS:
   RevenueCat: 435a7e59f541d07bc904a5d9802bcdbc0978140d
+  RevenueCatUI: 7a09480fe34d5bda83c5b9bc42c326e8a3a8c0dc
 
-PODFILE CHECKSUM: 8c30c1e2b7b8df5110710a056fe4c02026633527
+PODFILE CHECKSUM: 70100c16d5d4d16176cf5561919681205b9b678b
 
 COCOAPODS: 1.14.3
