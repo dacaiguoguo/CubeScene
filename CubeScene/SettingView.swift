@@ -76,13 +76,22 @@ public struct SettingView: View {
     public init(){}
 
     let channelLocalDataList:[Channel] = [Channel(channelID: "1", name: "ContentSoma", link: "https://dacaiguoguo.github.io/PrivacyPolicy.html"),
-                                          Channel(channelID: "2", name: "ContentAuthor", link: "mailto:dacaiguoguo@163.com")]
+                                          Channel(channelID: "2", name: "ContentAuthor", link: "mailto:dacaiguoguo@163.com"),
+                                          Channel(channelID: "3", name: "Privacy Policy", link: "https://dacaiguoguo.github.io/PrivacyPolicy.html"),
+                                          Channel(channelID: "4", name: "Terms Of Use", link: "https://dacaiguoguo.github.io/teamuse/termsofuse.html")]
 
     public var body: some View {
    
         List {
             Section(content: {
-
+                ForEach(channelLocalDataList) { channel in
+                    Link(LocalizedStringKey(channel.name), destination: URL(string: channel.link)!)
+                        .foregroundColor(.blue)
+                        .font(.headline)
+                }
+            })
+            
+            Section(content: {
                 NavigationLink {
                     ConfigView().environmentObject(userData)
                 } label: {
@@ -218,13 +227,6 @@ public struct SettingView: View {
                 }
             })
 
-            Section(content: {
-                ForEach(channelLocalDataList) { channel in
-                    Link(LocalizedStringKey(channel.name), destination: URL(string: channel.link)!)
-                        .foregroundColor(.blue)
-                        .font(.headline)
-                }
-            })
             
         }.navigationTitle("TitleHelp")
             .navigationBarTitleDisplayMode(.inline)
