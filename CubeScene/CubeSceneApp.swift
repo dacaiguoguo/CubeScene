@@ -29,7 +29,9 @@ struct CubeSceneApp: App {
     var body: some Scene {
         WindowGroup {
             TabView {
-                tabFor108().presentPaywallIfNeeded(
+                tabFor108()
+                tabFor240()
+                tabForT().presentPaywallIfNeeded(
                     requiredEntitlementIdentifier: "soma_t",
                     purchaseCompleted: { customerInfo in
                         print("Purchase completed: \(customerInfo.entitlements)")
@@ -39,8 +41,6 @@ struct CubeSceneApp: App {
                         print("Purchases restored: \(customerInfo.entitlements)")
                     }
                 )
-                tabFor240()
-                tabForT()
                 tabForTry()
                 tabForMore()
             }
@@ -141,7 +141,7 @@ struct CubeSceneApp: App {
     // MARK: - Launch Tasks
 
     private func performLaunchTasks() {
-       
+        print("performLaunchTasks completed:")
     }
 }
 
