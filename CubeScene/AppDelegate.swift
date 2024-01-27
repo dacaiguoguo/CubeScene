@@ -24,9 +24,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             print("\(String(describing: offers))")
         })
         Purchases.shared.getCustomerInfo { (customerInfo, error) in
-            if customerInfo?.entitlements.all["SOMABox"]?.isActive == true {
+            if customerInfo?.entitlements.all["soma_t"]?.isActive == true {
                 // User is "premium"f
+                print("\(String(describing: customerInfo))")
             }
+            //print("\(String(describing: customerInfo))")
         }
         return true
     }

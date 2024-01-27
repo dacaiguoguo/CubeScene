@@ -7,7 +7,6 @@
 
 import SwiftUI
 import UIKit
-import RevenueCat
 
 // UIColor 扩展，用于实现归档和解档操作
 extension UIColor {
@@ -91,20 +90,7 @@ public struct SettingView: View {
                         .font(.headline)
                 }
             })
-            
-            Section(content: {
-                Button(action: {
-                    Purchases.shared.restorePurchases { customerInfo, error in
-                        if customerInfo?.entitlements.all["soma_t"]?.isActive == true {
-                            // User is "premium"f
-                            print("\(String(describing: customerInfo))")
-                        }
-                    }
-                }, label: {
-                    Text("Restore Purchases")
-                })
-            })
-            
+          
 
             
             Section(content: {
