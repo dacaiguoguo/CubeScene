@@ -32,16 +32,16 @@ struct CubeSceneApp: App {
                 tabFor108()
                 tabFor240()
                 tabForT()
-//                    .presentPaywallIfNeeded(
-//                    requiredEntitlementIdentifier: "soma_t",
-//                    purchaseCompleted: { customerInfo in
-//                        print("Purchase completed: \(customerInfo.entitlements)")
-//                    },
-//                    restoreCompleted: { customerInfo in
-//                        // Paywall will be dismissed automatically if "pro" is now active.
-//                        print("Purchases restored: \(customerInfo.entitlements)")
-//                    }
-//                )
+                    .presentPaywallIfNeeded(
+                    requiredEntitlementIdentifier: "soma_t",
+                    purchaseCompleted: { customerInfo in
+                        print("Purchase completed: \(customerInfo.entitlements)")
+                    },
+                    restoreCompleted: { customerInfo in
+                        // Paywall will be dismissed automatically if "pro" is now active.
+                        print("Purchases restored: \(customerInfo.entitlements)")
+                    }
+                )
                 tabForTry()
                 tabForMore()
             }
