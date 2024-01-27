@@ -97,6 +97,8 @@ public struct SettingView: View {
                     Purchases.shared.restorePurchases { customerInfo, error in
                         if customerInfo?.entitlements.all["soma_t"]?.isActive == true {
                             // User is "premium"f
+                            // 存储到某个变量 并持久化
+                            SubscriptionManager.shared.isPremiumUser = true;
                             print("\(String(describing: customerInfo))")
                         }
                     }
