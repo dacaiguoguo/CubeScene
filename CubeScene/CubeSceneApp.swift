@@ -31,25 +31,25 @@ struct CubeSceneApp: App {
         WindowGroup {
             TabView(selection: $selectedTab) {
                 tabFor108()
-                tabFor240()
-                tabForT()
                     .presentPaywallIfNeeded(
                     requiredEntitlementIdentifier: "soma_t",
                     purchaseCompleted: { customerInfo in
-                        // print("Purchase completed: \(customerInfo.entitlements)")
-                        if !SubscriptionManager.shared.isPremiumUser {
-                            selectedTab = 0
-                        }
+                        SubscriptionManager.shared.isPremiumUser = true
                     },
                     restoreCompleted: { customerInfo in
-                        // Paywall will be dismissed automatically if "pro" is now active.
-                        // print("Purchases restored: \(customerInfo.entitlements)")
-                        if !SubscriptionManager.shared.isPremiumUser {
-                            selectedTab = 0
-                        }
+                        SubscriptionManager.shared.isPremiumUser = true
+                    })
+                tabFor240()
+                tabForT().presentPaywallIfNeeded(
+                    requiredEntitlementIdentifier: "soma_t",
+                    purchaseCompleted: { customerInfo in
+                        SubscriptionManager.shared.isPremiumUser = true
+                    },
+                    restoreCompleted: { customerInfo in
+                        SubscriptionManager.shared.isPremiumUser = true
                     }) {
                         if !SubscriptionManager.shared.isPremiumUser {
-                            selectedTab = 0
+                            selectedTab = 1
                         }
                     }
                 tabForTry()

@@ -76,5 +76,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 extension AppDelegate: PurchasesDelegate {
     func purchases(_ purchases: Purchases, receivedUpdated customerInfo: CustomerInfo) {
         /// - handle any changes to the user's CustomerInfo
+         if customerInfo.entitlements.all["soma_t"]?.isActive == true {
+        // User is "premium"f
+        // 存储到某个变量 并持久化
+        SubscriptionManager.shared.isPremiumUser = true;
+        print("\(String(describing: customerInfo))")
+    }
     }
 }

@@ -8,6 +8,7 @@
 import SwiftUI
 import UIKit
 import RevenueCat
+import RevenueCatUI
 import Foundation
 
 extension String {
@@ -187,11 +188,13 @@ extension Channel: Identifiable {
 
 public struct SettingView: View {
     @State private var showToast = false
+    @State private var showingPaywall = false
     
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var userData: UserData
     let persistenceController = PersistenceController.shared
     @State var showText = "success"
+    @State var showPurchase = false
     
     public init(){}
     
@@ -212,32 +215,65 @@ public struct SettingView: View {
             })
             
             Section(content: {
-                Button(action: {
-                    Purchases.shared.restorePurchases { customerInfo, error in
-                        if customerInfo?.entitlements.all["soma_t"]?.isActive == true {
-                            // User is "premium"f
-                            // 存储到某个变量 并持久化
-                            SubscriptionManager.shared.isPremiumUser = true;
-                            showText = "restorePurchases.success"
-                            showToast = true
-                            // 3秒后自动隐藏Toast
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                showToast = false
-                            }
-                            print("\(String(describing: customerInfo))")
-                        } else {
-                            showText = "restorePurchases.error"
-                            showToast = true
-                            // 3秒后自动隐藏Toast
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                showToast = false
-                            }
-                        }
-                    }
-                }, label: {
-                    Text("Restore Purchases")
-                })
-            })
+//                if showPurchase {
+//                    Button("Get Soma T solutions") {
+//                        Purchases.shared.getOfferings(completion: { offers, err in
+//                            print("\(String(describing: offers))")
+//                            self.showingPaywall = true
+//                        })
+//                    }.sheet(isPresented: $showingPaywall) {
+//                        PaywallView(offering: Purchases.shared.cachedOfferings!.offering(identifier: "soma_t")!, displayCloseButton: true).onPurchaseCompleted { customerInfo in
+//                            self.showingPaywall = false
+//                            if customerInfo.entitlements.all["soma_t"]?.isActive == true {
+//                                // User is "premium"f
+//                                // 存储到某个变量 并持久化
+//                                SubscriptionManager.shared.isPremiumUser = true;
+//                                showText = "restorePurchases.success"
+//                                showToast = true
+//                                // 3秒后自动隐藏Toast
+//                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//                                    showToast = false
+//                                }
+//                                print("\(String(describing: customerInfo))")
+//                            } else {
+//                                showText = "restorePurchases.error"
+//                                showToast = true
+//                                // 3秒后自动隐藏Toast
+//                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//                                    showToast = false
+//                                }
+//                            }
+//                        }.onPurchaseCancelled {
+//                            self.showingPaywall = false
+//                        }
+//                    }
+//                }
+//                Button(action: {
+//                    Purchases.shared.restorePurchases { customerInfo, error in
+//                        if customerInfo?.entitlements.all["soma_t"]?.isActive == true {
+//                            // User is "premium"f
+//                            // 存储到某个变量 并持久化
+//                            SubscriptionManager.shared.isPremiumUser = true;
+//                            showText = "restorePurchases.success"
+//                            showToast = true
+//                            // 3秒后自动隐藏Toast
+//                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//                                showToast = false
+//                            }
+//                            print("\(String(describing: customerInfo))")
+//                        } else {
+//                            showText = "restorePurchases.error"
+//                            showToast = true
+//                            // 3秒后自动隐藏Toast
+//                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//                                showToast = false
+//                            }
+//                        }
+//                    }
+//                }, label: {
+                    Text("Purchases")
+//                })
+            }) .paywallFooter()
             
             
             
@@ -378,7 +414,25 @@ public struct SettingView: View {
             })
             
             
-        }
+        }.onAppear(perform: {
+            Purchases.shared.getCustomerInfo { (customerInfo, error) in
+                if let error = error {
+                    print("Failed to retrieve customer info: \(error.localizedDescription)")
+                    return
+                }
+
+                if customerInfo?.entitlements.all["soma_t"]?.isActive == true {
+                    // 用户是"premium"用户
+                    self.showPurchase = false
+                    SubscriptionManager.shared.isPremiumUser = true;
+                    print("User is premium")
+                } else {
+                    // 用户不是"premium"用户
+                    self.showPurchase = true
+                    print("User is not premium")
+                }
+            }
+        })
         .toast(isShowing: $showToast, text: showText.localizedText)
         .navigationTitle("TitleHelp")
         .navigationBarTitleDisplayMode(.inline)
