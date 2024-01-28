@@ -215,10 +215,7 @@ public struct SettingView: View {
             })
             
             Section(content: {
-                VStack {
-                    Text("Purchases")
-                    Text("PurchasesDesc")
-                }
+                Text("Purchases")
             }) .paywallFooter()
             
             Section(content: {
