@@ -215,67 +215,11 @@ public struct SettingView: View {
             })
             
             Section(content: {
-//                if showPurchase {
-//                    Button("Get Soma T solutions") {
-//                        Purchases.shared.getOfferings(completion: { offers, err in
-//                            print("\(String(describing: offers))")
-//                            self.showingPaywall = true
-//                        })
-//                    }.sheet(isPresented: $showingPaywall) {
-//                        PaywallView(offering: Purchases.shared.cachedOfferings!.offering(identifier: "soma_t")!, displayCloseButton: true).onPurchaseCompleted { customerInfo in
-//                            self.showingPaywall = false
-//                            if customerInfo.entitlements.all["soma_t"]?.isActive == true {
-//                                // User is "premium"f
-//                                // 存储到某个变量 并持久化
-//                                SubscriptionManager.shared.isPremiumUser = true;
-//                                showText = "restorePurchases.success"
-//                                showToast = true
-//                                // 3秒后自动隐藏Toast
-//                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-//                                    showToast = false
-//                                }
-//                                print("\(String(describing: customerInfo))")
-//                            } else {
-//                                showText = "restorePurchases.error"
-//                                showToast = true
-//                                // 3秒后自动隐藏Toast
-//                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-//                                    showToast = false
-//                                }
-//                            }
-//                        }.onPurchaseCancelled {
-//                            self.showingPaywall = false
-//                        }
-//                    }
-//                }
-//                Button(action: {
-//                    Purchases.shared.restorePurchases { customerInfo, error in
-//                        if customerInfo?.entitlements.all["soma_t"]?.isActive == true {
-//                            // User is "premium"f
-//                            // 存储到某个变量 并持久化
-//                            SubscriptionManager.shared.isPremiumUser = true;
-//                            showText = "restorePurchases.success"
-//                            showToast = true
-//                            // 3秒后自动隐藏Toast
-//                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-//                                showToast = false
-//                            }
-//                            print("\(String(describing: customerInfo))")
-//                        } else {
-//                            showText = "restorePurchases.error"
-//                            showToast = true
-//                            // 3秒后自动隐藏Toast
-//                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-//                                showToast = false
-//                            }
-//                        }
-//                    }
-//                }, label: {
+                VStack {
                     Text("Purchases")
-//                })
+                    Text("PurchasesDesc")
+                }
             }) .paywallFooter()
-            
-            
             
             Section(content: {
                 NavigationLink {
@@ -420,7 +364,7 @@ public struct SettingView: View {
                     print("Failed to retrieve customer info: \(error.localizedDescription)")
                     return
                 }
-
+                
                 if customerInfo?.entitlements.all["soma_t"]?.isActive == true {
                     // 用户是"premium"用户
                     self.showPurchase = false

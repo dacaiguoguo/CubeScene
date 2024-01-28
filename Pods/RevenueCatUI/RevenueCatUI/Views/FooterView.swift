@@ -98,6 +98,7 @@ struct FooterView: View {
             if let url = self.privacyURL {
                 LinkButton(
                     url: url,
+                    // todo 本地化
                     titles: "Privacy policy", "Privacy"
                 )
             }
