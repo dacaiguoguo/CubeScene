@@ -144,6 +144,8 @@
 		5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayTool3D.swift; sourceTree = "<group>"; };
 		59CFCD422A6281F700E38F38 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		5B142E7E2B6559EC00708678 /* SettingViewClip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewClip.swift; sourceTree = "<group>"; };
+		5B18D2412B6897A6004AAF62 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5B18D2422B6897A6004AAF62 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		5B6FE7612B2D42E30035DD0F /* cube2.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = cube2.scn; sourceTree = "<group>"; };
 		5B7C065A2B2FEA570040942C /* ToolsFunc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsFunc.swift; sourceTree = "<group>"; };
 		5B99C3C82B302332003E37B5 /* Origin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Origin.swift; sourceTree = "<group>"; };
@@ -475,6 +477,7 @@
 				en,
 				Base,
 				"zh-Hans",
+				ja,
 			);
 			mainGroup = 9DF920602A404BBC001BD720;
 			productRefGroup = 9DF9206A2A404BBC001BD720 /* Products */;
@@ -635,7 +638,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# 定义 InfoPlist.strings 文件的路径\ninfoPlistStringsEN=\"${SRCROOT}/CubeScene/support/en.lproj/InfoPlist.strings\"\ninfoPlistStringsZH=\"${SRCROOT}/CubeScene/support/zh-Hans.lproj/InfoPlist.strings\"\n\n# 根据构建配置更新文件\nif [ \"${prod}\" == \"Debug\" ]; then\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABoxDebug\\\";\" > $infoPlistStringsEN\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"索玛立方体Dev\\\";\" > $infoPlistStringsZH\nelif [ \"${prod}\" == \"Release\" ]; then\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABox\\\";\" > $infoPlistStringsEN\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"索玛立方体\\\";\" > $infoPlistStringsZH\nelse\n    echo \"Unknown configuration: ${CONFIGURATION}\"\nfi\n";
+			shellScript = "# 定义 InfoPlist.strings 文件的路径\ninfoPlistStringsEN=\"${SRCROOT}/CubeScene/support/en.lproj/InfoPlist.strings\"\ninfoPlistStringsZH=\"${SRCROOT}/CubeScene/support/zh-Hans.lproj/InfoPlist.strings\"\ninfoPlistStringsJA=\"${SRCROOT}/CubeScene/support/ja.lproj/InfoPlist.strings\"\n# 根据构建配置更新文件\nif [ \"${prod}\" == \"Debug\" ]; then\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABoxDebug\\\";\" > $infoPlistStringsEN\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABoxDebug\\\";\" > $infoPlistStringsJA\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"索玛立方体Dev\\\";\" > $infoPlistStringsZH\nelif [ \"${prod}\" == \"Release\" ]; then\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABox\\\";\" > $infoPlistStringsEN\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"SOMABox\\\";\" > $infoPlistStringsJA\n    echo \"\\\"CFBundleDisplayName\\\" = \\\"索玛立方体\\\";\" > $infoPlistStringsZH\nelse\n    echo \"Unknown configuration: ${CONFIGURATION}\"\nfi\n";
 		};
 		87CD1406F41346F4E040A68C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -747,6 +750,7 @@
 			children = (
 				9DBE04F42A57D6560055AE14 /* en */,
 				9DBE04F62A57D65A0055AE14 /* zh-Hans */,
+				5B18D2422B6897A6004AAF62 /* ja */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -756,6 +760,7 @@
 			children = (
 				9DBE04FA2A57D7BC0055AE14 /* en */,
 				9DBE04FC2A57D7C10055AE14 /* zh-Hans */,
+				5B18D2412B6897A6004AAF62 /* ja */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
