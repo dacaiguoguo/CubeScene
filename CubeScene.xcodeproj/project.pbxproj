@@ -620,7 +620,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# 根据环境变量设置 App Icon\n\nif [ \"${prod}\" == \"Release\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/AppIcon.debug.appiconset/AppIcon1024.png\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png\"\nelif [ \"${prod}\" == \"Debug\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/AppIcon.release.appiconset/AppIcon1024.png\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png\"\nelse\n    cp -r \"${SRCROOT}/CubeScene/AppIcon.debug.appiconset/AppIcon1024.png\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png\"\nfi\n";
+			shellScript = "# 根据环境变量设置 App Icon\n\nif [ \"${prod}\" == \"Release\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/AppIcon.release.appiconset/AppIcon1024.png\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png\"\nelif [ \"${prod}\" == \"Debug\" ]; then\n    cp -r \"${SRCROOT}/CubeScene/AppIcon.debug.appiconset/AppIcon1024.png\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png\"\nelse\n    cp -r \"${SRCROOT}/CubeScene/AppIcon.debug.appiconset/AppIcon1024.png\" \"${SRCROOT}/CubeScene/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png\"\nfi\n";
 		};
 		5B2FF4CE2B5B434800AC3351 /* appname */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -792,7 +792,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.4.20;
+				MARKETING_VERSION = 3.4.21;
 				OTHER_CFLAGS = "-Wno-deprecated-declarations";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -827,7 +827,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.4.20;
+				MARKETING_VERSION = 3.4.21;
 				OTHER_CFLAGS = "-Wno-deprecated-declarations";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1026,7 +1026,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.4.20;
+				MARKETING_VERSION = 3.4.21;
 				OTHER_CFLAGS = "-Wno-deprecated-declarations";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1067,7 +1067,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.4.20;
+				MARKETING_VERSION = 3.4.21;
 				OTHER_CFLAGS = "-Wno-deprecated-declarations";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene;
 				PRODUCT_NAME = "$(TARGET_NAME)";
