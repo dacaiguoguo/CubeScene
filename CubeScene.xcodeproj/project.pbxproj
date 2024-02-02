@@ -146,6 +146,8 @@
 		5B142E7E2B6559EC00708678 /* SettingViewClip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewClip.swift; sourceTree = "<group>"; };
 		5B18D2412B6897A6004AAF62 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5B18D2422B6897A6004AAF62 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5B34E9B42B6D210100454D91 /* READMERelease.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = READMERelease.md; sourceTree = "<group>"; };
+		5B34E9B52B6D210100454D91 /* READMEDebug.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = READMEDebug.md; sourceTree = "<group>"; };
 		5B6FE7612B2D42E30035DD0F /* cube2.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = cube2.scn; sourceTree = "<group>"; };
 		5B7C065A2B2FEA570040942C /* ToolsFunc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsFunc.swift; sourceTree = "<group>"; };
 		5B99C3C82B302332003E37B5 /* Origin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Origin.swift; sourceTree = "<group>"; };
@@ -321,6 +323,8 @@
 			children = (
 				5BCBEA402B6007B400DC03D5 /* 索玛立方体.storekit */,
 				5BCBEA422B600AB700DC03D5 /* StoreKitTestCertificate.cer */,
+				5B34E9B52B6D210100454D91 /* READMEDebug.md */,
+				5B34E9B42B6D210100454D91 /* READMERelease.md */,
 				9DF9206B2A404BBC001BD720 /* CubeScene */,
 				9D2D85AD2A602AE400B11A7D /* Clip */,
 				9D7D34BB2AF7A86D009291BC /* CubeSceneTests */,
