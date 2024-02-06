@@ -113,7 +113,7 @@ public struct SingleContentView2: View {
             }
             // pickerView()
             
-        }.navigationBarItems(trailing:completeStatus()).navigationTitle(LocalizedStringKey("StepCount:\(stepcount)"))
+        }.navigationBarItems(trailing:completeStatus()).navigationTitle("\("StepCount".i18n()):\(stepcount)")
     }
     func completeStatus() -> some View {
         Group {
@@ -136,7 +136,7 @@ public struct SingleContentView2: View {
     }
     
     func resetText() -> some View {
-        let key = LocalizedStringKey("Reset \(Int(floor(counter)))")
+        let key = "\("Reset".i18n()) \(Int(floor(counter)))"
         return Text(key)
     }
     

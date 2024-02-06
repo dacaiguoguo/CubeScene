@@ -127,7 +127,7 @@ public struct SingleContentView: View {
                                 .cornerRadius(8)
                         }.frame(height: 44.0).padding(EdgeInsets(top: 5, leading: 8, bottom: 5, trailing: 5))
                         Spacer()
-                        Stepper(LocalizedStringKey("StepSm:\(value)"), onIncrement: incrementStep, onDecrement: decrementStep)
+                        Stepper("\("StepSm".i18n()) \(value)", onIncrement: incrementStep, onDecrement: decrementStep)
                             .padding(5)
                             .background(Color.white)
                     }

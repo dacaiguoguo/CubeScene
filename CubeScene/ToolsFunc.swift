@@ -340,3 +340,10 @@ func zhuanNode(_ lpoint: PointInfo, yuanNode: SCNNode) -> Void {
         yuanNode.transform = rt
     }
 }
+
+
+extension String {
+    func i18n(comment: String = "") -> String {
+        return NSLocalizedString(self, comment: comment)
+    }
+}
