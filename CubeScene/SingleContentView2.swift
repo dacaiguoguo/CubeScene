@@ -7,6 +7,13 @@
 
 import SwiftUI
 import SceneKit
+import StoreKit
+
+/// 每次启动个只弹出一次请求评分
+var runOnceRequestReview: () = {
+    // 在这里写只需执行一次的代码
+    SKStoreReviewController.requestReview()
+}()
 
 enum CSDirection {
     case left, right, up, down, forward, backward
@@ -148,6 +155,8 @@ public struct SingleContentView2: View {
             node2.transform = node2.transformTo ?? node2.transform;
             node2.setHighlighted(false)
         }
+                     
+        _ = runOnceRequestReview
     }
     
     func actionRunAt(index: Int) {

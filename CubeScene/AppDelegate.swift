@@ -9,6 +9,42 @@ import Foundation
 import UIKit
 import RevenueCat
 
+//请求用户授权推送
+func requestNotificationAuthorization() {
+    let center = UNUserNotificationCenter.current()
+    center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+        if granted {
+            print("用户已授权本地通知")
+            // 创建每天晚上7点触发的本地推送 UNMutableNotificationContent如何设置每周六上午8点发通知
+            let content = UNMutableNotificationContent()
+            content.title = "Play with your soma"
+            content.body = "Don't leave your soma alone. Have a try?"
+            content.sound = UNNotificationSound.default
+            
+            var dateComponents = DateComponents()
+            dateComponents.weekday = 7
+            dateComponents.hour = 9 // 晚上7点
+            dateComponents.minute = 0
+            dateComponents.second = 0
+            
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+            
+            let request = UNNotificationRequest(identifier: "somaWeeklyNotification", content: content, trigger: trigger)
+            
+            UNUserNotificationCenter.current().add(request) { (error) in
+                if let error = error {
+                    print(error.localizedDescription)
+                } else {
+                    print("添加成功")
+                }
+            }
+            
+        } else {
+            print("用户拒绝授权本地通知")
+        }
+    }
+}
+
 
 class SubscriptionManager {
     static let shared = SubscriptionManager() // 使用单例模式
@@ -69,6 +105,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             }
             //print("\(String(describing: customerInfo))")
         }
+        requestNotificationAuthorization()
         return true
     }
 }
