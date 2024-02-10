@@ -13,7 +13,7 @@ struct EnterListView240: View {
     static private let resourceName = "solutionsMaped"
 
 
-    @State var productList: [EnterItem] = produceData()
+    @State var productList: [Product] = produceData()
     let blueColor = Color(uiColor: UIColor(hex: "00bfff"));
 
     var body: some View {
@@ -37,7 +37,7 @@ struct EnterListView240: View {
         }
     }
     
-    func indeText(_ item:EnterItem) -> some View {
+    func indeText(_ item:Product) -> some View {
         let key = LocalizedStringKey("Kind")
         return HStack{
             Text(key).foregroundColor(.primary).font(.title2)
@@ -45,7 +45,7 @@ struct EnterListView240: View {
         }.padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
     }
 
-    static func produceData() -> [EnterItem]  {
+    static func produceData() -> [Product]  {
         let jsonContentData = try! JSONSerialization.jsonObject(with: Data(contentsOf: Bundle.main.url(forResource: resourceName, withExtension: "json")!))
 //        let jsonObject = (jsonContentData as! [[[[Int]]]]).map { item0 in
 //            item0.map { item in
@@ -81,7 +81,7 @@ struct EnterListView240: View {
 
         return (jsonContentData as! [[[[Int]]]]).enumerated().map { index, item in
             
-            return EnterItem(name: "\(index + 1)", matrix: item,isTaskComplete: false)
+            return Product(name: "\(index + 1)", matrix: item,isTaskComplete: false)
         }
     }
 }

@@ -15,7 +15,7 @@ extension SCNVector3: Equatable {
 }
 
 struct ScenekitSingleView : UIViewRepresentable {
-    private let dataModel: EnterItem
+    private let dataModel: Product
     private let showType:ShowType;
     private let colors:[UIColor]
     private let numberImageList: [UIImage]
@@ -42,7 +42,7 @@ struct ScenekitSingleView : UIViewRepresentable {
         return axisNode
     }
     
-    init(dataModel: EnterItem, showType: ShowType = .singleColor, colors: [UIColor], numberImageList: [UIImage], showColor: [Int] = [], focalLength: CGFloat = 110) {
+    init(dataModel: Product, showType: ShowType = .singleColor, colors: [UIColor], numberImageList: [UIImage], showColor: [Int] = [], focalLength: CGFloat = 110) {
         self.dataModel = dataModel
         self.showType = showType
         self.colors = colors
@@ -261,7 +261,7 @@ struct ScenekitSingleView : UIViewRepresentable {
 struct ScenekitSingleView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ScenekitSingleView(dataModel:EnterItem(name: "测试", matrix: [[[2,4,3], [6,4,1], [6,6,1]],
+            ScenekitSingleView(dataModel:Product(name: "测试", matrix: [[[2,4,3], [6,4,1], [6,6,1]],
                                                                         [[2,3,3], [6,4,1], [7,4,5]],
                                                                         [[2,2,3], [7,5,5], [7,7,5]]],
                                                    isTaskComplete: true),

@@ -8,34 +8,34 @@
 import SwiftUI
 
 
-struct EnterItem: Decodable {
-
+struct Product: Decodable {
+    
     /// 形状名称
     let name:String
-
+    
     /// 形状数据 三位数组
     let matrix:Matrix3D
-
+    
     /// 形状用到哪些块
     let usedBlock: [Int]
-
+    
     /// 形状拼接的顺序，从底层遍历得出，暂时不支持自定义顺序，TO支持自定义顺序
     let orderBlock: [Int]
-
+    
     /// 标记形状是否完成
     var isTaskComplete: Bool
-
+    
     /// 形状难度等级
     let level: Int
-
+    
     init(name: String, matrix: Matrix3D, isTaskComplete: Bool) {
         self.name = name
         self.matrix = matrix
-        let temp = EnterItem.orderList(matrix: matrix)
+        let temp = Product.orderList(matrix: matrix)
         self.usedBlock = Array(Set(temp.map({ item in
             mapColorIndex(item)
         }))).sorted(by: {$0 < $1})
-
+        
         self.orderBlock = temp
         self.isTaskComplete = isTaskComplete
         switch usedBlock.count {
@@ -85,7 +85,7 @@ struct EnterItem: Decodable {
     }
 }
 
-extension EnterItem: Identifiable {
+extension Product: Identifiable {
     var id: String {
         name
     }
@@ -95,7 +95,7 @@ extension EnterItem: Identifiable {
 /// 解析文件得到要展示的形状数据数组
 /// - Parameter resourceName: 数据文件名，在main bundle里
 /// - Returns: 形状数组
-func produceData(resourceName:String) -> [EnterItem]  {
+func produceData(resourceName:String) -> [Product]  {
     let stringContent = try! String(contentsOf: Bundle.main.url(forResource: resourceName, withExtension: "txt")!, encoding: .utf8)
     let ret = produceData2(stringContent: stringContent)
     return ret
@@ -105,7 +105,7 @@ func produceData(resourceName:String) -> [EnterItem]  {
 /// - Parameter stringContent: 要解析的字符串
 /// - Returns: 形状数组
 /// - Note: 第一行 以/SOMA开头
-func produceData2(stringContent:String) -> [EnterItem]  {
+func produceData2(stringContent:String) -> [Product]  {
     let firstArray = stringContent.components(separatedBy: "/SOMA")
     let trimmingSet:CharacterSet = {
         var triSet = CharacterSet.whitespacesAndNewlines
@@ -113,7 +113,7 @@ func produceData2(stringContent:String) -> [EnterItem]  {
         return triSet
     }()
     let charactersOfV = "VLTZABP"
-
+    
     return firstArray.filter { item in
         item.lengthOfBytes(using: .utf8) > 1
     }.map { currentData in
@@ -124,7 +124,7 @@ func produceData2(stringContent:String) -> [EnterItem]  {
         }.map({ item in
             item.trimmingCharacters(in: trimmingSet)
         })
-
+        
         let separatorItem = Character("/")
         // 非数字都解析成-1
         let result = parsedData.map { item in
@@ -139,11 +139,11 @@ func produceData2(stringContent:String) -> [EnterItem]  {
                         }
                         return -1
                     }
-
-
-//                        if subSubItem == "," {
-//                            return -1;
-//                        }
+                    
+                    
+                    //                        if subSubItem == "," {
+                    //                            return -1;
+                    //                        }
                     //    if subSubItem == ";" {
                     //        return 0;
                     //    }
@@ -168,72 +168,133 @@ func produceData2(stringContent:String) -> [EnterItem]  {
                     //    if subSubItem == "#" {
                     //        return 3;
                     //    }
-
+                    
                     // .-:+*=
                     let ret = Int(String(subSubItem)) ?? -1
                     return ret
                 }
             }
         }
-
+        
         if let name = firstLine {
-            return EnterItem(name: name, matrix: result, isTaskComplete: UserDefaults.standard.bool(forKey: name))
+            return Product(name: name, matrix: result, isTaskComplete: UserDefaults.standard.bool(forKey: name))
         } else {
-            return EnterItem(name: "无名", matrix: result, isTaskComplete: false)
+            return Product(name: "无名", matrix: result, isTaskComplete: false)
         }
     }
 }
 
+let blueColor = Color(uiColor: UIColor(hex: "00bfff"));
+
 
 struct EnterListView: View {
     @EnvironmentObject var userData: UserData
-    @State var productList: [EnterItem]
-    let blueColor = Color(uiColor: UIColor(hex: "00bfff"));
+    @State var productList: [Product]
     var body: some View {
-        List{
-            ForEach(productList.indices, id: \.self) { index in
-                let item = productList[index]
-                NavigationLink(destination: SingleContentView(dataModel: $productList[index]).environmentObject(userData)) {
-                    if let uiimage = UIImage(named: item.name) {
-                        Image(uiImage: uiimage)
-                            .resizable(resizingMode: .stretch)
-                            .aspectRatio(contentMode: .fill).clipped()
-                            .frame(width: 100.0, height: 100.0, alignment: .center)
-                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
-                            .disabled(true)
-                    } else {
-                        ScenekitSingleView(dataModel:item, showType: .singleColor, colors: userData.colorSaveList, numberImageList: userData.textImageList).frame(width: 100, height: 100)
-                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
-                            .disabled(true)
-                    }
-                    Spacer(minLength: 12.0)
-                    VStack(alignment: .leading){
-                        Text("\(item.name)").padding(EdgeInsets(top: 0, leading: 0, bottom: 8, trailing: 0))
-                        HStack {
-                            ForEach(0..<item.level, id: \.self) { _ in
-                                Image(systemName:"star.fill").scaleEffect(CGSizeMake(0.8, 0.8)).foregroundColor(.yellow)
-                            }
-                        }.padding(EdgeInsets(top: 0, leading: 0, bottom: 8, trailing: 0))
-                        if #available(iOS 16, *) {
-                            Text("\(LocalizedStringResource(stringLiteral: "\(item.isTaskComplete ? "Completed" : "ToDo")")) ")
-                                .font(.subheadline)
-                            +
-                            Text(Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle"))
-                                .font(.subheadline)
-                                .foregroundColor(item.isTaskComplete ? .green : .pink)
-                        } else {
-                            Text("\(item.isTaskComplete ? "Completed" : "ToDo")")
-                                .font(.subheadline)
-                            +
-                            Text(Image(systemName: item.isTaskComplete ? "checkmark.circle.fill" : "checkmark.circle"))
-                                .font(.subheadline)
-                                .foregroundColor(item.isTaskComplete ? .green : .pink)
-                        }
-
-                    }
-                }
+        List {
+            ForEach(productList) { product in
+                ProductRow(product: product)
+                    .listRowBackground(Color.clear)  // 设置行背景为透明
+                
             }
-            // .listRowBackground(Color(uiColor: UIColor(hex: "f8f8f8")))
+            .onAppear {
+                // 移除 List 默认的分隔线（如果你想要的话）
+                UITableView.appearance().separatorStyle = .none
+            }
+            .listStyle(PlainListStyle())  // 设置 List 为纯净风格
+        }
+    }
+    
+    struct ProductRow: View {
+        @EnvironmentObject var userData: UserData
+        @State var product: Product  // 假设 Product 是你的数据模型
+        
+        var body: some View {
+            NavigationLink(destination: SingleContentView(dataModel: $product).environmentObject(userData)) {
+                HStack {
+                    ProductImage(product: product)
+                    Spacer(minLength: 12.0)
+                    ProductDetails(product: product)
+                }
+                .padding()  // 为卡片内容添加内边距
+                .background(Color.white)  // 设置卡片背景颜色
+                .cornerRadius(10)  // 设置圆角
+                .shadow(color: .gray, radius: 5, x: 0, y: 2)  // 添加阴影效果
+                .padding(.horizontal)  // 为卡片本身添加水平方向上的间距，让它不紧贴屏幕边缘
+            }
+            .buttonStyle(PlainButtonStyle())  // 移除 NavigationLink 的默认按钮样式
+        }
+    }
+    
+    
+    // 提取的产品图片视图
+    struct ProductImage: View {
+        let product: Product
+        @EnvironmentObject var userData: UserData
+        
+        var body: some View {
+            if let uiimage = UIImage(named: product.name) {
+                Image(uiImage: uiimage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill).clipped()
+                    .frame(width: 100, height: 100)
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
+                    .disabled(true)
+            } else {
+                ScenekitSingleView(dataModel: product, showType: .singleColor, colors: userData.colorSaveList, numberImageList: userData.textImageList)
+                    .frame(width: 100, height: 100)
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
+                    .disabled(true)
+            }
+        }
+    }
+    
+    // 提取的产品详情视图
+    struct ProductDetails: View {
+        let product: Product
+        
+        var body: some View {
+            VStack(alignment: .leading) {
+                Text(product.name).padding(.bottom, 8)
+                StarRating(rating: product.level)
+                TaskStatus(isComplete: product.isTaskComplete)
+            }
+        }
+    }
+    
+    // 提取的星级评价视图
+    struct StarRating: View {
+        let rating: Int
+        
+        var body: some View {
+            HStack {
+                ForEach(0..<rating, id: \.self) { _ in
+                    Image(systemName: "star.fill").scaleEffect(0.8).foregroundColor(.yellow)
+                }
+            }.padding(.bottom, 8)
+        }
+    }
+    
+    // 提取的任务状态视图
+    struct TaskStatus: View {
+        let isComplete: Bool
+        
+        var body: some View {
+            if #available(iOS 16, *) {
+                Text(LocalizedStringResource(stringLiteral: isComplete ? "Completed" : "ToDo"))
+                    .font(.subheadline)
+                +
+                Text(Image(systemName: isComplete ? "checkmark.circle.fill" : "checkmark.circle"))
+                    .font(.subheadline)
+                    .foregroundColor(isComplete ? .green : .pink)
+            } else {
+                Text(isComplete ? "Completed" : "ToDo")
+                    .font(.subheadline)
+                +
+                Text(Image(systemName: isComplete ? "checkmark.circle.fill" : "checkmark.circle"))
+                    .font(.subheadline)
+                    .foregroundColor(isComplete ? .green : .pink)
+            }
         }
     }
 }

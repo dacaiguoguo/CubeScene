@@ -61,7 +61,7 @@ struct ConfigView: View {
     @State private var counter = 0
     @State private var isPresented = false
 
-    @State var ditem: EnterItem = EnterItem(name: "测试",
+    @State var ditem: Product = Product(name: "测试",
                                             matrix: [[[2,4,3], [6,4,1], [6,6,1]],
                                                      [[2,3,3], [6,4,1], [7,4,5]],
                                                      [[2,2,3], [7,5,5], [7,7,5]]], isTaskComplete: false)
@@ -120,7 +120,7 @@ struct ConfigView: View {
 struct InputView: View {
 
     @Binding var isPresented:Bool
-    @Binding var ditem: EnterItem
+    @Binding var ditem: Product
     @Binding var counter:Int
     @State private var message = ""
     @FocusState private var isEditing: Bool
@@ -143,7 +143,7 @@ struct InputView: View {
 
                     // 结束编辑状态
                     isEditing = false
-                    let input:[EnterItem]
+                    let input:[Product]
                     if message.hasPrefix("/SOMA") {
                         input = produceData2(stringContent: message)
                     } else {

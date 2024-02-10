@@ -43,7 +43,7 @@ public struct SingleContentView: View {
     @State var showType:ShowType = .singleColor
 #endif
     
-    @Binding var dataModel: EnterItem
+    @Binding var dataModel: Product
     
     @State var isShowItems = true
     
