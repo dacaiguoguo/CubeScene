@@ -85,6 +85,8 @@ class SubscriptionManager {
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         print("Your code here")
+        // 移除 List 默认的分隔线（如果你想要的话）
+        UITableView.appearance().separatorStyle = .none
         // 执行应用程序启动时的操作 RevenueCat
         Purchases.logLevel = .debug
         Purchases.configure(withAPIKey: "appl_lNBhYAAESbCcENhLTzCZUYXgoHU")

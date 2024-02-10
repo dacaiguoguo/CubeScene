@@ -198,8 +198,6 @@ struct EnterListView: View {
                 
             }
             .onAppear {
-                // 移除 List 默认的分隔线（如果你想要的话）
-                UITableView.appearance().separatorStyle = .none
             }
             .listStyle(PlainListStyle())  // 设置 List 为纯净风格
         }
@@ -208,23 +206,24 @@ struct EnterListView: View {
     struct ProductRow: View {
         @EnvironmentObject var userData: UserData
         @State var product: Product  // 假设 Product 是你的数据模型
-        
+
         var body: some View {
             NavigationLink(destination: SingleContentView(dataModel: $product).environmentObject(userData)) {
                 HStack {
                     ProductImage(product: product)
-                    Spacer(minLength: 12.0)
                     ProductDetails(product: product)
+                    Spacer()
                 }
-                .padding()  // 为卡片内容添加内边距
+                .padding()  // 为上下方向添加内边距
                 .background(Color.white)  // 设置卡片背景颜色
                 .cornerRadius(10)  // 设置圆角
                 .shadow(color: .gray, radius: 5, x: 0, y: 2)  // 添加阴影效果
-                .padding(.horizontal)  // 为卡片本身添加水平方向上的间距，让它不紧贴屏幕边缘
             }
-            .buttonStyle(PlainButtonStyle())  // 移除 NavigationLink 的默认按钮样式
+            .buttonStyle(PlainButtonStyle())  // 移除箭头和按钮样式
+//            .listRowInsets(EdgeInsets())  // 设置自定义的行内边距，这里使用默认值来最小化内边距
         }
     }
+
     
     
     // 提取的产品图片视图
@@ -238,12 +237,12 @@ struct EnterListView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill).clipped()
                     .frame(width: 100, height: 100)
-                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
+                    // .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
                     .disabled(true)
             } else {
                 ScenekitSingleView(dataModel: product, showType: .singleColor, colors: userData.colorSaveList, numberImageList: userData.textImageList)
                     .frame(width: 100, height: 100)
-                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
+                    // .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
                     .disabled(true)
             }
         }
