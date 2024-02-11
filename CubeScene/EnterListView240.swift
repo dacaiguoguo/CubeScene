@@ -7,46 +7,142 @@
 
 import SwiftUI
 
+let resourceName = "solutionsMaped"
+
 struct EnterListView240: View {
+    
+
     @EnvironmentObject var userData: UserData
-//    static private var resourceName = "solutions"
-    static private let resourceName = "solutionsMaped"
-
-
-    @State var productList: [Product] = produceData()
-    let blueColor = Color(uiColor: UIColor(hex: "00bfff"));
-
+    @State var productList: [Product] = produceData240(resourceName: resourceName)
     var body: some View {
-        List{
-            ForEach(productList.indices, id: \.self) { index in
-                let item = productList[index]
-                NavigationLink(destination: SingleContentView2(nodeList: makeNode(with: item.matrix)).environmentObject(userData)) {
-                    HStack{
-//                        Image("Cube").frame(width: 80, height: 80)
-//                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(uiColor: UIColor(hex: "00bfff")), lineWidth: 1))
-//                            .disabled(true)
-                        ScenekitSingleView(dataModel:item, showType: .colorFul, colors: userData.colorSaveList, numberImageList: userData.textImageList, showColor: [1, 2, 3, 4, 5, 6, 7]).frame(width: 100, height: 100)
-                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
-                            .disabled(true)
-                        VStack(alignment: .leading){
-                            indeText(item)
-                        }
-                    }
+        List {
+            ForEach(productList) { product in
+                ProductRow(product: product)
+                    .listRowBackground(Color.clear)  // 设置行背景为透明
+                
+            }
+            .onAppear {
+            }
+            .listStyle(PlainListStyle())  // 设置 List 为纯净风格
+        }
+    }
+    
+    struct ProductRow: View {
+        @EnvironmentObject var userData: UserData
+        @State var product: Product  // 假设 Product 是你的数据模型
+        @State private var isActive: Bool = false
+
+        var body: some View {
+            // 使用按钮来代替 NavigationLink，这样就不会显示箭头
+            Button(action: {
+                isActive = true
+            }) {
+                VStack(alignment: .center){
+                    ProductImage(product: product)
+                    indeText(product)
                 }
+                .padding()  // 卡片内边距
+                .background(blueColor)  // 卡片背景色
+                .cornerRadius(10)  // 卡片圆角
+                .shadow(color: .gray, radius: 5, x: 0, y: 2)  // 卡片阴影
+            }
+            .background(
+                NavigationLink(
+                    destination: SingleContentView(dataModel: $product).environmentObject(userData),
+                    isActive: $isActive
+                ) {
+                    EmptyView()
+                }
+                .hidden()  // 隐藏 NavigationLink，不显示箭头
+            )
+            .buttonStyle(PlainButtonStyle())  // 移除按钮样式
+            // .padding(.horizontal)  // 设置水平边距
+            .padding(.vertical, 8)  // 设置垂直边距
+        }
+        
+        func indeText(_ item:Product) -> some View {
+            return HStack{
+                Text("Kind").foregroundColor(.primary).font(.title2)
+                Text("\(item.name)").foregroundColor(.primary).font(.title2)
+            }.padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
+        }
+    }
+
+
+    
+    
+    // 提取的产品图片视图
+    struct ProductImage: View {
+        let product: Product
+        @EnvironmentObject var userData: UserData
+        
+        var body: some View {
+            ScenekitSingleView(dataModel:product, showType: .colorFul, colors: userData.colorSaveList, numberImageList: userData.textImageList, showColor: [1, 2, 3, 4, 5, 6, 7])                .frame(maxWidth: .infinity, minHeight: 150)
+                // .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
+                .disabled(true)
+        }
+    }
+    
+    // 提取的产品详情视图
+    struct ProductDetails: View {
+        let product: Product
+        
+        var body: some View {
+            VStack(alignment: .leading) {
+                Text(product.name).padding(.bottom, 8)
+                StarRating(rating: product.level)
+                TaskStatus(isComplete: product.isTaskComplete)
             }
         }
     }
     
-    func indeText(_ item:Product) -> some View {
-        let key = LocalizedStringKey("Kind")
-        return HStack{
-            Text(key).foregroundColor(.primary).font(.title2)
-            Text("\(item.name)").foregroundColor(.primary).font(.title2)
-        }.padding(EdgeInsets(top: 10.0, leading: 10.0, bottom: 0.0, trailing: 0.0))
+    // 提取的星级评价视图
+    struct StarRating: View {
+        let rating: Int
+        
+        var body: some View {
+            HStack {
+                ForEach(0..<rating, id: \.self) { _ in
+                    Image(systemName: "star.fill").scaleEffect(0.8).foregroundColor(.yellow)
+                }
+            }.padding(.bottom, 8)
+        }
     }
+    
+    // 提取的任务状态视图
+    struct TaskStatus: View {
+        let isComplete: Bool
+        
+        var body: some View {
+            if #available(iOS 16, *) {
+                Text(LocalizedStringResource(stringLiteral: isComplete ? "Completed" : "ToDo"))
+                    .font(.subheadline)
+                +
+                Text(Image(systemName: isComplete ? "checkmark.circle.fill" : "checkmark.circle"))
+                    .font(.subheadline)
+                    .foregroundColor(isComplete ? .green : .black)
+            } else {
+                Text(isComplete ? "Completed" : "ToDo")
+                    .font(.subheadline)
+                +
+                Text(Image(systemName: isComplete ? "checkmark.circle.fill" : "checkmark.circle"))
+                    .font(.subheadline)
+                    .foregroundColor(isComplete ? .green : .black)
+            }
+        }
+    }
+}
 
-    static func produceData() -> [Product]  {
-        let jsonContentData = try! JSONSerialization.jsonObject(with: Data(contentsOf: Bundle.main.url(forResource: resourceName, withExtension: "json")!))
+
+
+struct EnterListView240_Previews: PreviewProvider {
+    static var previews: some View {
+        EnterListView240()
+    }
+}
+
+func produceData240(resourceName:String) -> [Product]  {
+    let jsonContentData = try! JSONSerialization.jsonObject(with: Data(contentsOf: Bundle.main.url(forResource: resourceName, withExtension: "json")!))
 //        let jsonObject = (jsonContentData as! [[[[Int]]]]).map { item0 in
 //            item0.map { item in
 //                item.map { item2 in
@@ -79,15 +175,8 @@ struct EnterListView240: View {
 
 
 
-        return (jsonContentData as! [[[[Int]]]]).enumerated().map { index, item in
-            
-            return Product(name: "\(index + 1)", matrix: item,isTaskComplete: false)
-        }
-    }
-}
-
-struct EnterListView240_Previews: PreviewProvider {
-    static var previews: some View {
-        EnterListView240()
+    return (jsonContentData as! [[[[Int]]]]).enumerated().map { index, item in
+        
+        return Product(name: "\(index + 1)", matrix: item,isTaskComplete: false)
     }
 }

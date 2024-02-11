@@ -206,24 +206,43 @@ struct EnterListView: View {
     struct ProductRow: View {
         @EnvironmentObject var userData: UserData
         @State var product: Product  // 假设 Product 是你的数据模型
-
+        @State private var isActive: Bool = false
+        
         var body: some View {
-            NavigationLink(destination: SingleContentView(dataModel: $product).environmentObject(userData)) {
-                HStack {
+            // 使用按钮来代替 NavigationLink，这样就不会显示箭头
+            Button(action: {
+                isActive = true
+            }) {
+                VStack {
+                    Text(product.name).font(.title).foregroundColor(.white).padding(.bottom, 8)
                     ProductImage(product: product)
-                    ProductDetails(product: product)
-                    Spacer()
+                    HStack{
+                        StarRating(rating: product.level)
+                        TaskStatus(isComplete: product.isTaskComplete)
+                    }
+                    // ProductDetails(product: product)
                 }
-                .padding()  // 为上下方向添加内边距
-                .background(Color.white)  // 设置卡片背景颜色
-                .cornerRadius(10)  // 设置圆角
-                .shadow(color: .gray, radius: 5, x: 0, y: 2)  // 添加阴影效果
+                .padding()  // 卡片内边距
+                .background(blueColor)  // 卡片背景色
+                .cornerRadius(10)  // 卡片圆角
+                .shadow(color: .gray, radius: 5, x: 0, y: 2)  // 卡片阴影
             }
-            .buttonStyle(PlainButtonStyle())  // 移除箭头和按钮样式
-//            .listRowInsets(EdgeInsets())  // 设置自定义的行内边距，这里使用默认值来最小化内边距
+            .background(
+                NavigationLink(
+                    destination: SingleContentView(dataModel: $product).environmentObject(userData),
+                    isActive: $isActive
+                ) {
+                    EmptyView()
+                }
+                    .hidden()  // 隐藏 NavigationLink，不显示箭头
+            )
+            .buttonStyle(PlainButtonStyle())  // 移除按钮样式
+            // .padding(.horizontal)  // 设置水平边距
+            .padding(.vertical, 8)  // 设置垂直边距
         }
     }
-
+    
+    
     
     
     // 提取的产品图片视图
@@ -235,14 +254,14 @@ struct EnterListView: View {
             if let uiimage = UIImage(named: product.name) {
                 Image(uiImage: uiimage)
                     .resizable()
-                    .aspectRatio(contentMode: .fill).clipped()
-                    .frame(width: 100, height: 100)
-                    // .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
+                    .aspectRatio(contentMode: .fit).clipped()
+                    .frame(maxWidth: .infinity, minHeight: 180)
+                // .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
                     .disabled(true)
             } else {
                 ScenekitSingleView(dataModel: product, showType: .singleColor, colors: userData.colorSaveList, numberImageList: userData.textImageList)
-                    .frame(width: 100, height: 100)
-                    // .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
+                    .frame(maxWidth: .infinity, minHeight: 180)
+                // .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
                     .disabled(true)
             }
         }
@@ -254,10 +273,10 @@ struct EnterListView: View {
         
         var body: some View {
             VStack(alignment: .leading) {
-                Text(product.name).padding(.bottom, 8)
+                Text(product.name).font(.title).foregroundColor(.white).padding(.bottom, 8)
                 StarRating(rating: product.level)
                 TaskStatus(isComplete: product.isTaskComplete)
-            }
+            }.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 0))
         }
     }
     
@@ -281,18 +300,22 @@ struct EnterListView: View {
         var body: some View {
             if #available(iOS 16, *) {
                 Text(LocalizedStringResource(stringLiteral: isComplete ? "Completed" : "ToDo"))
-                    .font(.subheadline)
+                    .foregroundColor(.white).font(.title2)
+                +
+                Text(" ")
                 +
                 Text(Image(systemName: isComplete ? "checkmark.circle.fill" : "checkmark.circle"))
-                    .font(.subheadline)
-                    .foregroundColor(isComplete ? .green : .pink)
+                    .font(.title2)
+                    .foregroundColor(isComplete ? .green : .black)
             } else {
                 Text(isComplete ? "Completed" : "ToDo")
-                    .font(.subheadline)
+                    .font(.title2)
+                +
+                Text(" ")
                 +
                 Text(Image(systemName: isComplete ? "checkmark.circle.fill" : "checkmark.circle"))
-                    .font(.subheadline)
-                    .foregroundColor(isComplete ? .green : .pink)
+                    .font(.title2)
+                    .foregroundColor(isComplete ? .green : .black)
             }
         }
     }
