@@ -1035,6 +1035,7 @@
 				INFOPLIST_FILE = CubeScene/support/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "索玛立方体";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "为了保存截图到相册";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -1076,6 +1077,7 @@
 				INFOPLIST_FILE = CubeScene/support/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "索玛立方体";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "为了保存截图到相册";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;

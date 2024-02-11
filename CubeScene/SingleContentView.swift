@@ -108,9 +108,10 @@ public struct SingleContentView: View {
                                        numberImageList: userData.textImageList,
                                        showColor: showColor,
                                        focalLength: 45)
+                    // 用来生成正方形的切图的
+                    // .frame(width: 300.0, height: 300.0).border(Color.purple)
                 }.background(blueColor)
-                // 用来生成正方形的切图的
-                // .frame(width: 300.0, height: 300.0).border(Color.purple)
+                
 
                 if showType == .colorFul {
                     HStack {

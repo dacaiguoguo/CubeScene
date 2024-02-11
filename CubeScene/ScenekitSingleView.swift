@@ -67,16 +67,16 @@ struct ScenekitSingleView : UIViewRepresentable {
         // retrieve the SCNView
         let scnView = SCNView()
         
-#if DEBUG
-        // 创建坐标轴节点
-        let xAxis = createAxisNode(color: .red, vector: SCNVector4(1, 0, 0, Float.pi/2))
-        let yAxis = createAxisNode(color: .green, vector: SCNVector4(0, 1, 0, Float.pi/2))
-        let zAxis = createAxisNode(color: .blue, vector: SCNVector4(0, 0, 1, Float.pi/2))
-        
-        scene.rootNode.addChildNode(xAxis)
-        scene.rootNode.addChildNode(yAxis)
-        scene.rootNode.addChildNode(zAxis)
-#endif
+//#if DEBUG
+//        // 创建坐标轴节点
+//        let xAxis = createAxisNode(color: .red, vector: SCNVector4(1, 0, 0, Float.pi/2))
+//        let yAxis = createAxisNode(color: .green, vector: SCNVector4(0, 1, 0, Float.pi/2))
+//        let zAxis = createAxisNode(color: .blue, vector: SCNVector4(0, 0, 1, Float.pi/2))
+//        
+//        scene.rootNode.addChildNode(xAxis)
+//        scene.rootNode.addChildNode(yAxis)
+//        scene.rootNode.addChildNode(zAxis)
+//#endif
         let countOfRow = dataItem.count
         let countOfLayer = dataItem.first?.count ?? -1
         let countOfColum = dataItem.first?.first?.count ?? -1
@@ -229,34 +229,37 @@ struct ScenekitSingleView : UIViewRepresentable {
         }
         
         //        TODO: 改成由变量控制，点击按钮生成图像
-        //        辅助任务 保存图片到document 为了性能优化
-        // DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-        //     // 在此处执行您的任务
-        //     let sss = scnView.snapshot()
-        //     saveImageToDocumentDirectory(image:sss, fileName: imageName)
-        // }
+//                辅助任务 保存图片到document 为了性能优化
+//         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+             // 在此处执行您的任务
+//             let snapshot = scnView.snapshot()
+//             saveImageToDocumentDirectory(image:snapshot, fileName: imageName)
+//              保存快照到相册
+//             UIImageWriteToSavedPhotosAlbum(snapshot, self, nil, nil)
+//         }
     }
+    
     
 }
 
-//func saveImageToDocumentDirectory(image: UIImage, fileName: String) {
-//    guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-//        return
-//    }
-//
-//    guard let imageData = image.pngData() else {
-//        return
-//    }
-//
-//    let fileURL = documentsDirectory.appendingPathComponent("\(fileName).png")
-//
-//    do {
-//        try imageData.write(to: fileURL)
-//    } catch {
-//        print("Error saving image: \(error)")
-//    }
-//}
-//
+func saveImageToDocumentDirectory(image: UIImage, fileName: String) {
+    guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+        return
+    }
+
+    guard let imageData = image.pngData() else {
+        return
+    }
+
+    let fileURL = documentsDirectory.appendingPathComponent("\(fileName).png")
+
+    do {
+        try imageData.write(to: fileURL)
+    } catch {
+        print("Error saving image: \(error)")
+    }
+}
+
 
 struct ScenekitSingleView_Previews: PreviewProvider {
     static var previews: some View {
