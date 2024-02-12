@@ -54,41 +54,41 @@ func resizeImage(inputImagePath:String, outputImagePath:String, cropRectString:S
     }
 }
 
-let dir = "/Users/sunyanguo/Developer/CubeScene/CubeScene/AImages"
-let todir = "/Users/sunyanguo/Developer/ResizeImage/ResizeImage"
+let dir = "/Users/yanguosun/Developer/T索玛类型题卡"
+let todir = "/Users/yanguosun/Developer/Tresult"
 
 let list = try! FileManager.default.contentsOfDirectory(atPath: dir)
-for testString in list {
-    if testString.hasSuffix(".png") {
-        let startIndex = (testString as NSString).deletingPathExtension
-        let onename = "\(todir)/\(startIndex)@3x.png"
-        print(onename)
-        do {
-            try FileManager.default.copyItem(atPath: "\(dir)/\(testString)", toPath: onename)
-        } catch {
-            print(error)
-        }
-    }
-//    if testString.hasSuffix("@3x.png") {
-//        let startIndex = testString.index(testString.startIndex, offsetBy: 0)
-//        let endIndex = testString.index(testString.endIndex, offsetBy: -7)
-//        let onename = "\(todir)/\(testString[startIndex ..< endIndex]).png"
+//for testString in list {
+//    if testString.hasSuffix(".png") {
+//        let startIndex = (testString as NSString).deletingPathExtension
+//        let onename = "\(todir)/\(startIndex)@3x.png"
 //        print(onename)
 //        do {
-//            try FileManager.default.copyItem(atPath: "/Users/sunyanguo/Developer/ResizeImage/ResizeImage/todoimages/\(testString)", toPath: onename)
+//            try FileManager.default.copyItem(atPath: "\(dir)/\(testString)", toPath: onename)
 //        } catch {
 //            print(error)
 //        }
 //    }
-
-}
-
-//print(list)
-//for testString in list {
-//    if (testString as NSString).pathExtension == "png" {
-//        let inputImagePath = "\(dir)/\(testString)"
-//        let outputImagePath = "\(todir)/\((testString as NSString).deletingPathExtension)@3x.png"
-//        let cropRectString = "0,550,950,950"
-//        resizeImage(inputImagePath: inputImagePath, outputImagePath: outputImagePath, cropRectString: cropRectString)
-//    }
+////    if testString.hasSuffix("@3x.png") {
+////        let startIndex = testString.index(testString.startIndex, offsetBy: 0)
+////        let endIndex = testString.index(testString.endIndex, offsetBy: -7)
+////        let onename = "\(todir)/\(testString[startIndex ..< endIndex]).png"
+////        print(onename)
+////        do {
+////            try FileManager.default.copyItem(atPath: "/Users/sunyanguo/Developer/ResizeImage/ResizeImage/todoimages/\(testString)", toPath: onename)
+////        } catch {
+////            print(error)
+////        }
+////    }
+//
 //}
+
+print(list)
+for testString in list {
+    if (testString as NSString).pathExtension.lowercased() == "png" {
+        let inputImagePath = "\(dir)/\(testString)"
+        let outputImagePath = "\(todir)/\((testString as NSString).deletingPathExtension).png"
+        let cropRectString = "116,628,596,596"
+        resizeImage(inputImagePath: inputImagePath, outputImagePath: outputImagePath, cropRectString: cropRectString)
+    }
+}
