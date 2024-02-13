@@ -313,7 +313,7 @@ struct EnterListView: View {
                 +
                 Text(Image(systemName: isComplete ? "checkmark.circle.fill" : "checkmark.circle"))
                     .font(.title2)
-                    .foregroundColor(isComplete ? .green : .black)
+                    .foregroundColor(isComplete ? .green : .white)
             } else {
                 Text(isComplete ? "Completed" : "ToDo")
                     .font(.title2)
@@ -322,7 +322,7 @@ struct EnterListView: View {
                 +
                 Text(Image(systemName: isComplete ? "checkmark.circle.fill" : "checkmark.circle"))
                     .font(.title2)
-                    .foregroundColor(isComplete ? .green : .black)
+                    .foregroundColor(isComplete ? .green : .white)
             }
         }
     }

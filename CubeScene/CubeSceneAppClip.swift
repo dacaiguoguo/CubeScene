@@ -29,7 +29,6 @@ struct CubeSceneApp: App {
             TabView {
                 tabFor108()
                 tabFor240()
-                tabForT()
                 tabForTry()
                 tabForMore()
             }

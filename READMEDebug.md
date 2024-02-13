@@ -3,3 +3,4 @@
         NSLocalizedString
 1
 3.4.23
+clip
