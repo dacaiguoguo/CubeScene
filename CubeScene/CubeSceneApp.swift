@@ -50,7 +50,7 @@ struct CubeSceneApp: App {
                         SubscriptionManager.shared.isPremiumUser = true
                     }) {
                         if !SubscriptionManager.shared.isPremiumUser {
-                            selectedTab = 1
+                            selectedTab = 4
                         }
                     }
                 tabForTry()
