@@ -1691,7 +1691,8 @@ The 'Tycho Magnetic Anomaly' is the monolith.
 /..66/.333
 
 
-/SOMA-T221 aka CP615
+/SOMA-T221
+; aka CP615
 /744./7744
 /6635/7655
 /..35/2631
@@ -1782,8 +1783,8 @@ The 'Tycho Magnetic Anomaly' is the monolith.
 /..../..../..../..22
 
 
-/SOMA-T233 update...
-;Intruder Alert by Emily
+/SOMA-T233
+;Intruder Alert by Emily  update...
 /.3566/.5562
 /.3576/.3772
 /.3442/14472
@@ -1805,7 +1806,8 @@ The 'Tycho Magnetic Anomaly' is the monolith.
 /5..2/5112
 
 
-/SOMA-T236 aka WW117
+/SOMA-T236
+; aka WW117
 /222/234/333/557/577
 /..1/..4/..4/..6/5.7
 /..1/..1/..4/..6/.66
@@ -1818,7 +1820,8 @@ The 'Tycho Magnetic Anomaly' is the monolith.
 /...7/..77/...6/..66
 
 
-/SOMA-T237b Hybrid
+/SOMA-T237b
+; Hybrid
 /1.../1222/5544/5443
 /..../1..2/3..3/5..3
 /..../3..7/3..6/3..3
@@ -1848,7 +1851,8 @@ The 'Tycho Magnetic Anomaly' is the monolith.
 /..2../..2..
 
 
-/SOMA-T241 aka C3C01
+/SOMA-T241
+; aka C3C01
 /..7/.77/.31/.35/.35/662/642
 /.../..7/..1/.31/.55/.62/.44
 /.../.../.../.../.../..2/..4
@@ -1943,7 +1947,8 @@ The 'Tycho Magnetic Anomaly' is the monolith.
 /.37./.77./4255
 
 
-/SOMA-T255 aka C5F09
+/SOMA-T255
+; aka C5F09
 /.44222/443211
 /.....5/.33315
 /.....6/....55
@@ -2402,7 +2407,8 @@ The 'Tycho Magnetic Anomaly' is the monolith.
 /..2/222
 
 
-/SOMA-T319 aka C3A15 and KT001
+/SOMA-T319
+; aka C3A15 and KT001
 /.66/.67/.77/445/115
 /.36/.33/.37/.44/155
 /.../.../.../..2/222
@@ -2597,7 +2603,8 @@ The 'Tycho Magnetic Anomaly' is the monolith.
 /.../553/663/673
 
 
-/SOMA-T341 aka WW416
+/SOMA-T341
+; aka WW416
 /377/337/366
 /2.7/2.6/2.6
 /244/445/115
@@ -2645,7 +2652,8 @@ The 'Tycho Magnetic Anomaly' is the monolith.
 /.../.../665
 
 
-/SOMA-T347 aka WW306
+/SOMA-T347
+; aka WW306
 /.../.../333
 /..2/772/734
 /..2/714/114
@@ -2660,7 +2668,8 @@ The 'Tycho Magnetic Anomaly' is the monolith.
 /.../.../755
 
 
-/SOMA-T348 aka WW719
+/SOMA-T348
+; aka WW719
 /351./331./366.
 /551./576./776.
 /..../..../.742

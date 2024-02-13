@@ -258,6 +258,13 @@ struct EnterListView: View {
                     .frame(maxWidth: .infinity, minHeight: 180)
                 // .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
                     .disabled(true)
+            } else if let uiimage = UIImage(named: "SOMA-\(product.name)") {
+                Image(uiImage: uiimage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit).clipped()
+                    .frame(maxWidth: .infinity, minHeight: 180)
+                // .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
+                    .disabled(true)
             } else {
                 ScenekitSingleView(dataModel: product, showType: .singleColor, colors: userData.colorSaveList, numberImageList: userData.textImageList)
                     .frame(maxWidth: .infinity, minHeight: 180)
