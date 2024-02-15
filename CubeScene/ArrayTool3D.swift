@@ -5,8 +5,6 @@
 //  Created by lvmama on 2023/7/1.
 //
 
-// 定义一个表示三维矩阵的类型别名
-typealias Matrix3D = [[[Int]]]
 
 enum Axis {
     case x

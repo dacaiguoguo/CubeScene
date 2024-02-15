@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G726" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22522" systemVersion="23C71" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="AbsEntity" representedClassName="AbsEntity" isAbstract="YES" syncable="YES" codeGenerationType="class">
         <attribute name="index2" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="isStarred" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
@@ -9,4 +9,12 @@
     <entity name="FavItem" representedClassName="FavItem" parentEntity="AbsEntity" syncable="YES" codeGenerationType="class"/>
     <entity name="FtItem" representedClassName="FtItem" parentEntity="AbsEntity" syncable="YES" codeGenerationType="class"/>
     <entity name="JtItem" representedClassName="JtItem" parentEntity="AbsEntity" syncable="YES" codeGenerationType="class"/>
+    <entity name="ProductEntity" representedClassName="ProductEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="arrayData" optional="YES" attributeType="Binary"/>
+        <attribute name="isTaskComplete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="level" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String" defaultValueString="N/A"/>
+        <attribute name="orderBlock" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="NSArray"/>
+        <attribute name="usedBlock" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="NSArray"/>
+    </entity>
 </model>

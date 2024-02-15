@@ -6,90 +6,61 @@
 //
 
 import SwiftUI
+import CoreData
 
+typealias Matrix3D = [[[Int]]]
+typealias BlockList = [Int]
 
-struct Product: Decodable {
-    
-    /// 形状名称
-    let name:String
-    
-    /// 形状数据 三位数组
-    let matrix:Matrix3D
-    
-    /// 形状用到哪些块
-    let usedBlock: [Int]
-    
-    /// 形状拼接的顺序，从底层遍历得出，暂时不支持自定义顺序，TO支持自定义顺序
-    let orderBlock: [Int]
-    
-    /// 标记形状是否完成
+struct Product: Decodable, Identifiable {
+    let name: String
+    let matrix: Matrix3D
+    let usedBlock: BlockList
+    let orderBlock: BlockList
     var isTaskComplete: Bool
-    
-    /// 形状难度等级
     let level: Int
-    
+
+    var id: String { name }
+
     init(name: String, matrix: Matrix3D, isTaskComplete: Bool) {
         self.name = name
         self.matrix = matrix
-        let temp = Product.orderList(matrix: matrix)
-        self.usedBlock = Array(Set(temp.map({ item in
-            mapColorIndex(item)
-        }))).sorted(by: {$0 < $1})
-        
-        self.orderBlock = temp
+        self.orderBlock = Product.orderList(from: matrix)
+        self.usedBlock = Array(Set(orderBlock.filter { $0 >= 0 })).sorted()
         self.isTaskComplete = isTaskComplete
-        switch usedBlock.count {
-        case 2:
-            self.level = 1
-        case 3:
-            self.level = 1
-        case 4:
-            self.level = 2
-        case 5:
-            self.level = 3
-        case 6:
-            self.level = 3
-        case 7:
-            self.level = 4
-        default:
-            self.level = 4
-        }
+        self.level = Product.determineLevel(from: usedBlock)
     }
-    /*
-     [[[2,4,3], [6,4,1], [6,6,1]],
-     [[2,3,3], [6,4,1], [7,4,5]],
-     [[2,2,3], [7,5,5], [7,7,5]]]
-     */
-    static func orderList(matrix:Matrix3D) -> [Int] {
-        guard matrix.count > 0 else {
-            return []
-        }
-        let countOfRow = matrix.count
-        let countOfLayer = matrix.first?.count ?? -1
-        let countOfColum = matrix.first?.first?.count ?? -1
-        var ret:[Int] = []
-        for y in (0..<countOfLayer).reversed() {
-            for x in (0..<countOfColum).reversed() {
-                for z in (0..<countOfRow).reversed() {
-                    let value = matrix[z][y][x];
-                    if value < 0 {
-                        continue
-                    }
-                    if !ret.contains(value) {
-                        ret.append(value)
-                    }
-                }
+
+    private static func orderList(from matrix: Matrix3D) -> BlockList {
+        guard !matrix.isEmpty else { return [] }
+        return matrix.lazy.reversed().flatMap { layer in
+            layer.lazy.reversed().flatMap { row in
+                row.reversed()
             }
+        }.filter { $0 >= 0 }.removingDuplicates()
+    }
+
+    private static func determineLevel(from usedBlocks: BlockList) -> Int {
+        switch usedBlocks.count {
+        case 2...3: return 1
+        case 4...5: return 2
+        case 6...7: return 3
+        default: return 4
         }
-        return ret
     }
 }
 
-extension Product: Identifiable {
-    var id: String {
-        name
+extension Array where Element: Equatable {
+    func removingDuplicates() -> [Element] {
+        var result = [Element]()
+        for value in self {
+            if !result.contains(value) {
+                result.append(value)
+            }
+        }
+        return result
     }
 }
+
 
 
 /// 解析文件得到要展示的形状数据数组
@@ -186,12 +157,74 @@ func produceData2(stringContent:String) -> [Product]  {
 
 let blueColor = Color(uiColor: UIColor(hex: "00bfff"));
 
+extension Product {
+    func toManagedObject(in context: NSManagedObjectContext) -> ProductEntity {
+        let productEntity = ProductEntity(context: context)
+        productEntity.name = name
+        productEntity.isTaskComplete = isTaskComplete
+        productEntity.level = Int16(level) // 根据你的模型属性类型调整
+
+        // 对于数组和矩阵，你需要将它们转换为合适的格式
+        // 例如，将 matrix 转换为 Data
+        if let data = try? NSKeyedArchiver.archivedData(withRootObject: self.matrix, requiringSecureCoding: false) {
+            productEntity.arrayData = data
+        }
+
+
+        // 同样，对于 usedBlock 和 orderBlock
+        productEntity.usedBlock = self.usedBlock as NSArray
+
+        productEntity.orderBlock = self.orderBlock as NSArray
+
+        return productEntity
+    }
+}
+
 
 struct EnterListView: View {
     @EnvironmentObject var userData: UserData
+    @Environment(\.managedObjectContext) private var viewContext
+    let persistenceController = PersistenceController.shared
+
     @State var productList: [Product]
     var body: some View {
         List {
+//            Button {
+//                
+//                productList.forEach { product in
+//                    let context = persistenceController.container.viewContext // 你的 NSManagedObjectContext 实例
+//                    let productEntity = ProductEntity(context: context)
+//
+//                    productEntity.name = product.name
+//                    productEntity.isTaskComplete = product.isTaskComplete
+//                    productEntity.level = Int16(product.level) // 根据你的模型属性类型调整
+//
+//                    // 对于数组和矩阵，你需要将它们转换为合适的格式
+//                    // 例如，将 matrix 转换为 Data
+//                    if let data = try? NSKeyedArchiver.archivedData(withRootObject: product.matrix, requiringSecureCoding: false) {
+//                        productEntity.arrayData = data
+//                    }
+//
+//
+//                    // 同样，对于 usedBlock 和 orderBlock
+//                    productEntity.usedBlock = product.usedBlock as NSArray
+//
+//                    productEntity.orderBlock = product.orderBlock as NSArray
+////                    let productEntity = product.toManagedObject(in: context)
+//                    do {
+//                        context.insert(productEntity)
+//                        try context.save()
+//                    } catch {
+//                        // 处理错误
+//                    }
+//                }
+//                
+//            
+//                
+//            } label: {
+//                Text("Save")
+//            }
+
             ForEach(productList) { product in
                 ProductRow(product: product)
                     .listRowBackground(Color.clear)  // 设置行背景为透明
