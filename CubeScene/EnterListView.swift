@@ -216,10 +216,14 @@ struct EnterListView: View {
         var body: some View {
             // 使用按钮来代替 NavigationLink，这样就不会显示箭头
             Button(action: {
-                if SubscriptionManager.shared.isPremiumUser {
-                    isActive = true
+                if product.name.hasPrefix("T") || product.name.hasPrefix("C") {
+                    if SubscriptionManager.shared.isPremiumUser {
+                        isActive = true
+                    } else {
+                        displayPaywall = true
+                    }
                 } else {
-                    displayPaywall = true
+                    isActive = true
                 }
             }) {
                 VStack {
