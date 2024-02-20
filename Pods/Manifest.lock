@@ -1,7 +1,7 @@
 PODS:
-  - RevenueCat (4.32.1)
-  - RevenueCatUI (4.32.1):
-    - RevenueCat (= 4.32.1)
+  - RevenueCat (4.36.3)
+  - RevenueCatUI (4.36.3):
+    - RevenueCat (= 4.36.3)
 
 DEPENDENCIES:
   - RevenueCat
@@ -13,8 +13,8 @@ SPEC REPOS:
     - RevenueCatUI
 
 SPEC CHECKSUMS:
-  RevenueCat: 435a7e59f541d07bc904a5d9802bcdbc0978140d
-  RevenueCatUI: 7a09480fe34d5bda83c5b9bc42c326e8a3a8c0dc
+  RevenueCat: 7be0d7bde9efb2fc1ebd1888522c55bb4f9feb18
+  RevenueCatUI: 42dc70fb9527d63b753d73298d7b53e816070b1a
 
 PODFILE CHECKSUM: 70100c16d5d4d16176cf5561919681205b9b678b
 

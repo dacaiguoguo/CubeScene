@@ -18,9 +18,9 @@ struct Product: Decodable, Identifiable {
     let orderBlock: BlockList
     var isTaskComplete: Bool
     let level: Int
-
+    
     var id: String { name }
-
+    
     init(name: String, matrix: Matrix3D, isTaskComplete: Bool) {
         self.name = name
         self.matrix = matrix
@@ -29,7 +29,7 @@ struct Product: Decodable, Identifiable {
         self.isTaskComplete = isTaskComplete
         self.level = Product.determineLevel(from: usedBlock)
     }
-
+    
     private static func orderList(from matrix: Matrix3D) -> BlockList {
         guard !matrix.isEmpty else { return [] }
         return matrix.lazy.reversed().flatMap { layer in
@@ -38,7 +38,7 @@ struct Product: Decodable, Identifiable {
             }
         }.filter { $0 >= 0 }.removingDuplicates()
     }
-
+    
     private static func determineLevel(from usedBlocks: BlockList) -> Int {
         switch usedBlocks.count {
         case 2...3: return 1
@@ -163,76 +163,47 @@ extension Product {
         productEntity.name = name
         productEntity.isTaskComplete = isTaskComplete
         productEntity.level = Int16(level) // 根据你的模型属性类型调整
-
+        
         // 对于数组和矩阵，你需要将它们转换为合适的格式
         // 例如，将 matrix 转换为 Data
         if let data = try? NSKeyedArchiver.archivedData(withRootObject: self.matrix, requiringSecureCoding: false) {
             productEntity.arrayData = data
         }
-
-
+        
+        
         // 同样，对于 usedBlock 和 orderBlock
         productEntity.usedBlock = self.usedBlock as NSArray
-
+        
         productEntity.orderBlock = self.orderBlock as NSArray
-
+        
         return productEntity
     }
 }
 
+import RevenueCatUI
 
 struct EnterListView: View {
     @EnvironmentObject var userData: UserData
     @Environment(\.managedObjectContext) private var viewContext
     let persistenceController = PersistenceController.shared
-
+    @State var displayPaywall = false
+    
     @State var productList: [Product]
     var body: some View {
         List {
-//            Button {
-//                
-//                productList.forEach { product in
-//                    let context = persistenceController.container.viewContext // 你的 NSManagedObjectContext 实例
-//                    let productEntity = ProductEntity(context: context)
-//
-//                    productEntity.name = product.name
-//                    productEntity.isTaskComplete = product.isTaskComplete
-//                    productEntity.level = Int16(product.level) // 根据你的模型属性类型调整
-//
-//                    // 对于数组和矩阵，你需要将它们转换为合适的格式
-//                    // 例如，将 matrix 转换为 Data
-//                    if let data = try? NSKeyedArchiver.archivedData(withRootObject: product.matrix, requiringSecureCoding: false) {
-//                        productEntity.arrayData = data
-//                    }
-//
-//
-//                    // 同样，对于 usedBlock 和 orderBlock
-//                    productEntity.usedBlock = product.usedBlock as NSArray
-//
-//                    productEntity.orderBlock = product.orderBlock as NSArray
-////                    let productEntity = product.toManagedObject(in: context)
-//                    do {
-//                        context.insert(productEntity)
-//                        try context.save()
-//                    } catch {
-//                        // 处理错误
-//                    }
-//                }
-//                
-//            
-//                
-//            } label: {
-//                Text("Save")
-//            }
-
             ForEach(productList) { product in
-                ProductRow(product: product)
+                ProductRow(product: product, displayPaywall: $displayPaywall)
                     .listRowBackground(Color.clear)  // 设置行背景为透明
-                
-            }
-            .onAppear {
             }
             .listStyle(PlainListStyle())  // 设置 List 为纯净风格
+        }
+        .sheet(isPresented: self.$displayPaywall) {
+            PaywallView()
+                .onPurchaseCompleted { customerInfo in
+                    print("Purchase completed: \(customerInfo.entitlements)")
+                    self.displayPaywall = false
+                    SubscriptionManager.shared.isPremiumUser = true
+                }
         }
     }
     
@@ -240,11 +211,16 @@ struct EnterListView: View {
         @EnvironmentObject var userData: UserData
         @State var product: Product  // 假设 Product 是你的数据模型
         @State private var isActive: Bool = false
+        @Binding var displayPaywall:Bool
         
         var body: some View {
             // 使用按钮来代替 NavigationLink，这样就不会显示箭头
             Button(action: {
-                isActive = true
+                if SubscriptionManager.shared.isPremiumUser {
+                    isActive = true
+                } else {
+                    displayPaywall = true
+                }
             }) {
                 VStack {
                     Text(product.name).font(.title).foregroundColor(.white).padding(.bottom, 8)
@@ -267,7 +243,6 @@ struct EnterListView: View {
                 ) {
                     EmptyView()
                 }
-                    .hidden()  // 隐藏 NavigationLink，不显示箭头
             )
             .buttonStyle(PlainButtonStyle())  // 移除按钮样式
             // .padding(.horizontal)  // 设置水平边距

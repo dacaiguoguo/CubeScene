@@ -18,8 +18,8 @@
 
 import SwiftUI
 import UIKit
-
-
+import RevenueCat
+import RevenueCatUI
 
 @main
 struct CubeSceneApp: App {
@@ -32,14 +32,6 @@ struct CubeSceneApp: App {
         WindowGroup {
             TabView(selection: $selectedTab) {
                 tabFor108()
-                    .presentPaywallIfNeeded(
-                    requiredEntitlementIdentifier: "soma_t",
-                    purchaseCompleted: { customerInfo in
-                        SubscriptionManager.shared.isPremiumUser = true
-                    },
-                    restoreCompleted: { customerInfo in
-                        SubscriptionManager.shared.isPremiumUser = true
-                    })
                 tabFor240()
                 tabForT().presentPaywallIfNeeded(
                     requiredEntitlementIdentifier: "soma_t",
@@ -48,11 +40,9 @@ struct CubeSceneApp: App {
                     },
                     restoreCompleted: { customerInfo in
                         SubscriptionManager.shared.isPremiumUser = true
-                    }) {
-                        if !SubscriptionManager.shared.isPremiumUser {
-                            selectedTab = 4
-                        }
-                    }
+                    }, onDismiss:  {
+                        
+                    })
                 tabForTry()
                 tabForMore()
             }
@@ -154,12 +144,24 @@ struct CubeSceneApp: App {
 
     private func performLaunchTasks() {
         print("performLaunchTasks completed:")
+        Purchases.shared.getCustomerInfo { comp, err in
+            SubscriptionManager.shared.isPremiumUser = checkUserSubscriptionStatus(comp)
+            print("isPremiumUser: \(SubscriptionManager.shared.isPremiumUser)")
+        }
     }
 }
 
 
-import SwiftUI
 
-import RevenueCat
-import RevenueCatUI
 
+func checkUserSubscriptionStatus(_ customerInfo:CustomerInfo?) -> Bool {
+    var hasActiveSub = false
+    // 检查用户是否拥有有效的订阅
+    if let customerInfo = customerInfo, customerInfo.entitlements["soma_t"]?.isActive == true {
+        print("User has an active subscription.")
+        hasActiveSub = true
+    } else {
+        print("User does not have an active subscription.")
+    }
+    return hasActiveSub
+}
