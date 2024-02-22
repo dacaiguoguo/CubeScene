@@ -8,7 +8,7 @@
 import SwiftUI
 import SceneKit
 import StoreKit
-
+import Mixpanel
 /// 每次启动个只弹出一次请求评分
 var runOnceRequestReview: () = {
     // 在这里写只需执行一次的代码
@@ -126,12 +126,14 @@ public struct SingleContentView2: View {
         Group {
             HStack {
                 Button(action: {
+                    Mixpanel.mainInstance().track(event: "reset")
                     reset()
                 }, label: {
                     resetText()
                     // Text( "\(LocalizedStringKey("Reset")\(Int(floor(counter))"))
                 })
                 Button(action: {
+                    Mixpanel.mainInstance().track(event: "DemoShow")
                     reset()
                     counter += 0.001;
                     actionRunAt(index: 0)

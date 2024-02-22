@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreData
 import SafariServices
-
+import Mixpanel
 
 struct ChaiZiItem: Hashable, Identifiable {
     var id: String {
@@ -147,6 +147,7 @@ struct ChaiZiView<T>: View where T:AbsEntity {
 
     private func detailButton(_ item:T) -> some View {
         Button("详细") {
+            Mixpanel.mainInstance().track(event: "detailButton", properties: ["Signup": item.name])
             if let url = item.url {
                 let sc = SFSafariViewController(url: url)
                 if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {

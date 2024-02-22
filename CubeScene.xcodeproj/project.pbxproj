@@ -14,6 +14,7 @@
 		59CFCD432A6281F700E38F38 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59CFCD422A6281F700E38F38 /* UserData.swift */; };
 		5B6FE7622B2D42E30035DD0F /* cube2.scn in Resources */ = {isa = PBXBuildFile; fileRef = 5B6FE7612B2D42E30035DD0F /* cube2.scn */; };
 		5B7C065B2B2FEA570040942C /* ToolsFunc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C065A2B2FEA570040942C /* ToolsFunc.swift */; };
+		5B86AD372B86427300F6A442 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B86AD362B86427300F6A442 /* StoreKit.framework */; };
 		5B99C3C92B302332003E37B5 /* Origin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B99C3C82B302332003E37B5 /* Origin.swift */; };
 		5B99C3D52B302F5A003E37B5 /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B99C3D22B302F5A003E37B5 /* Dictionary+Extensions.swift */; };
 		5BB65C482B2D705F00E97777 /* solutionsMaped6.json in Resources */ = {isa = PBXBuildFile; fileRef = 5BB65C472B2D705F00E97777 /* solutionsMaped6.json */; };
@@ -100,6 +101,7 @@
 		5B34E9B52B6D210100454D91 /* READMEDebug.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = READMEDebug.md; sourceTree = "<group>"; };
 		5B6FE7612B2D42E30035DD0F /* cube2.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = cube2.scn; sourceTree = "<group>"; };
 		5B7C065A2B2FEA570040942C /* ToolsFunc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsFunc.swift; sourceTree = "<group>"; };
+		5B86AD362B86427300F6A442 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		5B99C3C82B302332003E37B5 /* Origin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Origin.swift; sourceTree = "<group>"; };
 		5B99C3D22B302F5A003E37B5 /* Dictionary+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Dictionary+Extensions.swift"; path = "extensions/Dictionary+Extensions.swift"; sourceTree = "<group>"; };
 		5BB65C472B2D705F00E97777 /* solutionsMaped6.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = solutionsMaped6.json; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E2F66FD96086575404A29FC /* Pods_CubeScene.framework in Frameworks */,
+				5B86AD372B86427300F6A442 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,6 +206,7 @@
 		5177FACDBBB70601E787BD09 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5B86AD362B86427300F6A442 /* StoreKit.framework */,
 				23C86B6BC95EA5C238398272 /* Pods_CubeScene.framework */,
 				FC9583311015BB06733CC96D /* Pods_CubeSceneTests.framework */,
 			);
@@ -838,7 +842,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.4.24;
+				MARKETING_VERSION = 3.4.25;
 				OTHER_CFLAGS = "-Wno-deprecated-declarations";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -880,7 +884,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.4.24;
+				MARKETING_VERSION = 3.4.25;
 				OTHER_CFLAGS = "-Wno-deprecated-declarations";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene;
 				PRODUCT_NAME = "$(TARGET_NAME)";

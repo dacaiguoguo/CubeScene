@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import Mixpanel
 
 typealias Matrix3D = [[[Int]]]
 typealias BlockList = [Int]
@@ -219,10 +220,13 @@ struct EnterListView: View {
                 if product.name.hasPrefix("T") || product.name.hasPrefix("C") {
                     if SubscriptionManager.shared.isPremiumUser {
                         isActive = true
+                        Mixpanel.mainInstance().track(event: "ProductRowisActive", properties: ["Signup": product.name])
                     } else {
+                        Mixpanel.mainInstance().track(event: "displayPaywall", properties: ["Signup": product.name])
                         displayPaywall = true
                     }
                 } else {
+                    Mixpanel.mainInstance().track(event: "ProductRowisFree", properties: ["Signup": product.name])
                     isActive = true
                 }
             }) {

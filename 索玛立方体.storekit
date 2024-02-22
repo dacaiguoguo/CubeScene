@@ -4,13 +4,32 @@
 
   ],
   "products" : [
-
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "6476926938",
+      "localizations" : [
+        {
+          "description" : "To Demo Can use 10 times",
+          "displayName" : "Use Demo 10 times",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "可以使用app中演示10次",
+          "displayName" : "演示10次",
+          "locale" : "zh_CN"
+        }
+      ],
+      "productID" : "demo_count",
+      "referenceName" : "demo count",
+      "type" : "Consumable"
+    }
   ],
   "settings" : {
     "_applicationInternalID" : "6450415992",
     "_developerTeamID" : "AJG2826637",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 728135903.75051796,
+    "_lastSynchronizedDate" : 730133029.41667604,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
@@ -96,6 +115,36 @@
           "productID" : "6450415992001",
           "recurringSubscriptionPeriod" : "P1W",
           "referenceName" : "soma_t",
+          "subscriptionGroupID" : "21437795",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "2.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6478165435",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "索玛立方体月订阅，超多拼法，很有趣",
+              "displayName" : "索玛立方体月订阅",
+              "locale" : "zh_CN"
+            },
+            {
+              "description" : "Soma Monthly, More Solution",
+              "displayName" : "Soma Monthly",
+              "locale" : "ar"
+            }
+          ],
+          "productID" : "soma_t_month",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "soma_t_month",
           "subscriptionGroupID" : "21437795",
           "type" : "RecurringSubscription"
         }

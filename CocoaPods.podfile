@@ -6,6 +6,7 @@ target 'CubeScene' do
   use_frameworks!
   pod 'RevenueCat'
   pod 'RevenueCatUI'
+  pod 'Mixpanel-swift'
   # Pods for CubeScene
 
   target 'CubeSceneTests' do

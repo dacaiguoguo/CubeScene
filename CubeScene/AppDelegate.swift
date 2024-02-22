@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import RevenueCat
+import Mixpanel
 
 //请求用户授权推送
 func requestNotificationAuthorization() {
@@ -87,6 +88,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         print("Your code here:\(NSHomeDirectory())")
         // 移除 List 默认的分隔线（如果你想要的话）
         UITableView.appearance().separatorStyle = .none
+        // Replace with your Project Token
+        Mixpanel.initialize(token: "0db8c0bbc4140bee54384c6d148e9270", trackAutomaticEvents: true)
+        Mixpanel.mainInstance().track(event: "Signed Up", properties: [
+            "Signup Type": "Referral",
+        ])
+        
+        
+        
         // 执行应用程序启动时的操作 RevenueCat
         Purchases.logLevel = .debug
         Purchases.configure(withAPIKey: "appl_lNBhYAAESbCcENhLTzCZUYXgoHU")

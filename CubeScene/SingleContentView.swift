@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import Mixpanel
 
 /// 显示类型 单色、彩色、数字
 enum ShowType: Hashable {
@@ -116,6 +116,7 @@ public struct SingleContentView: View {
                 if showType == .colorFul {
                     HStack {
                         Button(action: {
+                            Mixpanel.mainInstance().track(event: "isTimerRunning.toggle", properties: ["Signup": dataModel.name])
                             isTimerRunning.toggle()
                         }) {
                             Text(isTimerRunning ? "Pause Playback" : "Auto Play")
@@ -167,6 +168,7 @@ public struct SingleContentView: View {
 //                }
                 if isShowItems {
                     Button(action: {
+                        Mixpanel.mainInstance().track(event: "isTaskComplete.toggle", properties: ["Signup": dataModel.name])
                         dataModel.isTaskComplete.toggle()
                         UserDefaults.standard.set(dataModel.isTaskComplete, forKey: dataModel.name)
                     }) {

@@ -20,6 +20,7 @@ import SwiftUI
 import UIKit
 import RevenueCat
 import RevenueCatUI
+import Mixpanel
 
 @main
 struct CubeSceneApp: App {
@@ -30,7 +31,12 @@ struct CubeSceneApp: App {
 
     var body: some Scene {
         WindowGroup {
-            TabView(selection: $selectedTab) {
+            TabView(selection: Binding(get: {
+                selectedTab
+            }, set: { newv in
+                selectedTab = newv
+                Mixpanel.mainInstance().track(event: "selectedTab", properties: ["Signup": "\(selectedTab)"])
+            })) {
                 tabFor108()
                 tabFor240()
                 tabForT().presentPaywallIfNeeded(
