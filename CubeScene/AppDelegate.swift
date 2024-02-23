@@ -93,13 +93,19 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         Mixpanel.mainInstance().track(event: "Signed Up", properties: [
             "Signup Type": "Referral",
         ])
+#if DEBUG
+        Purchases.logLevel = .debug
+#endif
+        
+        // Option 2: Set different Mixpanel identifier in RevenueCat
         
         
         
         // 执行应用程序启动时的操作 RevenueCat
-        Purchases.logLevel = .debug
         Purchases.configure(withAPIKey: "appl_lNBhYAAESbCcENhLTzCZUYXgoHU")
-           Purchases.shared.delegate = self // make sure to set this after calling configure
+        Purchases.shared.delegate = self // make sure to set this after calling configure
+        Purchases.shared.attribution.setMixpanelDistinctID(Mixpanel.mainInstance().distinctId)
+
         // Using Completion Blocks
         Purchases.shared.getProducts(["6450415992001"]) { stlist in
             print("\(stlist)")
