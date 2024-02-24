@@ -202,7 +202,9 @@ public struct SettingView: View {
                                           Channel(channelID: "2", name: "ContentAuthor", link: "mailto:dacaiguoguo@163.com"),
                                           Channel(channelID: "3", name: "Privacy Policy", link: "https://dacaiguoguo.github.io/PrivacyPolicy.html"),
                                           Channel(channelID: "4", name: "Terms Of Use", link: "https://dacaiguoguo.github.io/teamuse/termsofuse.html")]
-    
+    @State private var showingSheet = false
+    @State private var currentIcon:String = cicon()
+
     public var body: some View {
         
         List {
@@ -211,6 +213,26 @@ public struct SettingView: View {
                     Link(LocalizedStringKey(channel.name), destination: URL(string: channel.link)!)
                         .foregroundColor(.blue)
                         .font(.headline)
+                }
+            })
+            Section(content: {
+                Button {
+                    self.showingSheet = true
+
+                } label: {
+                    Text("Choose Icon").font(.headline) + Text("     Current:\(currentIcon)")
+                }
+                .actionSheet(isPresented: $showingSheet) {
+                    ActionSheet(
+                        title: Text("Choose Icon") + Text("Current:\(currentIcon)"),
+                        message: Text("Choose new Icon"),//请选择一个新的 App 图标
+                        buttons: [
+                            .default(Text("Default")) { self.changeIcon(to: nil) },
+                            .default(Text("AppIcon1")) { self.changeIcon(to: "AppIcon1") },
+                            .default(Text("AppIcon2")) { self.changeIcon(to: "AppIcon2") },
+                            .cancel()
+                        ]
+                    )
                 }
             })
             
@@ -377,6 +399,27 @@ public struct SettingView: View {
         .toast(isShowing: $showToast, text: showText.localizedText)
         .navigationTitle("TitleHelp")
         .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    static func cicon() -> String {
+        if let currentIcon = UIApplication.shared.alternateIconName {
+            print("当前的 App 图标是: \(currentIcon)")
+            return currentIcon
+        } else {
+            print("当前使用的是默认 App 图标")
+            return "Default"
+        }
+    }
+    
+    func changeIcon(to iconName: String?) {
+        UIApplication.shared.setAlternateIconName(iconName) { error in
+            currentIcon = SettingView.cicon()
+            if let error = error {
+                print("图标切换失败: \(error.localizedDescription)")
+            } else {
+                print("图标已更改。")
+            }
+        }
     }
 }
 
