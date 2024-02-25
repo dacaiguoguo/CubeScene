@@ -16,18 +16,35 @@ struct EnterListView240: View {
     @EnvironmentObject var userData: UserData
     @State var productList: [Product] = produceData240(resourceName: resourceName)
     var body: some View {
-        List {
-            ForEach(productList) { product in
-                ProductRow(product: product)
-                    .listRowBackground(Color.clear)  // 设置行背景为透明
-                
+        ScrollView {
+            LazyVGrid(columns: gridLayout, spacing: 20) {
+                ForEach(productList) { product in
+                    ProductRow(product: product)
+                        .listRowBackground(Color.clear)  // 设置行背景为透明
+                }
             }
-            .onAppear {
-            }
-            .listStyle(PlainListStyle())  // 设置 List 为纯净风格
+            .padding() // 添加一些内边距
         }
     }
     
+    
+    // 根据设备类型确定列的数量
+
+    private var gridLayout: [GridItem] {
+
+        // iPad上一行显示3个项目
+
+        let ipadColumns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
+
+        // iPhone上一行显示一个项目
+
+        let iphoneColumn = [GridItem(.flexible()), GridItem(.flexible())]
+
+
+
+        return UIDevice.current.userInterfaceIdiom == .pad ? ipadColumns : iphoneColumn
+
+    }
     struct ProductRow: View {
         @EnvironmentObject var userData: UserData
         @State var product: Product  // 假设 Product 是你的数据模型

@@ -186,19 +186,30 @@ import RevenueCatUI
 struct EnterListView: View {
     @EnvironmentObject var userData: UserData
     @Environment(\.managedObjectContext) private var viewContext
-    let persistenceController = PersistenceController.shared
     @State var displayPaywall = false
-    
     @State var productList: [Product]
+
+    // 根据设备类型确定列的数量
+    private var gridLayout: [GridItem] {
+        // iPad上一行显示3个项目
+        let ipadColumns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
+        // iPhone上一行显示一个项目
+        let iphoneColumn = [GridItem(.flexible()), GridItem(.flexible())]
+
+        return UIDevice.current.userInterfaceIdiom == .pad ? ipadColumns : iphoneColumn
+    }
+
     var body: some View {
-        List {
-            ForEach(productList) { product in
-                ProductRow(product: product, displayPaywall: $displayPaywall)
-                    .listRowBackground(Color.clear)  // 设置行背景为透明
+        ScrollView {
+            LazyVGrid(columns: gridLayout, spacing: 20) {
+                ForEach(productList) { product in
+                    ProductRow(product: product, displayPaywall: $displayPaywall)
+                        .background(Color.clear) // 设置背景为透明
+                }
             }
-            .listStyle(PlainListStyle())  // 设置 List 为纯净风格
+            .padding() // 添加一些内边距
         }
-        .sheet(isPresented: self.$displayPaywall) {
+        .sheet(isPresented: $displayPaywall) {
             PaywallView()
                 .onPurchaseCompleted { customerInfo in
                     print("Purchase completed: \(customerInfo.entitlements)")
@@ -207,6 +218,7 @@ struct EnterListView: View {
                 }
         }
     }
+    
     
     struct ProductRow: View {
         @EnvironmentObject var userData: UserData
@@ -232,12 +244,9 @@ struct EnterListView: View {
             }) {
                 VStack {
                     Text(product.name).font(.title).foregroundColor(.white).padding(.bottom, 8)
+                    StarRating(rating: product.level)
                     ProductImage(product: product)
-                    HStack{
-                        StarRating(rating: product.level)
-                        TaskStatus(isComplete: product.isTaskComplete)
-                    }
-                    // ProductDetails(product: product)
+                    TaskStatus(isComplete: product.isTaskComplete)
                 }
                 .padding()  // 卡片内边距
                 .background(blueColor)  // 卡片背景色
@@ -253,13 +262,9 @@ struct EnterListView: View {
                 }
             )
             .buttonStyle(PlainButtonStyle())  // 移除按钮样式
-            // .padding(.horizontal)  // 设置水平边距
             .padding(.vertical, 8)  // 设置垂直边距
         }
     }
-    
-    
-    
     
     // 提取的产品图片视图
     struct ProductImage: View {
@@ -272,34 +277,18 @@ struct EnterListView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit).clipped()
                     .frame(maxWidth: .infinity, minHeight: 180)
-                // .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
                     .disabled(true)
             } else if let uiimage = UIImage(named: "SOMA-\(product.name)") {
                 Image(uiImage: uiimage)
                     .resizable()
                     .aspectRatio(contentMode: .fit).clipped()
                     .frame(maxWidth: .infinity, minHeight: 180)
-                // .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
                     .disabled(true)
             } else {
                 ScenekitSingleView(dataModel: product, showType: .singleColor, colors: userData.colorSaveList, numberImageList: userData.textImageList)
                     .frame(maxWidth: .infinity, minHeight: 180)
-                // .overlay(RoundedRectangle(cornerRadius: 8).stroke(blueColor, lineWidth: 1))
                     .disabled(true)
             }
-        }
-    }
-    
-    // 提取的产品详情视图
-    struct ProductDetails: View {
-        let product: Product
-        
-        var body: some View {
-            VStack(alignment: .leading) {
-                Text(product.name).font(.title).foregroundColor(.white).padding(.bottom, 8)
-                StarRating(rating: product.level)
-                TaskStatus(isComplete: product.isTaskComplete)
-            }.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 0))
         }
     }
     
@@ -308,11 +297,11 @@ struct EnterListView: View {
         let rating: Int
         
         var body: some View {
-            HStack {
+            HStack(alignment: .center) {
                 ForEach(0..<rating, id: \.self) { _ in
-                    Image(systemName: "star.fill").scaleEffect(0.8).foregroundColor(.yellow)
+                    Image(systemName: "star.fill").scaleEffect(1).foregroundColor(.yellow)
                 }
-            }.padding(.bottom, 8)
+            }.padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
         }
     }
     
@@ -321,30 +310,21 @@ struct EnterListView: View {
         let isComplete: Bool
         
         var body: some View {
-            if #available(iOS 16, *) {
-                Text(LocalizedStringResource(stringLiteral: isComplete ? "Completed" : "ToDo"))
-                    .foregroundColor(.white).font(.title2)
-                +
-                Text(" ")
-                +
-                Text(Image(systemName: isComplete ? "checkmark.circle.fill" : "checkmark.circle"))
-                    .font(.title2)
-                    .foregroundColor(isComplete ? .green : .white)
-            } else {
+            HStack(alignment: .center) {
                 Text(isComplete ? "Completed" : "ToDo")
+                    .foregroundColor(isComplete ? .green : .black)
                     .font(.title2)
-                +
-                Text(" ")
-                +
-                Text(Image(systemName: isComplete ? "checkmark.circle.fill" : "checkmark.circle"))
+                Image(systemName: isComplete ? "checkmark.circle.fill" : "checkmark.circle")
                     .font(.title2)
-                    .foregroundColor(isComplete ? .green : .white)
+                    .foregroundColor(isComplete ? .green : .black)
             }
+            .padding(.horizontal) // 为文本和图标添加一些内边距
+            .background(Color.white) // 设置视图的背景颜色为白色
+            .cornerRadius(4) // 设置视图的圆角半径为4
         }
     }
+
 }
-
-
 
 struct EnterListView_Previews: PreviewProvider {
     static var previews: some View {
