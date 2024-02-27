@@ -32,24 +32,24 @@
 		9D1602BA2A4BDBF100C247A7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D1602B92A4BDBF100C247A7 /* LaunchScreen.storyboard */; };
 		9D46D7252AF12F57002DE821 /* SingleContentView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D46D7232AF12F57002DE821 /* SingleContentView2.swift */; };
 		9D46D7272AF12F57002DE821 /* ScenekitSingleView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D46D7242AF12F57002DE821 /* ScenekitSingleView2.swift */; };
-		9D6DC3E52AA168460068C807 /* SOMAY101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D6DC3E42AA168460068C807 /* SOMAY101.txt */; };
+		9D6DC3E52AA168460068C807 /* SOMAY101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D6DC3E42AA168460068C807 /* SOMAY101.txt */; settings = {ASSET_TAGS = (yourResourceTag, ); }; };
 		9D7D34BD2AF7A86D009291BC /* CubeSceneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7D34BC2AF7A86D009291BC /* CubeSceneTests.swift */; };
 		9D7D34C42AF7A88C009291BC /* PointInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7D34C32AF7A88C009291BC /* PointInfo.swift */; };
 		9D7D34C52AF7A8D4009291BC /* PointInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7D34C32AF7A88C009291BC /* PointInfo.swift */; };
 		9D7D34C82AF7C3D4009291BC /* TestEnter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7D34C72AF7C3D4009291BC /* TestEnter.swift */; };
-		9D7E411D2AA2356A00863C43 /* SOMAX101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411B2AA2356A00863C43 /* SOMAX101.txt */; };
-		9D7E411F2AA2356A00863C43 /* SOMAW101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411C2AA2356A00863C43 /* SOMAW101.txt */; };
-		9D890F9C2AD8EF3600E1EF0C /* SOMAC4A101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D890F9B2AD8EF3600E1EF0C /* SOMAC4A101.txt */; };
+		9D7E411D2AA2356A00863C43 /* SOMAX101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411B2AA2356A00863C43 /* SOMAX101.txt */; settings = {ASSET_TAGS = (yourResourceTag, ); }; };
+		9D7E411F2AA2356A00863C43 /* SOMAW101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D7E411C2AA2356A00863C43 /* SOMAW101.txt */; settings = {ASSET_TAGS = (yourResourceTag, ); }; };
+		9D890F9C2AD8EF3600E1EF0C /* SOMAC4A101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D890F9B2AD8EF3600E1EF0C /* SOMAC4A101.txt */; settings = {ASSET_TAGS = (yourResourceTag, ); }; };
 		9D89A1AF2AE37C0B008C6707 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D89A1AE2AE37C0B008C6707 /* Persistence.swift */; };
 		9D89A1B72AE37C19008C6707 /* ChaiZiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D89A1B12AE37C18008C6707 /* ChaiZiView.swift */; };
 		9D89A1B92AE37C19008C6707 /* chaizi-ft.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D89A1B22AE37C18008C6707 /* chaizi-ft.txt */; };
 		9D89A1BB2AE37C19008C6707 /* chaizi-gbk.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D89A1B32AE37C18008C6707 /* chaizi-gbk.txt */; };
 		9D89A1BD2AE37C19008C6707 /* CoreDataTest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9D89A1B42AE37C19008C6707 /* CoreDataTest.xcdatamodeld */; };
 		9D89A1BF2AE37C19008C6707 /* chaizi-jt.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D89A1B62AE37C19008C6707 /* chaizi-jt.txt */; };
-		9D9448812AB43E0E0005FD11 /* SOMAC3A101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D9448802AB43E0E0005FD11 /* SOMAC3A101.txt */; };
-		9DA001872AD6390100FDACFE /* SOMAC3C101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DA001852AD6390100FDACFE /* SOMAC3C101.txt */; };
-		9DA001892AD6390100FDACFE /* SOMAC3D101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DA001862AD6390100FDACFE /* SOMAC3D101.txt */; };
-		9DB0AAB52AC1DEAB0093A611 /* SOMAC3B101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DB0AAB42AC1DEAB0093A611 /* SOMAC3B101.txt */; };
+		9D9448812AB43E0E0005FD11 /* SOMAC3A101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D9448802AB43E0E0005FD11 /* SOMAC3A101.txt */; settings = {ASSET_TAGS = (yourResourceTag, ); }; };
+		9DA001872AD6390100FDACFE /* SOMAC3C101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DA001852AD6390100FDACFE /* SOMAC3C101.txt */; settings = {ASSET_TAGS = (yourResourceTag, ); }; };
+		9DA001892AD6390100FDACFE /* SOMAC3D101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DA001862AD6390100FDACFE /* SOMAC3D101.txt */; settings = {ASSET_TAGS = (yourResourceTag, ); }; };
+		9DB0AAB52AC1DEAB0093A611 /* SOMAC3B101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DB0AAB42AC1DEAB0093A611 /* SOMAC3B101.txt */; settings = {ASSET_TAGS = (yourResourceTag, ); }; };
 		9DBE04F02A56ECB70055AE14 /* ConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBE04EF2A56ECB70055AE14 /* ConfigView.swift */; };
 		9DBE04F32A57D6560055AE14 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DBE04F52A57D6560055AE14 /* InfoPlist.strings */; };
 		9DBE04F92A57D7BC0055AE14 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DBE04FB2A57D7BC0055AE14 /* Localizable.strings */; };
@@ -399,6 +399,9 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
+				KnownAssetTags = (
+					yourResourceTag,
+				);
 				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1510;
 				TargetAttributes = {
@@ -850,7 +853,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.4.25;
+				MARKETING_VERSION = 4.0.0;
 				OTHER_CFLAGS = "-Wno-deprecated-declarations";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -892,7 +895,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.4.25;
+				MARKETING_VERSION = 4.0.0;
 				OTHER_CFLAGS = "-Wno-deprecated-declarations";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene;
 				PRODUCT_NAME = "$(TARGET_NAME)";

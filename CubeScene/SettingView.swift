@@ -205,6 +205,121 @@ public struct SettingView: View {
     @State private var showingSheet = false
     @State private var currentIcon:String = cicon()
 
+    @State private var isRequestingResource = false
+    @State private var resourcesAvailable = false
+    @State var productListX: [Product] = []
+    @State var productListY: [Product] = []
+    @State var productListW: [Product] = []
+    @State var productListC3A: [Product] = []
+    @State var productListC3B: [Product] = []
+    @State var productListC3C: [Product] = []
+    @State var productListC3D: [Product] = []
+    @State var productListC4A: [Product] = []
+    
+    func somelistView() -> some View {
+        Group {
+            
+            NavigationLink {
+                EnterListView(productList: self.productListX).navigationTitle("TabTitleNameX").navigationBarTitleDisplayMode(.inline)
+                    .onAppear {
+                        
+                    }.environmentObject(userData)
+            } label: {
+                HStack{
+                    Text("TabTitleNameX")
+                    Spacer()
+                    Image(systemName: "highlighter")
+                }
+            }
+            NavigationLink {
+                EnterListView(productList: self.productListY).navigationTitle("TabTitleNameY").navigationBarTitleDisplayMode(.inline)
+                    .onAppear {
+                        
+                    }.environmentObject(userData)
+            } label: {
+                HStack{
+                    Text("TabTitleNameY")
+                    Spacer()
+                    Image(systemName: "highlighter")
+                }
+            }
+            
+            NavigationLink {
+                EnterListView(productList: self.productListW).navigationTitle("TabTitleNameW").navigationBarTitleDisplayMode(.inline)
+                    .onAppear {
+                        
+                    }.environmentObject(userData)
+            } label: {
+                HStack{
+                    Text("TabTitleNameW")
+                    Spacer()
+                    Image(systemName: "highlighter")
+                }
+            }
+            NavigationLink {
+                EnterListView(productList: self.productListC3A).navigationTitle("SOMA C3A").navigationBarTitleDisplayMode(.inline)
+                    .onAppear {
+                        
+                    }.environmentObject(userData)
+            } label: {
+                HStack{
+                    Text("SOMA C3A")
+                    Spacer()
+                    Image(systemName: "highlighter")
+                }
+            }
+            
+            NavigationLink {
+                EnterListView(productList: self.productListC3B).navigationTitle("SOMA C3B").navigationBarTitleDisplayMode(.inline)
+                    .onAppear {
+                        
+                    }.environmentObject(userData)
+            } label: {
+                HStack{
+                    Text("SOMA C3B")
+                    Spacer()
+                    Image(systemName: "highlighter")
+                }
+            }
+            NavigationLink {
+                EnterListView(productList: self.productListC3C).navigationTitle("SOMA C3C").navigationBarTitleDisplayMode(.inline)
+                    .onAppear {
+                        
+                    }.environmentObject(userData)
+            } label: {
+                HStack{
+                    Text("SOMA C3C")
+                    Spacer()
+                    Image(systemName: "highlighter")
+                }
+            }
+            NavigationLink {
+                EnterListView(productList: self.productListC3D).navigationTitle("SOMA C3D").navigationBarTitleDisplayMode(.inline)
+                    .onAppear {
+                        
+                    }.environmentObject(userData)
+            } label: {
+                HStack{
+                    Text("SOMA C3D")
+                    Spacer()
+                    Image(systemName: "highlighter")
+                }
+            }
+            NavigationLink {
+                EnterListView(productList: self.productListC4A).navigationTitle("SOMA C4A").navigationBarTitleDisplayMode(.inline)
+                    .onAppear {
+                        
+                    }.environmentObject(userData)
+            } label: {
+                HStack{
+                    Text("SOMA C4A")
+                    Spacer()
+                    Image(systemName: "highlighter")
+                }
+            }
+            
+        }
+    }
     public var body: some View {
         
         List {
@@ -218,7 +333,7 @@ public struct SettingView: View {
             Section(content: {
                 Button {
                     self.showingSheet = true
-
+                    
                 } label: {
                     Text("Choose Icon").font(.headline) + Text("     Current:\(currentIcon)")
                 }
@@ -250,106 +365,9 @@ public struct SettingView: View {
                         Image(systemName: "gear.circle")
                     }
                 }
-                
-                NavigationLink {
-                    EnterListView(productList: produceData(resourceName: "SOMAX101")).navigationTitle("TabTitleNameX").navigationBarTitleDisplayMode(.inline)
-                        .onAppear {
-                            
-                        }.environmentObject(userData)
-                } label: {
-                    HStack{
-                        Text("TabTitleNameX")
-                        Spacer()
-                        Image(systemName: "highlighter")
-                    }
+                if resourcesAvailable {
+                    somelistView()
                 }
-                NavigationLink {
-                    EnterListView(productList: produceData(resourceName: "SOMAY101")).navigationTitle("TabTitleNameY").navigationBarTitleDisplayMode(.inline)
-                        .onAppear {
-                            
-                        }.environmentObject(userData)
-                } label: {
-                    HStack{
-                        Text("TabTitleNameY")
-                        Spacer()
-                        Image(systemName: "highlighter")
-                    }
-                }
-                
-                NavigationLink {
-                    EnterListView(productList: produceData(resourceName: "SOMAW101")).navigationTitle("TabTitleNameW").navigationBarTitleDisplayMode(.inline)
-                        .onAppear {
-                            
-                        }.environmentObject(userData)
-                } label: {
-                    HStack{
-                        Text("TabTitleNameW")
-                        Spacer()
-                        Image(systemName: "highlighter")
-                    }
-                }
-                NavigationLink {
-                    EnterListView(productList: produceData(resourceName: "SOMAC3A101")).navigationTitle("SOMA C3A").navigationBarTitleDisplayMode(.inline)
-                        .onAppear {
-                            
-                        }.environmentObject(userData)
-                } label: {
-                    HStack{
-                        Text("SOMA C3A")
-                        Spacer()
-                        Image(systemName: "highlighter")
-                    }
-                }
-                
-                NavigationLink {
-                    EnterListView(productList: produceData(resourceName: "SOMAC3B101")).navigationTitle("SOMA C3B").navigationBarTitleDisplayMode(.inline)
-                        .onAppear {
-                            
-                        }.environmentObject(userData)
-                } label: {
-                    HStack{
-                        Text("SOMA C3B")
-                        Spacer()
-                        Image(systemName: "highlighter")
-                    }
-                }
-                NavigationLink {
-                    EnterListView(productList: produceData(resourceName: "SOMAC3C101")).navigationTitle("SOMA C3C").navigationBarTitleDisplayMode(.inline)
-                        .onAppear {
-                            
-                        }.environmentObject(userData)
-                } label: {
-                    HStack{
-                        Text("SOMA C3C")
-                        Spacer()
-                        Image(systemName: "highlighter")
-                    }
-                }
-                NavigationLink {
-                    EnterListView(productList: produceData(resourceName: "SOMAC3D101")).navigationTitle("SOMA C3D").navigationBarTitleDisplayMode(.inline)
-                        .onAppear {
-                            
-                        }.environmentObject(userData)
-                } label: {
-                    HStack{
-                        Text("SOMA C3D")
-                        Spacer()
-                        Image(systemName: "highlighter")
-                    }
-                }
-                NavigationLink {
-                    EnterListView(productList: produceData(resourceName: "SOMAC4A101")).navigationTitle("SOMA C4A").navigationBarTitleDisplayMode(.inline)
-                        .onAppear {
-                            
-                        }.environmentObject(userData)
-                } label: {
-                    HStack{
-                        Text("SOMA C4A")
-                        Spacer()
-                        Image(systemName: "highlighter")
-                    }
-                }
-                
             })
             Section(content: {
                 
@@ -378,6 +396,7 @@ public struct SettingView: View {
             
             
         }.onAppear(perform: {
+            requestResources()
             Purchases.shared.getCustomerInfo { (customerInfo, error) in
                 if let error = error {
                     print("Failed to retrieve customer info: \(error.localizedDescription)")
@@ -400,7 +419,35 @@ public struct SettingView: View {
         .navigationTitle("TitleHelp")
         .navigationBarTitleDisplayMode(.inline)
     }
-    
+    func requestResources() {
+        guard !isRequestingResource else { return }
+        isRequestingResource = true
+        
+        let resourceRequest = NSBundleResourceRequest(tags: Set(["yourResourceTag"]))
+        resourceRequest.loadingPriority = NSBundleResourceRequestLoadingPriorityUrgent
+        
+        resourceRequest.beginAccessingResources { error in
+            DispatchQueue.main.async {
+                self.isRequestingResource = false
+                if let error = error {
+                    print("Error accessing resources: \(error.localizedDescription)")
+                } else {
+                    self.productListX = produceData(resourceName: "SOMAX101")
+                    self.productListY = produceData(resourceName: "SOMAY101")
+                    self.productListW = produceData(resourceName: "SOMAW101")
+                    self.productListW = produceData(resourceName: "SOMAW101")
+                    self.productListC3A = produceData(resourceName: "SOMAC3A101")
+                    self.productListC3B = produceData(resourceName: "SOMAC3B101")
+                    self.productListC3C = produceData(resourceName: "SOMAC3C101")
+                    self.productListC3D = produceData(resourceName: "SOMAC3D101")
+                    self.productListC4A = produceData(resourceName: "SOMAC4A101")
+                    self.resourcesAvailable = true;
+                    // 资源请求成功，更新列表
+                }
+                resourceRequest.endAccessingResources()
+            }
+        }
+    }
     static func cicon() -> String {
         if let currentIcon = UIApplication.shared.alternateIconName {
             print("当前的 App 图标是: \(currentIcon)")

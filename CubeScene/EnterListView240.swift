@@ -53,7 +53,7 @@ struct EnterListView240: View {
         var body: some View {
             // 使用按钮来代替 NavigationLink，这样就不会显示箭头
             Button(action: {
-                Mixpanel.mainInstance().track(event: "ProductRowisFree", properties: ["Signup": product.name])
+                Mixpanel.mainInstance().track(event: "ProductRowisFree", properties: ["kind240": product.name])
                 isActive = true
             }) {
                 VStack(alignment: .center){
