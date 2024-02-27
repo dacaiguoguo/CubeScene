@@ -54,7 +54,7 @@
 		9DBE04F32A57D6560055AE14 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DBE04F52A57D6560055AE14 /* InfoPlist.strings */; };
 		9DBE04F92A57D7BC0055AE14 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DBE04FB2A57D7BC0055AE14 /* Localizable.strings */; };
 		9DDEC0C62A614716001A0046 /* EnterListView240.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DDEC0C52A614716001A0046 /* EnterListView240.swift */; };
-		9DDEC0CB2A614D47001A0046 /* solutionsMaped.json in Resources */ = {isa = PBXBuildFile; fileRef = 9DDEC0CA2A614D47001A0046 /* solutionsMaped.json */; };
+		9DDEC0CB2A614D47001A0046 /* solutionsMaped.json in Resources */ = {isa = PBXBuildFile; fileRef = 9DDEC0CA2A614D47001A0046 /* solutionsMaped.json */; settings = {ASSET_TAGS = (yourResourceTag2, ); }; };
 		9DDEC0CF2A61753A001A0046 /* SOMA108.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DDEC0CE2A61753A001A0046 /* SOMA108.txt */; };
 		9DDEC0D22A6178DF001A0046 /* SOMAT101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9DDEC0D12A6178DF001A0046 /* SOMAT101.txt */; };
 		9DF9206D2A404BBC001BD720 /* CubeSceneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF9206C2A404BBC001BD720 /* CubeSceneApp.swift */; };
@@ -401,6 +401,7 @@
 				BuildIndependentTargetsInParallel = 1;
 				KnownAssetTags = (
 					yourResourceTag,
+					yourResourceTag2,
 				);
 				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1510;
@@ -854,6 +855,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 4.0.0;
+				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = yourResourceTag2;
 				OTHER_CFLAGS = "-Wno-deprecated-declarations";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -896,6 +898,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 4.0.0;
+				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = yourResourceTag2;
 				OTHER_CFLAGS = "-Wno-deprecated-declarations";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lvmama.CubeScene;
 				PRODUCT_NAME = "$(TARGET_NAME)";
