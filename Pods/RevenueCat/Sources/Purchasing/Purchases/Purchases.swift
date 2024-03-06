@@ -233,6 +233,10 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
         set { self.systemInfo.finishTransactions = newValue }
     }
 
+    @objc public var isAtSandbox: Bool {
+        get { self.systemInfo.isSandbox }
+    }
+    
     private let attributionFetcher: AttributionFetcher
     private let attributionPoster: AttributionPoster
     private let backend: Backend

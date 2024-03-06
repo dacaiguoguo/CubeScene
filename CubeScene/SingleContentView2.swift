@@ -9,11 +9,6 @@ import SwiftUI
 import SceneKit
 import StoreKit
 import Mixpanel
-/// 每次启动个只弹出一次请求评分
-var runOnceRequestReview: () = {
-    // 在这里写只需执行一次的代码
-    SKStoreReviewController.requestReview()
-}()
 
 enum CSDirection {
     case left, right, up, down, forward, backward

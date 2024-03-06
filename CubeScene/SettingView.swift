@@ -264,6 +264,7 @@ public struct SettingView: View {
             } label: {
                 HStack{
                     Text("SOMA C3A")
+                    Text("(PRO)").font(.body)
                     Spacer()
                     Image(systemName: "highlighter")
                 }
@@ -277,6 +278,7 @@ public struct SettingView: View {
             } label: {
                 HStack{
                     Text("SOMA C3B")
+                    Text("(PRO)").font(.body)
                     Spacer()
                     Image(systemName: "highlighter")
                 }
@@ -289,6 +291,7 @@ public struct SettingView: View {
             } label: {
                 HStack{
                     Text("SOMA C3C")
+                    Text("(PRO)").font(.body)
                     Spacer()
                     Image(systemName: "highlighter")
                 }
@@ -301,6 +304,7 @@ public struct SettingView: View {
             } label: {
                 HStack{
                     Text("SOMA C3D")
+                    Text("(PRO)").font(.body)
                     Spacer()
                     Image(systemName: "highlighter")
                 }
@@ -313,6 +317,7 @@ public struct SettingView: View {
             } label: {
                 HStack{
                     Text("SOMA C4A")
+                    Text("(PRO)").font(.body)
                     Spacer()
                     Image(systemName: "highlighter")
                 }
@@ -323,6 +328,21 @@ public struct SettingView: View {
     public var body: some View {
         
         List {
+            Section(content: {
+                NavigationLink {
+                    ConfigView().environmentObject(userData)
+                } label: {
+                    HStack{
+                        Text("TitleSetting")
+                        Spacer()
+                        Image(systemName: "gear.circle")
+                    }
+                }
+                if resourcesAvailable {
+                    somelistView()
+                }
+            })
+            
             Section(content: {
                 ForEach(channelLocalDataList) { channel in
                     Link(LocalizedStringKey(channel.name), destination: URL(string: channel.link)!)
@@ -355,20 +375,7 @@ public struct SettingView: View {
                 Text("Purchases")
             }) .paywallFooter()
             
-            Section(content: {
-                NavigationLink {
-                    ConfigView().environmentObject(userData)
-                } label: {
-                    HStack{
-                        Text("TitleSetting")
-                        Spacer()
-                        Image(systemName: "gear.circle")
-                    }
-                }
-                if resourcesAvailable {
-                    somelistView()
-                }
-            })
+        
             Section(content: {
                 
                 NavigationLink {

@@ -225,6 +225,7 @@ struct EnterListView: View {
         @State var product: Product  // 假设 Product 是你的数据模型
         @State private var isActive: Bool = false
         @Binding var displayPaywall:Bool
+
         
         var body: some View {
             // 使用按钮来代替 NavigationLink，这样就不会显示箭头
@@ -243,8 +244,11 @@ struct EnterListView: View {
                 }
             }) {
                 VStack {
-                    Text(product.name).font(.title).foregroundColor(.white).padding(.bottom, 8)
-                    StarRating(rating: product.level)
+                    Text(product.name).font(.title).foregroundColor(.white)
+                    if product.name.hasPrefix("T") || product.name.hasPrefix("C") {
+                        Text("(PRO)").font(.body).foregroundColor(.white)
+                    }
+                    StarRating(rating: product.level).padding(.top, 8)
                     ProductImage(product: product)
                     TaskStatus(isComplete: product.isTaskComplete)
                 }

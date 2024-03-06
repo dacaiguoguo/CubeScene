@@ -9,7 +9,13 @@ import Foundation
 import UIKit
 import RevenueCat
 import Mixpanel
+import StoreKit
 
+/// 每次启动个只弹出一次请求评分
+var runOnceRequestReview: () = {
+    // 在这里写只需执行一次的代码
+    SKStoreReviewController.requestReview()
+}()
 //请求用户授权推送
 func requestNotificationAuthorization() {
     let center = UNUserNotificationCenter.current()
@@ -86,10 +92,22 @@ class SubscriptionManager {
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         print("Your code here:\(NSHomeDirectory())")
+        // 执行应用程序启动时的操作 RevenueCat
+        Purchases.configure(withAPIKey: "appl_lNBhYAAESbCcENhLTzCZUYXgoHU")
+
         // 移除 List 默认的分隔线（如果你想要的话）
         UITableView.appearance().separatorStyle = .none
         // Replace with your Project Token
-        Mixpanel.initialize(token: "0db8c0bbc4140bee54384c6d148e9270", trackAutomaticEvents: true)
+        if Purchases.shared.isAtSandbox {
+            // 初始化 Mixpanel
+            Mixpanel.initialize(token: "519f100127827f64d9df5052b8dc0e92", trackAutomaticEvents: true)
+            print("Purchases.shared.isAtSandbox true")
+        } else {
+            print("Purchases.shared.isAtSandbox false")
+            Mixpanel.initialize(token: "0db8c0bbc4140bee54384c6d148e9270", trackAutomaticEvents: true)
+        }
+ 
+        
         Mixpanel.mainInstance().track(event: "Signed Up", properties: [
             "Signup Type": "Referral",
         ])
@@ -101,8 +119,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         
         
         
-        // 执行应用程序启动时的操作 RevenueCat
-        Purchases.configure(withAPIKey: "appl_lNBhYAAESbCcENhLTzCZUYXgoHU")
         Purchases.shared.delegate = self // make sure to set this after calling configure
         Purchases.shared.attribution.setMixpanelDistinctID(Mixpanel.mainInstance().distinctId)
 
@@ -123,6 +139,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             //print("\(String(describing: customerInfo))")
         }
         requestNotificationAuthorization()
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.5) {
+            // 评分弹窗
+            _ = runOnceRequestReview
+        }
         return true
     }
 }
