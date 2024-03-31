@@ -29,7 +29,7 @@
     "_applicationInternalID" : "6450415992",
     "_developerTeamID" : "AJG2826637",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 730133029.41667604,
+    "_lastSynchronizedDate" : 733548058.90190601,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
@@ -126,7 +126,7 @@
 
           ],
           "displayPrice" : "2.99",
-          "familyShareable" : false,
+          "familyShareable" : true,
           "groupNumber" : 2,
           "internalID" : "6478165435",
           "introductoryOffer" : null,
@@ -140,11 +140,46 @@
               "description" : "Soma Monthly, More Solution",
               "displayName" : "Soma Monthly",
               "locale" : "ar"
+            },
+            {
+              "description" : "Soma Monthly, More Solution",
+              "displayName" : "Soma Monthly",
+              "locale" : "en_US"
             }
           ],
           "productID" : "soma_t_month",
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "soma_t_month",
+          "subscriptionGroupID" : "21437795",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "2.99",
+          "familyShareable" : false,
+          "groupNumber" : 3,
+          "internalID" : "6480354864",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "soma annual",
+              "displayName" : "soma annual",
+              "locale" : "en_US"
+            },
+            {
+              "description" : "索玛立方体-按年订阅",
+              "displayName" : "索玛立方体-年",
+              "locale" : "zh_CN"
+            }
+          ],
+          "productID" : "soma_t_yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "soma_t_yearly",
           "subscriptionGroupID" : "21437795",
           "type" : "RecurringSubscription"
         }
