@@ -37,20 +37,20 @@ struct CubeSceneApp: App {
                 selectedTab = newv
                 Mixpanel.mainInstance().track(event: "selectedTab", properties: ["Signup": "\(selectedTab)"])
             })) {
-                tabFor108()
-                tabFor240()
-                tabForT().presentPaywallIfNeeded(
-                    requiredEntitlementIdentifier: "soma_t",
-                    purchaseCompleted: { customerInfo in
-                        SubscriptionManager.shared.isPremiumUser = true
-                    },
-                    restoreCompleted: { customerInfo in
-                        SubscriptionManager.shared.isPremiumUser = true
-                    }, onDismiss:  {
-                        
-                    })
+//                tabFor108()
+//                tabFor240()
+//                tabForT().presentPaywallIfNeeded(
+//                    requiredEntitlementIdentifier: "soma_t",
+//                    purchaseCompleted: { customerInfo in
+//                        SubscriptionManager.shared.isPremiumUser = true
+//                    },
+//                    restoreCompleted: { customerInfo in
+//                        SubscriptionManager.shared.isPremiumUser = true
+//                    }, onDismiss:  {
+//                        
+//                    })
                 tabForTry()
-                tabForMore()
+//                tabForMore()
             }
         }
         .onChange(of: scenePhase) { phase in

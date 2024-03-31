@@ -70,12 +70,12 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         let scene = SCNScene()
         
         let camera = SCNCamera()
-        camera.focalLength = 30
+        camera.focalLength = 50
         
         let cameraNode = SCNNode()
         cameraNode.camera = camera
-        cameraNode.position = SCNVector3Make(-10.5, 10.5, 20)
-        cameraNode.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
+        cameraNode.position = SCNVector3Make(15, 15, 15)
+//        cameraNode.eulerAngles = SCNVector3(-Float.pi/9, -Float.pi/6, 0)
         
         scene.rootNode.addChildNode(cameraNode)
         
@@ -91,7 +91,7 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         )
         sky.groundColor = UIColor.black.cgColor
         sky.update()
-        scene.background.contents = sky
+        scene.background.contents = UIColor.white
         
 //        // 创建包含六个面的天空盒贴图数组
 //        let skyboxImages = [
@@ -118,13 +118,18 @@ struct ScenekitSingleView2 : UIViewRepresentable {
     func makeUIView(context: Context) -> SCNView {
         // sceneView.debugOptions = [.showCameras, SCNDebugOptions(rawValue: 2048)]
         // scnView.showsStatistics = true
-        let parNode2 = SCNNode()
-
-        nodeList.forEach { item in
-            parNode2.addChildNode(item)
+        for item in stride(from: 0, to: 1, by: 1) {
+            let parNode2 = SCNNode()
+            parNode2.geometry = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0.2)
+            parNode2.geometry?.firstMaterial?.diffuse.contents = UIImage(named: "SOMA-T01\(item)")
+            parNode2.position = SCNVector3(x: Float(item), y: Float(item), z: 0)
+            scene.rootNode.addChildNode(parNode2)
         }
-        scene.rootNode.addChildNode(Origin(length: 10))
-        scene.rootNode.addChildNode(parNode2)
+//        nodeList.forEach { item in
+//            parNode2.addChildNode(item)
+//        }
+        scene.rootNode.addChildNode(Origin(length: 100))
+        
         sceneView.scene = scene
         sceneView.autoenablesDefaultLighting = true
         sceneView.allowsCameraControl = true

@@ -104,15 +104,16 @@ public struct SingleContentView2: View {
     
     public var body: some View {
         VStack {
-            ZStack(alignment: .bottomTrailing) {
-                ScenekitSingleView2(nodeList: nodeList, selectedSegment: $selectedSegment)
-                HStack{
-                    Spacer()
-                    rotationView()
-                    stepperView()
-                }.frame(height: 150).padding()
-                
-            }
+            ScenekitSingleView2(nodeList: nodeList, selectedSegment: $selectedSegment)
+
+//            ZStack(alignment: .bottomTrailing) {
+//                HStack{
+//                    Spacer()
+//                    rotationView()
+//                    stepperView()
+//                }.frame(height: 150).padding()
+//                
+//            }
             // pickerView()
             
         }.navigationBarItems(trailing:completeStatus()).navigationTitle("\("StepCount".i18n()):\(stepcount)")
