@@ -26,7 +26,7 @@ struct Product: Decodable, Identifiable {
         self.name = name
         self.matrix = matrix
         self.orderBlock = Product.orderList(from: matrix)
-        self.usedBlock = Array(Set(orderBlock.filter { $0 >= 0 })).sorted()
+        self.usedBlock = Array(Set(orderBlock.filter { $0 >= 0 && $0 < 65 })).sorted()
         self.isTaskComplete = isTaskComplete
         self.level = Product.determineLevel(from: usedBlock)
     }
