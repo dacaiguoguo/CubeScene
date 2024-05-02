@@ -218,7 +218,7 @@ struct EnterListView: View {
                 }
         }
     }
-    
+
     
     struct ProductRow: View {
         @EnvironmentObject var userData: UserData
@@ -231,13 +231,19 @@ struct EnterListView: View {
             // 使用按钮来代替 NavigationLink，这样就不会显示箭头
             Button(action: {
                 if product.name.hasPrefix("T") || product.name.hasPrefix("C") {
-                    if SubscriptionManager.shared.isPremiumUser {
-                        isActive = true
-                        Mixpanel.mainInstance().track(event: "ProductRowisActive", properties: ["Signup": product.name])
+                    if shouldShowPaywall() {
+                        if SubscriptionManager.shared.isPremiumUser {
+                            isActive = true
+                            Mixpanel.mainInstance().track(event: "ProductRowisActive", properties: ["Signup": product.name])
+                        } else {
+                            Mixpanel.mainInstance().track(event: "displayPaywall", properties: ["Signup": product.name])
+                            displayPaywall = true
+                        }
                     } else {
-                        Mixpanel.mainInstance().track(event: "displayPaywall", properties: ["Signup": product.name])
-                        displayPaywall = true
+                        isActive = true
+                        Mixpanel.mainInstance().track(event: "TryRowActive", properties: ["Signup": product.name])
                     }
+                    
                 } else {
                     Mixpanel.mainInstance().track(event: "ProductRowisFree", properties: ["Signup": product.name])
                     isActive = true
@@ -334,4 +340,26 @@ struct EnterListView_Previews: PreviewProvider {
     static var previews: some View {
         EnterListView(productList: produceData(resourceName: "SOMA101"))
     }
+}
+
+
+import Foundation
+
+class ImageCounter {
+    static let shared = ImageCounter()
+
+    /// 读取并增加图片生成计数器
+    /// - Parameter key: 存储在 UserDefaults 中的键名
+    /// - Returns: 返回增加前的值
+    func incrementImageCount(forKey key: String) -> Int {
+        let currentCount = UserDefaults.standard.integer(forKey: key)
+        UserDefaults.standard.set(currentCount + 1, forKey: key)
+        UserDefaults.standard.synchronize()  // 确保数据被保存到磁盘
+        return currentCount
+    }
+}
+
+func shouldShowPaywall() -> Bool {
+    let imageCount = ImageCounter.shared.incrementImageCount(forKey: "T")
+    return imageCount >= 5
 }
