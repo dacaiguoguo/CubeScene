@@ -68,7 +68,7 @@ class SubscriptionManager {
         isPremiumUser = UserDefaults.standard.bool(forKey: "isPremiumUser")
     }
 
-    func checkSubscriptionStatus() {
+    func checkSubscriptionStatus2() {
         Purchases.shared.getCustomerInfo { (customerInfo, error) in
             if let error = error {
                 print("Failed to retrieve customer info: \(error.localizedDescription)")
@@ -143,6 +143,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             // 评分弹窗
             _ = runOnceRequestReview
         }
+        SubscriptionManager.shared.checkSubscriptionStatus2()
         return true
     }
 }

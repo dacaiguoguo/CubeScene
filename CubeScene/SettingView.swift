@@ -370,10 +370,12 @@ public struct SettingView: View {
                     )
                 }
             })
-            
-            Section(content: {
-                Text("Purchases")
-            }) .paywallFooter()
+            if !SubscriptionManager.shared.isPremiumUser {
+                Section(content: {
+                    Text("Purchases")
+                }) .paywallFooter()
+            }
+  
             
         
             Section(content: {
