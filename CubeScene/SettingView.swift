@@ -215,7 +215,8 @@ public struct SettingView: View {
     @State var productListC3C: [Product] = []
     @State var productListC3D: [Product] = []
     @State var productListC4A: [Product] = []
-    
+    @State var productListC4B: [Product] = []
+
     func somelistView() -> some View {
         Group {
             
@@ -322,7 +323,19 @@ public struct SettingView: View {
                     Image(systemName: "highlighter")
                 }
             }
-            
+            NavigationLink {
+                EnterListView(productList: self.productListC4B).navigationTitle("SOMA C4B").navigationBarTitleDisplayMode(.inline)
+                    .onAppear {
+                        
+                    }.environmentObject(userData)
+            } label: {
+                HStack{
+                    Text("SOMA C4B")
+                    Text("(PRO)").font(.body)
+                    Spacer()
+                    Image(systemName: "highlighter")
+                }
+            }
         }
     }
     public var body: some View {
@@ -450,6 +463,7 @@ public struct SettingView: View {
                     self.productListC3C = produceData(resourceName: "SOMAC3C101")
                     self.productListC3D = produceData(resourceName: "SOMAC3D101")
                     self.productListC4A = produceData(resourceName: "SOMAC4A101")
+                    self.productListC4B = produceData(resourceName: "SOMAC4B101")
                     self.resourcesAvailable = true;
                     // 资源请求成功，更新列表
                 }

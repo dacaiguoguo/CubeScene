@@ -12,6 +12,7 @@
 		5934F66B2A65038B00AED0E9 /* ScenekitSingleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5934F66A2A65038B00AED0E9 /* ScenekitSingleView.swift */; };
 		5971BA8C2A50547800CD6111 /* ArrayTool3D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */; };
 		59CFCD432A6281F700E38F38 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59CFCD422A6281F700E38F38 /* UserData.swift */; };
+		5B0CFE5D2C552CE500BEA499 /* SOMAC4B101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5B0CFE5C2C552CE500BEA499 /* SOMAC4B101.txt */; settings = {ASSET_TAGS = (yourResourceTag, ); }; };
 		5B64399C2B8B158700D2C67B /* Cube@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B64399A2B8B158700D2C67B /* Cube@3x.png */; };
 		5B64399D2B8B158700D2C67B /* Cube@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B64399B2B8B158700D2C67B /* Cube@2x.png */; };
 		5B6948C52BE3105A00FD4ED8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 5B6948C42BE3105A00FD4ED8 /* PrivacyInfo.xcprivacy */; };
@@ -97,6 +98,7 @@
 		5934F66A2A65038B00AED0E9 /* ScenekitSingleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenekitSingleView.swift; sourceTree = "<group>"; };
 		5971BA8B2A50547800CD6111 /* ArrayTool3D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayTool3D.swift; sourceTree = "<group>"; };
 		59CFCD422A6281F700E38F38 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
+		5B0CFE5C2C552CE500BEA499 /* SOMAC4B101.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = SOMAC4B101.txt; sourceTree = "<group>"; };
 		5B142E7E2B6559EC00708678 /* SettingViewClip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewClip.swift; sourceTree = "<group>"; };
 		5B18D2412B6897A6004AAF62 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5B18D2422B6897A6004AAF62 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -259,6 +261,7 @@
 				9DA001852AD6390100FDACFE /* SOMAC3C101.txt */,
 				9DA001862AD6390100FDACFE /* SOMAC3D101.txt */,
 				9D890F9B2AD8EF3600E1EF0C /* SOMAC4A101.txt */,
+				5B0CFE5C2C552CE500BEA499 /* SOMAC4B101.txt */,
 				9DF9380A2A417BA4001BD720 /* data1.txt */,
 				9DF9380C2A417BA4001BD720 /* data2.txt */,
 				9DF938102A417BAD001BD720 /* data3.txt */,
@@ -476,6 +479,7 @@
 				9DF9380D2A417BA4001BD720 /* data1.txt in Resources */,
 				5BFFACBE2B7B570700266836 /* SomaT.xcassets in Resources */,
 				9DDEC0CB2A614D47001A0046 /* solutionsMaped.json in Resources */,
+				5B0CFE5D2C552CE500BEA499 /* SOMAC4B101.txt in Resources */,
 				9D1602BA2A4BDBF100C247A7 /* LaunchScreen.storyboard in Resources */,
 				5BB65C482B2D705F00E97777 /* solutionsMaped6.json in Resources */,
 				9DA001892AD6390100FDACFE /* SOMAC3D101.txt in Resources */,

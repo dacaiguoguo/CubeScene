@@ -248,6 +248,7 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         let yuanInner = SCNSphere(radius: 0.55)
         yuanInner.firstMaterial?.diffuse.contents = UIColor.black //colors[indexValue].darker()
         let yuanNodeInner = SCNNode(geometry: yuanInner)
+        yuanNodeInner.name = "yuanCenter"
         yuanNode.addChildNode(yuanNodeInner)
         
         yuanNode.name = lpoint.name
@@ -263,9 +264,10 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
             }
             
             let yuanInner = SCNSphere(radius: 0.55)
+            yuanInner.name = "yuanInner1"
             yuanInner.firstMaterial?.diffuse.contents = colors[indexValue].darker()
             let yuanNodeInner = SCNNode(geometry: yuanInner)
-            
+            yuanNodeInner.name = "yuanInner"
             let boxNode2 = SCNNode()
             boxNode2.addChildNode(yuanNodeInner)
 

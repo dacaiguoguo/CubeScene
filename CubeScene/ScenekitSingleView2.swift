@@ -167,6 +167,8 @@ struct ScenekitSingleView2 : UIViewRepresentable {
             
             guard let firstHit = hitTestResults.first else { return }
             let tappedNode = firstHit.node
+            print("tappedNode111")
+
             // Access the parent and neighboring nodes here
             if let parentNode = tappedNode.parent , let parentNodename = parentNode.name, parentNodename.hasPrefix("块") {
                 let numberString = String(parentNodename.filter { "0"..."9" ~= $0 })
@@ -178,13 +180,18 @@ struct ScenekitSingleView2 : UIViewRepresentable {
                 }
                 if let scene = sceneView.scene {
                     scene.rootNode.enumerateHierarchy { (acnnode, _) in
+                        if let name = acnnode.name {
+                            print("No number found \(name)")
+                        }
                         acnnode.setHighlighted(false)
                     }
                 }
                 // Highlight parent node an all child
                 parentNode.childNodes.forEach { acnnode in
-                    if let name = acnnode.name, name != "yuanNode" {
-                        acnnode.setHighlighted(true)
+                    if let name = acnnode.name {
+                        if name == "yuanCenter" {
+                            acnnode.setHighlighted(true)
+                        }
                     }
                 }
             }
