@@ -131,18 +131,18 @@ struct ScenekitSingleView2 : UIViewRepresentable {
         let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleTap(_:)))
            sceneView.addGestureRecognizer(tapGesture)
         
-        if let path = Bundle.main.path(forResource: "NodeTechnique", ofType: "plist") {
-            if let dict = NSDictionary(contentsOfFile: path)  {
-                let dict2 = dict as! [String : AnyObject]
-                let technique = SCNTechnique(dictionary:dict2)
-
-                // set the glow color to yellow
-                let color = SCNVector3(1.0, 1.0, 0.0)
-                technique?.setValue(NSValue(scnVector3: color), forKeyPath: "glowColorSymbol")
-
-                self.sceneView.technique = technique
-            }
-        }
+//        if let path = Bundle.main.path(forResource: "NodeTechnique", ofType: "plist") {
+//            if let dict = NSDictionary(contentsOfFile: path)  {
+//                let dict2 = dict as! [String : AnyObject]
+//                let technique = SCNTechnique(dictionary:dict2)
+//
+//                // set the glow color to yellow
+//                let color = SCNVector3(1.0, 1.0, 0.0)
+//                technique?.setValue(NSValue(scnVector3: color), forKeyPath: "glowColorSymbol")
+//
+//                self.sceneView.technique = technique
+//            }
+//        }
         return sceneView
     }
     
@@ -182,6 +182,11 @@ struct ScenekitSingleView2 : UIViewRepresentable {
                     scene.rootNode.enumerateHierarchy { (acnnode, _) in
                         if let name = acnnode.name {
                             print("No number found \(name)")
+                            if name == "yuanCenter" {
+                                let yuanInner = SCNSphere(radius: 0.5)
+                                acnnode.geometry = yuanInner
+                                acnnode.geometry!.firstMaterial?.diffuse.contents = UIColor.clear
+                            }
                         }
                         acnnode.setHighlighted(false)
                     }
@@ -191,6 +196,9 @@ struct ScenekitSingleView2 : UIViewRepresentable {
                     if let name = acnnode.name {
                         if name == "yuanCenter" {
                             acnnode.setHighlighted(true)
+                            let yuanInner = SCNSphere(radius: 0.55)
+                            acnnode.geometry = yuanInner
+                            acnnode.geometry!.firstMaterial?.diffuse.contents = UIColor.yellow
                         }
                     }
                 }

@@ -216,7 +216,7 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
     let maped =  lResult.map { lpoint in
         let value = lpoint.value
         let location = lpoint.location
-        // print("boxNode2.position value:\(value) \(location)")
+        //         print("boxNode2.position value:\(value) \(lpoint.name)")
         
         // 这是初始位置
         let positionOrgList = [[5,0,-5],
@@ -245,8 +245,8 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
         yuanNode.name = "yuanNode"
         yuanNode.orgPosition = yuanNode.position
         
-        let yuanInner = SCNSphere(radius: 0.55)
-        yuanInner.firstMaterial?.diffuse.contents = UIColor.black //colors[indexValue].darker()
+        let yuanInner = SCNSphere(radius: lpoint.name == "块 1" ? 0.55 : 0.5)
+        yuanInner.firstMaterial?.diffuse.contents =  lpoint.name == "块 1" ? UIColor.yellow : UIColor.clear //colors[indexValue].darker()
         let yuanNodeInner = SCNNode(geometry: yuanInner)
         yuanNodeInner.name = "yuanCenter"
         yuanNode.addChildNode(yuanNodeInner)
@@ -263,17 +263,10 @@ func makeNode(with result2: Matrix3D) -> [SCNNode] {
                 box2.firstMaterial?.diffuse.contents = colors[indexValue].withAlphaComponent(1.0)
             }
             
-            let yuanInner = SCNSphere(radius: 0.55)
-            yuanInner.name = "yuanInner1"
-            yuanInner.firstMaterial?.diffuse.contents = colors[indexValue].darker()
-            let yuanNodeInner = SCNNode(geometry: yuanInner)
-            yuanNodeInner.name = "yuanInner"
+           
             let boxNode2 = SCNNode()
-            boxNode2.addChildNode(yuanNodeInner)
-
             boxNode2.geometry = box2
             boxNode2.name = "\(value)"
-            
             boxNode2.position = SCNVector3(x: Float(child.x - Int(location.x)),
                                            y: -Float(child.y - Int(location.y)),
                                            z: Float(child.z - Int(location.z)));
