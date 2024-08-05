@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import SwiftUI
 
 struct Question {
     let question: String
@@ -15,10 +16,12 @@ struct Question {
 
 struct ParentalGateView: View {
     @State private var userInput: String = ""
-    @State private var isAccessGranted: Bool = false
     @State private var showAlert: Bool = false
     @State private var currentQuestion: Question?
-
+    
+    // 闭包，用于在回答正确后执行导航
+    var onCorrectAnswer: () -> Void
+    
     // 题库
     private let questions: [Question] = [
         Question(question: "What is 7 + 5?", answer: "12"),
@@ -70,9 +73,6 @@ struct ParentalGateView: View {
         .onAppear {
             selectRandomQuestion()
         }
-        .fullScreenCover(isPresented: $isAccessGranted) {
-            RestrictedContentView()
-        }
     }
 
     private func selectRandomQuestion() {
@@ -83,9 +83,43 @@ struct ParentalGateView: View {
 
     private func verifyAnswer() {
         if userInput == currentQuestion?.answer {
-            isAccessGranted = true
+            onCorrectAnswer()
         } else {
             showAlert = true
+        }
+    }
+}
+import SwiftUI
+
+struct ConfirmView: View {
+    @State private var showParentalGate: Bool = false
+    @State private var navigateToRestrictedContent: Bool = false
+
+    var body: some View {
+        VStack {
+            NavigationView {
+                VStack {
+                    NavigationLink(destination: RestrictedContentView(), isActive: $navigateToRestrictedContent) {
+                        EmptyView()
+                    }
+
+                    Button(action: {
+                        showParentalGate = true
+                    }) {
+                        Text("Access Restricted Content")
+                            .padding()
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                }
+                .fullScreenCover(isPresented: $showParentalGate) {
+                    ParentalGateView(onCorrectAnswer: {
+                        showParentalGate = false
+                        navigateToRestrictedContent = true
+                    })
+                }
+            }
         }
     }
 }
@@ -108,31 +142,8 @@ struct RestrictedContentView: View {
     }
 }
 
-
-struct ComfirmView: View {
-    @State private var showParentalGate: Bool = false
-
-    var body: some View {
-        VStack {
-            Button(action: {
-                showParentalGate = true
-            }) {
-                Text("Access Restricted Content")
-                    .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
-        }
-        .fullScreenCover(isPresented: $showParentalGate) {
-            ParentalGateView()
-        }
-    }
-}
-
-
-struct ContentView_Previews: PreviewProvider {
+struct ConfirmView_Previews: PreviewProvider {
     static var previews: some View {
-        ComfirmView()
+        ConfirmView()
     }
 }

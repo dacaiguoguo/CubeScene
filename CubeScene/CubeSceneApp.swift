@@ -49,7 +49,7 @@ struct CubeSceneApp: App {
                     }, onDismiss:  {
                         
                     })
-                ComfirmView()
+                tabForTry()
                 tabForMore()
             }
         }
