@@ -28,29 +28,37 @@ struct CubeSceneApp: App {
     @Environment(\.scenePhase) var scenePhase
     let userData = UserData()
     @State private var selectedTab = 0
-
+    @State private var showParentalGate: Bool = false
+    @State private var requestedTab: Int?
+    
     var body: some Scene {
         WindowGroup {
             TabView(selection: Binding(get: {
                 selectedTab
-            }, set: { newv in
-                selectedTab = newv
-                Mixpanel.mainInstance().track(event: "selectedTab", properties: ["Signup": "\(selectedTab)"])
+            }, set: { newTab in
+                if newTab == 2 || newTab == 4 {
+                    // 如果用户尝试切换到tabForT，显示 ParentalGateView
+                    requestedTab = newTab
+                    showParentalGate = true
+                } else {
+                    selectedTab = newTab
+                    Mixpanel.mainInstance().track(event: "selectedTab", properties: ["Signup": "\(newTab)"])
+                }
             })) {
                 tabFor108()
                 tabFor240()
-                tabForT().presentPaywallIfNeeded(
-                    requiredEntitlementIdentifier: "soma_t",
-                    purchaseCompleted: { customerInfo in
-                        SubscriptionManager.shared.isPremiumUser = true
-                    },
-                    restoreCompleted: { customerInfo in
-                        SubscriptionManager.shared.isPremiumUser = true
-                    }, onDismiss:  {
-                        
-                    })
+                tabForT()
                 tabForTry()
                 tabForMore()
+            }
+            .fullScreenCover(isPresented: $showParentalGate) {
+                ParentalGateView(onCorrectAnswer: {
+                    if let requestedTab = requestedTab {
+                        selectedTab = requestedTab
+                        Mixpanel.mainInstance().track(event: "selectedTab", properties: ["Signup": "\(requestedTab)"])
+                    }
+                    showParentalGate = false
+                })
             }
         }
         .onChange(of: scenePhase) { phase in
@@ -58,10 +66,11 @@ struct CubeSceneApp: App {
                 performLaunchTasks()
             }
         }
+        
     }
-
+    
     // MARK: - Tabs
-
+    
     func tabFor108() -> some View {
         NavigationView {
             enterListView(with: "SOMA108", title: "TitleName")
@@ -73,7 +82,7 @@ struct CubeSceneApp: App {
         }
         .tag(0)
     }
-
+    
     func tabFor240() -> some View {
         NavigationView {
             EnterListView240().environmentObject(userData)
@@ -87,7 +96,7 @@ struct CubeSceneApp: App {
         }
         .tag(1)
     }
-
+    
     func tabForT() -> some View {
         NavigationView {
             enterListView(with: "SOMAT101", title: "TitleName3")
@@ -99,7 +108,7 @@ struct CubeSceneApp: App {
         }
         .tag(2)
     }
-
+    
     func tabForTry() -> some View {
         NavigationView {
             singleContentView(with: "data1", title: "TabTitleNameTry")
@@ -111,7 +120,7 @@ struct CubeSceneApp: App {
         }
         .tag(3)
     }
-
+    
     func tabForMore() -> some View {
         NavigationView {
             SettingView().environmentObject(userData)
@@ -125,9 +134,9 @@ struct CubeSceneApp: App {
         }
         .tag(4)
     }
-
+    
     // MARK: - Shared View Functions
-
+    
     @ViewBuilder
     private func enterListView(with resourceName: String, title: String) -> some View {
         EnterListView(productList: produceData(resourceName: resourceName))
@@ -135,7 +144,7 @@ struct CubeSceneApp: App {
             .navigationBarTitleDisplayMode(.inline)
             .environmentObject(userData)
     }
-
+    
     @ViewBuilder
     private func singleContentView(with dataName: String, title: String) -> some View {
         SingleContentView2(nodeList: makeNode(with: produceData(resourceName: dataName).first!.matrix))
@@ -143,11 +152,11 @@ struct CubeSceneApp: App {
             .navigationBarTitleDisplayMode(.inline)
             .environmentObject(userData)
     }
-
-   
-
+    
+    
+    
     // MARK: - Launch Tasks
-
+    
     private func performLaunchTasks() {
         print("performLaunchTasks completed:")
         Purchases.shared.getCustomerInfo { comp, err in

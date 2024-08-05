@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import SwiftUI
+import Mixpanel
 
 struct Question {
     let question: String
@@ -19,10 +20,8 @@ struct ParentalGateView: View {
     @State private var showAlert: Bool = false
     @State private var currentQuestion: Question?
     
-    // 闭包，用于在回答正确后执行导航
     var onCorrectAnswer: () -> Void
     
-    // 题库
     private let questions: [Question] = [
         Question(question: "What is 7 + 5?", answer: "12"),
         Question(question: "What is 6 + 8?", answer: "14"),
@@ -89,6 +88,8 @@ struct ParentalGateView: View {
         }
     }
 }
+
+
 import SwiftUI
 
 struct ConfirmView: View {
