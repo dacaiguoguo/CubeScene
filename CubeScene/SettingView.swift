@@ -383,11 +383,11 @@ public struct SettingView: View {
                     )
                 }
             })
-            if !SubscriptionManager.shared.isPremiumUser {
-                Section(content: {
-                    Text("Purchases")
-                }) .paywallFooter()
-            }
+//            if !SubscriptionManager.shared.isPremiumUser {
+//                Section(content: {
+//                    Text("Purchases")
+//                }) .paywallFooter()
+//            }
   
             
         
