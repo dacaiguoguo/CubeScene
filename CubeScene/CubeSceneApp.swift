@@ -46,6 +46,16 @@ struct CubeSceneApp: App {
                 }
             })) {
                 tabFor108()
+                    .presentPaywallIfNeeded(
+                    requiredEntitlementIdentifier: "soma_t",
+                    purchaseCompleted: { customerInfo in
+                        SubscriptionManager.shared.isPremiumUser = true
+                    },
+                    restoreCompleted: { customerInfo in
+                        SubscriptionManager.shared.isPremiumUser = true
+                    }, onDismiss:  {
+                        
+                    })
                 tabFor240()
                 tabForT()
                 tabForTry()
