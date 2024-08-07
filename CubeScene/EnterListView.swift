@@ -345,20 +345,6 @@ struct EnterListView_Previews: PreviewProvider {
 
 import Foundation
 
-class ImageCounter {
-    static let shared = ImageCounter()
-
-    /// 读取并增加图片生成计数器
-    /// - Parameter key: 存储在 UserDefaults 中的键名
-    /// - Returns: 返回增加前的值
-    func incrementImageCount(forKey key: String) -> Int {
-        let currentCount = UserDefaults.standard.integer(forKey: key)
-        UserDefaults.standard.set(currentCount + 1, forKey: key)
-        UserDefaults.standard.synchronize()  // 确保数据被保存到磁盘
-        return currentCount
-    }
-}
-
 func shouldShowPaywall() -> Bool {
     let imageCount = ImageCounter.shared.incrementImageCount(forKey: "T")
     return imageCount >= 5

@@ -22,6 +22,30 @@ import RevenueCat
 import RevenueCatUI
 import Mixpanel
 
+class ImageCounter: ObservableObject {
+    static let shared = ImageCounter()
+    
+    @Published var imageCount: Int = 0
+
+    private init() {
+        self.imageCount = UserDefaults.standard.integer(forKey: "T")
+    }
+
+    /// 读取并增加图片生成计数器
+    /// - Parameter key: 存储在 UserDefaults 中的键名
+    /// - Returns: 返回增加前的值
+    func incrementImageCount(forKey key: String) -> Int {
+        let currentCount = UserDefaults.standard.integer(forKey: key)
+        let newCount = currentCount + 1
+        UserDefaults.standard.set(newCount, forKey: key)
+        UserDefaults.standard.synchronize()  // 确保数据被保存到磁盘
+        DispatchQueue.main.async {
+            self.imageCount = newCount
+        }
+        return currentCount
+    }
+}
+
 @main
 struct CubeSceneApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
@@ -30,7 +54,9 @@ struct CubeSceneApp: App {
     @State private var selectedTab = 0
     @State private var showParentalGate: Bool = false
     @State private var requestedTab: Int?
-    
+    @ObservedObject var imageCounter = ImageCounter.shared
+    @ObservedObject var subscriptionManager = SubscriptionManager.shared
+
     var body: some Scene {
         WindowGroup {
             TabView(selection: Binding(get: {
@@ -46,16 +72,6 @@ struct CubeSceneApp: App {
                 }
             })) {
                 tabFor108()
-                    .presentPaywallIfNeeded(
-                    requiredEntitlementIdentifier: "soma_t",
-                    purchaseCompleted: { customerInfo in
-                        SubscriptionManager.shared.isPremiumUser = true
-                    },
-                    restoreCompleted: { customerInfo in
-                        SubscriptionManager.shared.isPremiumUser = true
-                    }, onDismiss:  {
-                        
-                    })
                 tabFor240()
                 tabForT()
                 tabForTry()
@@ -109,7 +125,11 @@ struct CubeSceneApp: App {
     
     func tabForT() -> some View {
         NavigationView {
-            enterListView(with: "SOMAT101", title: "TitleName3")
+            if subscriptionManager.isPremiumUser {
+                enterListView(with: "SOMAT101", title: NSLocalizedString("TitleName3", comment: "Tab title for section 3"))
+            } else {
+                enterListView(with: "SOMAT101", title: "\(NSLocalizedString("TabTitleName3", comment: "Tab title for section 3")) free(\(max(5 - imageCounter.imageCount, 0)))")
+            }
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .tabItem {

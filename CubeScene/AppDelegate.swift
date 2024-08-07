@@ -11,6 +11,8 @@ import RevenueCat
 import Mixpanel
 import StoreKit
 
+
+
 /// 每次启动个只弹出一次请求评分
 var runOnceRequestReview: () = {
     #if targetEnvironment(simulator)
@@ -56,24 +58,27 @@ func requestNotificationAuthorization() {
     }
 }
 
+import Foundation
 
-class SubscriptionManager {
+class SubscriptionManager: ObservableObject {
     static let shared = SubscriptionManager() // 使用单例模式
 
-    var isPremiumUser: Bool = false {
+    @Published var isPremiumUser: Bool = false {
         didSet {
             // 每当isPremiumUser的值改变时，持久化该值
             UserDefaults.standard.set(isPremiumUser, forKey: "isPremiumUser")
         }
     }
 
-    init() {
+    private init() {
         // 从UserDefaults读取之前持久化的订阅状态
         isPremiumUser = UserDefaults.standard.bool(forKey: "isPremiumUser")
     }
 
     func checkSubscriptionStatus2() {
-        Purchases.shared.getCustomerInfo { (customerInfo, error) in
+        Purchases.shared.getCustomerInfo { [weak self] (customerInfo, error) in
+            guard let self = self else { return }
+            
             if let error = error {
                 print("Failed to retrieve customer info: \(error.localizedDescription)")
                 return
@@ -81,12 +86,16 @@ class SubscriptionManager {
 
             if customerInfo?.entitlements.all["soma_t"]?.isActive == true {
                 // 用户是"premium"用户
-                self.isPremiumUser = true
-                print("User is premium")
+                DispatchQueue.main.async {
+                    self.isPremiumUser = true
+                    print("User is premium")
+                }
             } else {
                 // 用户不是"premium"用户
-                self.isPremiumUser = false
-                print("User is not premium")
+                DispatchQueue.main.async {
+                    self.isPremiumUser = false
+                    print("User is not premium")
+                }
             }
         }
     }

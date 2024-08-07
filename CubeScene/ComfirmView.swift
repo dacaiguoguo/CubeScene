@@ -40,7 +40,7 @@ struct ParentalGateView: View {
             Text("Parental Gate")
                 .font(.largeTitle)
                 .padding()
-
+            Image(uiImage: UIImage(named: "Cube")!)
             if let currentQuestion = currentQuestion {
                 Text(currentQuestion.question)
                     .font(.title2)
