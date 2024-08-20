@@ -34,24 +34,27 @@ struct ParentalGateView: View {
         Question(question: "What is 5 + 6?", answer: "11"),
         Question(question: "What is 6 + 7?", answer: "13")
     ]
-
+    
     var body: some View {
         VStack {
             Text("Parental Gate")
                 .font(.largeTitle)
+                .foregroundColor(Color.primary)  // 自动适应颜色
                 .padding()
             Image(uiImage: UIImage(named: "Cube")!)
             if let currentQuestion = currentQuestion {
                 Text(currentQuestion.question)
                     .font(.title2)
+                    .foregroundColor(Color.primary)  // 自动适应颜色
                     .padding()
             }
-
+            
             TextField("Enter your answer", text: $userInput)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .foregroundColor(Color.primary)  // 自动适应颜色
                 .keyboardType(.numberPad)
                 .padding()
-
+            
             Button(action: {
                 verifyAnswer()
             }) {
@@ -66,20 +69,20 @@ struct ParentalGateView: View {
             }
         }
         .padding()
-        .background(Color.white)
+        .background(Color(UIColor.secondarySystemBackground))  // 使用系统颜色
         .cornerRadius(15)
         .shadow(radius: 10)
         .onAppear {
             selectRandomQuestion()
         }
     }
-
+    
     private func selectRandomQuestion() {
         if let question = questions.randomElement() {
             currentQuestion = question
         }
     }
-
+    
     private func verifyAnswer() {
         if userInput == currentQuestion?.answer {
             onCorrectAnswer()
@@ -95,7 +98,7 @@ import SwiftUI
 struct ConfirmView: View {
     @State private var showParentalGate: Bool = false
     @State private var navigateToRestrictedContent: Bool = false
-
+    
     var body: some View {
         VStack {
             NavigationView {
@@ -103,7 +106,7 @@ struct ConfirmView: View {
                     NavigationLink(destination: RestrictedContentView(), isActive: $navigateToRestrictedContent) {
                         EmptyView()
                     }
-
+                    
                     Button(action: {
                         showParentalGate = true
                     }) {
@@ -131,7 +134,7 @@ struct RestrictedContentView: View {
             Text("Restricted Content")
                 .font(.largeTitle)
                 .padding()
-
+            
             Text("This content is protected by a parental gate.")
                 .font(.title2)
                 .padding()
