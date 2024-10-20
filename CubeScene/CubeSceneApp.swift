@@ -62,7 +62,7 @@ struct CubeSceneApp: App {
             TabView(selection: Binding(get: {
                 selectedTab
             }, set: { newTab in
-                if newTab == 2 || newTab == 4 {
+                if newTab == 20 || newTab == 40 {
                     // 如果用户尝试切换到tabForT，显示 ParentalGateView
                     requestedTab = newTab
                     showParentalGate = true
