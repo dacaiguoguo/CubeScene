@@ -347,5 +347,5 @@ import Foundation
 
 func shouldShowPaywall() -> Bool {
     let imageCount = ImageCounter.shared.incrementImageCount(forKey: "T")
-    return imageCount >= 5000
+    return imageCount >= 5
 }
