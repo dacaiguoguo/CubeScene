@@ -77,15 +77,15 @@ struct CubeSceneApp: App {
                 tabForTry()
                 tabForMore()
             }
-            .fullScreenCover(isPresented: $showParentalGate) {
-                ParentalGateView(onCorrectAnswer: {
-                    if let requestedTab = requestedTab {
-                        selectedTab = requestedTab
-                        Mixpanel.mainInstance().track(event: "selectedTab", properties: ["Signup": "\(requestedTab)"])
-                    }
-                    showParentalGate = false
-                })
-            }
+//            .fullScreenCover(isPresented: $showParentalGate) {
+//                ParentalGateView(onCorrectAnswer: {
+//                    if let requestedTab = requestedTab {
+//                        selectedTab = requestedTab
+//                        Mixpanel.mainInstance().track(event: "selectedTab", properties: ["Signup": "\(requestedTab)"])
+//                    }
+//                    showParentalGate = false
+//                })
+//            }
         }
         .onChange(of: scenePhase) { phase in
             if phase == .active {
