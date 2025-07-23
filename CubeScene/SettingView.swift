@@ -442,34 +442,17 @@ public struct SettingView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
     func requestResources() {
-        guard !isRequestingResource else { return }
-        isRequestingResource = true
-        
-        let resourceRequest = NSBundleResourceRequest(tags: Set(["yourResourceTag"]))
-        resourceRequest.loadingPriority = NSBundleResourceRequestLoadingPriorityUrgent
-        
-        resourceRequest.beginAccessingResources { error in
-            DispatchQueue.main.async {
-                self.isRequestingResource = false
-                if let error = error {
-                    print("Error accessing resources: \(error.localizedDescription)")
-                } else {
-                    self.productListX = produceData(resourceName: "SOMAX101")
-                    self.productListY = produceData(resourceName: "SOMAY101")
-                    self.productListW = produceData(resourceName: "SOMAW101")
-                    self.productListW = produceData(resourceName: "SOMAW101")
-                    self.productListC3A = produceData(resourceName: "SOMAC3A101")
-                    self.productListC3B = produceData(resourceName: "SOMAC3B101")
-                    self.productListC3C = produceData(resourceName: "SOMAC3C101")
-                    self.productListC3D = produceData(resourceName: "SOMAC3D101")
-                    self.productListC4A = produceData(resourceName: "SOMAC4A101")
-                    self.productListC4B = produceData(resourceName: "SOMAC4B101")
-                    self.resourcesAvailable = true;
-                    // 资源请求成功，更新列表
-                }
-                resourceRequest.endAccessingResources()
-            }
-        }
+        self.productListX = produceData(resourceName: "SOMAX101")
+        self.productListY = produceData(resourceName: "SOMAY101")
+        self.productListW = produceData(resourceName: "SOMAW101")
+        self.productListW = produceData(resourceName: "SOMAW101")
+        self.productListC3A = produceData(resourceName: "SOMAC3A101")
+        self.productListC3B = produceData(resourceName: "SOMAC3B101")
+        self.productListC3C = produceData(resourceName: "SOMAC3C101")
+        self.productListC3D = produceData(resourceName: "SOMAC3D101")
+        self.productListC4A = produceData(resourceName: "SOMAC4A101")
+        self.productListC4B = produceData(resourceName: "SOMAC4B101")
+        self.resourcesAvailable = true;
     }
     static func cicon() -> String {
         if let currentIcon = UIApplication.shared.alternateIconName {

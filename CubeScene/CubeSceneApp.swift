@@ -62,13 +62,9 @@ struct CubeSceneApp: App {
             TabView(selection: Binding(get: {
                 selectedTab
             }, set: { newTab in
-                if newTab == 2 || newTab == 4 {
-                    // 如果用户尝试切换到tabForT，显示 ParentalGateView
-                    requestedTab = newTab
+                selectedTab = newTab
+                if !SubscriptionManager.shared.isPremiumUser {
                     showParentalGate = true
-                } else {
-                    selectedTab = newTab
-                    Mixpanel.mainInstance().track(event: "selectedTab", properties: ["Signup": "\(newTab)"])
                 }
             })) {
                 tabFor108()
@@ -77,15 +73,15 @@ struct CubeSceneApp: App {
                 tabForTry()
                 tabForMore()
             }
-//            .fullScreenCover(isPresented: $showParentalGate) {
-//                ParentalGateView(onCorrectAnswer: {
-//                    if let requestedTab = requestedTab {
-//                        selectedTab = requestedTab
-//                        Mixpanel.mainInstance().track(event: "selectedTab", properties: ["Signup": "\(requestedTab)"])
-//                    }
-//                    showParentalGate = false
-//                })
-//            }
+            .fullScreenCover(isPresented: $showParentalGate) {
+                ParentalGateView(onCorrectAnswer: {
+                    if let requestedTab = requestedTab {
+                        selectedTab = requestedTab
+                        Mixpanel.mainInstance().track(event: "selectedTab", properties: ["Signup": "\(requestedTab)"])
+                    }
+                    showParentalGate = false
+                })
+            }
         }
         .onChange(of: scenePhase) { phase in
             if phase == .active {
