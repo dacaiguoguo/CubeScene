@@ -14,6 +14,7 @@
 		59CFCD432A6281F700E38F38 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59CFCD422A6281F700E38F38 /* UserData.swift */; };
 		5B0CFE5D2C552CE500BEA499 /* SOMAC4B101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5B0CFE5C2C552CE500BEA499 /* SOMAC4B101.txt */; };
 		5B0CFE642C5CF8F300BEA499 /* ComfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0CFE632C5CF8F300BEA499 /* ComfirmView.swift */; };
+		5B26DAC92E52175C0060764B /* SOMAA026101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5B26DAC82E52175C0060764B /* SOMAA026101.txt */; };
 		5B64399C2B8B158700D2C67B /* Cube@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B64399A2B8B158700D2C67B /* Cube@3x.png */; };
 		5B64399D2B8B158700D2C67B /* Cube@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B64399B2B8B158700D2C67B /* Cube@2x.png */; };
 		5B6948C52BE3105A00FD4ED8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 5B6948C42BE3105A00FD4ED8 /* PrivacyInfo.xcprivacy */; };
@@ -104,6 +105,7 @@
 		5B142E7E2B6559EC00708678 /* SettingViewClip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewClip.swift; sourceTree = "<group>"; };
 		5B18D2412B6897A6004AAF62 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5B18D2422B6897A6004AAF62 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5B26DAC82E52175C0060764B /* SOMAA026101.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = SOMAA026101.txt; sourceTree = "<group>"; };
 		5B34E9B42B6D210100454D91 /* READMERelease.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = READMERelease.md; sourceTree = "<group>"; };
 		5B34E9B52B6D210100454D91 /* READMEDebug.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = READMEDebug.md; sourceTree = "<group>"; };
 		5B57B4782C65C07D004BBD1F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -296,6 +298,7 @@
 				9D7E411B2AA2356A00863C43 /* SOMAX101.txt */,
 				9D9448802AB43E0E0005FD11 /* SOMAC3A101.txt */,
 				9DB0AAB42AC1DEAB0093A611 /* SOMAC3B101.txt */,
+				5B26DAC82E52175C0060764B /* SOMAA026101.txt */,
 				9DA001852AD6390100FDACFE /* SOMAC3C101.txt */,
 				9DA001862AD6390100FDACFE /* SOMAC3D101.txt */,
 				9D890F9B2AD8EF3600E1EF0C /* SOMAC4A101.txt */,
@@ -535,6 +538,7 @@
 				9D1602BA2A4BDBF100C247A7 /* LaunchScreen.storyboard in Resources */,
 				5BB65C482B2D705F00E97777 /* solutionsMaped6.json in Resources */,
 				9DA001892AD6390100FDACFE /* SOMAC3D101.txt in Resources */,
+				5B26DAC92E52175C0060764B /* SOMAA026101.txt in Resources */,
 				9DDEC0CF2A61753A001A0046 /* SOMA108.txt in Resources */,
 				9DF920712A404BBF001BD720 /* Assets.xcassets in Resources */,
 				9D89A1BB2AE37C19008C6707 /* chaizi-gbk.txt in Resources */,

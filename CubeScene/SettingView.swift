@@ -212,6 +212,7 @@ public struct SettingView: View {
     @State var productListW: [Product] = []
     @State var productListC3A: [Product] = []
     @State var productListC3B: [Product] = []
+    @State var productListA026: [Product] = []
     @State var productListC3C: [Product] = []
     @State var productListC3D: [Product] = []
     @State var productListC4A: [Product] = []
@@ -265,6 +266,20 @@ public struct SettingView: View {
             } label: {
                 HStack{
                     Text("SOMA C3A")
+                    Text("(PRO)").font(.body)
+                    Spacer()
+                    Image(systemName: "highlighter")
+                }
+            }
+            
+            NavigationLink {
+                EnterListView(productList: self.productListA026).navigationTitle("Figures A026").navigationBarTitleDisplayMode(.inline)
+                    .onAppear {
+                        
+                    }.environmentObject(userData)
+            } label: {
+                HStack{
+                    Text("Figures A026")
                     Text("(PRO)").font(.body)
                     Spacer()
                     Image(systemName: "highlighter")
@@ -448,6 +463,7 @@ public struct SettingView: View {
         self.productListW = produceData(resourceName: "SOMAW101")
         self.productListC3A = produceData(resourceName: "SOMAC3A101")
         self.productListC3B = produceData(resourceName: "SOMAC3B101")
+        self.productListA026 = produceData(resourceName: "SOMAA026101")
         self.productListC3C = produceData(resourceName: "SOMAC3C101")
         self.productListC3D = produceData(resourceName: "SOMAC3D101")
         self.productListC4A = produceData(resourceName: "SOMAC4A101")
