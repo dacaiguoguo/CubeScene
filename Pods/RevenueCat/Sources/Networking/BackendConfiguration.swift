@@ -19,6 +19,7 @@ class BackendConfiguration {
 
     let operationDispatcher: OperationDispatcher
     let operationQueue: OperationQueue
+    let diagnosticsQueue: OperationQueue
     let dateProvider: DateProvider
     let systemInfo: SystemInfo
     let offlineCustomerInfoCreator: OfflineCustomerInfoCreator?
@@ -26,12 +27,14 @@ class BackendConfiguration {
     init(httpClient: HTTPClient,
          operationDispatcher: OperationDispatcher,
          operationQueue: OperationQueue,
+         diagnosticsQueue: OperationQueue,
          systemInfo: SystemInfo,
          offlineCustomerInfoCreator: OfflineCustomerInfoCreator?,
          dateProvider: DateProvider = DateProvider()) {
         self.httpClient = httpClient
         self.operationDispatcher = operationDispatcher
         self.operationQueue = operationQueue
+        self.diagnosticsQueue = diagnosticsQueue
         self.offlineCustomerInfoCreator = offlineCustomerInfoCreator
         self.dateProvider = dateProvider
         self.systemInfo = systemInfo
@@ -50,11 +53,21 @@ extension BackendConfiguration {
     /// Adds the `operation` to the `OperationQueue` (based on `CallbackCacheStatus`) potentially adding a random delay.
     func addCacheableOperation<T: CacheableNetworkOperation>(
         with factory: CacheableNetworkOperationFactory<T>,
-        delay: Delay,
+        delay: JitterableDelay,
         cacheStatus: CallbackCacheStatus
     ) {
-        self.operationDispatcher.dispatchOnWorkerThread(delay: delay) {
+        self.operationDispatcher.dispatchOnWorkerThread(jitterableDelay: delay) {
             self.operationQueue.addCacheableOperation(with: factory, cacheStatus: cacheStatus)
+        }
+    }
+
+    /// Adds the `operation` to the diagnostics `OperationQueue` potentially adding a random delay.
+    func addDiagnosticsOperation(
+        _ operation: NetworkOperation,
+        delay: JitterableDelay = .long
+    ) {
+        self.operationDispatcher.dispatchOnWorkerThread(jitterableDelay: delay) {
+            self.diagnosticsQueue.addOperation(operation)
         }
     }
 

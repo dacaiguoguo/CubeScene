@@ -47,7 +47,8 @@ extension CustomerInfo {
         self.init(
             response: content,
             entitlementVerification: Self.verification,
-            sandboxEnvironmentDetector: sandboxEnvironmentDetector
+            sandboxEnvironmentDetector: sandboxEnvironmentDetector,
+            httpResponseOriginalSource: nil
         )
     }
 
@@ -100,11 +101,7 @@ private extension CustomerInfo {
 internal extension CustomerInfo {
 
     var isComputedOffline: Bool {
-        if #available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *) {
-            return self.entitlements.verification == .verifiedOnDevice
-        } else {
-            return false
-        }
+        return self.entitlements.verification == .verifiedOnDevice
     }
 
 }

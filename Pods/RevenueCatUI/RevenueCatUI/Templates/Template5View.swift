@@ -77,11 +77,11 @@ struct Template5View: TemplateViewType {
                     self.features
                 }
                 .padding(.top, self.defaultVerticalPaddingLength)
-                .scrollableIfNecessaryWhenAvailable()
+                .scrollableIfNecessaryWhenAvailableForV1()
 
                 self.packages
                     .padding(.top, self.defaultVerticalPaddingLength)
-                    .scrollableIfNecessaryWhenAvailable()
+                    .scrollableIfNecessaryWhenAvailableForV1()
             }
 
             Spacer()
@@ -108,7 +108,7 @@ struct Template5View: TemplateViewType {
                         // Compensate for additional padding on condensed mode + iPad
                         : self.defaultVerticalPaddingLength.map { $0 * -1 }
                     )
-                    .scrollableIfNecessaryWhenAvailable(enabled: self.configuration.mode.isFullScreen)
+                    .scrollableIfNecessaryWhenAvailableForV1(enabled: self.configuration.mode.isFullScreen)
             }
 
             if self.configuration.mode.shouldDisplayInlineOfferDetails(displayingAllPlans: self.displayingAllPlans) {
@@ -129,8 +129,10 @@ struct Template5View: TemplateViewType {
 
     @ViewBuilder
     private var headerImage: some View {
-        if let header = self.configuration.headerImageURL {
-            RemoteImage(url: header,
+        if let headerImageURL = self.configuration.headerImageURL {
+            let headerLowResImageURL = self.configuration.headerLowResImageURL
+            RemoteImage(url: headerImageURL,
+                        lowResUrl: headerLowResImageURL,
                         aspectRatio: self.headerAspectRatio,
                         maxWidth: .infinity)
             .clipped()
@@ -197,7 +199,7 @@ struct Template5View: TemplateViewType {
     }
 
     private var packages: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: Constants.defaultPackageVerticalSpacing) {
             ForEach(self.configuration.packages.all, id: \.content.id) { package in
                 let isSelected = self.selectedPackage.content === package.content
 
@@ -230,7 +232,7 @@ struct Template5View: TemplateViewType {
 
                 Spacer(minLength: 0)
 
-                self.packageDiscountLabel(package, selected: selected)
+                self.packageBadgeLabel(package, selected: selected)
             }
 
             self.offerDetails(package: package, selected: selected)
@@ -253,19 +255,20 @@ struct Template5View: TemplateViewType {
 
     private var footerView: some View {
         FooterView(configuration: self.configuration,
+                   locale: self.selectedLocalization.locale,
                    purchaseHandler: self.purchaseHandler,
                    displayingAllPlans: self.$displayingAllPlans)
     }
 
     @ViewBuilder
-    private func packageDiscountLabel(
+    private func packageBadgeLabel(
         _ package: TemplateViewConfiguration.Package,
         selected: Bool
     ) -> some View {
-        if let discount = package.discountRelativeToMostExpensivePerMonth {
+        if let badge = package.localization.offerBadge, !badge.isEmpty {
             let colors = self.configuration.colors
 
-            Text(Localization.localized(discount: discount, locale: self.locale))
+            Text(badge)
                 .textCase(.uppercase)
                 .padding(.vertical, 4)
                 .padding(.horizontal, 8)
@@ -367,7 +370,6 @@ private extension Template5View {
 
 }
 
-@available(iOS 13.0, tvOS 13.0, macOS 10.15, watchOS 6.2, *)
 private extension PaywallData.Configuration.Colors {
 
     var featureIcon: Color { self.accent1Color }
@@ -408,6 +410,31 @@ struct Template5View_Previews: PreviewProvider {
                 Template5View($0)
             }
         }
+    }
+
+}
+
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+@available(watchOS, unavailable)
+@available(macOS, unavailable)
+@available(tvOS, unavailable)
+struct Template5ViewLandscape_Previews: PreviewProvider {
+
+    // Matches `BaseSnapshotTest.landscapeSize` (950x460) used in `Template5ViewTests.testLandscapePaywall`
+    private static let landscapeSize: CGSize = .init(width: 1900, height: 920)
+
+    static var previews: some View {
+        PreviewableTemplate(
+            offering: TestData.offeringWithTemplate5Paywall,
+            mode: .default
+        ) {
+            Template5View($0)
+        }
+        .previewDisplayName("Template 5 – Landscape")
+        .previewLayout(.fixed(width: self.landscapeSize.width,
+                              height: self.landscapeSize.height))
+        .environment(\.verticalSizeClass, .compact)
+        .previewInterfaceOrientation(.landscapeLeft)
     }
 
 }

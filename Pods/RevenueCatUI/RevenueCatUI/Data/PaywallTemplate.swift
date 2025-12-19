@@ -14,13 +14,14 @@
 import Foundation
 
 /// The type of template used to display a paywall.
-internal enum PaywallTemplate: String {
+enum PaywallTemplate: String {
 
     case template1 = "1"
     case template2 = "2"
     case template3 = "3"
     case template4 = "4"
     case template5 = "5"
+    case template7 = "7"
 
 }
 

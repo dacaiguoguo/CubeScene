@@ -17,9 +17,13 @@ class Backend {
 
     let identity: IdentityAPI
     let offerings: OfferingsAPI
+    let webBilling: WebBillingAPI
     let offlineEntitlements: OfflineEntitlementsAPI
     let customer: CustomerAPI
     let internalAPI: InternalAPI
+    let customerCenterConfig: CustomerCenterConfigAPI
+    let redeemWebPurchaseAPI: RedeemWebPurchaseAPI
+    let virtualCurrenciesAPI: VirtualCurrenciesAPI
 
     private let config: BackendConfiguration
 
@@ -31,16 +35,20 @@ class Backend {
         operationDispatcher: OperationDispatcher,
         attributionFetcher: AttributionFetcher,
         offlineCustomerInfoCreator: OfflineCustomerInfoCreator?,
+        diagnosticsTracker: DiagnosticsTrackerType?,
         dateProvider: DateProvider = DateProvider()
     ) {
         let httpClient = HTTPClient(apiKey: apiKey,
                                     systemInfo: systemInfo,
                                     eTagManager: eTagManager,
                                     signing: Signing(apiKey: apiKey, clock: systemInfo.clock),
-                                    requestTimeout: httpClientTimeout)
+                                    diagnosticsTracker: diagnosticsTracker,
+                                    requestTimeout: httpClientTimeout,
+                                    operationDispatcher: OperationDispatcher.default)
         let config = BackendConfiguration(httpClient: httpClient,
                                           operationDispatcher: operationDispatcher,
                                           operationQueue: QueueProvider.createBackendQueue(),
+                                          diagnosticsQueue: QueueProvider.createDiagnosticsQueue(),
                                           systemInfo: systemInfo,
                                           offlineCustomerInfoCreator: offlineCustomerInfoCreator,
                                           dateProvider: dateProvider)
@@ -51,30 +59,46 @@ class Backend {
         let customer = CustomerAPI(backendConfig: backendConfig, attributionFetcher: attributionFetcher)
         let identity = IdentityAPI(backendConfig: backendConfig)
         let offerings = OfferingsAPI(backendConfig: backendConfig)
+        let webBilling = WebBillingAPI(backendConfig: backendConfig)
         let offlineEntitlements = OfflineEntitlementsAPI(backendConfig: backendConfig)
         let internalAPI = InternalAPI(backendConfig: backendConfig)
+        let customerCenterConfig = CustomerCenterConfigAPI(backendConfig: backendConfig)
+        let redeemWebPurchaseAPI = RedeemWebPurchaseAPI(backendConfig: backendConfig)
+        let virtualCurrenciesAPI = VirtualCurrenciesAPI(backendConfig: backendConfig)
 
         self.init(backendConfig: backendConfig,
                   customerAPI: customer,
                   identityAPI: identity,
                   offeringsAPI: offerings,
+                  webBillingAPI: webBilling,
                   offlineEntitlements: offlineEntitlements,
-                  internalAPI: internalAPI)
+                  internalAPI: internalAPI,
+                  customerCenterConfig: customerCenterConfig,
+                  redeemWebPurchaseAPI: redeemWebPurchaseAPI,
+                  virtualCurrenciesAPI: virtualCurrenciesAPI)
     }
 
     required init(backendConfig: BackendConfiguration,
                   customerAPI: CustomerAPI,
                   identityAPI: IdentityAPI,
                   offeringsAPI: OfferingsAPI,
+                  webBillingAPI: WebBillingAPI,
                   offlineEntitlements: OfflineEntitlementsAPI,
-                  internalAPI: InternalAPI) {
+                  internalAPI: InternalAPI,
+                  customerCenterConfig: CustomerCenterConfigAPI,
+                  redeemWebPurchaseAPI: RedeemWebPurchaseAPI,
+                  virtualCurrenciesAPI: VirtualCurrenciesAPI) {
         self.config = backendConfig
 
         self.customer = customerAPI
         self.identity = identityAPI
         self.offerings = offeringsAPI
+        self.webBilling = webBillingAPI
         self.offlineEntitlements = offlineEntitlements
         self.internalAPI = internalAPI
+        self.customerCenterConfig = customerCenterConfig
+        self.redeemWebPurchaseAPI = redeemWebPurchaseAPI
+        self.virtualCurrenciesAPI = virtualCurrenciesAPI
     }
 
     func clearHTTPClientCaches() {
@@ -113,11 +137,13 @@ class Backend {
               productData: ProductRequestData?,
               transactionData: PurchasedTransactionData,
               observerMode: Bool,
+              appTransaction: String? = nil,
               completion: @escaping CustomerAPI.CustomerInfoResponseHandler) {
         self.customer.post(receipt: receipt,
                            productData: productData,
                            transactionData: transactionData,
                            observerMode: observerMode,
+                           appTransaction: appTransaction,
                            completion: completion)
     }
 
@@ -127,12 +153,33 @@ class Backend {
         self.customer.post(subscriberAttributes: subscriberAttributes, appUserID: appUserID, completion: completion)
     }
 
+    #if DEBUG
+    /// Checks if the SDK should log the status of the health report to the console.
+    /// - Parameter appUserID: An `appUserID` that allows the Backend to check for health report availability
+    /// - Returns: Whether the health report should be reported to the console for the given `appUserID`.
+    func healthReportAvailabilityRequest(appUserID: String) async throws -> HealthReportAvailability {
+        try await Async.call { (completion: @escaping (Result<HealthReportAvailability, BackendError>) -> Void) in
+            self.internalAPI.healthReportAvailabilityRequest(
+                appUserID: appUserID,
+                completion: completion
+            )
+        }
+    }
+
+    /// Call the `/health_report` endpoint and perform a full validation of the SDK's configuration
+    /// - Parameter appUserID: An `appUserID` that allows the Backend to fetch offerings
+    /// - Returns: A report with all validation checks along with their status
+    func healthReportRequest(appUserID: String) async throws -> HealthReport {
+        try await Async.call { (completion: @escaping (Result<HealthReport, BackendError>) -> Void) in
+            self.internalAPI.healthReportRequest(appUserID: appUserID, completion: completion)
+        }
+    }
+    #endif
 }
 
 extension Backend {
 
     /// - Throws: `NetworkError`
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     func healthRequest(signatureVerification: Bool) async throws {
         try await Async.call { completion in
             self.internalAPI.healthRequest(signatureVerification: signatureVerification) { error in
@@ -169,8 +216,16 @@ extension Backend {
 
         static func createBackendQueue() -> OperationQueue {
             let operationQueue = OperationQueue()
-            operationQueue.name = "Backend Queue"
+            operationQueue.name = "RC Backend Queue"
             operationQueue.maxConcurrentOperationCount = 1
+            return operationQueue
+        }
+
+        static func createDiagnosticsQueue() -> OperationQueue {
+            let operationQueue = OperationQueue()
+            operationQueue.name = "RC Diagnostics Queue"
+            operationQueue.maxConcurrentOperationCount = 1
+            operationQueue.qualityOfService = .background
             return operationQueue
         }
 

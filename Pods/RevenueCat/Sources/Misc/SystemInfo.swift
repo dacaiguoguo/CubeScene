@@ -23,8 +23,10 @@ import WatchKit
 import AppKit
 #endif
 
+// swiftlint:disable file_length
 class SystemInfo {
 
+    // swiftlint:disable:next force_unwrapping
     static let appleSubscriptionsURL = URL(string: "https://apps.apple.com/account/subscriptions")!
 
     static var forceUniversalAppStore: Bool {
@@ -32,17 +34,34 @@ class SystemInfo {
         set { self._forceUniversalAppStore.value = newValue }
     }
 
-    let storeKit2Setting: StoreKit2Setting
+    let storeKitVersion: StoreKitVersion
+    private var _apiKeyValidationResult: Configuration.APIKeyValidationResult
+    var apiKeyValidationResult: Configuration.APIKeyValidationResult {
+        get { return self._apiKeyValidationResult }
+        set { self._apiKeyValidationResult = newValue }
+    }
+
+    /// Whether the API key used to configure the SDK is a Simulated Store API key.
+    var isSimulatedStoreAPIKey: Bool {
+        return self.apiKeyValidationResult == .simulatedStore
+    }
+
     let operationDispatcher: OperationDispatcher
     let platformFlavor: String
     let platformFlavorVersion: String?
     let responseVerificationMode: Signing.ResponseVerificationMode
     let dangerousSettings: DangerousSettings
     let clock: ClockType
+    private let preferredLocalesProvider: PreferredLocalesProvider
 
     var finishTransactions: Bool {
         get { return self._finishTransactions.value }
         set { self._finishTransactions.value = newValue }
+    }
+
+    var isAppBackgroundedState: Bool {
+        get { self._isAppBackgroundedState.value }
+        set { self._isAppBackgroundedState.value = newValue }
     }
 
     var bundle: Bundle { return self._bundle.value }
@@ -52,10 +71,15 @@ class SystemInfo {
     private let sandboxEnvironmentDetector: SandboxEnvironmentDetector
     private let storefrontProvider: StorefrontProviderType
     private let _finishTransactions: Atomic<Bool>
+    private let _isAppBackgroundedState: Atomic<Bool>
     private let _bundle: Atomic<Bundle>
 
     private static let _forceUniversalAppStore: Atomic<Bool> = false
     private static let _proxyURL: Atomic<URL?> = nil
+
+    // swiftlint:disable:next force_unwrapping
+    static let defaultApiBaseURL = URL(string: "https://api.revenuecat.com")!
+    private static let _apiBaseURL: Atomic<URL> = .init(defaultApiBaseURL)
 
     private lazy var _isSandbox: Bool = {
         return self.sandboxEnvironmentDetector.isSandbox
@@ -65,12 +89,20 @@ class SystemInfo {
         return self._isSandbox
     }
 
+    var isDebugBuild: Bool {
+#if DEBUG
+        return true
+#else
+        return false
+#endif
+    }
+
     var storefront: StorefrontType? {
         return self.storefrontProvider.currentStorefront
     }
 
     static var frameworkVersion: String {
-        return "4.36.3"
+        return "5.51.0"
     }
 
     static var systemVersion: String {
@@ -91,6 +123,19 @@ class SystemInfo {
 
     static var platformHeader: String {
         return Self.forceUniversalAppStore ? "iOS" : self.platformHeaderConstant
+    }
+
+    static var deviceVersion: String {
+        var systemInfo = utsname()
+        uname(&systemInfo)
+
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let identifier = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8, value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
+        }
+
+        return identifier
     }
 
     var identifierForVendor: String? {
@@ -122,49 +167,74 @@ class SystemInfo {
         }
     }
 
+    /*
+     Allows for updating the base URL for API calls that use `HTTPRequest.Path`.
+     Useful for testing in case we want to perform tests against another instance of our backend.
+     
+     We've decided not to use the proxy URL for this, because it's behavior is slightly different. 
+     Specifically, when using a proxy URL the fallback logic is not used, because all requests should 
+     be going through the proxy URL instead. 
+     */
+    static var apiBaseURL: URL {
+        get { return self._apiBaseURL.value }
+        set {
+            self._apiBaseURL.value = newValue
+        }
+    }
+
+    static let appSessionID = UUID()
+
     init(platformInfo: Purchases.PlatformInfo?,
          finishTransactions: Bool,
          operationDispatcher: OperationDispatcher = .default,
          bundle: Bundle = .main,
          sandboxEnvironmentDetector: SandboxEnvironmentDetector = BundleSandboxEnvironmentDetector.default,
          storefrontProvider: StorefrontProviderType = DefaultStorefrontProvider(),
-         storeKit2Setting: StoreKit2Setting = .default,
+         storeKitVersion: StoreKitVersion = .default,
+         apiKeyValidationResult: Configuration.APIKeyValidationResult = .validApplePlatform,
          responseVerificationMode: Signing.ResponseVerificationMode = .default,
          dangerousSettings: DangerousSettings? = nil,
-         clock: ClockType = Clock.default) {
+         isAppBackgrounded: Bool? = nil,
+         clock: ClockType = Clock.default,
+         preferredLocalesProvider: PreferredLocalesProvider) {
         self.platformFlavor = platformInfo?.flavor ?? "native"
         self.platformFlavorVersion = platformInfo?.version
         self._bundle = .init(bundle)
 
         self._finishTransactions = .init(finishTransactions)
+        self._isAppBackgroundedState = .init(isAppBackgrounded ?? false)
         self.operationDispatcher = operationDispatcher
-        self.storeKit2Setting = storeKit2Setting
+        self.storeKitVersion = storeKitVersion
+        self._apiKeyValidationResult = apiKeyValidationResult
         self.sandboxEnvironmentDetector = sandboxEnvironmentDetector
         self.storefrontProvider = storefrontProvider
         self.responseVerificationMode = responseVerificationMode
         self.dangerousSettings = dangerousSettings ?? DangerousSettings()
         self.clock = clock
-    }
+        self.preferredLocalesProvider = preferredLocalesProvider
 
-    /// Asynchronous API if caller can't ensure that it's invoked in the `@MainActor`
-    /// - Seealso: `isApplicationBackgrounded`
-    func isApplicationBackgrounded(completion: @escaping @Sendable (Bool) -> Void) {
-        self.operationDispatcher.dispatchOnMainActor {
-            completion(self.isApplicationBackgrounded)
+        if isAppBackgrounded == nil {
+            self.isApplicationBackgrounded { isAppBackgrounded in
+                self.isAppBackgroundedState = isAppBackgrounded
+            }
         }
     }
 
-    /// Synchronous API for callers in `@MainActor`.
-    /// - Seealso: `isApplicationBackgrounded(completion:)`
-    @MainActor
-    var isApplicationBackgrounded: Bool {
-    #if os(iOS) || os(tvOS) || VISION_OS
-        return self.isApplicationBackgroundedIOSAndTVOS
-    #elseif os(macOS)
-        return false
-    #elseif os(watchOS)
-        return self.isApplicationBackgroundedWatchOS
-    #endif
+    var supportsOfflineEntitlements: Bool {
+        !self.observerMode && !self.dangerousSettings.customEntitlementComputation
+    }
+
+    /// Asynchronous API to check if app is backgrounded at a specific moment.
+    func isApplicationBackgrounded(completion: @escaping @Sendable (Bool) -> Void) {
+        self.operationDispatcher.dispatchOnMainActor {
+            var isApplicationBackgrounded: Bool = false
+            #if os(iOS) || os(tvOS) || VISION_OS
+            isApplicationBackgrounded = self.isApplicationBackgroundedIOSAndTVOS
+            #elseif os(watchOS)
+            isApplicationBackgrounded = self.isApplicationBackgroundedWatchOS
+            #endif
+            completion(isApplicationBackgrounded)
+        }
     }
 
     #if targetEnvironment(simulator)
@@ -175,6 +245,22 @@ class SystemInfo {
 
     func isOperatingSystemAtLeast(_ version: OperatingSystemVersion) -> Bool {
         return ProcessInfo.processInfo.isOperatingSystemAtLeast(version)
+    }
+
+    /// Checks for exposure to https://github.com/RevenueCat/purchases-ios/issues/4954
+    func isSubjectToKnownIssue_18_4_sim() -> Bool {
+        let firstOSVersionWithBug = OperatingSystemVersion(majorVersion: 18,
+                                                           minorVersion: 4,
+                                                           patchVersion: 0)
+
+        // Conservative estimate. No Simulator iOS fix version currently known (as at 2025-04-15).
+        let firstOSVersionWithFix = OperatingSystemVersion(majorVersion: 18,
+                                                           minorVersion: 5,
+                                                           patchVersion: 0)
+
+        return SystemInfo.isRunningInSimulator
+            && self.isOperatingSystemAtLeast(firstOSVersionWithBug)
+            && !self.isOperatingSystemAtLeast(firstOSVersionWithFix)
     }
 
     #if os(iOS) || os(tvOS) || VISION_OS
@@ -193,16 +279,30 @@ class SystemInfo {
         return host.contains("apple.com")
     }
 
+    /// Returns the preferred locales, including the locale override if set.
+    var preferredLocales: [String] {
+        return self.preferredLocalesProvider.preferredLocales
+    }
+
+    /// Developer-set preferred locale.
+    ///
+    /// `preferredLocales` already includes it if set, so this property is only useful for reading the override value.
+    var preferredLocaleOverride: String? {
+        return self.preferredLocalesProvider.preferredLocaleOverride
+    }
+
+    func overridePreferredLocale(_ locale: String?) {
+        self.preferredLocalesProvider.overridePreferredLocale(locale)
+    }
 }
 
-#if os(iOS) || VISION_OS
+#if os(iOS) || os(tvOS) || VISION_OS
 extension SystemInfo {
 
-    @available(iOS 13.0, macCatalystApplicationExtension 13.1, *)
+    @available(iOS 13.0, macCatalyst 13.1, tvOS 13.0, *)
     @available(macOS, unavailable)
     @available(watchOS, unavailable)
     @available(watchOSApplicationExtension, unavailable)
-    @available(tvOS, unavailable)
     @MainActor
     var currentWindowScene: UIWindowScene {
         get throws {
@@ -211,7 +311,6 @@ extension SystemInfo {
             return try scene.orThrow(ErrorUtils.storeProblemError(withMessage: "Failed to get UIWindowScene"))
         }
     }
-
 }
 #endif
 
@@ -237,10 +336,6 @@ extension SystemInfo {
     static let platformHeaderConstant = "visionOS"
     #endif
 
-}
-
-extension SystemInfo {
-
     static var applicationWillEnterForegroundNotification: Notification.Name {
         #if os(iOS) || os(tvOS) || VISION_OS
             UIApplication.willEnterForegroundNotification
@@ -261,10 +356,30 @@ extension SystemInfo {
         #endif
     }
 
+    /// Returns the appropriate `Notification.Name` for the OS's didBecomeActive notification,
+    /// indicating that the application did become active. This value is only nil for watchOS
+    /// versions below 7.0.
+    static var applicationDidBecomeActiveNotification: Notification.Name? {
+        #if os(iOS) || os(tvOS) || VISION_OS || targetEnvironment(macCatalyst)
+            return UIApplication.didBecomeActiveNotification
+        #elseif os(macOS)
+            return NSApplication.didBecomeActiveNotification
+        #elseif os(watchOS)
+        if #available(watchOS 9, *) {
+            return WKApplication.didBecomeActiveNotification
+        } else if #available(watchOS 7, *) {
+            // Work around for "Symbol not found" dyld crashes on watchOS 7.0..<9.0
+            return Notification.Name("WKApplicationDidBecomeActiveNotification")
+        } else {
+            // There's no equivalent notification available on watchOS <7.
+            return nil
+        }
+        #endif
+    }
+
     var isAppExtension: Bool {
         return self.bundle.bundlePath.hasSuffix(".appex")
     }
-
 }
 
 private extension SystemInfo {

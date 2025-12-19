@@ -49,6 +49,21 @@ open class DefaultPaywallFontProvider: PaywallFontProvider {
         case .caption: return .caption
         case .caption2: return .caption2
 
+        // Font.TextStyle.caption3 was introduced with tvOS 18.0/Xcode 16.0, but
+        // was removed without warning in Xcode 16.1/tvOS 18.1 and hasn't been reintroduced
+        // since.
+        // Xcode 16.0 shipped with Swift compiler 6.0, and Xcode 16.1 shipped with Swift compiler 6.0.2,
+        // this allows us to target builds built only with Xcode 16.0.
+        //
+        // We will need to reevaluate this if and when Font.TextStyle.caption3 is reintroduced.
+        #if compiler(>=6.0) && compiler(<6.0.2) && os(tvOS)
+        case .caption3: if #available(tvOS 18.0, *) {
+            return .system(.caption3)
+        } else {
+            return .caption2
+        }
+        #endif
+
         #if swift(>=5.9) && os(visionOS)
         case .extraLargeTitle: return .extraLargeTitle
         case .extraLargeTitle2: return .extraLargeTitle2
@@ -58,8 +73,6 @@ open class DefaultPaywallFontProvider: PaywallFontProvider {
     }
 
 }
-
-#if canImport(UIKit)
 
 /// A ``PaywallFontProvider`` implementation that allows you to provide a custom
 /// font name, and it will automatically scale up based on the size category.
@@ -76,22 +89,18 @@ open class CustomPaywallFontProvider: PaywallFontProvider {
     // swiftlint:disable:next missing_docs
     open func font(for textStyle: Font.TextStyle) -> Font {
         return Font.custom(self.fontName,
-                           size: UIFont.preferredFont(forTextStyle: textStyle.style).pointSize,
+                           size: PlatformFont.preferredFont(forTextStyle: textStyle.style).pointSize,
                            relativeTo: textStyle)
     }
 
 }
 
-#endif
-
 // MARK: - Private
-
-#if canImport(UIKit)
 
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, *)
 private extension Font.TextStyle {
 
-    var style: UIFont.TextStyle {
+    var style: PlatformFont.TextStyle {
         switch self {
         #if os(tvOS)
         case .largeTitle: return .title1
@@ -109,6 +118,17 @@ private extension Font.TextStyle {
         case .caption: return .caption1
         case .caption2: return .caption2
 
+        // Font.TextStyle.caption3 was introduced with tvOS 18.0/Xcode 16.0, but
+        // was removed without warning in Xcode 16.1/tvOS 18.1 and hasn't been reintroduced
+        // since.
+        // Xcode 16.0 shipped with Swift compiler 6.0, and Xcode 16.1 shipped with Swift compiler 6.0.2,
+        // this allows us to target builds built only with Xcode 16.0.
+        //
+        // We will need to reevaluate this if and when Font.TextStyle.caption3 is reintroduced.
+        #if compiler(>=6.0) && compiler(<6.0.2) && os(tvOS)
+        case .caption3: return .caption2
+        #endif
+
         #if swift(>=5.9) && os(visionOS)
         case .extraLargeTitle: return .extraLargeTitle
         case .extraLargeTitle2: return .extraLargeTitle2
@@ -119,5 +139,3 @@ private extension Font.TextStyle {
     }
 
 }
-
-#endif

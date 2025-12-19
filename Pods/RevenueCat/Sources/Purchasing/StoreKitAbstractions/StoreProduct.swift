@@ -81,18 +81,14 @@ public typealias SK2Product = StoreKit.Product
     @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
     @objc public var isFamilyShareable: Bool { self.product.isFamilyShareable }
 
-    @available(iOS 12.0, macCatalyst 13.0, tvOS 12.0, macOS 10.14, watchOS 6.2, *)
     @objc public var subscriptionGroupIdentifier: String? { self.product.subscriptionGroupIdentifier}
 
     @objc public var priceFormatter: NumberFormatter? { self.product.priceFormatter }
 
-    @available(iOS 11.2, macOS 10.13.2, tvOS 11.2, watchOS 6.2, *)
     @objc public var subscriptionPeriod: SubscriptionPeriod? { self.product.subscriptionPeriod }
 
-    @available(iOS 11.2, macOS 10.13.2, tvOS 11.2, watchOS 6.2, *)
     @objc public var introductoryDiscount: StoreProductDiscount? { self.product.introductoryDiscount }
 
-    @available(iOS 12.2, macOS 10.14.4, tvOS 12.2, watchOS 6.2, *)
     @objc public var discounts: [StoreProductDiscount] { self.product.discounts }
 
     // switflint:enable missing_docs
@@ -211,6 +207,13 @@ public extension StoreProduct {
         return self.price as NSDecimalNumber
     }
 
+    /// Calculates the price of this subscription product per day.
+    /// - Returns: `nil` if the product is not a subscription.
+    @available(iOS 11.2, macOS 10.13.2, tvOS 11.2, watchOS 6.2, *)
+    @objc var pricePerDay: NSDecimalNumber? {
+        return self.subscriptionPeriod?.pricePerDay(withTotalPrice: self.price) as NSDecimalNumber?
+    }
+
     /// Calculates the price of this subscription product per week.
     /// - Returns: `nil` if the product is not a subscription.
     @available(iOS 11.2, macOS 10.13.2, tvOS 11.2, watchOS 6.2, *)
@@ -237,6 +240,16 @@ public extension StoreProduct {
     @objc var localizedIntroductoryPriceString: String? {
         guard #available(iOS 12.2, macOS 10.14.4, tvOS 12.2, watchOS 6.2, *) else { return nil }
         return self.formattedString(for: self.introductoryDiscount?.priceDecimalNumber)
+    }
+
+    /// The formatted price per week using ``StoreProduct/priceFormatter``.
+    /// ### Related Symbols
+    /// - ``pricePerWeek``
+    /// - ``localizedPricePerMonth``
+    /// - ``localizedPricePerYear``
+    @available(iOS 11.2, macOS 10.13.2, tvOS 11.2, watchOS 6.2, *)
+    @objc var localizedPricePerDay: String? {
+        return self.formattedString(for: self.pricePerDay)
     }
 
     /// The formatted price per week using ``StoreProduct/priceFormatter``.
@@ -272,7 +285,6 @@ public extension StoreProduct {
 }
 
 #if !ENABLE_CUSTOM_ENTITLEMENT_COMPUTATION
-@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
 public extension StoreProduct {
     /// Finds the subset of ``discounts`` that's eligible for the current user.
     /// - Note: if checking for eligibility for a `StoreProductDiscount` fails (for example, if network is down),
@@ -311,8 +323,9 @@ extension StoreProduct {
         return (self.product as? SK2StoreProduct)?.underlyingSK2Product
     }
 
-    var isTestProduct: Bool {
-        return self.product is TestStoreProduct
+    /// Returns the `TestStoreProduct` if this `StoreProduct` represents a `TestStoreProduct`.
+    internal var testStoreProduct: TestStoreProduct? {
+        return self.product as? TestStoreProduct
     }
 
 }

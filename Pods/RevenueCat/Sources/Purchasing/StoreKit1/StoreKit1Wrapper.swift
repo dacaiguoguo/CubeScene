@@ -42,10 +42,6 @@ class StoreKit1Wrapper: NSObject {
     static var simulatesAskToBuyInSandbox = false
 
     var currentStorefront: Storefront? {
-        guard #available(iOS 13.0, tvOS 13.0, macOS 10.15, watchOS 6.2, *) else {
-            return nil
-        }
-
         return self.paymentQueue.storefront
             .map(SK1Storefront.init)
             .map(Storefront.from(storefront:))
@@ -70,15 +66,18 @@ class StoreKit1Wrapper: NSObject {
     private let operationDispatcher: OperationDispatcher
     private let observerMode: Bool
     private let sandboxEnvironmentDetector: SandboxEnvironmentDetector
+    private let diagnosticsTracker: DiagnosticsTrackerType?
 
     init(paymentQueue: SKPaymentQueue = .default(),
          operationDispatcher: OperationDispatcher = .default,
          observerMode: Bool,
-         sandboxEnvironmentDetector: SandboxEnvironmentDetector = BundleSandboxEnvironmentDetector.default) {
+         sandboxEnvironmentDetector: SandboxEnvironmentDetector = BundleSandboxEnvironmentDetector.default,
+         diagnosticsTracker: DiagnosticsTrackerType?) {
         self.paymentQueue = paymentQueue
         self.operationDispatcher = operationDispatcher
         self.observerMode = observerMode
         self.sandboxEnvironmentDetector = sandboxEnvironmentDetector
+        self.diagnosticsTracker = diagnosticsTracker
 
         super.init()
 
@@ -103,14 +102,11 @@ class StoreKit1Wrapper: NSObject {
 
     func payment(with product: SK1Product) -> SKMutablePayment {
         let payment = SKMutablePayment(product: product)
+        payment.simulatesAskToBuyInSandbox = Self.simulatesAskToBuyInSandbox
 
-        if #available(iOS 8.0, macOS 10.14, watchOS 6.2, macCatalyst 13.0, *) {
-            payment.simulatesAskToBuyInSandbox = Self.simulatesAskToBuyInSandbox
-        }
         return payment
     }
 
-    @available(iOS 12.2, macOS 10.14.4, watchOS 6.2, macCatalyst 13.0, tvOS 12.2, *)
     func payment(with product: SK1Product, discount: SKPaymentDiscount?) -> SKMutablePayment {
         let payment = self.payment(with: product)
         payment.paymentDiscount = discount
@@ -193,6 +189,8 @@ extension StoreKit1Wrapper: SKPaymentTransactionObserver {
             ))
         }
 
+        self.trackTransactionQueueReceivedIfNeeded(transactions)
+
         self.operationDispatcher.dispatchOnWorkerThread {
             for transaction in transactions {
                 Logger.debug(Strings.purchase.paymentqueue_updated_transaction(self, transaction))
@@ -253,6 +251,21 @@ extension StoreKit1Wrapper: SKPaymentTransactionObserver {
     /// Receiving this many or more will produce a warning.
     private static let highTransactionCountThreshold: Int = 100
 
+    private func trackTransactionQueueReceivedIfNeeded(_ transactions: [SKPaymentTransaction]) {
+        guard #available(iOS 15.0, tvOS 15.0, macOS 12.0, watchOS 8.0, *),
+              let diagnosticsTracker = self.diagnosticsTracker else { return }
+
+        transactions.forEach { transaction in
+            diagnosticsTracker.trackAppleTransactionQueueReceived(
+                productId: transaction.payment.productIdentifier,
+                paymentDiscountId: transaction.payment.paymentDiscount?.identifier,
+                transactionState: transaction.transactionState.diagnosticsName,
+                storefront: self.currentStorefront?.countryCode,
+                errorMessage: transaction.error?.localizedDescription
+            )
+        }
+    }
+
 }
 
 extension StoreKit1Wrapper: SKPaymentQueueDelegate {
@@ -269,3 +282,23 @@ extension StoreKit1Wrapper: SKPaymentQueueDelegate {
 // @unchecked because:
 // - Class is not `final` (it's mocked). This implicitly makes subclasses `Sendable` even if they're not thread-safe.
 extension StoreKit1Wrapper: @unchecked Sendable {}
+
+fileprivate extension SKPaymentTransactionState {
+
+    var diagnosticsName: String {
+        switch self {
+        case .purchasing:
+            return "PURCHASING"
+        case .purchased:
+            return "PURCHASED"
+        case .failed:
+            return "FAILED"
+        case .restored:
+            return "RESTORED"
+        case .deferred:
+            return "DEFERRED"
+        @unknown default:
+            return "UNKNOWN (RAW VALUE: \(self.rawValue))"
+        }
+    }
+}

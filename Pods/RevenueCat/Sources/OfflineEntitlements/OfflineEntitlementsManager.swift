@@ -35,8 +35,7 @@ class OfflineEntitlementsManager {
         completion: (@MainActor @Sendable (Result<(), Error>) -> Void)?
     ) {
         guard #available(iOS 15.0, tvOS 15.0, watchOS 8.0, macOS 12.0, *),
-              !self.systemInfo.observerMode,
-              !self.systemInfo.dangerousSettings.customEntitlementComputation else {
+              self.systemInfo.supportsOfflineEntitlements else {
             Logger.debug(Strings.offlineEntitlements.product_entitlement_mapping_unavailable)
 
             self.dispatchCompletionOnMainThreadIfPossible(completion, result: .failure(.notAvailable))
@@ -69,7 +68,13 @@ class OfflineEntitlementsManager {
     }
 
     func shouldComputeOfflineCustomerInfo(appUserID: String) -> Bool {
-        return self.deviceCache.cachedCustomerInfoData(appUserID: appUserID) == nil
+        return self.isOfflineEntitlementsEnabled() &&
+        self.deviceCache.cachedCustomerInfoData(appUserID: appUserID) == nil
+    }
+
+    // We diable offline entitlements for the Test Store since there's no store where to store the client's purchases
+    private func isOfflineEntitlementsEnabled() -> Bool {
+        return !self.systemInfo.isSimulatedStoreAPIKey
     }
 
 }

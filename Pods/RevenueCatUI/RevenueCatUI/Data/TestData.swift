@@ -6,19 +6,46 @@
 //
 
 import Foundation
-import RevenueCat
+@_spi(Internal) import RevenueCat
 import SwiftUI
 
-// swiftlint:disable type_body_length file_length
-
-#if DEBUG
+// swiftlint:disable type_body_length file_length force_unwrapping
 
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-internal enum TestData {
+enum TestData {
+
+    static let customerInfo: CustomerInfo = {
+        return .decode(
+        """
+        {
+            "schema_version": "4",
+            "request_date": "2022-03-08T17:42:58Z",
+            "request_date_ms": 1646761378845,
+            "subscriber": {
+                "first_seen": "2022-03-08T17:42:58Z",
+                "last_seen": "2022-03-08T17:42:58Z",
+                "management_url": "https://apps.apple.com/account/subscriptions",
+                "non_subscriptions": {
+                },
+                "original_app_user_id": "$RCAnonymousID:5b6fdbac3a0c4f879e43d269ecdf9ba1",
+                "original_application_version": "1.0",
+                "original_purchase_date": "2022-04-12T00:03:24Z",
+                "other_purchases": {
+                },
+                "subscriptions": {
+                },
+                "entitlements": {
+                }
+            }
+        }
+        """
+        )
+    }()
 
     static let weeklyProduct = TestStoreProduct(
         localizedTitle: "Weekly",
         price: 1.99,
+        currencyCode: "USD",
         localizedPriceString: "$1.99",
         productIdentifier: "com.revenuecat.product_1",
         productType: .autoRenewableSubscription,
@@ -30,6 +57,7 @@ internal enum TestData {
     static let monthlyProduct = TestStoreProduct(
         localizedTitle: "Monthly",
         price: 6.99,
+        currencyCode: "USD",
         localizedPriceString: "$6.99",
         productIdentifier: "com.revenuecat.product_2",
         productType: .autoRenewableSubscription,
@@ -42,6 +70,7 @@ internal enum TestData {
     static let threeMonthProduct = TestStoreProduct(
         localizedTitle: "3 months",
         price: 4.99,
+        currencyCode: "USD",
         localizedPriceString: "$4.99",
         productIdentifier: "com.revenuecat.product_5",
         productType: .autoRenewableSubscription,
@@ -51,9 +80,23 @@ internal enum TestData {
         introductoryDiscount: Self.intro(7, .day),
         locale: Self.locale
     )
+    static let threeMonthProductThailand = TestStoreProduct(
+        localizedTitle: "3 months",
+        price: 5.00,
+        currencyCode: Locale.thailand.rc_languageCode!,
+        localizedPriceString: "฿5.00",
+        productIdentifier: "com.revenuecat.product_5",
+        productType: .autoRenewableSubscription,
+        localizedDescription: "PRO monthly",
+        subscriptionGroupIdentifier: "group",
+        subscriptionPeriod: .init(value: 3, unit: .month),
+        introductoryDiscount: Self.intro(7, .day),
+        locale: Locale.thailand
+    )
     static let sixMonthProduct = TestStoreProduct(
         localizedTitle: "6 months",
         price: 7.99,
+        currencyCode: "USD",
         localizedPriceString: "$7.99",
         productIdentifier: "com.revenuecat.product_5",
         productType: .autoRenewableSubscription,
@@ -66,6 +109,7 @@ internal enum TestData {
     static let annualProduct = TestStoreProduct(
         localizedTitle: "Annual",
         price: 53.99,
+        currencyCode: "USD",
         localizedPriceString: "$53.99",
         productIdentifier: "com.revenuecat.product_3",
         productType: .autoRenewableSubscription,
@@ -75,9 +119,36 @@ internal enum TestData {
         introductoryDiscount: Self.intro(14, .day, priceString: "$1.99"),
         locale: Self.locale
     )
+    static let annualProduct60 = TestStoreProduct(
+        localizedTitle: "Annual",
+        price: 60.00,
+        currencyCode: "USD",
+        localizedPriceString: "$60.00",
+        productIdentifier: "com.revenuecat.product_3",
+        productType: .autoRenewableSubscription,
+        localizedDescription: "PRO annual",
+        subscriptionGroupIdentifier: "group",
+        subscriptionPeriod: .init(value: 1, unit: .year),
+        introductoryDiscount: Self.intro(14, .day, priceString: "$2.99"),
+        locale: Self.locale
+    )
+    static let annualProduct60Taiwan = TestStoreProduct(
+        localizedTitle: "Annual",
+        price: 60.00,
+        currencyCode: "USD",
+        localizedPriceString: "US$60.00",
+        productIdentifier: "com.revenuecat.product_3",
+        productType: .autoRenewableSubscription,
+        localizedDescription: "PRO annual",
+        subscriptionGroupIdentifier: "group",
+        subscriptionPeriod: .init(value: 1, unit: .year),
+        introductoryDiscount: Self.intro(14, .day, priceString: "US$2.99"),
+        locale: Locale.taiwan
+    )
     static let lifetimeProduct = TestStoreProduct(
         localizedTitle: "Lifetime",
         price: 119.49,
+        currencyCode: "USD",
         localizedPriceString: "$119.49",
         productIdentifier: "com.revenuecat.product_lifetime",
         productType: .nonConsumable,
@@ -86,9 +157,99 @@ internal enum TestData {
         subscriptionPeriod: nil,
         locale: Self.locale
     )
+    static let weeklyPackage = Package(
+        identifier: PackageType.weekly.identifier,
+        packageType: .weekly,
+        storeProduct: Self.weeklyProduct.toStoreProduct(),
+        offeringIdentifier: Self.offeringIdentifier,
+        webCheckoutUrl: nil
+    )
+    static let monthlyPackage = Package(
+        identifier: PackageType.monthly.identifier,
+        packageType: .monthly,
+        storeProduct: Self.monthlyProduct.toStoreProduct(),
+        offeringIdentifier: Self.offeringIdentifier,
+        webCheckoutUrl: nil
+    )
+    static let threeMonthPackage = Package(
+        identifier: PackageType.threeMonth.identifier,
+        packageType: .threeMonth,
+        storeProduct: Self.threeMonthProduct.toStoreProduct(),
+        offeringIdentifier: Self.offeringIdentifier,
+        webCheckoutUrl: nil
+    )
+    static let threeMonthPackageThailand = Package(
+        identifier: PackageType.threeMonth.identifier,
+        packageType: .threeMonth,
+        storeProduct: Self.threeMonthProductThailand.toStoreProduct(),
+        offeringIdentifier: Self.offeringIdentifier,
+        webCheckoutUrl: nil
+    )
+    static let sixMonthPackage = Package(
+        identifier: PackageType.sixMonth.identifier,
+        packageType: .sixMonth,
+        storeProduct: Self.sixMonthProduct.toStoreProduct(),
+        offeringIdentifier: Self.offeringIdentifier,
+        webCheckoutUrl: nil
+    )
+    static let annualPackage = Package(
+        identifier: PackageType.annual.identifier,
+        packageType: .annual,
+        storeProduct: Self.annualProduct.toStoreProduct(),
+        offeringIdentifier: Self.offeringIdentifier,
+        webCheckoutUrl: nil
+    )
+    static let annualPackage60 = Package(
+        identifier: PackageType.annual.identifier,
+        packageType: .annual,
+        storeProduct: Self.annualProduct60.toStoreProduct(),
+        offeringIdentifier: Self.offeringIdentifier,
+        webCheckoutUrl: nil
+    )
+    static let annualPackage60Taiwan = Package(
+        identifier: PackageType.annual.identifier,
+        packageType: .annual,
+        storeProduct: Self.annualProduct60Taiwan.toStoreProduct(),
+        offeringIdentifier: Self.offeringIdentifier,
+        webCheckoutUrl: nil
+    )
+    static let lifetimePackage = Package(
+        identifier: PackageType.lifetime.identifier,
+        packageType: .lifetime,
+        storeProduct: Self.lifetimeProduct.toStoreProduct(),
+        offeringIdentifier: Self.offeringIdentifier,
+        webCheckoutUrl: nil
+    )
+
+    #if DEBUG
+
+    static let productWithPromoOfferPayUpFront = TestStoreProduct(
+        localizedTitle: "PRO monthly",
+        price: 3.99,
+        currencyCode: "USD",
+        localizedPriceString: "$3.99",
+        productIdentifier: "com.revenuecat.promo.product_2",
+        productType: .autoRenewableSubscription,
+        localizedDescription: "PRO monthly",
+        subscriptionGroupIdentifier: "group",
+        subscriptionPeriod: .init(value: 1, unit: .month),
+        introductoryDiscount: nil,
+        discounts: [ .init(
+            identifier: "intro",
+            price: 1.99,
+            localizedPriceString: "$1.99",
+            paymentMode: .payUpFront,
+            subscriptionPeriod: .init(value: 1, unit: .week),
+            numberOfPeriods: 1,
+            type: .promotional
+        )],
+        locale: Self.locale
+    )
+
     static let productWithIntroOffer = TestStoreProduct(
         localizedTitle: "PRO monthly",
         price: 3.99,
+        currencyCode: "USD",
         localizedPriceString: "$3.99",
         productIdentifier: "com.revenuecat.product_4",
         productType: .autoRenewableSubscription,
@@ -107,9 +268,32 @@ internal enum TestData {
         discounts: [],
         locale: Self.locale
     )
+    static let productWithIntroOfferPayUpFront = TestStoreProduct(
+        localizedTitle: "PRO monthly",
+        price: 3.99,
+        currencyCode: "USD",
+        localizedPriceString: "$3.99",
+        productIdentifier: "com.revenuecat.product_5",
+        productType: .autoRenewableSubscription,
+        localizedDescription: "PRO monthly",
+        subscriptionGroupIdentifier: "group",
+        subscriptionPeriod: .init(value: 1, unit: .month),
+        introductoryDiscount: .init(
+            identifier: "intro",
+            price: 1.99,
+            localizedPriceString: "$1.99",
+            paymentMode: .payUpFront,
+            subscriptionPeriod: .init(value: 1, unit: .week),
+            numberOfPeriods: 1,
+            type: .introductory
+        ),
+        discounts: [],
+        locale: Self.locale
+    )
     static let productWithNoIntroOffer = TestStoreProduct(
         localizedTitle: "PRO annual",
         price: 34.99,
+        currencyCode: "USD",
         localizedPriceString: "$34.99",
         productIdentifier: "com.revenuecat.product_3",
         productType: .autoRenewableSubscription,
@@ -120,69 +304,51 @@ internal enum TestData {
         discounts: [],
         locale: Self.locale
     )
-    static let weeklyPackage = Package(
-        identifier: PackageType.weekly.identifier,
-        packageType: .weekly,
-        storeProduct: Self.weeklyProduct.toStoreProduct(),
-        offeringIdentifier: Self.offeringIdentifier
-    )
-    static let monthlyPackage = Package(
-        identifier: PackageType.monthly.identifier,
-        packageType: .monthly,
-        storeProduct: Self.monthlyProduct.toStoreProduct(),
-        offeringIdentifier: Self.offeringIdentifier
-    )
-    static let threeMonthPackage = Package(
-        identifier: PackageType.threeMonth.identifier,
-        packageType: .threeMonth,
-        storeProduct: Self.threeMonthProduct.toStoreProduct(),
-        offeringIdentifier: Self.offeringIdentifier
-    )
-    static let sixMonthPackage = Package(
-        identifier: PackageType.sixMonth.identifier,
-        packageType: .sixMonth,
-        storeProduct: Self.sixMonthProduct.toStoreProduct(),
-        offeringIdentifier: Self.offeringIdentifier
-    )
-    static let annualPackage = Package(
-        identifier: PackageType.annual.identifier,
-        packageType: .annual,
-        storeProduct: Self.annualProduct.toStoreProduct(),
-        offeringIdentifier: Self.offeringIdentifier
-    )
     static let customPackage = Package(
         identifier: "Custom",
         packageType: .custom,
         storeProduct: Self.annualProduct.toStoreProduct(),
-        offeringIdentifier: Self.offeringIdentifier
+        offeringIdentifier: Self.offeringIdentifier,
+        webCheckoutUrl: nil
     )
 
     static let unknownPackage = Package(
         identifier: "Unknown",
         packageType: .unknown,
         storeProduct: Self.annualProduct.toStoreProduct(),
-        offeringIdentifier: Self.offeringIdentifier
+        offeringIdentifier: Self.offeringIdentifier,
+        webCheckoutUrl: nil
+    )
+
+    static let packageWithPromoOfferPayUpFront = Package(
+        identifier: PackageType.monthly.identifier,
+        packageType: .monthly,
+        storeProduct: productWithPromoOfferPayUpFront.toStoreProduct(),
+        offeringIdentifier: Self.offeringIdentifier,
+        webCheckoutUrl: nil
     )
 
     static let packageWithIntroOffer = Package(
         identifier: PackageType.monthly.identifier,
         packageType: .monthly,
         storeProduct: productWithIntroOffer.toStoreProduct(),
-        offeringIdentifier: Self.offeringIdentifier
+        offeringIdentifier: Self.offeringIdentifier,
+        webCheckoutUrl: nil
+    )
+    static let packageWithIntroOfferPayUpFront = Package(
+        identifier: PackageType.monthly.identifier,
+        packageType: .monthly,
+        storeProduct: productWithIntroOfferPayUpFront.toStoreProduct(),
+        offeringIdentifier: Self.offeringIdentifier,
+        webCheckoutUrl: nil
     )
     static let packageWithNoIntroOffer = Package(
         identifier: PackageType.annual.identifier,
         packageType: .annual,
         storeProduct: productWithNoIntroOffer.toStoreProduct(),
-        offeringIdentifier: Self.offeringIdentifier
+        offeringIdentifier: Self.offeringIdentifier,
+        webCheckoutUrl: nil
     )
-    static let lifetimePackage = Package(
-        identifier: PackageType.lifetime.identifier,
-        packageType: .lifetime,
-        storeProduct: Self.lifetimeProduct.toStoreProduct(),
-        offeringIdentifier: Self.offeringIdentifier
-    )
-
     static let packages = [
         Self.packageWithIntroOffer,
         Self.packageWithNoIntroOffer
@@ -217,7 +383,8 @@ internal enum TestData {
         serverDescription: "Main offering",
         metadata: [:],
         paywall: Self.paywallWithIntroOffer,
-        availablePackages: Self.packages
+        availablePackages: Self.packages,
+        webCheckoutUrl: nil
     )
 
     static let offeringWithNoIntroOffer = Offering(
@@ -225,7 +392,8 @@ internal enum TestData {
         serverDescription: "Main offering",
         metadata: [:],
         paywall: Self.paywallWithNoIntroOffer,
-        availablePackages: Self.packages
+        availablePackages: Self.packages,
+        webCheckoutUrl: nil
     )
 
     static let offeringWithMultiPackagePaywall = Offering(
@@ -263,7 +431,8 @@ internal enum TestData {
         ),
         availablePackages: [Self.weeklyPackage,
                             Self.monthlyPackage,
-                            Self.annualPackage]
+                            Self.annualPackage],
+        webCheckoutUrl: nil
     )
 
     static let offeringWithSinglePackageFeaturesPaywall = Offering(
@@ -320,7 +489,8 @@ internal enum TestData {
         ),
         availablePackages: [Self.weeklyPackage,
                             Self.monthlyPackage,
-                            Self.annualPackage]
+                            Self.annualPackage],
+        webCheckoutUrl: nil
     )
 
     static let offeringWithMultiPackageHorizontalPaywall = Offering(
@@ -373,7 +543,8 @@ internal enum TestData {
         availablePackages: [TestData.monthlyPackage,
                             TestData.sixMonthPackage,
                             TestData.annualPackage,
-                            TestData.lifetimePackage]
+                            TestData.lifetimePackage],
+        webCheckoutUrl: nil
     )
 
     static let offeringWithTemplate5Paywall = Offering(
@@ -433,7 +604,205 @@ internal enum TestData {
         ),
         availablePackages: [TestData.monthlyPackage,
                             TestData.sixMonthPackage,
-                            TestData.annualPackage]
+                            TestData.annualPackage],
+        webCheckoutUrl: nil
+    )
+
+    static let offeringWithTemplate7Paywall = Offering(
+        identifier: Self.offeringIdentifier,
+        serverDescription: "Offering",
+        metadata: [:],
+        paywall: .init(
+            templateName: PaywallTemplate.template7.rawValue,
+            config: .init(
+                images: .init(
+                    header: "954459_1692992845.png"
+                ),
+                imagesByTier: [
+                    "basic": .init(
+                        header: "954459_1703109702.png"
+                    ),
+                    "premium": .init(
+                        header: "954459_1701267532.jpeg"
+                    )
+                ],
+                colors: .init(light: .init(), dark: .init()),
+                colorsByTier: [
+                    "basic": .init(
+                        light: .init(
+                            background: "#ffffff",
+                            text1: "#000000",
+                            text2: "#adf5c5",
+                            text3: "#b15d5d",
+                            callToActionBackground: #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1).asPaywallColor,
+                            callToActionForeground: "#ffffff",
+                            accent1: #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1).asPaywallColor,
+                            accent2: #colorLiteral(red: 0.06274510175, green: 0, blue: 0.1921568662, alpha: 1).asPaywallColor,
+                            accent3: "#7676801F",
+                            tierControlBackground: "#dcdcdc",
+                            tierControlForeground: "#000000",
+                            tierControlSelectedBackground: #colorLiteral(red: 0.06274510175, green: 0, blue: 0.1921568662, alpha: 1).asPaywallColor,
+                            tierControlSelectedForeground: "#ffffff"
+                        )
+                    ),
+                    "standard": .init(
+                        light: .init(
+                            background: "#ffffff",
+                            text1: "#000000",
+                            text2: "#adf5c5",
+                            text3: "#b15d5d",
+                            callToActionBackground: #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1).asPaywallColor,
+                            callToActionForeground: "#ffffff",
+                            accent1: #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1).asPaywallColor,
+                            accent2: "#7676801F",
+                            accent3: #colorLiteral(red: 0.1921568662, green: 0.007843137719, blue: 0.09019608051, alpha: 1).asPaywallColor,
+                            tierControlBackground: "#dcdcdc",
+                            tierControlForeground: "#000000",
+                            tierControlSelectedBackground: #colorLiteral(red: 0.06274510175, green: 0, blue: 0.1921568662, alpha: 1).asPaywallColor,
+                            tierControlSelectedForeground: "#ffffff"
+                        )
+                    ),
+                    "premium": .init(
+                        light: .init(
+                            background: "#ffffff",
+                            text1: "#000000",
+                            text2: "#adf5c5",
+                            text3: "#b15d5d",
+                            callToActionBackground: #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1).asPaywallColor,
+                            callToActionForeground: "#ffffff",
+                            accent1: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1).asPaywallColor,
+                            accent2: "#7676801F",
+                            accent3: #colorLiteral(red: 0.1294117719, green: 0.2156862766, blue: 0.06666667014, alpha: 1).asPaywallColor,
+                            tierControlBackground: "#dcdcdc",
+                            tierControlForeground: "#000000",
+                            tierControlSelectedBackground: #colorLiteral(red: 0.06274510175, green: 0, blue: 0.1921568662, alpha: 1).asPaywallColor,
+                            tierControlSelectedForeground: "#ffffff"
+                        )
+                    )
+                ],
+                tiers: [
+                    .init(
+                        id: "basic",
+                        packages: [
+                            TestData.annualPackage.identifier,
+                            TestData.monthlyPackage.identifier
+                        ],
+                        defaultPackage: TestData.threeMonthPackage.identifier
+                    ),
+                    .init(
+                        id: "standard",
+                        packages: [
+                            TestData.weeklyPackage.identifier,
+                            TestData.threeMonthPackage.identifier
+                        ],
+                        defaultPackage: TestData.weeklyPackage.identifier
+                    ),
+                    .init(
+                        id: "premium",
+                        packages: [
+                            TestData.sixMonthPackage.identifier,
+                            TestData.lifetimePackage.identifier
+                        ],
+                        defaultPackage: TestData.annualPackage.identifier
+                    )
+                ],
+                termsOfServiceURL: URL(string: "https://revenuecat.com/tos")!
+            ),
+            localizationByTier: [
+                "basic": .init(
+                    title: "Get started with our Basic plan",
+                    callToAction: "{{ price_per_period }}",
+                    callToActionWithIntroOffer: "Start your {{ sub_offer_duration }} free trial",
+                    offerDetails: "{{ total_price_and_per_month }}",
+                    offerDetailsWithIntroOffer: "Free for {{ sub_offer_duration }}, " +
+                    "then {{ total_price_and_per_month }}",
+                    offerOverrides: [
+                        TestData.threeMonthPackage.identifier: .init(
+                            offerDetails: "Details",
+                            offerDetailsWithIntroOffer: nil,
+                            offerName: "OVERRIDE Three Month",
+                            offerBadge: nil
+                        ),
+                        TestData.lifetimePackage.identifier: .init(
+                            offerDetails: "Details",
+                            offerDetailsWithIntroOffer: nil,
+                            offerName: "OVERRIDE Lifetime",
+                            offerBadge: nil
+                        )
+                    ],
+                    features: [
+                        .init(title: "Access to 10 cinematic LUTs", iconID: "tick"),
+                        .init(title: "Standard fonts", iconID: "tick"),
+                        .init(title: "2 templates", iconID: "tick")
+                    ],
+                    tierName: "Basic"
+                ),
+                "standard": .init(
+                    title: "Get started with our Standard plan",
+                    callToAction: "{{ price_per_period }}",
+                    callToActionWithIntroOffer: "Start your {{ sub_offer_duration }} free trial",
+                    offerDetails: "{{ total_price_and_per_month }}",
+                    offerDetailsWithIntroOffer: "Free for {{ sub_offer_duration }}, " +
+                    "then {{ total_price_and_per_month }}",
+                    offerOverrides: [
+                        TestData.weeklyPackage.identifier: .init(
+                            offerDetails: "Details",
+                            offerDetailsWithIntroOffer: nil,
+                            offerName: "OVERRIDE Week",
+                            offerBadge: nil
+                        ),
+                        TestData.monthlyPackage.identifier: .init(
+                            offerDetails: "Details",
+                            offerDetailsWithIntroOffer: nil,
+                            offerName: "OVERRIDE Month",
+                            offerBadge: nil
+                        )
+                    ],
+                    features: [
+                        .init(title: "Access to 30 cinematic LUTs", iconID: "tick"),
+                        .init(title: "Pro fonts and transition effects", iconID: "tick"),
+                        .init(title: "10+ templates", iconID: "tick")
+                    ],
+                    tierName: "Standard"
+                ),
+                "premium": .init(
+                    title: "Master the art of video editing",
+                    callToAction: "{{ price_per_period }}",
+                    callToActionWithIntroOffer: "Start your {{ sub_offer_duration }} free trial",
+                    offerDetails: "{{ total_price_and_per_month }}",
+                    offerDetailsWithIntroOffer: "Free for {{ sub_offer_duration }}, " +
+                    "then {{ total_price_and_per_month }}",
+                    offerOverrides: [
+                        TestData.sixMonthPackage.identifier: .init(
+                            offerDetails: "Details",
+                            offerDetailsWithIntroOffer: nil,
+                            offerName: "OVERRIDE Six Month",
+                            offerBadge: nil
+                        ),
+                        TestData.annualPackage.identifier: .init(
+                            offerDetails: "Details",
+                            offerDetailsWithIntroOffer: "",
+                            offerName: "OVERRIDE Annual",
+                            offerBadge: nil
+                        )
+                    ],
+                    features: [
+                        .init(title: "Access to all 150 of our cinematic LUTs", iconID: "tick"),
+                        .init(title: "Custom design tools and transition effects", iconID: "tick"),
+                        .init(title: "100+ exclusive templates", iconID: "tick")
+                    ],
+                    tierName: "Premium"
+                )
+            ],
+            assetBaseURL: Self.paywallAssetBaseURL
+        ),
+        availablePackages: [TestData.weeklyPackage,
+                            TestData.monthlyPackage,
+                            TestData.sixMonthPackage,
+                            TestData.threeMonthPackage,
+                            TestData.annualPackage,
+                            TestData.lifetimePackage],
+        webCheckoutUrl: nil
     )
 
     static let offeringWithNoPaywall = Offering(
@@ -441,7 +810,8 @@ internal enum TestData {
         serverDescription: "Offering",
         metadata: [:],
         paywall: nil,
-        availablePackages: Self.packages
+        availablePackages: Self.packages,
+        webCheckoutUrl: nil
     )
 
     static let lightColors: PaywallData.Configuration.Colors = .init(
@@ -468,34 +838,6 @@ internal enum TestData {
     #elseif canImport(SwiftUI) && canImport(UIKit)
     static let colors: PaywallData.Configuration.Colors = .combine(light: Self.lightColors, dark: Self.darkColors)
     #endif
-
-    static let customerInfo: CustomerInfo = {
-        return .decode(
-        """
-        {
-            "schema_version": "4",
-            "request_date": "2022-03-08T17:42:58Z",
-            "request_date_ms": 1646761378845,
-            "subscriber": {
-                "first_seen": "2022-03-08T17:42:58Z",
-                "last_seen": "2022-03-08T17:42:58Z",
-                "management_url": "https://apps.apple.com/account/subscriptions",
-                "non_subscriptions": {
-                },
-                "original_app_user_id": "$RCAnonymousID:5b6fdbac3a0c4f879e43d269ecdf9ba1",
-                "original_application_version": "1.0",
-                "original_purchase_date": "2022-04-12T00:03:24Z",
-                "other_purchases": {
-                },
-                "subscriptions": {
-                },
-                "entitlements": {
-                }
-            }
-        }
-        """
-        )
-    }()
 
     static let localization1: PaywallData.LocalizedConfiguration = .init(
         title: "Ignite your child's *curiosity*",
@@ -525,12 +867,9 @@ internal enum TestData {
     )
     static let paywallAssetBaseURL = URL(string: "https://assets.pawwalls.com")!
 
-    #if os(watchOS)
-    // `Locale.current` in watchOS produces `en_001` when running tests
-    static let locale: Locale = .init(identifier: "en_US")
-    #else
-    static let locale: Locale = .current
     #endif
+
+    static let locale: Locale = .init(identifier: "en_US")
 
     private static let offeringIdentifier = "offering"
 
@@ -554,6 +893,8 @@ internal enum TestData {
 
 // MARK: -
 
+#if DEBUG
+
 extension PaywallColor: ExpressibleByStringLiteral {
 
     /// Creates a `PaywallColor` with a string literal
@@ -564,6 +905,8 @@ extension PaywallColor: ExpressibleByStringLiteral {
     }
 
 }
+
+#endif
 
 extension PackageType {
 
@@ -586,4 +929,7 @@ extension CustomerInfo {
 
 }
 
-#endif
+extension Locale {
+    static let taiwan = Locale(identifier: "zh_TW")
+    static let thailand = Locale(identifier: "th_TH")
+}

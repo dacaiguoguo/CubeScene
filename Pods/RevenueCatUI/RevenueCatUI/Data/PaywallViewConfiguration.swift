@@ -18,8 +18,9 @@ struct PaywallViewConfiguration {
     var mode: PaywallViewMode
     var fonts: PaywallFontProvider
     var displayCloseButton: Bool
+    let useDraftPaywall: Bool
     var introEligibility: TrialOrIntroEligibilityChecker?
-    var purchaseHandler: PurchaseHandler?
+    var purchaseHandler: PurchaseHandler
 
     init(
         content: Content,
@@ -27,14 +28,16 @@ struct PaywallViewConfiguration {
         mode: PaywallViewMode = .default,
         fonts: PaywallFontProvider = DefaultPaywallFontProvider(),
         displayCloseButton: Bool = false,
+        useDraftPaywall: Bool = false,
         introEligibility: TrialOrIntroEligibilityChecker? = nil,
-        purchaseHandler: PurchaseHandler? = nil
+        purchaseHandler: PurchaseHandler
     ) {
         self.content = content
         self.customerInfo = customerInfo
         self.mode = mode
         self.fonts = fonts
         self.displayCloseButton = displayCloseButton
+        self.useDraftPaywall = useDraftPaywall
         self.introEligibility = introEligibility
         self.purchaseHandler = purchaseHandler
     }
@@ -49,7 +52,7 @@ extension PaywallViewConfiguration {
 
         case defaultOffering
         case offering(Offering)
-        case offeringIdentifier(String)
+        case offeringIdentifier(String, presentedOfferingContext: PresentedOfferingContext?)
 
     }
 
@@ -66,17 +69,21 @@ extension PaywallViewConfiguration {
         mode: PaywallViewMode = .default,
         fonts: PaywallFontProvider = DefaultPaywallFontProvider(),
         displayCloseButton: Bool = false,
+        useDraftPaywall: Bool = false,
         introEligibility: TrialOrIntroEligibilityChecker? = nil,
-        purchaseHandler: PurchaseHandler? = nil
+        purchaseHandler: PurchaseHandler = PurchaseHandler.default()
     ) {
+        let handler = purchaseHandler
+
         self.init(
             content: .optionalOffering(offering),
             customerInfo: customerInfo,
             mode: mode,
             fonts: fonts,
             displayCloseButton: displayCloseButton,
+            useDraftPaywall: useDraftPaywall,
             introEligibility: introEligibility,
-            purchaseHandler: purchaseHandler
+            purchaseHandler: handler
         )
     }
 

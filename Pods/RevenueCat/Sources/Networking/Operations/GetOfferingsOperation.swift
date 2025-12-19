@@ -47,6 +47,9 @@ final class GetOfferingsOperation: CacheableNetworkOperation {
 
 }
 
+// Restating inherited @unchecked Sendable from Foundation's Operation
+extension GetOfferingsOperation: @unchecked Sendable {}
+
 private extension GetOfferingsOperation {
 
     func getOfferings(completion: @escaping () -> Void) {
@@ -70,7 +73,10 @@ private extension GetOfferingsOperation {
 
             self.offeringsCallbackCache.performOnAllItemsAndRemoveFromCache(withCacheable: self) { callbackObject in
                 callbackObject.completion(response
-                    .map { $0.body }
+                    .map {
+                        Offerings.Contents(response: $0.body,
+                                           httpResponseOriginalSource: $0.originalSource)
+                    }
                     .mapError(BackendError.networkError)
                 )
             }

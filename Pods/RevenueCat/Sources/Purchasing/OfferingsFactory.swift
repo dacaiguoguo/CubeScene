@@ -17,11 +17,16 @@ import StoreKit
 
 class OfferingsFactory {
 
-    func createOfferings(from storeProductsByID: [String: StoreProduct], data: OfferingsResponse) -> Offerings? {
+    func createOfferings(from storeProductsByID: [String: StoreProduct],
+                         contents: Offerings.Contents,
+                         loadedFromDiskCache: Bool) -> Offerings? {
+        let data = contents.response
         let offerings: [String: Offering] = data
             .offerings
             .compactMap { offeringData in
-                createOffering(from: storeProductsByID, offering: offeringData)
+                createOffering(from: storeProductsByID,
+                               offering: offeringData,
+                               uiConfig: data.uiConfig)
             }
             .dictionaryAllowingDuplicateKeys { $0.identifier }
 
@@ -31,27 +36,58 @@ class OfferingsFactory {
 
         return Offerings(offerings: offerings,
                          currentOfferingID: data.currentOfferingId,
-                         response: data)
+                         placements: createPlacement(with: data.placements),
+                         targeting: data.targeting.flatMap { .init(revision: $0.revision, ruleId: $0.ruleId) },
+                         contents: contents,
+                         loadedFromDiskCache: loadedFromDiskCache)
     }
 
     func createOffering(
         from storeProductsByID: [String: StoreProduct],
-        offering: OfferingsResponse.Offering
+        offering: OfferingsResponse.Offering,
+        uiConfig: UIConfig?
     ) -> Offering? {
         let availablePackages: [Package] = offering.packages.compactMap { package in
             createPackage(with: package, productsByID: storeProductsByID, offeringIdentifier: offering.identifier)
         }
 
         guard !availablePackages.isEmpty else {
+            #if ENABLE_CUSTOM_ENTITLEMENT_COMPUTATION && !DEBUG
+            Logger.debug(Strings.offering.offering_empty(offeringIdentifier: offering.identifier))
+            #else
             Logger.warn(Strings.offering.offering_empty(offeringIdentifier: offering.identifier))
+            #endif
             return nil
         }
+
+        let paywallComponents: Offering.PaywallComponents? = {
+            if let uiConfig, let paywallComponents = offering.paywallComponents {
+                return .init(
+                    uiConfig: uiConfig,
+                    data: paywallComponents
+                )
+            }
+            return nil
+        }()
+
+        let paywallDraftComponents: Offering.PaywallComponents? = {
+            if let uiConfig, let paywallDraftComponents = offering.draftPaywallComponents {
+                return .init(
+                    uiConfig: uiConfig,
+                    data: paywallDraftComponents
+                )
+            }
+            return nil
+        }()
 
         return Offering(identifier: offering.identifier,
                         serverDescription: offering.description,
                         metadata: offering.metadata.mapValues(\.asAny),
                         paywall: offering.paywall,
-                        availablePackages: availablePackages)
+                        paywallComponents: paywallComponents,
+                        draftPaywallComponents: paywallDraftComponents,
+                        availablePackages: availablePackages,
+                        webCheckoutUrl: offering.webCheckoutUrl)
     }
 
     func createPackage(
@@ -65,9 +101,20 @@ class OfferingsFactory {
 
         return .init(package: data,
                      product: product,
-                     offeringIdentifier: offeringIdentifier)
+                     offeringIdentifier: offeringIdentifier,
+                     webCheckoutUrl: data.webCheckoutUrl)
     }
 
+    func createPlacement(
+        with data: OfferingsResponse.Placements?
+    ) -> Offerings.Placements? {
+        guard let data else {
+            return nil
+        }
+
+        return .init(fallbackOfferingId: data.fallbackOfferingId,
+                     offeringIdsByPlacement: data.offeringIdsByPlacement)
+    }
 }
 
 // @unchecked because:
@@ -81,12 +128,14 @@ private extension Package {
     convenience init(
         package: OfferingsResponse.Offering.Package,
         product: StoreProduct,
-        offeringIdentifier: String
+        offeringIdentifier: String,
+        webCheckoutUrl: URL?
     ) {
         self.init(identifier: package.identifier,
                   packageType: Package.packageType(from: package.identifier),
                   storeProduct: product,
-                  offeringIdentifier: offeringIdentifier)
+                  offeringIdentifier: offeringIdentifier,
+                  webCheckoutUrl: webCheckoutUrl)
     }
 
 }

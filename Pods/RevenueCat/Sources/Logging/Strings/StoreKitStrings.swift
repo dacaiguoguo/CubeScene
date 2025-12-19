@@ -37,6 +37,14 @@ enum StoreKitStrings {
 
     case sk2_purchasing_added_promotional_offer_option(String)
 
+    case sk2_purchasing_added_winback_offer_option(String)
+
+    case sk2_purchasing_added_custom_introductory_offer_eligibility_jws
+
+    case sk2_purchasing_added_custom_promotional_offer_jws(offerID: String)
+
+    case sk2_purchasing_added_uuid_option(UUID)
+
     case sk2_unknown_product_type(String)
 
     case sk1_no_known_product_type
@@ -59,6 +67,8 @@ enum StoreKitStrings {
 
     case sk2_observing_transaction_updates
 
+    case sk2_observing_purchase_intents
+
     case sk2_unknown_environment(String)
 
     case sk2_error_encoding_receipt(Error)
@@ -71,6 +81,8 @@ enum StoreKitStrings {
 
     case sk2_unverified_transaction(identifier: String, Error)
 
+    case sk2_unverified_renewal_info(productIdentifier: String)
+
     case sk2_receipt_missing_purchase(transactionId: String)
 
     #if DEBUG
@@ -82,6 +94,12 @@ enum StoreKitStrings {
     case could_not_defer_store_messages(Error)
 
     case error_displaying_store_message(Error)
+
+    case unknown_storekit_error(Error)
+
+    case skunknown_purchase_result(String)
+
+    case sk2_sync_purchases_no_transaction_or_apptransaction_found
 
 }
 
@@ -121,6 +139,18 @@ extension StoreKitStrings: LogMessage {
 
         case let .sk2_purchasing_added_promotional_offer_option(discountIdentifier):
             return "Adding Product.PurchaseOption for discount '\(discountIdentifier)'"
+
+        case let .sk2_purchasing_added_winback_offer_option(winBackOfferID):
+            return "Adding Product.PurchaseOption for win-back offer with ID '\(winBackOfferID)'"
+
+        case .sk2_purchasing_added_custom_introductory_offer_eligibility_jws:
+            return "Adding Product.PurchaseOption for developer-provided introductoryOfferEligibilityJWS"
+
+        case let .sk2_purchasing_added_custom_promotional_offer_jws(offerID):
+            return "Adding Product.PurchaseOption for developer-provided promotionalOfferJWS with offer ID '\(offerID)'"
+
+        case let .sk2_purchasing_added_uuid_option(uuid):
+            return "Adding Product.PurchaseOption for .appAccountToken '\(uuid)'"
 
         case let .sk2_unknown_product_type(type):
             return "Product.ProductType '\(type)' unknown, the product type will be undefined."
@@ -163,6 +193,9 @@ extension StoreKitStrings: LogMessage {
         case .sk2_observing_transaction_updates:
             return "Observing StoreKit.Transaction.updates"
 
+        case .sk2_observing_purchase_intents:
+            return "Observing StoreKit.PurchaseIntent.intents"
+
         case let .sk2_unknown_environment(environment):
             return "Unrecognized StoreKit Environment: \(environment)"
 
@@ -181,6 +214,9 @@ extension StoreKitStrings: LogMessage {
         case let .sk2_unverified_transaction(id, error):
             return "Found unverified transaction with ID: '\(id)' Error: '\(error)'"
 
+        case let .sk2_unverified_renewal_info(productIdentifier):
+            return "Found unverified renewal info for product with identifier: '\(productIdentifier)'"
+
         case let .sk2_receipt_missing_purchase(transactionId):
             return "SK2 receipt is still missing transaction with id '\(transactionId)'"
 
@@ -195,6 +231,15 @@ extension StoreKitStrings: LogMessage {
 
         case let .error_displaying_store_message(error):
             return "Error displaying StoreKit message: '\(error)'"
+
+        case let .unknown_storekit_error(error):
+            return "Unknown StoreKit error. Error: '\(error.localizedDescription)'"
+
+        case let .skunknown_purchase_result(name):
+            return "Unrecognized Product.PurchaseResult: \(name)"
+
+        case .sk2_sync_purchases_no_transaction_or_apptransaction_found:
+            return "Couldn't find previous transactions or an AppTransaction."
         }
     }
 

@@ -20,6 +20,7 @@ final class AttributionPoster {
     private let backend: Backend
     private let attributionFetcher: AttributionFetcher
     private let subscriberAttributesManager: SubscriberAttributesManager
+    private let systemInfo: SystemInfo
 
     private static var postponedAttributionData: [AttributionData]?
 
@@ -27,17 +28,23 @@ final class AttributionPoster {
          currentUserProvider: CurrentUserProvider,
          backend: Backend,
          attributionFetcher: AttributionFetcher,
-         subscriberAttributesManager: SubscriberAttributesManager) {
+         subscriberAttributesManager: SubscriberAttributesManager,
+         systemInfo: SystemInfo) {
         self.deviceCache = deviceCache
         self.currentUserProvider = currentUserProvider
         self.backend = backend
         self.attributionFetcher = attributionFetcher
         self.subscriberAttributesManager = subscriberAttributesManager
+        self.systemInfo = systemInfo
     }
 
     func post(attributionData data: [String: Any],
               fromNetwork network: AttributionNetwork,
               networkUserId: String?) {
+        guard !self.systemInfo.dangerousSettings.uiPreviewMode else {
+            return
+        }
+
         Logger.debug(Strings.attribution.instance_configured_posting_attribution)
         if data[AttributionKey.AppsFlyer.id.rawValue] != nil {
             Logger.warn(Strings.attribution.appsflyer_id_deprecated)
@@ -95,34 +102,6 @@ final class AttributionPoster {
         }
     }
 
-    @available(*, deprecated)
-    func postAppleSearchAdsAttributionIfNeeded() {
-        guard attributionFetcher.isAuthorizedToPostSearchAds else {
-            return
-        }
-
-        guard self.latestNetworkIdAndAdvertisingIdentifierSent(network: .appleSearchAds) == nil else {
-            return
-        }
-
-        attributionFetcher.afficheClientAttributionDetails { attributionDetails, error in
-            guard let attributionDetails = attributionDetails,
-                  error == nil else {
-                return
-            }
-
-            let attributionDetailsValues = attributionDetails.values
-            let firstAttributionDict = attributionDetailsValues.first as? [String: NSObject]
-
-            guard let hasIad = firstAttributionDict?["iad-attribution"] as? NSNumber,
-                  hasIad.boolValue == true else {
-                return
-            }
-
-            self.post(attributionData: attributionDetails, fromNetwork: .appleSearchAds, networkUserId: nil)
-        }
-    }
-
     // should match OS availability in https://developer.apple.com/documentation/ad_services
     @available(iOS 14.3, tvOS 14.3, watchOS 6.2, macOS 11.1, macCatalyst 14.3, *)
     @available(tvOS, unavailable)
@@ -138,7 +117,6 @@ final class AttributionPoster {
         }
     }
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     var adServicesTokenToPostIfNeeded: String? {
         get async {
             #if os(tvOS) || os(watchOS)
@@ -170,14 +148,14 @@ final class AttributionPoster {
     }
 
     func postPostponedAttributionDataIfNeeded() {
-        guard let postponedAttributionData = Self.postponedAttributionData else {
-            return
-        }
+        if let postponedAttributionData = Self.postponedAttributionData,
+           !systemInfo.dangerousSettings.uiPreviewMode {
 
-        for attributionData in postponedAttributionData {
-            post(attributionData: attributionData.data,
-                 fromNetwork: attributionData.network,
-                 networkUserId: attributionData.networkUserId)
+            for attributionData in postponedAttributionData {
+                post(attributionData: attributionData.data,
+                     fromNetwork: attributionData.network,
+                     networkUserId: attributionData.networkUserId)
+            }
         }
 
         Self.postponedAttributionData = nil

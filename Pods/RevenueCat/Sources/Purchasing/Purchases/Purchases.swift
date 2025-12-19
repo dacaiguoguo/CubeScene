@@ -1,4 +1,5 @@
 //
+//
 //  Copyright RevenueCat Inc. All Rights Reserved.
 //
 //  Licensed under the MIT License (the "License");
@@ -25,6 +26,8 @@ import StoreKit
 /**
  Result for ``Purchases/purchase(product:)``.
  Counterpart of `PurchaseCompletedBlock` for `async` APIs.
+ Note that `transaction` will be `nil` when ``Purchases/purchasesAreCompletedBy``
+ is ``PurchasesAreCompletedBy/myApp``
  */
 public typealias PurchaseResultData = (transaction: StoreTransaction?,
                                        customerInfo: CustomerInfo,
@@ -37,6 +40,11 @@ public typealias PurchaseCompletedBlock = @MainActor @Sendable (StoreTransaction
                                                                 CustomerInfo?,
                                                                 PublicError?,
                                                                 Bool) -> Void
+
+/**
+ Completion block for ``Purchases/getStorefront(completion:)``
+ */
+public typealias GetStorefrontBlock = @MainActor @Sendable (Storefront?) -> Void
 
 /**
  Block for starting purchases in ``PurchasesDelegate/purchases(_:readyForPromotedProduct:purchase:)``
@@ -56,7 +64,7 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
     /// - Warning: this method will crash with `fatalError` if ``Purchases`` has not been initialized through
     /// ``Purchases/configure(withAPIKey:)`` or one of its overloads.
     /// If there's a chance that may have not happened yet, you can use ``isConfigured`` to check if it's safe to call.
-    /// 
+    ///
     /// ### Related symbols
     /// - ``isConfigured``
     @objc(sharedPurchases)
@@ -74,6 +82,13 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
     /// or one of is overloads.
     @objc public static var isConfigured: Bool { Self.purchases.value != nil }
 
+    /**
+     * The delegate for ``Purchases`` responsible for handling updating your app's state in response to updated
+     * customer info or promotional product purchases.
+     *
+     * - Warning: The delegate is not retained by ``Purchases``, so your app must retain a reference to the delegate
+     * to prevent it from being unintentionally deallocated.
+     */
     @objc public var delegate: PurchasesDelegate? {
         get { self.privateDelegate }
         set {
@@ -228,15 +243,26 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
 
     @objc public let attribution: Attribution
 
-    @objc public var finishTransactions: Bool {
-        get { self.systemInfo.finishTransactions }
-        set { self.systemInfo.finishTransactions = newValue }
+    @objc public var purchasesAreCompletedBy: PurchasesAreCompletedBy {
+        get { self.systemInfo.finishTransactions ? .revenueCat : .myApp }
+        set { self.systemInfo.finishTransactions = newValue.finishTransactions }
     }
 
-    @objc public var isAtSandbox: Bool {
-        get { self.systemInfo.isSandbox }
+    @objc public var storeFrontCountryCode: String? {
+        systemInfo.storefront?.countryCode
     }
-    
+
+    @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
+    @_spi(Experimental) @objc public var storeFrontLocale: Locale? {
+        systemInfo.storefront.map { storefront in
+            Locale(components: .init(
+                languageCode: nil,
+                script: nil,
+                languageRegion: .init(storefront.countryCode)
+            ))
+        }
+    }
+
     private let attributionFetcher: AttributionFetcher
     private let attributionPoster: AttributionPoster
     private let backend: Backend
@@ -250,18 +276,42 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
     private let offlineEntitlementsManager: OfflineEntitlementsManager
     private let productsManager: ProductsManagerType
     private let customerInfoManager: CustomerInfoManager
-    private let paywallEventsManager: PaywallEventsManagerType?
+    private let eventsManager: EventsManagerType?
+
+#if ENABLE_AD_EVENTS_TRACKING
+    private var _adTracker: Any?
+
+    /// The ad tracker for reporting ad impressions, clicks, and revenue to RevenueCat.
+    @available(iOS 15.0, tvOS 15.0, macOS 12.0, watchOS 8.0, *)
+    @_spi(Experimental) @objc public var adTracker: AdTracker {
+        if let tracker = _adTracker as? AdTracker {
+            return tracker
+        }
+        let tracker = AdTracker(eventsManager: self.eventsManager)
+        _adTracker = tracker
+        return tracker
+    }
+#endif
+
     private let trialOrIntroPriceEligibilityChecker: CachingTrialOrIntroPriceEligibilityChecker
     private let purchasedProductsFetcher: PurchasedProductsFetcherType?
     private let purchasesOrchestrator: PurchasesOrchestrator
     private let receiptFetcher: ReceiptFetcher
     private let requestFetcher: StoreKitRequestFetcher
     private let paymentQueueWrapper: EitherPaymentQueueWrapper
-    private let systemInfo: SystemInfo
+    fileprivate let systemInfo: SystemInfo
     private let storeMessagesHelper: StoreMessagesHelperType?
     private var customerInfoObservationDisposable: (() -> Void)?
+    private let healthManager: SDKHealthManager
 
-    // swiftlint:disable:next function_body_length
+    private let syncAttributesAndOfferingsIfNeededRateLimiter = RateLimiter(maxCalls: 5, period: 60)
+    private let overridePreferredUILocaleRateLimiter = RateLimiter(maxCalls: 2, period: 60)
+    private let diagnosticsTracker: DiagnosticsTrackerType?
+    private let virtualCurrencyManager: VirtualCurrencyManagerType
+
+    @_spi(Internal) public let subscriptionHistoryTracker = SubscriptionHistoryTracker()
+
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     convenience init(apiKey: String,
                      appUserID: String?,
                      userDefaults: UserDefaults? = nil,
@@ -269,11 +319,15 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
                      observerMode: Bool = false,
                      platformInfo: PlatformInfo? = Purchases.platformInfo,
                      responseVerificationMode: Signing.ResponseVerificationMode,
-                     storeKit2Setting: StoreKit2Setting = .default,
+                     storeKitVersion: StoreKitVersion = .default,
                      storeKitTimeout: TimeInterval = Configuration.storeKitRequestTimeoutDefault,
                      networkTimeout: TimeInterval = Configuration.networkTimeoutDefault,
                      dangerousSettings: DangerousSettings? = nil,
-                     showStoreMessagesAutomatically: Bool) {
+                     showStoreMessagesAutomatically: Bool,
+                     diagnosticsEnabled: Bool = false,
+                     preferredLocale: String?,
+                     automaticDeviceIdentifierCollectionEnabled: Bool = true
+    ) {
         if userDefaults != nil {
             Logger.debug(Strings.configure.using_custom_user_defaults)
         }
@@ -282,22 +336,51 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
         let receiptRefreshRequestFactory = ReceiptRefreshRequestFactory()
         let fetcher = StoreKitRequestFetcher(requestFactory: receiptRefreshRequestFactory,
                                              operationDispatcher: operationDispatcher)
-        let systemInfo = SystemInfo(platformInfo: platformInfo,
-                                    finishTransactions: !observerMode,
-                                    operationDispatcher: operationDispatcher,
-                                    storeKit2Setting: storeKit2Setting,
-                                    responseVerificationMode: responseVerificationMode,
-                                    dangerousSettings: dangerousSettings)
+
+        let apiKeyValidationResult = Configuration.validateAndLog(apiKey: apiKey)
+
+        let systemInfo = SystemInfo(
+            platformInfo: platformInfo,
+            finishTransactions: !observerMode,
+            operationDispatcher: operationDispatcher,
+            storeKitVersion: storeKitVersion,
+            apiKeyValidationResult: apiKeyValidationResult,
+            responseVerificationMode: responseVerificationMode,
+            dangerousSettings: dangerousSettings,
+            preferredLocalesProvider: PreferredLocalesProvider(preferredLocaleOverride: preferredLocale)
+        )
+
+        apiKeyValidationResult.checkForSimulatedStoreAPIKeyInRelease(systemInfo: systemInfo, apiKey: apiKey)
 
         let receiptFetcher = ReceiptFetcher(requestFetcher: fetcher, systemInfo: systemInfo)
         let eTagManager = ETagManager()
         let attributionTypeFactory = AttributionTypeFactory()
         let attributionFetcher = AttributionFetcher(attributionFactory: attributionTypeFactory, systemInfo: systemInfo)
         let userDefaults = userDefaults ?? UserDefaults.computeDefault()
-        let deviceCache = DeviceCache(sandboxEnvironmentDetector: systemInfo, userDefaults: userDefaults)
+        let deviceCache = DeviceCache(systemInfo: systemInfo, userDefaults: userDefaults)
 
-        let purchasedProductsFetcher = OfflineCustomerInfoCreator.createPurchasedProductsFetcherIfAvailable()
-        let transactionFetcher = StoreKit2TransactionFetcher()
+        let diagnosticsFileHandler: DiagnosticsFileHandlerType? = {
+            guard diagnosticsEnabled,
+                  dangerousSettings?.uiPreviewMode != true,
+                  #available(iOS 15.0, tvOS 15.0, macOS 12.0, watchOS 8.0, *) else { return nil }
+            return DiagnosticsFileHandler()
+        }()
+
+        let diagnosticsTracker: DiagnosticsTrackerType? = {
+            if let handler = diagnosticsFileHandler, #available(iOS 15.0, tvOS 15.0, macOS 12.0, watchOS 8.0, *) {
+                return DiagnosticsTracker(diagnosticsFileHandler: handler)
+            } else {
+                if diagnosticsEnabled {
+                    Logger.error(Strings.diagnostics.could_not_create_diagnostics_tracker)
+                }
+            }
+            return nil
+        }()
+
+        let purchasedProductsFetcher = OfflineCustomerInfoCreator.createPurchasedProductsFetcherIfAvailable(
+            diagnosticsTracker: diagnosticsTracker
+        )
+        let transactionFetcher = StoreKit2TransactionFetcher(diagnosticsTracker: diagnosticsTracker)
 
         let backend = Backend(
             apiKey: apiKey,
@@ -309,27 +392,34 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
             offlineCustomerInfoCreator: .createIfAvailable(
                 with: purchasedProductsFetcher,
                 productEntitlementMappingFetcher: deviceCache,
+                tracker: diagnosticsTracker,
                 observerMode: observerMode
-            )
+            ),
+            diagnosticsTracker: diagnosticsTracker
         )
 
-        let paymentQueueWrapper: EitherPaymentQueueWrapper = systemInfo.storeKit2Setting.shouldOnlyUseStoreKit2
+        let paymentQueueWrapper: EitherPaymentQueueWrapper = systemInfo.storeKitVersion.isStoreKit2EnabledAndAvailable
             ? .right(.init())
             : .left(.init(
                 operationDispatcher: operationDispatcher,
                 observerMode: observerMode,
-                sandboxEnvironmentDetector: systemInfo
+                sandboxEnvironmentDetector: systemInfo,
+                diagnosticsTracker: diagnosticsTracker
             ))
+
+        let simulatedStorePurchaseHandler = SimulatedStorePurchaseHandler(systemInfo: systemInfo)
 
         let offeringsFactory = OfferingsFactory()
         let receiptParser = PurchasesReceiptParser.default
         let transactionsManager = TransactionsManager(receiptParser: receiptParser)
 
-        let productsRequestFactory = ProductsRequestFactory()
         let productsManager = CachingProductsManager(
-            manager: ProductsManager(productsRequestFactory: productsRequestFactory,
-                                     systemInfo: systemInfo,
-                                     requestTimeout: storeKitTimeout)
+            manager: ProductsManagerFactory.createManager(apiKeyValidationResult: apiKeyValidationResult,
+                                                          diagnosticsTracker: diagnosticsTracker,
+                                                          systemInfo: systemInfo,
+                                                          backend: backend,
+                                                          deviceCache: deviceCache,
+                                                          requestTimeout: storeKitTimeout)
         )
 
         let transactionPoster = TransactionPoster(
@@ -346,49 +436,85 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
                                                                     operationDispatcher: operationDispatcher,
                                                                     api: backend.offlineEntitlements,
                                                                     systemInfo: systemInfo)
-        let customerInfoManager = CustomerInfoManager(offlineEntitlementsManager: offlineEntitlementsManager,
+
+        let customerInfoManager: CustomerInfoManager
+        if #available(iOS 15.0, tvOS 15.0, macOS 12.0, watchOS 8.0, *) {
+            customerInfoManager = CustomerInfoManager(offlineEntitlementsManager: offlineEntitlementsManager,
+                                                      operationDispatcher: operationDispatcher,
+                                                      deviceCache: deviceCache,
+                                                      backend: backend,
+                                                      transactionFetcher: transactionFetcher,
+                                                      transactionPoster: transactionPoster,
+                                                      systemInfo: systemInfo,
+                                                      diagnosticsTracker: diagnosticsTracker)
+        } else {
+            customerInfoManager = CustomerInfoManager(offlineEntitlementsManager: offlineEntitlementsManager,
                                                       operationDispatcher: operationDispatcher,
                                                       deviceCache: deviceCache,
                                                       backend: backend,
                                                       transactionFetcher: transactionFetcher,
                                                       transactionPoster: transactionPoster,
                                                       systemInfo: systemInfo)
+        }
 
         let attributionDataMigrator = AttributionDataMigrator()
-        let subscriberAttributesManager = SubscriberAttributesManager(backend: backend,
-                                                                      deviceCache: deviceCache,
-                                                                      operationDispatcher: operationDispatcher,
-                                                                      attributionFetcher: attributionFetcher,
-                                                                      attributionDataMigrator: attributionDataMigrator)
+        let subscriberAttributesManager = SubscriberAttributesManager(
+            backend: backend,
+            deviceCache: deviceCache,
+            operationDispatcher: operationDispatcher,
+            attributionFetcher: attributionFetcher,
+            attributionDataMigrator: attributionDataMigrator,
+            automaticDeviceIdentifierCollectionEnabled: automaticDeviceIdentifierCollectionEnabled)
         let identityManager = IdentityManager(deviceCache: deviceCache,
+                                              systemInfo: systemInfo,
                                               backend: backend,
                                               customerInfoManager: customerInfoManager,
                                               attributeSyncing: subscriberAttributesManager,
-                                              appUserID: appUserID)
+                                              appUserID: appUserID
+        )
 
-        let paywallEventsManager: PaywallEventsManagerType?
+        let eventsManager: EventsManagerType?
         do {
             if #available(iOS 15.0, tvOS 15.0, macOS 12.0, watchOS 8.0, *) {
-                paywallEventsManager = PaywallEventsManager(
+                #if ENABLE_AD_EVENTS_TRACKING
+                let adEventStore: AdEventStoreType? = try? AdEventStore.createDefault(
+                    applicationSupportDirectory: applicationSupportDirectory
+                )
+                eventsManager = EventsManager(
                     internalAPI: backend.internalAPI,
                     userProvider: identityManager,
-                    store: try PaywallEventStore.createDefault(applicationSupportDirectory: applicationSupportDirectory)
+                    store: try FeatureEventStore.createDefault(
+                        applicationSupportDirectory: applicationSupportDirectory
+                    ),
+                    systemInfo: systemInfo,
+                    adEventStore: adEventStore
                 )
+                #else
+                eventsManager = EventsManager(
+                    internalAPI: backend.internalAPI,
+                    userProvider: identityManager,
+                    store: try FeatureEventStore.createDefault(
+                        applicationSupportDirectory: applicationSupportDirectory
+                    ),
+                    systemInfo: systemInfo
+                )
+                #endif
                 Logger.verbose(Strings.paywalls.event_manager_initialized)
             } else {
                 Logger.verbose(Strings.paywalls.event_manager_not_initialized_not_available)
-                paywallEventsManager = nil
+                eventsManager = nil
             }
         } catch {
             Logger.verbose(Strings.paywalls.event_manager_failed_to_initialize(error))
-            paywallEventsManager = nil
+            eventsManager = nil
         }
 
         let attributionPoster = AttributionPoster(deviceCache: deviceCache,
                                                   currentUserProvider: identityManager,
                                                   backend: backend,
                                                   attributionFetcher: attributionFetcher,
-                                                  subscriberAttributesManager: subscriberAttributesManager)
+                                                  subscriberAttributesManager: subscriberAttributesManager,
+                                                  systemInfo: systemInfo)
         let subscriberAttributes = Attribution(subscriberAttributesManager: subscriberAttributesManager,
                                                currentUserProvider: identityManager,
                                                attributionPoster: attributionPoster,
@@ -399,7 +525,8 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
                                                 systemInfo: systemInfo,
                                                 backend: backend,
                                                 offeringsFactory: offeringsFactory,
-                                                productsManager: productsManager)
+                                                productsManager: productsManager,
+                                                diagnosticsTracker: diagnosticsTracker)
         let manageSubsHelper = ManageSubscriptionsHelper(systemInfo: systemInfo,
                                                          customerInfoManager: customerInfoManager,
                                                          currentUserProvider: identityManager)
@@ -420,11 +547,43 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
         storeMessagesHelper = nil
         #endif
 
+        let winBackOfferEligibilityCalculator: WinBackOfferEligibilityCalculatorType?
+        if #available(iOS 18.0, macOS 15.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *) {
+            winBackOfferEligibilityCalculator = WinBackOfferEligibilityCalculator(systemInfo: systemInfo)
+        } else {
+            winBackOfferEligibilityCalculator = nil
+        }
+
+        let notificationCenter: NotificationCenter = .default
         let purchasesOrchestrator: PurchasesOrchestrator = {
             if #available(iOS 15.0, tvOS 15.0, macOS 12.0, watchOS 8.0, *) {
+                let diagnosticsSynchronizer: DiagnosticsSynchronizer?
+                if diagnosticsEnabled {
+                    if let diagnosticsFileHandler = diagnosticsFileHandler {
+                        let synchronizedUserDefaults = SynchronizedUserDefaults(userDefaults: userDefaults)
+                        diagnosticsSynchronizer = DiagnosticsSynchronizer(internalAPI: backend.internalAPI,
+                                                                          handler: diagnosticsFileHandler,
+                                                                          tracker: diagnosticsTracker,
+                                                                          userDefaults: synchronizedUserDefaults)
+                        Task {
+                            await diagnosticsFileHandler.updateDelegate(diagnosticsSynchronizer)
+                        }
+                    } else {
+                        Logger.error(Strings.diagnostics.could_not_create_diagnostics_tracker)
+                        diagnosticsSynchronizer = nil
+                    }
+                } else {
+                    diagnosticsSynchronizer = nil
+                }
+                let storeKit2ObserverModePurchaseDetector = StoreKit2ObserverModePurchaseDetector(
+                    deviceCache: deviceCache,
+                    allTransactionsProvider: SK2AllTransactionsProvider()
+                )
+
                 return .init(
                     productsManager: productsManager,
                     paymentQueueWrapper: paymentQueueWrapper,
+                    simulatedStorePurchaseHandler: simulatedStorePurchaseHandler,
                     systemInfo: systemInfo,
                     subscriberAttributes: subscriberAttributes,
                     operationDispatcher: operationDispatcher,
@@ -440,14 +599,24 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
                     offeringsManager: offeringsManager,
                     manageSubscriptionsHelper: manageSubsHelper,
                     beginRefundRequestHelper: beginRefundRequestHelper,
-                    storeKit2TransactionListener: StoreKit2TransactionListener(delegate: nil),
+                    storeKit2TransactionListener: StoreKit2TransactionListener(delegate: nil,
+                                                                               diagnosticsTracker: diagnosticsTracker),
                     storeKit2StorefrontListener: StoreKit2StorefrontListener(delegate: nil),
-                    storeMessagesHelper: storeMessagesHelper
+                    storeKit2ObserverModePurchaseDetector: storeKit2ObserverModePurchaseDetector,
+                    storeMessagesHelper: storeMessagesHelper,
+                    diagnosticsSynchronizer: diagnosticsSynchronizer,
+                    diagnosticsTracker: diagnosticsTracker,
+                    winBackOfferEligibilityCalculator: winBackOfferEligibilityCalculator,
+                    eventsManager: eventsManager,
+                    webPurchaseRedemptionHelper: WebPurchaseRedemptionHelper(backend: backend,
+                                                                             identityManager: identityManager,
+                                                                             customerInfoManager: customerInfoManager)
                 )
             } else {
                 return .init(
                     productsManager: productsManager,
                     paymentQueueWrapper: paymentQueueWrapper,
+                    simulatedStorePurchaseHandler: simulatedStorePurchaseHandler,
                     systemInfo: systemInfo,
                     subscriberAttributes: subscriberAttributes,
                     operationDispatcher: operationDispatcher,
@@ -463,7 +632,13 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
                     offeringsManager: offeringsManager,
                     manageSubscriptionsHelper: manageSubsHelper,
                     beginRefundRequestHelper: beginRefundRequestHelper,
-                    storeMessagesHelper: storeMessagesHelper
+                    storeMessagesHelper: storeMessagesHelper,
+                    diagnosticsTracker: diagnosticsTracker,
+                    winBackOfferEligibilityCalculator: winBackOfferEligibilityCalculator,
+                    eventsManager: eventsManager,
+                    webPurchaseRedemptionHelper: WebPurchaseRedemptionHelper(backend: backend,
+                                                                             identityManager: identityManager,
+                                                                             customerInfoManager: customerInfoManager)
                 )
             }
         }()
@@ -475,16 +650,27 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
                                                       backend: backend,
                                                       currentUserProvider: identityManager,
                                                       operationDispatcher: operationDispatcher,
-                                                      productsManager: productsManager)
+                                                      productsManager: productsManager,
+                                                      diagnosticsTracker: diagnosticsTracker)
         )
 
         let paywallCache: PaywallCacheWarmingType?
 
         if #available(iOS 15.0, macOS 12.0, watchOS 8.0, tvOS 15.0, *) {
-            paywallCache = PaywallCacheWarming(introEligibiltyChecker: trialOrIntroPriceChecker)
+            paywallCache = PaywallCacheWarming(
+                introEligibiltyChecker: trialOrIntroPriceChecker
+            )
         } else {
             paywallCache = nil
         }
+
+        let virtualCurrencyManager = VirtualCurrencyManager(
+            identityManager: identityManager,
+            deviceCache: deviceCache,
+            backend: backend,
+            systemInfo: systemInfo
+        )
+        let healthManager = SDKHealthManager(backend: backend, identityManager: identityManager)
 
         self.init(appUserID: appUserID,
                   requestFetcher: fetcher,
@@ -494,7 +680,7 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
                   backend: backend,
                   paymentQueueWrapper: paymentQueueWrapper,
                   userDefaults: userDefaults,
-                  notificationCenter: .default,
+                  notificationCenter: notificationCenter,
                   systemInfo: systemInfo,
                   offeringsFactory: offeringsFactory,
                   deviceCache: deviceCache,
@@ -503,14 +689,17 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
                   subscriberAttributes: subscriberAttributes,
                   operationDispatcher: operationDispatcher,
                   customerInfoManager: customerInfoManager,
-                  paywallEventsManager: paywallEventsManager,
+                  eventsManager: eventsManager,
                   productsManager: productsManager,
                   offeringsManager: offeringsManager,
                   offlineEntitlementsManager: offlineEntitlementsManager,
                   purchasesOrchestrator: purchasesOrchestrator,
                   purchasedProductsFetcher: purchasedProductsFetcher,
                   trialOrIntroPriceEligibilityChecker: trialOrIntroPriceChecker,
-                  storeMessagesHelper: storeMessagesHelper
+                  storeMessagesHelper: storeMessagesHelper,
+                  diagnosticsTracker: diagnosticsTracker,
+                  virtualCurrencyManager: virtualCurrencyManager,
+                  healthManager: healthManager
         )
     }
 
@@ -532,14 +721,17 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
          subscriberAttributes: Attribution,
          operationDispatcher: OperationDispatcher,
          customerInfoManager: CustomerInfoManager,
-         paywallEventsManager: PaywallEventsManagerType?,
+         eventsManager: EventsManagerType?,
          productsManager: ProductsManagerType,
          offeringsManager: OfferingsManager,
          offlineEntitlementsManager: OfflineEntitlementsManager,
          purchasesOrchestrator: PurchasesOrchestrator,
          purchasedProductsFetcher: PurchasedProductsFetcherType?,
          trialOrIntroPriceEligibilityChecker: CachingTrialOrIntroPriceEligibilityChecker,
-         storeMessagesHelper: StoreMessagesHelperType?
+         storeMessagesHelper: StoreMessagesHelperType?,
+         diagnosticsTracker: DiagnosticsTrackerType?,
+         virtualCurrencyManager: VirtualCurrencyManagerType,
+         healthManager: SDKHealthManager
     ) {
 
         if systemInfo.dangerousSettings.customEntitlementComputation {
@@ -552,9 +744,6 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
         }
 
         Logger.debug(Strings.configure.debug_enabled, fileName: nil)
-        if systemInfo.storeKit2Setting == .enabledForCompatibleDevices {
-            Logger.info(Strings.configure.store_kit_2_enabled, fileName: nil)
-        }
         if systemInfo.observerMode {
             Logger.debug(Strings.configure.observer_mode_enabled, fileName: nil)
         }
@@ -564,6 +753,7 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
         Logger.debug(Strings.configure.is_simulator(SystemInfo.isRunningInSimulator), fileName: nil)
         Logger.user(Strings.configure.initial_app_user_id(isSet: appUserID != nil), fileName: nil)
         Logger.debug(Strings.configure.response_verification_mode(systemInfo.responseVerificationMode), fileName: nil)
+        Logger.debug(Strings.configure.storekit_version(systemInfo.storeKitVersion), fileName: nil)
 
         self.requestFetcher = requestFetcher
         self.receiptFetcher = receiptFetcher
@@ -581,7 +771,7 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
         self.attribution = subscriberAttributes
         self.operationDispatcher = operationDispatcher
         self.customerInfoManager = customerInfoManager
-        self.paywallEventsManager = paywallEventsManager
+        self.eventsManager = eventsManager
         self.productsManager = productsManager
         self.offeringsManager = offeringsManager
         self.offlineEntitlementsManager = offlineEntitlementsManager
@@ -589,16 +779,29 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
         self.purchasedProductsFetcher = purchasedProductsFetcher
         self.trialOrIntroPriceEligibilityChecker = trialOrIntroPriceEligibilityChecker
         self.storeMessagesHelper = storeMessagesHelper
+        self.diagnosticsTracker = diagnosticsTracker
+        self.virtualCurrencyManager = virtualCurrencyManager
+        self.healthManager = healthManager
 
         super.init()
 
         Logger.verbose(Strings.configure.purchases_init(self, paymentQueueWrapper))
+
+        #if os(iOS) || targetEnvironment(macCatalyst) || os(macOS)
+        if #available(iOS 16.4, macOS 14.4, *), systemInfo.storeKitVersion.isStoreKit2EnabledAndAvailable {
+            purchasesOrchestrator.setSK2PurchaseIntentListener(StoreKit2PurchaseIntentListener())
+        }
+        #endif
 
         self.purchasesOrchestrator.delegate = self
 
         // Don't update caches in the background to potentially avoid apps being launched through a notification
         // all at the same time by too many users concurrently.
         self.updateCachesIfInForeground()
+
+        #if DEBUG && !ENABLE_CUSTOM_ENTITLEMENT_COMPUTATION
+        self.runHealthCheckIfInForeground()
+        #endif
 
         if self.systemInfo.dangerousSettings.autoSyncPurchases {
             self.paymentQueueWrapper.sk1Wrapper?.delegate = purchasesOrchestrator
@@ -611,11 +814,8 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
         self.paymentQueueWrapper.sk2Wrapper?.delegate = purchasesOrchestrator
 
         self.subscribeToAppStateNotifications()
-        self.attributionPoster.postPostponedAttributionDataIfNeeded()
 
-        #if !ENABLE_CUSTOM_ENTITLEMENT_COMPUTATION
-        (self as DeprecatedSearchAdsAttribution).postAppleSearchAddsAttributionCollectionIfNeeded()
-        #endif
+        self.attributionPoster.postPostponedAttributionDataIfNeeded()
 
         self.customerInfoObservationDisposable = customerInfoManager.monitorChanges { [weak self] old, new in
             guard let self = self else { return }
@@ -675,14 +875,6 @@ extension Purchases {
                       forNetworkUserId networkUserId: String?) {
         attributionPoster.post(attributionData: data, fromNetwork: network, networkUserId: networkUserId)
     }
-
-    @available(*, deprecated)
-    fileprivate func postAppleSearchAddsAttributionCollectionIfNeeded() {
-        guard Self.automaticAppleSearchAdsAttributionCollection else {
-            return
-        }
-        attributionPoster.postAppleSearchAdsAttributionIfNeeded()
-    }
     #endif
 }
 
@@ -690,9 +882,17 @@ extension Purchases {
 
 public extension Purchases {
 
+    /// Parses a deep link URL to verify it's a RevenueCat web purchase redemption link
+    /// - Seealso: ``Purchases/redeemWebPurchase(_:)``
+    @objc internal static func parseAsWebPurchaseRedemption(_ url: URL) -> WebPurchaseRedemption? {
+        return DeepLinkParser.parseAsWebPurchaseRedemption(url)
+    }
+
     @objc var appUserID: String { self.identityManager.currentAppUserID }
 
     @objc var isAnonymous: Bool { self.identityManager.currentUserIsAnonymous }
+
+    @objc var isSandbox: Bool { return self.systemInfo.isSandbox }
 
     @objc func getOfferings(completion: @escaping (Offerings?, PublicError?) -> Void) {
         self.getOfferings(fetchPolicy: .default, completion: completion)
@@ -700,14 +900,16 @@ public extension Purchases {
 
     internal func getOfferings(
         fetchPolicy: OfferingsManager.FetchPolicy,
+        fetchCurrent: Bool = false,
         completion: @escaping (Offerings?, PublicError?) -> Void
     ) {
-        self.offeringsManager.offerings(appUserID: self.appUserID, fetchPolicy: fetchPolicy) { @Sendable result in
+        self.offeringsManager.offerings(appUserID: self.appUserID,
+                                        fetchPolicy: fetchPolicy,
+                                        fetchCurrent: fetchCurrent) { @Sendable result in
             completion(result.value, result.error?.asPublicError)
         }
     }
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     func offerings() async throws -> Offerings {
         return try await self.offerings(fetchPolicy: .default)
     }
@@ -716,7 +918,6 @@ public extension Purchases {
         return self.offeringsManager.cachedOfferings
     }
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     internal func offerings(fetchPolicy: OfferingsManager.FetchPolicy) async throws -> Offerings {
         return try await self.offeringsAsync(fetchPolicy: fetchPolicy)
     }
@@ -727,6 +928,11 @@ public extension Purchases {
 
 public extension Purchases {
 
+    @available(*, deprecated, message: """
+    The appUserID passed to logIn is a constant string known at compile time.
+    This is likely a programmer error. This ID is used to identify the current user.
+    See https://docs.revenuecat.com/docs/user-ids for more information.
+    """)
     func logIn(_ appUserID: StaticString, completion: @escaping (CustomerInfo?, Bool, PublicError?) -> Void) {
         Logger.warn(Strings.identity.logging_in_with_static_string)
 
@@ -734,7 +940,7 @@ public extension Purchases {
     }
 
     // Favor `StaticString` overload (`String` is not convertible to `StaticString`).
-    // This allows us to provide a compile-time warning to developers who accidentally 
+    // This allows us to provide a compile-time warning to developers who accidentally
     // call logIn with hardcoded user ids in their app
     @_disfavoredOverload
     @objc(logIn:completion:)
@@ -754,7 +960,6 @@ public extension Purchases {
         }
     }
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     func logIn(_ appUserID: StaticString) async throws -> (customerInfo: CustomerInfo, created: Bool) {
         Logger.warn(Strings.identity.logging_in_with_static_string)
 
@@ -762,10 +967,9 @@ public extension Purchases {
     }
 
     // Favor `StaticString` overload (`String` is not convertible to `StaticString`).
-    // This allows us to provide a compile-time warning to developers who accidentally 
+    // This allows us to provide a compile-time warning to developers who accidentally
     // call logIn with hardcoded user ids in their app
     @_disfavoredOverload
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     func logIn(_ appUserID: String) async throws -> (customerInfo: CustomerInfo, created: Bool) {
         return try await self.logInAsync(appUserID)
     }
@@ -792,9 +996,43 @@ public extension Purchases {
         }
     }
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     func logOut() async throws -> CustomerInfo {
         return try await logOutAsync()
+    }
+
+    @objc func syncAttributesAndOfferingsIfNeeded(completion: @escaping (Offerings?, PublicError?) -> Void) {
+        guard syncAttributesAndOfferingsIfNeededRateLimiter.shouldProceed() else {
+            Logger.warn(
+                Strings.identity.sync_attributes_and_offerings_rate_limit_reached(
+                    maxCalls: syncAttributesAndOfferingsIfNeededRateLimiter.maxCalls,
+                    period: Int(syncAttributesAndOfferingsIfNeededRateLimiter.period)
+                )
+            )
+            self.getOfferings(fetchPolicy: .default, completion: completion)
+            return
+        }
+
+        self.syncSubscriberAttributes(completion: {
+            self.getOfferings(fetchPolicy: .default, fetchCurrent: true, completion: completion)
+        })
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
+    func syncAttributesAndOfferingsIfNeeded() async throws -> Offerings? {
+        return try await syncAttributesAndOfferingsIfNeededAsync()
+    }
+
+    @objc func getStorefront(completion: @escaping GetStorefrontBlock) {
+        Task {
+            let storefront = await Storefront.currentStorefront
+            self.operationDispatcher.dispatchOnMainActor {
+                completion(storefront)
+            }
+        }
+    }
+
+    func getStorefront() async -> Storefront? {
+        return await getStorefrontAsync()
     }
 
 }
@@ -848,28 +1086,26 @@ public extension Purchases {
         completion: @escaping (CustomerInfo?, PublicError?) -> Void
     ) {
         self.customerInfoManager.customerInfo(appUserID: self.appUserID,
-                                              fetchPolicy: fetchPolicy) { @Sendable result in
+                                              fetchPolicy: fetchPolicy,
+                                              trackDiagnostics: true) { @Sendable result in
             completion(result.value, result.error?.asPublicError)
         }
     }
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     func customerInfo() async throws -> CustomerInfo {
         return try await self.customerInfo(fetchPolicy: .default)
     }
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     func customerInfo(fetchPolicy: CacheFetchPolicy) async throws -> CustomerInfo {
         return try await self.customerInfoAsync(fetchPolicy: fetchPolicy)
     }
 
     var cachedCustomerInfo: CustomerInfo? {
-        return self.customerInfoManager.cachedCustomerInfo(appUserID: self.appUserID)
+        return try? self.customerInfoManager.cachedCustomerInfo(appUserID: self.appUserID)
     }
 
     #endif
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     var customerInfoStream: AsyncStream<CustomerInfo> {
         return self.customerInfoManager.customerInfoStream
     }
@@ -879,27 +1115,34 @@ public extension Purchases {
         purchasesOrchestrator.products(withIdentifiers: productIdentifiers, completion: completion)
     }
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     func products(_ productIdentifiers: [String]) async -> [StoreProduct] {
         return await productsAsync(productIdentifiers)
     }
 
     @objc(purchaseProduct:withCompletion:)
     func purchase(product: StoreProduct, completion: @escaping PurchaseCompletedBlock) {
-        purchasesOrchestrator.purchase(product: product, package: nil, completion: completion)
+        purchasesOrchestrator.purchase(product: product,
+                                       package: nil,
+                                       promotionalOffer: nil,
+                                       metadata: nil,
+                                       trackDiagnostics: true,
+                                       completion: completion)
     }
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     func purchase(product: StoreProduct) async throws -> PurchaseResultData {
         return try await purchaseAsync(product: product)
     }
 
     @objc(purchasePackage:withCompletion:)
     func purchase(package: Package, completion: @escaping PurchaseCompletedBlock) {
-        purchasesOrchestrator.purchase(product: package.storeProduct, package: package, completion: completion)
+        purchasesOrchestrator.purchase(product: package.storeProduct,
+                                       package: package,
+                                       promotionalOffer: nil,
+                                       metadata: nil,
+                                       trackDiagnostics: true,
+                                       completion: completion)
     }
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     func purchase(package: Package) async throws -> PurchaseResultData {
         return try await purchaseAsync(package: package)
     }
@@ -910,9 +1153,47 @@ public extension Purchases {
         }
     }
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     func restorePurchases() async throws -> CustomerInfo {
         return try await self.restorePurchasesAsync()
+    }
+
+    @objc(purchaseWithParams:completion:)
+    func purchase(_ params: PurchaseParams, completion: @escaping PurchaseCompletedBlock) {
+        purchasesOrchestrator.purchase(params: params, trackDiagnostics: true, completion: completion)
+    }
+
+    func purchase(_ params: PurchaseParams) async throws -> PurchaseResultData {
+        return try await purchaseAsync(params)
+    }
+
+    @objc(purchaseProduct:withPromotionalOffer:completion:)
+    func purchase(product: StoreProduct,
+                  promotionalOffer: PromotionalOffer,
+                  completion: @escaping PurchaseCompletedBlock) {
+        purchasesOrchestrator.purchase(product: product,
+                                       package: nil,
+                                       promotionalOffer: promotionalOffer.signedData,
+                                       metadata: nil,
+                                       trackDiagnostics: true,
+                                       completion: completion)
+    }
+
+    func purchase(product: StoreProduct, promotionalOffer: PromotionalOffer) async throws -> PurchaseResultData {
+        return try await purchaseAsync(product: product, promotionalOffer: promotionalOffer)
+    }
+
+    @objc(purchasePackage:withPromotionalOffer:completion:)
+    func purchase(package: Package, promotionalOffer: PromotionalOffer, completion: @escaping PurchaseCompletedBlock) {
+        purchasesOrchestrator.purchase(product: package.storeProduct,
+                                       package: package,
+                                       promotionalOffer: promotionalOffer.signedData,
+                                       metadata: nil,
+                                       trackDiagnostics: true,
+                                       completion: completion)
+    }
+
+    func purchase(package: Package, promotionalOffer: PromotionalOffer) async throws -> PurchaseResultData {
+        return try await purchaseAsync(package: package, promotionalOffer: promotionalOffer)
     }
 
     #if !ENABLE_CUSTOM_ENTITLEMENT_COMPUTATION
@@ -927,40 +1208,11 @@ public extension Purchases {
         }
     }
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     func syncPurchases() async throws -> CustomerInfo {
         return try await syncPurchasesAsync()
     }
 
-    @available(iOS 12.2, macOS 10.14.4, watchOS 6.2, macCatalyst 13.0, tvOS 12.2, *)
-    @objc(purchaseProduct:withPromotionalOffer:completion:)
-    func purchase(product: StoreProduct,
-                  promotionalOffer: PromotionalOffer,
-                  completion: @escaping PurchaseCompletedBlock) {
-        purchasesOrchestrator.purchase(product: product,
-                                       package: nil,
-                                       promotionalOffer: promotionalOffer.signedData,
-                                       completion: completion)
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
-    func purchase(product: StoreProduct, promotionalOffer: PromotionalOffer) async throws -> PurchaseResultData {
-        return try await purchaseAsync(product: product, promotionalOffer: promotionalOffer)
-    }
-
-    @available(iOS 12.2, macOS 10.14.4, watchOS 6.2, macCatalyst 13.0, tvOS 12.2, *)
-    @objc(purchasePackage:withPromotionalOffer:completion:)
-    func purchase(package: Package, promotionalOffer: PromotionalOffer, completion: @escaping PurchaseCompletedBlock) {
-        purchasesOrchestrator.purchase(product: package.storeProduct,
-                                       package: package,
-                                       promotionalOffer: promotionalOffer.signedData,
-                                       completion: completion)
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
-    func purchase(package: Package, promotionalOffer: PromotionalOffer) async throws -> PurchaseResultData {
-        return try await purchaseAsync(package: package, promotionalOffer: promotionalOffer)
-    }
+    #endif
 
     @objc(checkTrialOrIntroDiscountEligibility:completion:)
     func checkTrialOrIntroDiscountEligibility(productIdentifiers: [String],
@@ -969,12 +1221,10 @@ public extension Purchases {
                                                                   completion: completion)
     }
 
-    @available(iOS 13.0, tvOS 13.0, macOS 10.15, watchOS 6.2, *)
     func checkTrialOrIntroDiscountEligibility(productIdentifiers: [String]) async -> [String: IntroEligibility] {
         return await checkTrialOrIntroductoryDiscountEligibilityAsync(productIdentifiers)
     }
 
-    @available(iOS 13.0, tvOS 13.0, macOS 10.15, watchOS 6.2, *)
     func checkTrialOrIntroDiscountEligibility(packages: [Package]) async -> [Package: IntroEligibility] {
         let result = await self.checkTrialOrIntroDiscountEligibility(
             productIdentifiers: packages.map(\.storeProduct.productIdentifier)
@@ -992,12 +1242,9 @@ public extension Purchases {
         trialOrIntroPriceEligibilityChecker.checkEligibility(product: product, completion: completion)
     }
 
-    @available(iOS 13.0, tvOS 13.0, macOS 10.15, watchOS 6.2, *)
     func checkTrialOrIntroDiscountEligibility(product: StoreProduct) async -> IntroEligibilityStatus {
         return await checkTrialOrIntroductoryDiscountEligibilityAsync(product)
     }
-
-    #endif
 
 #if os(iOS) || targetEnvironment(macCatalyst) || VISION_OS
     @available(iOS 13.4, macCatalyst 13.4, *)
@@ -1014,13 +1261,13 @@ public extension Purchases {
     @available(macOS, unavailable)
     @available(macCatalyst, unavailable)
     @objc func presentCodeRedemptionSheet() {
+        if #available(iOS 15.0, *) {
+            self.diagnosticsTracker?.trackApplePresentCodeRedemptionSheetRequest()
+        }
         self.paymentQueueWrapper.paymentQueueWrapperType.presentCodeRedemptionSheet()
     }
 #endif
 
-    #if !ENABLE_CUSTOM_ENTITLEMENT_COMPUTATION
-
-    @available(iOS 12.2, macOS 10.14.4, macCatalyst 13.0, tvOS 12.2, watchOS 6.2, *)
     @objc(getPromotionalOfferForProductDiscount:withProduct:withCompletion:)
     func getPromotionalOffer(forProductDiscount discount: StoreProductDiscount,
                              product: StoreProduct,
@@ -1031,18 +1278,14 @@ public extension Purchases {
         }
     }
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     func promotionalOffer(forProductDiscount discount: StoreProductDiscount,
                           product: StoreProduct) async throws -> PromotionalOffer {
         return try await promotionalOfferAsync(forProductDiscount: discount, product: product)
     }
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     func eligiblePromotionalOffers(forProduct product: StoreProduct) async -> [PromotionalOffer] {
         return await eligiblePromotionalOffersAsync(forProduct: product)
     }
-
-    #endif
 
 #if os(iOS) || os(macOS) || VISION_OS
 
@@ -1107,11 +1350,87 @@ public extension Purchases {
 
 #endif
 
+    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+    func recordPurchase(
+        _ purchaseResult: StoreKit.Product.PurchaseResult
+    ) async throws -> StoreTransaction? {
+        guard self.systemInfo.observerMode else {
+            throw NewErrorUtils.configurationError(
+                message: Strings.configure.record_purchase_requires_purchases_made_by_my_app.description
+            ).asPublicError
+        }
+        guard self.systemInfo.storeKitVersion == .storeKit2 else {
+            throw NewErrorUtils.configurationError(
+                message: Strings.configure.sk2_required.description
+            ).asPublicError
+        }
+        do {
+            let (_, transaction) = try await self.purchasesOrchestrator.storeKit2TransactionListener.handle(
+                purchaseResult: purchaseResult, fromTransactionUpdate: true
+            )
+            return transaction
+        } catch {
+            throw NewErrorUtils.purchasesError(withUntypedError: error).asPublicError
+        }
+    }
+
+    func redeemWebPurchase(
+        webPurchaseRedemption: WebPurchaseRedemption,
+        completion: @escaping (CustomerInfo?, PublicError?) -> Void
+    ) {
+        self.purchasesOrchestrator.redeemWebPurchase(webPurchaseRedemption: webPurchaseRedemption,
+                                                     completion: completion)
+    }
+
+    func redeemWebPurchase(_ webPurchaseRedemption: WebPurchaseRedemption) async -> WebPurchaseRedemptionResult {
+        return await self.purchasesOrchestrator.redeemWebPurchase(webPurchaseRedemption)
+    }
 }
+
+// MARK: - Virtual Currencies
+#if !ENABLE_CUSTOM_ENTITLEMENT_COMPUTATION
+public extension Purchases {
+
+    @objc func getVirtualCurrencies(
+        completion: @escaping @Sendable (VirtualCurrencies?, PublicError?) -> Void
+    ) {
+        Task {
+            do {
+                let virtualCurrencies = try await self.virtualCurrencies()
+                OperationDispatcher.dispatchOnMainActor {
+                    completion(virtualCurrencies, nil)
+                }
+            } catch {
+                let publicError = NewErrorUtils.purchasesError(withUntypedError: error).asPublicError
+                OperationDispatcher.dispatchOnMainActor {
+                    completion(nil, publicError)
+                }
+            }
+        }
+    }
+
+    @objc var cachedVirtualCurrencies: VirtualCurrencies? {
+        return self.virtualCurrencyManager.cachedVirtualCurrencies()
+    }
+
+    func virtualCurrencies() async throws -> VirtualCurrencies {
+        do {
+            return try await self.virtualCurrencyManager.virtualCurrencies()
+        } catch {
+            let publicError = NewErrorUtils.purchasesError(withUntypedError: error).asPublicError
+            throw publicError
+        }
+    }
+
+    @objc func invalidateVirtualCurrenciesCache() {
+        self.virtualCurrencyManager.invalidateVirtualCurrenciesCache()
+    }
+}
+#endif
 
 // swiftlint:enable missing_docs
 
-// MARK: - Paywalls
+// MARK: - Paywalls & Customer Center
 
 @available(iOS 15.0, tvOS 15.0, macOS 12.0, watchOS 8.0, *)
 public extension Purchases {
@@ -1119,13 +1438,83 @@ public extension Purchases {
     /// Used by `RevenueCatUI` to keep track of ``PaywallEvent``s.
     func track(paywallEvent: PaywallEvent) async {
         self.purchasesOrchestrator.track(paywallEvent: paywallEvent)
-        await self.paywallEventsManager?.track(paywallEvent: paywallEvent)
+        await self.eventsManager?.track(featureEvent: paywallEvent)
     }
+
+    /// Used by `RevenueCatUI` to keep track of ``CustomerCenterEvent``s.
+    @_spi(Internal) func track(customerCenterEvent: any CustomerCenterEventType) {
+        operationDispatcher.dispatchOnWorkerThread {
+            // If we make CustomerCenterEventType implement FeatureEvent, we have to make FeatureEvent public
+            guard let event = customerCenterEvent as? FeatureEvent else { return }
+            await self.eventsManager?.track(featureEvent: event)
+        }
+    }
+
+    /// Used by `RevenueCatUI` to download Customer Center data
+    @_spi(Internal) func loadCustomerCenter() async throws -> CustomerCenterConfigData {
+        let response = try await Async.call { completion in
+            self.backend.customerCenterConfig.getCustomerCenterConfig(appUserID: self.appUserID,
+                                                                      isAppBackgrounded: false) { result in
+                completion(result.mapError(\.asPublicError))
+            }
+        }
+
+        return CustomerCenterConfigData(from: response)
+    }
+
+    /// Used by `RevenueCatUI` to create a support ticket
+    @_spi(Internal) func createTicket(customerEmail: String, ticketDescription: String) async throws -> Bool {
+        let response = try await Async.call { completion in
+            self.backend.customerCenterConfig.postCreateTicket(appUserID: self.appUserID,
+                                                               customerEmail: customerEmail,
+                                                               ticketDescription: ticketDescription) { result in
+                completion(result.mapError(\.asPublicError))
+            }
+        }
+
+        return response.sent
+    }
+
+#if !os(tvOS)
+
+    /// Used by `RevenueCatUI` to notify `RevenueCat` when a font in a paywall fails to load.
+    @_spi(Internal) func failedToLoadFontWithConfig(_ fontConfig: UIConfig.FontsConfig) {
+        self.operationDispatcher.dispatchOnWorkerThread {
+            await self.paywallCache?.triggerFontDownloadIfNeeded(fontsConfig: fontConfig)
+        }
+    }
+
+#endif
 
     /// Used by `RevenueCatUI` to download and cache paywall images.
     @available(iOS 15.0, macOS 12.0, watchOS 8.0, tvOS 15.0, *)
     static let paywallImageDownloadSession: URLSession = PaywallCacheWarming.downloadSession
 
+}
+
+// MARK: - Preferred locale
+
+extension Purchases {
+    /// Overrides the preferred locale for RevenueCatUI components.
+    /// - Parameter locale: A locale string in the format "language_region" (e.g., "en_US").
+    /// Use `nil` to remove the override and use the default user locale determined by the system.
+    ///
+    /// Setting this will affect the display of RevenueCat UI components, such as the Paywalls.
+    /// - Important: This method only takes effect after `Purchases` has been configured.
+    public func overridePreferredUILocale(_ locale: String?) {
+        guard locale != self.systemInfo.preferredLocaleOverride else {
+            return
+        }
+
+        self.systemInfo.overridePreferredLocale(locale)
+
+        if self.overridePreferredUILocaleRateLimiter.shouldProceed() {
+            // Refetches new offerings with preferred locale
+            self.getOfferings(fetchPolicy: .default, fetchCurrent: true) { _, _ in
+                // No-op
+            }
+        }
+    }
 }
 
 // MARK: Configuring Purchases
@@ -1149,7 +1538,7 @@ public extension Purchases {
      * ```swift
      *  Purchases.configure(
      *      with: Configuration.Builder(withAPIKey: Constants.apiKey)
-     *               .with(observerMode: false)
+     *               .with(purchasesAreCompletedBy: .revenueCat)
      *               .with(appUserID: "<app_user_id>")
      *               .build()
      *      )
@@ -1164,13 +1553,18 @@ public extension Purchases {
                   userDefaults: configuration.userDefaults,
                   platformInfo: configuration.platformInfo,
                   responseVerificationMode: configuration.responseVerificationMode,
-                  storeKit2Setting: configuration.storeKit2Setting,
+                  storeKitVersion: configuration.storeKitVersion,
                   storeKitTimeout: configuration.storeKit1Timeout,
                   networkTimeout: configuration.networkTimeout,
                   dangerousSettings: configuration.dangerousSettings,
-                  showStoreMessagesAutomatically: configuration.showStoreMessagesAutomatically
+                  showStoreMessagesAutomatically: configuration.showStoreMessagesAutomatically,
+                  diagnosticsEnabled: configuration.diagnosticsEnabled,
+                  preferredLocale: configuration.preferredLocale,
+                  automaticDeviceIdentifierCollectionEnabled: configuration.automaticDeviceIdentifierCollectionEnabled
         )
     }
+
+    #if !ENABLE_CUSTOM_ENTITLEMENT_COMPUTATION
 
     /**
      * Configures an instance of the Purchases SDK with a specified ``Configuration/Builder``.
@@ -1189,7 +1583,7 @@ public extension Purchases {
      * ```swift
      *  Purchases.configure(
      *      with: .init(withAPIKey: Constants.apiKey)
-     *               .with(observerMode: false)
+     *               .with(purchasesAreCompletedBy: .revenueCat)
      *               .with(appUserID: "<app_user_id>")
      *      )
      * ```
@@ -1199,8 +1593,6 @@ public extension Purchases {
     @discardableResult static func configure(with builder: Configuration.Builder) -> Purchases {
         return Self.configure(with: builder.build())
     }
-
-    #if !ENABLE_CUSTOM_ENTITLEMENT_COMPUTATION
 
     /**
      * Configures an instance of the Purchases SDK with a specified API key.
@@ -1239,18 +1631,35 @@ public extension Purchases {
      *
      * - Returns: An instantiated ``Purchases`` object that has been set as a singleton.
      */
+    @_disfavoredOverload
     @objc(configureWithAPIKey:appUserID:)
     @discardableResult static func configure(withAPIKey apiKey: String, appUserID: String?) -> Purchases {
-        Self.configure(withAPIKey: apiKey, appUserID: appUserID, observerMode: false)
+        Self.configure(withAPIKey: apiKey,
+                       appUserID: appUserID,
+                       purchasesAreCompletedBy: .revenueCat,
+                       storeKitVersion: .default)
+    }
+
+    @available(*, deprecated, message: """
+    The appUserID passed to logIn is a constant string known at compile time.
+    This is likely a programmer error. This ID is used to identify the current user.
+    See https://docs.revenuecat.com/docs/user-ids for more information.
+    """)
+    // swiftlint:disable:next missing_docs
+    @discardableResult static func configure(withAPIKey apiKey: String, appUserID: StaticString) -> Purchases {
+        Logger.warn(Strings.identity.logging_in_with_static_string)
+        return Self.configure(withAPIKey: apiKey,
+                              appUserID: "\(appUserID)",
+                              purchasesAreCompletedBy: .revenueCat,
+                              storeKitVersion: .default)
     }
 
     /**
-     * Configures an instance of the Purchases SDK with a custom `UserDefaults`.
+     * Configures an instance of the Purchases SDK with a specified API key, app user ID, purchasesAreCompletedBy
+     * setting, and StoreKit version.
      *
-     * Use this constructor if you want to
-     * sync status across a shared container, such as between a host app and an extension. The instance of the
-     * Purchases SDK will be set as a singleton.
-     * You should access the singleton instance using ``Purchases/shared``
+     * Use this constructor if you want to set purchasesAreCompletedBy. The instance of the Purchases SDK
+     * will be set as a singleton. You should access the singleton instance using ``Purchases/shared``.
      *
      * - Parameter apiKey: The API Key generated for your app from https://app.revenuecat.com/
      *
@@ -1258,23 +1667,50 @@ public extension Purchases {
      * purchases and subscriptions across devices. Pass `nil` or an empty string if you want ``Purchases``
      * to generate this for you.
      *
-     * - Parameter observerMode: Set this to `true` if you have your own IAP implementation and want to use only
-     * RevenueCat's backend. Default is `false`.
+     * - Parameter purchasesAreCompletedBy: Set this to ``PurchasesAreCompletedBy/myApp``
+     *  if you have your own IAP implementation and want to use only RevenueCat's backend.
+     *  Default is ``PurchasesAreCompletedBy/revenueCat``.
+     *
+     * - Parameter storeKitVersion: The StoreKit version Purchases will use to process your purchases.
      *
      * - Returns: An instantiated ``Purchases`` object that has been set as a singleton.
      *
-     * - Warning: This assumes your IAP implementation uses StoreKit 1.
-     * Observer mode is not compatible with StoreKit 2.
+     * - Warning: If purchasesAreCompletedBy is ``PurchasesAreCompletedBy/myApp``
+     * and storeKitVersion is ``StoreKitVersion/storeKit2``, ensure that you're
+     * calling ``Purchases/recordPurchase(_:)`` after making a purchase.
      */
-    @objc(configureWithAPIKey:appUserID:observerMode:)
+    @_disfavoredOverload
+    @objc(configureWithAPIKey:appUserID:purchasesAreCompletedBy:storeKitVersion:)
     @discardableResult static func configure(withAPIKey apiKey: String,
                                              appUserID: String?,
-                                             observerMode: Bool) -> Purchases {
-        Self.configure(
+                                             purchasesAreCompletedBy: PurchasesAreCompletedBy,
+                                             storeKitVersion: StoreKitVersion) -> Purchases {
+        return Self.configure(
             with: Configuration
                 .builder(withAPIKey: apiKey)
                 .with(appUserID: appUserID)
-                .with(observerMode: observerMode)
+                .with(purchasesAreCompletedBy: purchasesAreCompletedBy, storeKitVersion: storeKitVersion)
+                .build()
+        )
+    }
+
+    @available(*, deprecated, message: """
+    The appUserID passed to logIn is a constant string known at compile time.
+    This is likely a programmer error. This ID is used to identify the current user.
+    See https://docs.revenuecat.com/docs/user-ids for more information.
+    """)
+    // swiftlint:disable:next missing_docs
+    @discardableResult static func configure(withAPIKey apiKey: String,
+                                             appUserID: StaticString,
+                                             purchasesAreCompletedBy: PurchasesAreCompletedBy,
+                                             storeKitVersion: StoreKitVersion) -> Purchases {
+        Logger.warn(Strings.identity.logging_in_with_static_string)
+
+        return Self.configure(
+            with: Configuration
+                .builder(withAPIKey: apiKey)
+                .with(appUserID: "\(appUserID)")
+                .with(purchasesAreCompletedBy: purchasesAreCompletedBy, storeKitVersion: storeKitVersion)
                 .build()
         )
     }
@@ -1317,11 +1753,61 @@ public extension Purchases {
     @objc(configureInCustomEntitlementsModeWithApiKey:appUserID:)
     @discardableResult static func configureInCustomEntitlementsComputationMode(apiKey: String,
                                                                                 appUserID: String) -> Purchases {
+        Self.configureInCustomEntitlementsComputationMode(
+            apiKey: apiKey,
+            appUserID: appUserID,
+            showStoreMessagesAutomatically: true
+        )
+    }
+
+    /**
+     * Configures an instance of the Purchases SDK with a specified API key and
+     * app user ID in Custom Entitlements Computation mode.
+
+     * - Warning: Configuring in Custom Entitlements Computation mode should only be enabled after
+     * being instructed to do so by the RevenueCat team.
+     * Apps configured in this mode will not have anonymous IDs, will not be able to use logOut methods,
+     * and will not have their CustomerInfo cache refreshed automatically.
+     *
+     * ## Custom Entitlements Computation mode
+     * This mode is intended for apps that will use RevenueCat to manage payment flows,
+     * but **will not** use RevenueCat's SDK to compute entitlements.
+     * Apps using this mode will instead rely on webhooks to get notified when purchases go through
+     * and to merge information between RevenueCat's servers
+     * and their own.
+     *
+     * In this mode, the RevenueCat SDK will never generate anonymous IDs. Instead, it can only be configured
+     * with a known appUserID, and the logOut methods
+     * will return an error if called. To change users, call ``logIn(_:)-arja``.
+     *
+     * The instance will be set as a singleton.
+     * You should access the singleton instance using ``Purchases/shared``.
+     *
+     * - Note: Best practice is to use a salted hash of your unique app user ids.
+     *
+     * - Parameter apiKey: The API Key generated for your app from https://app.revenuecat.com/
+     *
+     * - Parameter appUserID: The unique app user id for this user. This user id will allow users to share their
+     * purchases and subscriptions across devices. Pass `nil` or an empty string if you want ``Purchases``
+     * to generate this for you.
+     *
+     * - Parameter showStoreMessagesAutomatically: Enabled by default. If enabled, if the user has
+     * billing issues, has yet to accept a price increase consent or there are other messages from StoreKit, they will
+     * be displayed automatically when the app is initialized.
+     *
+     * - Returns: An instantiated ``Purchases`` object that has been set as a singleton.
+     */
+    @objc(configureInCustomEntitlementsModeWithApiKey:appUserID:showStoreMessagesAutomatically:)
+    @discardableResult static func configureInCustomEntitlementsComputationMode(
+        apiKey: String,
+        appUserID: String,
+        showStoreMessagesAutomatically: Bool = true
+    ) -> Purchases {
         Self.configure(
-            with: .builder(withAPIKey: apiKey)
-                .with(appUserID: appUserID)
-                .with(dangerousSettings: DangerousSettings(customEntitlementComputation: true))
-                .build())
+            with: Configuration.Builder(withAPIKey: apiKey, appUserID: appUserID)
+                .with(showStoreMessagesAutomatically: showStoreMessagesAutomatically)
+                .build()
+        )
     }
 
     #endif
@@ -1335,11 +1821,14 @@ public extension Purchases {
         applicationSupportDirectory: URL? = nil,
         platformInfo: PlatformInfo?,
         responseVerificationMode: Signing.ResponseVerificationMode,
-        storeKit2Setting: StoreKit2Setting,
+        storeKitVersion: StoreKitVersion,
         storeKitTimeout: TimeInterval,
         networkTimeout: TimeInterval,
         dangerousSettings: DangerousSettings?,
-        showStoreMessagesAutomatically: Bool
+        showStoreMessagesAutomatically: Bool,
+        diagnosticsEnabled: Bool,
+        preferredLocale: String?,
+        automaticDeviceIdentifierCollectionEnabled: Bool = true
     ) -> Purchases {
         return self.setDefaultInstance(
             .init(apiKey: apiKey,
@@ -1349,11 +1838,14 @@ public extension Purchases {
                   observerMode: observerMode,
                   platformInfo: platformInfo,
                   responseVerificationMode: responseVerificationMode,
-                  storeKit2Setting: storeKit2Setting,
+                  storeKitVersion: storeKitVersion,
                   storeKitTimeout: storeKitTimeout,
                   networkTimeout: networkTimeout,
                   dangerousSettings: dangerousSettings,
-                  showStoreMessagesAutomatically: showStoreMessagesAutomatically)
+                  showStoreMessagesAutomatically: showStoreMessagesAutomatically,
+                  diagnosticsEnabled: diagnosticsEnabled,
+                  preferredLocale: preferredLocale,
+                  automaticDeviceIdentifierCollectionEnabled: automaticDeviceIdentifierCollectionEnabled)
         )
     }
 
@@ -1383,7 +1875,21 @@ extension Purchases: PurchasesOrchestratorDelegate {
      */
     func readyForPromotedProduct(_ product: StoreProduct,
                                  purchase startPurchase: @escaping StartPurchaseBlock) {
-        self.delegate?.purchases?(self, readyForPromotedProduct: product, purchase: startPurchase)
+
+        switch self.systemInfo.storeKitVersion.effectiveVersion {
+        case .storeKit1:
+            // Calling the delegate method on the main actor causes test failures on iOS 14-16, so instead
+            // we dispatch to the main thread, which doesn't cause the failures.
+            OperationDispatcher.default.dispatchOnMainThread {
+                self.delegate?.purchases?(self, readyForPromotedProduct: product, purchase: startPurchase)
+            }
+        case .storeKit2:
+            // Ensure that the delegate method is called on the main actor for StoreKit 2.
+            OperationDispatcher.default.dispatchOnMainActor {
+                self.delegate?.purchases?(self, readyForPromotedProduct: product, purchase: startPurchase)
+            }
+        }
+
     }
 
 #if os(iOS) || targetEnvironment(macCatalyst) || VISION_OS
@@ -1411,10 +1917,24 @@ public extension Purchases {
     /**
      * Deprecated
      */
-    @available(*, deprecated, message: "Configure behavior through the RevenueCat dashboard instead")
+    @available(*, deprecated, message: """
+    Configure behavior through the RevenueCat dashboard instead. If you have configured the \"Legacy\" restore
+    behavior in the [RevenueCat Dashboard](app.revenuecat.com) and are currently setting this to `true`, keep
+    this setting active.
+    """
+    )
     @objc var allowSharingAppStoreAccount: Bool {
         get { purchasesOrchestrator.allowSharingAppStoreAccount }
         set { purchasesOrchestrator.allowSharingAppStoreAccount = newValue }
+    }
+
+    /**
+     * Deprecated. Where responsibility for completing purchase transactions lies.
+     */
+    @available(*, deprecated, message: "Use ``purchasesAreCompletedBy`` instead.")
+    @objc var finishTransactions: Bool {
+        get { self.systemInfo.finishTransactions }
+        set { self.systemInfo.finishTransactions = newValue }
     }
 
     #if !ENABLE_CUSTOM_ENTITLEMENT_COMPUTATION
@@ -1471,21 +1991,33 @@ extension Purchases: @unchecked Sendable {}
 extension Purchases {
 
     /// Used when purchasing through `SwiftUI` paywalls.
-    func cachePresentedOfferingIdentifier(_ identifier: String, productIdentifier: String) {
-        Logger.debug(Strings.purchase.caching_presented_offering_identifier(offeringID: identifier,
-                                                                            productID: productIdentifier))
+    func cachePresentedOfferingContext(_ context: PresentedOfferingContext, productIdentifier: String) {
+        Logger.debug(Strings.purchase.caching_presented_offering_identifier(
+            offeringID: context.offeringIdentifier,
+            productID: productIdentifier
+        ))
 
-        self.purchasesOrchestrator.cachePresentedOfferingIdentifier(
-            identifier,
+        self.purchasesOrchestrator.cachePresentedOfferingContext(
+            context,
             productIdentifier: productIdentifier
         )
     }
 
+    // swiftlint:disable missing_docs
+    @_spi(Internal) public var preferredLocales: [String] {
+        return self.systemInfo.preferredLocales
+    }
+
+    // `preferredLocales` will always include the preferred locale override if set, so this
+    // property is only useful for reading the override value
+    // swiftlint:disable missing_docs
+    @_spi(Internal) public var preferredLocaleOverride: String? {
+        return self.systemInfo.preferredLocaleOverride
+    }
 }
 
 extension Purchases: InternalPurchasesType {
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     internal func healthRequest(signatureVerification: Bool) async throws {
         do {
             try await self.backend.healthRequest(signatureVerification: signatureVerification)
@@ -1493,6 +2025,12 @@ extension Purchases: InternalPurchasesType {
             throw NewErrorUtils.purchasesError(withUntypedError: error)
         }
     }
+
+    #if DEBUG
+    internal func healthReport() async -> PurchasesDiagnostics.SDKHealthReport {
+        await self.healthManager.healthReport()
+    }
+    #endif
 
     @available(iOS 15.0, tvOS 15.0, watchOS 8.0, macOS 12.0, *)
     func productEntitlementMapping() async throws -> ProductEntitlementMapping {
@@ -1520,8 +2058,8 @@ internal extension Purchases {
         return self.paymentQueueWrapper.sk1Wrapper != nil
     }
 
-    var storeKit2Setting: StoreKit2Setting {
-        return self.systemInfo.storeKit2Setting
+    var isStoreKit2EnabledAndAvailable: Bool {
+        return self.systemInfo.storeKitVersion.isStoreKit2EnabledAndAvailable
     }
 
     #if DEBUG
@@ -1529,7 +2067,6 @@ internal extension Purchases {
     /// - Returns: the parsed `AppleReceipt`
     ///
     /// - Warning: this is only meant for integration tests, as a way to debug purchase failures.
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     func fetchReceipt(_ policy: ReceiptRefreshPolicy) async throws -> AppleReceipt? {
         let receipt = await self.receiptFetcher.receiptData(refreshPolicy: policy)
 
@@ -1573,10 +2110,6 @@ internal extension Purchases {
         return self.productsManager.requestTimeout
     }
 
-    var isSandbox: Bool {
-        return self.systemInfo.isSandbox
-    }
-
     var observerMode: Bool {
         return self.systemInfo.observerMode
     }
@@ -1586,7 +2119,7 @@ internal extension Purchases {
     }
 
     var offlineCustomerInfoEnabled: Bool {
-        return self.backend.offlineCustomerInfoEnabled
+        return self.backend.offlineCustomerInfoEnabled && self.systemInfo.supportsOfflineEntitlements
     }
 
     var publicKey: Signing.PublicKey? {
@@ -1601,11 +2134,9 @@ internal extension Purchases {
         self.offeringsManager.invalidateCachedOfferings(appUserID: self.appUserID)
     }
 
-    /// - Throws: if posting events fails
-    /// - Returns: the number of events posted
     @available(iOS 15.0, tvOS 15.0, macOS 12.0, watchOS 8.0, *)
     func flushPaywallEvents(count: Int) async throws -> Int {
-        return try await self.paywallEventsManager?.flushEvents(count: count) ?? 0
+        return try await self.eventsManager?.flushFeatureEvents(batchSize: count) ?? 0
     }
 
 }
@@ -1625,8 +2156,14 @@ private extension Purchases {
         self.delegate?.purchases?(self, receivedUpdated: new)
     }
 
+    @objc func applicationDidBecomeActive() {
+        purchasesOrchestrator.handleApplicationDidBecomeActive()
+    }
+
     @objc func applicationWillEnterForeground() {
         Logger.debug(Strings.configure.application_foregrounded)
+
+        self.systemInfo.isAppBackgroundedState = false
 
         // Note: it's important that we observe "will enter foreground" instead of
         // "did become active" so that we don't trigger cache updates in the middle
@@ -1635,7 +2172,6 @@ private extension Purchases {
         self.dispatchSyncSubscriberAttributes()
 
         #if !ENABLE_CUSTOM_ENTITLEMENT_COMPUTATION
-        (self as DeprecatedSearchAdsAttribution).postAppleSearchAddsAttributionCollectionIfNeeded()
 
         #if os(iOS) || os(macOS) || VISION_OS
         if #available(iOS 14.3, macOS 11.1, macCatalyst 14.3, *) {
@@ -1643,13 +2179,17 @@ private extension Purchases {
         }
         #endif
 
-        self.postPaywallEventsIfNeeded()
+        self.purchasesOrchestrator.postEventsIfNeeded(delayed: true)
 
         #endif
     }
 
     @objc func applicationDidEnterBackground() {
+        self.systemInfo.isAppBackgroundedState = true
         self.dispatchSyncSubscriberAttributes()
+        #if !ENABLE_CUSTOM_ENTITLEMENT_COMPUTATION
+        self.purchasesOrchestrator.postEventsIfNeeded()
+        #endif
     }
 
     func subscribeToAppStateNotifications() {
@@ -1661,6 +2201,11 @@ private extension Purchases {
         self.notificationCenter.addObserver(self,
                                             selector: #selector(self.applicationDidEnterBackground),
                                             name: SystemInfo.applicationDidEnterBackgroundNotification,
+                                            object: nil)
+
+        self.notificationCenter.addObserver(self,
+                                            selector: #selector(self.applicationDidBecomeActive),
+                                            name: SystemInfo.applicationDidBecomeActiveNotification,
                                             object: nil)
     }
 
@@ -1682,7 +2227,38 @@ private extension Purchases {
         }
     }
 
+    #if DEBUG && !ENABLE_CUSTOM_ENTITLEMENT_COMPUTATION
+    func runHealthCheckIfInForeground() {
+        // This is a workaround and needs to be fixed at some point. Explanation:
+        // The StoreKit integration tests are very time sensitive and set very
+        // short expiry times for most products. This results in flakiness, which
+        // is further aggravated by the fact that the health check adds an extra async
+        // method and thus an extra delay.
+        // To avoid this, we skip the health check when running integration tests.
+        // This is not ideal, and we should consider making the tests more resilient
+        // in the future.
+        guard !ProcessInfo.isRunningIntegrationTests else { return }
+
+        self.operationDispatcher.dispatchOnWorkerThread { [weak self] in
+            guard self?.systemInfo.isAppBackgroundedState == false,
+            let appUserID = self?.appUserID,
+                let availability = try? await self?.backend.healthReportAvailabilityRequest(
+                    appUserID: appUserID
+                ), availability.reportLogs else {
+                    return
+                }
+            await self?.healthManager.logSDKHealthReportOutcome()
+        }
+    }
+    #endif
+
     func updateAllCachesIfNeeded(isAppBackgrounded: Bool) {
+        guard !self.systemInfo.dangerousSettings.uiPreviewMode else {
+            // No need to update caches every time when in UI preview mode.
+            // Only needed at configuration time
+            return
+        }
+
         if !self.systemInfo.dangerousSettings.customEntitlementComputation {
             self.customerInfoManager.fetchAndCacheCustomerInfoIfStale(appUserID: self.appUserID,
                                                                       isAppBackgrounded: isAppBackgrounded,
@@ -1711,7 +2287,8 @@ private extension Purchases {
     ) {
         Logger.verbose(Strings.purchase.updating_all_caches)
 
-        if self.systemInfo.dangerousSettings.customEntitlementComputation {
+        if self.systemInfo.dangerousSettings.customEntitlementComputation ||
+            self.systemInfo.dangerousSettings.uiPreviewMode {
             if let completion = completion {
                 let error = NewErrorUtils.featureNotAvailableInCustomEntitlementsComputationModeError()
                 completion(.failure(error.asPublicError))
@@ -1733,7 +2310,7 @@ private extension Purchases {
 
     // Used when delegate is being set
     func sendCachedCustomerInfoToDelegateIfExists() {
-        guard let info = self.customerInfoManager.cachedCustomerInfo(appUserID: self.appUserID) else {
+        guard let info = try? self.customerInfoManager.cachedCustomerInfo(appUserID: self.appUserID) else {
             return
         }
 
@@ -1745,37 +2322,109 @@ private extension Purchases {
         self.offeringsManager.updateOfferingsCache(
             appUserID: self.appUserID,
             isAppBackgrounded: isAppBackgrounded
-        ) { [cache = self.paywallCache] offerings in
+        ) { [weak self] offeringsResultData in
             if #available(iOS 15.0, macOS 12.0, watchOS 8.0, tvOS 15.0, *),
-               let cache = cache, let offerings = offerings.value {
-                self.operationDispatcher.dispatchOnWorkerThread {
-                    await cache.warmUpEligibilityCache(offerings: offerings)
-                    await cache.warmUpPaywallImagesCache(offerings: offerings)
+               let offerings = offeringsResultData.value?.offerings {
+                self?.warmUpCaches(offerings: offerings)
+            }
+        }
+    }
+
+    @available(iOS 15.0, macOS 12.0, watchOS 8.0, tvOS 15.0, *)
+    private func warmUpCaches(offerings: Offerings) {
+        guard let cache = self.paywallCache else {
+            return
+        }
+        self.operationDispatcher.dispatchOnWorkerThread {
+            await cache.warmUpEligibilityCache(offerings: offerings)
+        }
+        self.operationDispatcher.dispatchOnWorkerThread {
+            await cache.warmUpPaywallImagesCache(offerings: offerings)
+        }
+        self.operationDispatcher.dispatchOnWorkerThread {
+            await cache.warmUpPaywallFontsCache(offerings: offerings)
+        }
+    }
+
+}
+
+// MARK: - Win-Back Offers
+#if !ENABLE_CUSTOM_ENTITLEMENT_COMPUTATION
+@available(iOS 18.0, macOS 15.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *)
+extension Purchases {
+
+    /**
+     * Returns the win-back offers that the subscriber is eligible for on the provided product.
+     *
+     * - Parameter product: The product to check for eligible win-back offers.
+     * - Returns: The win-back offers on the given product that a subscriber is eligible for.
+     * - Important: Win-back offers are only supported when the SDK is running with StoreKit 2 enabled.
+     */
+    public func eligibleWinBackOffers(
+        forProduct product: StoreProduct
+    ) async throws -> [WinBackOffer] {
+        return try await self.purchasesOrchestrator.eligibleWinBackOffers(forProduct: product)
+    }
+
+    /**
+     * Returns the win-back offers that the subscriber is eligible for on the provided package.
+     *
+     * - Parameter package: The package to check for eligible win-back offers.
+     * - Returns: The win-back offers on the given product that a subscriber is eligible for.
+     * - Important: Win-back offers are only supported when the SDK is running with StoreKit 2 enabled.
+     */
+    @available(iOS 18.0, macOS 15.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *)
+    public func eligibleWinBackOffers(
+        forPackage package: Package
+    ) async throws -> [WinBackOffer] {
+        return try await self.eligibleWinBackOffers(forProduct: package.storeProduct)
+    }
+
+    /**
+     * Returns the win-back offers that the subscriber is eligible for on the provided product.
+     *
+     * - Parameter product: The product to check for eligible win-back offers.
+     * - Parameter completion: A completion block that is called with the eligible win-back
+     * offers for the provided product.
+     * - Important: Win-back offers are only supported when the SDK is running with StoreKit 2 enabled.
+     */
+    @objc public func eligibleWinBackOffers(
+        forProduct product: StoreProduct,
+        completion: @escaping @Sendable ([WinBackOffer]?, PublicError?) -> Void
+    ) {
+        Task {
+            do {
+                let eligibleWinBackOffers = try await self.eligibleWinBackOffers(forProduct: product)
+                OperationDispatcher.dispatchOnMainActor {
+                    completion(eligibleWinBackOffers, nil)
+                }
+            } catch {
+                let publicError = NewErrorUtils.purchasesError(withUntypedError: error).asPublicError
+                OperationDispatcher.dispatchOnMainActor {
+                    completion(nil, publicError)
                 }
             }
         }
     }
 
-    private func postPaywallEventsIfNeeded() {
-        guard #available(iOS 15.0, tvOS 15.0, macOS 12.0, watchOS 8.0, *),
-              let manager = self.paywallEventsManager else { return }
-
-        self.operationDispatcher.dispatchOnWorkerThread(delay: .long) {
-            _ = try? await manager.flushEvents(count: PaywallEventsManager.defaultEventFlushCount)
+    /**
+     * Returns the win-back offers that the subscriber is eligible for on the provided package.
+     *
+     * - Parameter package: The package to check for eligible win-back offers.
+     * - Parameter completion: A completion block that is called with the eligible win-back
+     * offers for the provided product.
+     * - Important: Win-back offers are only supported when the SDK is running with StoreKit 2 enabled.
+     */
+    @available(iOS 18.0, macOS 15.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *)
+    @objc public func eligibleWinBackOffers(
+        forPackage package: Package,
+        completion: @escaping @Sendable ([WinBackOffer]?, PublicError?) -> Void
+    ) {
+        self.eligibleWinBackOffers(
+            forProduct: package.storeProduct
+        ) { winBackOffers, error in
+            completion(winBackOffers, error)
         }
     }
-
 }
-
-// MARK: - Deprecations
-
-/// Protocol to be able to call `Purchases.postAppleSearchAddsAttributionCollectionIfNeeded` without warnings
-private protocol DeprecatedSearchAdsAttribution {
-
-    func postAppleSearchAddsAttributionCollectionIfNeeded()
-
-}
-
-#if !ENABLE_CUSTOM_ENTITLEMENT_COMPUTATION
-extension Purchases: DeprecatedSearchAdsAttribution {}
 #endif

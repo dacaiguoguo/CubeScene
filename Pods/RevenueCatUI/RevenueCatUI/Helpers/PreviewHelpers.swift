@@ -16,6 +16,7 @@ import SwiftUI
 
 #if DEBUG
 
+// swiftlint:disable force_unwrapping
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 @available(macOS, unavailable)
 @MainActor
@@ -74,7 +75,8 @@ struct PreviewableTemplate<T: TemplateViewType>: View {
             template: template,
             mode: mode,
             fonts: DefaultPaywallFontProvider(),
-            locale: .current
+            locale: .current,
+            showZeroDecimalPlacePrices: false
         ).map { (template, $0) }
 
         self.presentInSheet = presentInSheet

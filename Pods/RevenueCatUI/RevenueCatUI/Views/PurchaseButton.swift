@@ -29,6 +29,8 @@ struct PurchaseButton: View {
     private var purchaseHandler: PurchaseHandler
     @Environment(\.isEnabled)
     private var isEnabled
+    @Environment(\.purchaseInitiatedAction)
+    private var purchaseInitiatedAction: PurchaseInitiatedAction?
 
     init(
         packages: TemplateViewConfiguration.PackageConfiguration,
@@ -39,6 +41,21 @@ struct PurchaseButton: View {
             packages: packages,
             selectedPackage: selectedPackage,
             colors: configuration.colors,
+            fonts: configuration.fonts,
+            mode: configuration.mode
+        )
+    }
+
+    init(
+        packages: TemplateViewConfiguration.PackageConfiguration,
+        selectedPackage: TemplateViewConfiguration.Package,
+        configuration: TemplateViewConfiguration,
+        selectedTier: PaywallData.Tier
+    ) {
+        self.init(
+            packages: packages,
+            selectedPackage: selectedPackage,
+            colors: configuration.colors(for: selectedTier),
             fonts: configuration.fonts,
             mode: configuration.mode
         )
@@ -64,10 +81,25 @@ struct PurchaseButton: View {
 
     private var button: some View {
         AsyncButton {
-            guard !self.purchaseHandler.actionInProgress else { return }
+            guard !self.purchaseHandler.actionInProgress else {
+                return
+            }
             guard !self.selectedPackage.currentlySubscribed else {
                 Logger.warning(Strings.product_already_subscribed)
                 return
+            }
+
+            // Check if there's a purchase interceptor
+            if let interceptor = self.purchaseInitiatedAction {
+                // Wait for the interceptor to call resume before proceeding
+                let result = await self.purchaseHandler.withPendingPurchaseContinuation {
+                    await withCheckedContinuation { continuation in
+                        interceptor(self.selectedPackage.content, resume: ResumeAction { shouldProceed in
+                            continuation.resume(returning: shouldProceed)
+                        })
+                    }
+                }
+                guard result else { return }
             }
 
             _ = try await self.purchaseHandler.purchase(package: self.selectedPackage.content)
@@ -106,7 +138,7 @@ struct PurchaseButton: View {
             }
         }
         #if targetEnvironment(macCatalyst)
-        .buttonStyle(.plain)
+        .buttonStyle(.borderless)
         #endif
     }
 

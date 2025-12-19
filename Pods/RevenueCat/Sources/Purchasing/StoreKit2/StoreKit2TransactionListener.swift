@@ -37,12 +37,17 @@ protocol StoreKit2TransactionListenerType: Sendable {
 
     func set(delegate: StoreKit2TransactionListenerDelegate) async
 
-    /// - Returns: `nil` `CustomerInfo` if purchases were not synced
-    /// - Throws: Error if purchase was not completed successfully
+    /// - Throws: ``PurchasesError`` if purchase was not completed successfully
+    /// - Parameter fromTransactionUpdate: `true` only for transactions detected outside of a manual purchase flow.
     func handle(
-        purchaseResult: StoreKit.Product.PurchaseResult
+        purchaseResult: StoreKit.Product.PurchaseResult,
+        fromTransactionUpdate: Bool
     ) async throws -> StoreKit2TransactionListener.ResultData
 
+    func handleSK2ObserverModeTransaction(
+        verifiedTransaction: StoreKit.Transaction,
+        jwsRepresentation: String
+    ) async throws
 }
 
 /// Observes `StoreKit.Transaction.updates`, which receives:
@@ -59,6 +64,8 @@ actor StoreKit2TransactionListener: StoreKit2TransactionListenerType {
 
     private weak var delegate: StoreKit2TransactionListenerDelegate?
 
+    private let diagnosticsTracker: DiagnosticsTrackerType?
+
     // We can't directly store instances of `AsyncStream`, since that causes runtime crashes when
     // loading this type in iOS <= 15, even with @available checks correctly in place.
     // See https://openradar.appspot.com/radar?id=4970535809187840 / https://github.com/apple/swift/issues/58099
@@ -68,17 +75,19 @@ actor StoreKit2TransactionListener: StoreKit2TransactionListenerType {
         return self._updates.value
     }
 
-    init(delegate: StoreKit2TransactionListenerDelegate? = nil) {
-        self.init(delegate: delegate, updates: StoreKit.Transaction.updates)
+    init(delegate: StoreKit2TransactionListenerDelegate? = nil, diagnosticsTracker: DiagnosticsTrackerType?) {
+        self.init(delegate: delegate, diagnosticsTracker: diagnosticsTracker, updates: StoreKit.Transaction.updates)
     }
 
     /// Creates a listener with an `AsyncSequence` of `VerificationResult<Transaction>`s
     /// By default `StoreKit.Transaction.updates` is used, but a custom one can be passed for testing.
     init<S: AsyncSequence>(
         delegate: StoreKit2TransactionListenerDelegate? = nil,
+        diagnosticsTracker: DiagnosticsTrackerType?,
         updates: S
     ) where S.Element == TransactionResult {
         self.delegate = delegate
+        self.diagnosticsTracker = diagnosticsTracker
         self._updates = .init(updates.toAsyncStream())
     }
 
@@ -113,15 +122,14 @@ actor StoreKit2TransactionListener: StoreKit2TransactionListenerType {
         self.taskHandle = nil
     }
 
-    /// - Returns: `nil` `CustomerInfo` if purchases were not synced
-    /// - Throws: Error if purchase was not completed successfully
     func handle(
-        purchaseResult: StoreKit.Product.PurchaseResult
+        purchaseResult: StoreKit.Product.PurchaseResult,
+        fromTransactionUpdate: Bool = false
     ) async throws -> ResultData {
         switch purchaseResult {
         case let .success(verificationResult):
             let transaction = try await self.handle(transactionResult: verificationResult,
-                                                    fromTransactionUpdate: false)
+                                                    fromTransactionUpdate: fromTransactionUpdate)
             return (false, transaction)
         case .pending:
             throw ErrorUtils.paymentDeferredError()
@@ -164,6 +172,9 @@ private extension StoreKit2TransactionListener {
                     productID: verifiedTransaction.productID
                 ))
 
+                self.trackTransactionUpdateReceivedIfNeeded(transaction: transaction,
+                                                            sk2Transaction: verifiedTransaction)
+
                 try await delegate.storeKit2TransactionListener(
                     self,
                     updatedTransaction: transaction
@@ -172,6 +183,69 @@ private extension StoreKit2TransactionListener {
 
             return transaction
         }
+    }
+}
+
+@available(iOS 15.0, tvOS 15.0, macOS 12.0, watchOS 8.0, *)
+extension StoreKit2TransactionListener {
+
+    func handleSK2ObserverModeTransaction(
+        verifiedTransaction: StoreKit.Transaction,
+        jwsRepresentation: String
+    ) async throws {
+        let transaction = StoreTransaction(sk2Transaction: verifiedTransaction,
+                                           jwsRepresentation: jwsRepresentation)
+        if let delegate = self.delegate {
+            Logger.debug(Strings.purchase.sk2_transactions_update_received_transaction(
+                productID: verifiedTransaction.productID
+            ))
+
+            self.trackTransactionUpdateReceivedIfNeeded(transaction: transaction,
+                                                        sk2Transaction: verifiedTransaction)
+            try await delegate.storeKit2TransactionListener(
+                self,
+                updatedTransaction: transaction
+            )
+        }
+    }
+}
+
+// MARK: - Diagnostics
+
+@available(iOS 15.0, tvOS 15.0, macOS 12.0, watchOS 8.0, *)
+private extension StoreKit2TransactionListener {
+
+    func trackTransactionUpdateReceivedIfNeeded(transaction: StoreTransaction, sk2Transaction: SK2Transaction) {
+        guard let diagnosticsTracker = self.diagnosticsTracker else {
+            return
+        }
+
+        var reason: String?
+        var currency: String?
+        var price: Float?
+        #if compiler(>=6.0)
+        if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *) {
+            reason = sk2Transaction.reason.rawValue
+        }
+
+        if #available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *) {
+            currency = sk2Transaction.currency?.identifier
+        }
+
+        price = sk2Transaction.price.map { ($0 as NSDecimalNumber).floatValue }
+        #endif
+
+        diagnosticsTracker.trackAppleTransactionUpdateReceived(
+            transactionId: sk2Transaction.id,
+            environment: transaction.environment?.rawValue,
+            storefront: transaction.storefront?.countryCode,
+            productId: transaction.productIdentifier,
+            purchaseDate: transaction.purchaseDate,
+            expirationDate: sk2Transaction.expirationDate,
+            price: price,
+            currency: currency,
+            reason: reason
+        )
     }
 
 }

@@ -87,10 +87,12 @@ final class CustomerAPI {
         self.backendConfig.operationQueue.addOperation(postAttributionDataOperation)
     }
 
+    // swiftlint:disable function_parameter_count
     func post(receipt: EncodedAppleReceipt,
               productData: ProductRequestData?,
               transactionData: PurchasedTransactionData,
               observerMode: Bool,
+              appTransaction: String?,
               completion: @escaping CustomerAPI.CustomerInfoResponseHandler) {
         var subscriberAttributesToPost: SubscriberAttribute.Dictionary?
 
@@ -99,7 +101,8 @@ final class CustomerAPI {
             let attributionStatus = self.attributionFetcher.authorizationStatus
             let consentStatus = SubscriberAttribute(attribute: ReservedSubscriberAttribute.consentStatus,
                                                     value: attributionStatus.description,
-                                                    dateProvider: self.backendConfig.dateProvider)
+                                                    dateProvider: self.backendConfig.dateProvider,
+                                                    ignoreTimeInCacheIdentity: true)
             subscriberAttributesToPost?[consentStatus.key] = consentStatus
         }
 
@@ -111,7 +114,8 @@ final class CustomerAPI {
             productData: productData,
             receipt: receipt,
             observerMode: observerMode,
-            testReceiptIdentifier: self.backendConfig.systemInfo.testReceiptIdentifier
+            testReceiptIdentifier: self.backendConfig.systemInfo.testReceiptIdentifier,
+            appTransaction: appTransaction
         )
         let factory = PostReceiptDataOperation.createFactory(
             configuration: config,

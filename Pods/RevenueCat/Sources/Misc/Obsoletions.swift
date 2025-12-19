@@ -61,7 +61,7 @@ public extension Purchases {
     @available(watchOS, introduced: 6.2, unavailable, renamed: "restorePurchases()")
     @available(macOS, introduced: 10.15, unavailable, renamed: "restorePurchases()")
     @available(macCatalyst, introduced: 13.0, unavailable, renamed: "restorePurchases()")
-    func restoreTransactions() async throws -> CustomerInfo {
+    func restoreTransactions() throws -> CustomerInfo {
         fatalError()
     }
 
@@ -102,7 +102,7 @@ public extension Purchases {
     @available(watchOS, introduced: 6.2, unavailable, renamed: "customerInfo()")
     @available(macOS, introduced: 10.15, unavailable, renamed: "customerInfo()")
     @available(macCatalyst, introduced: 13.0, unavailable, renamed: "customerInfo()")
-    func purchaserInfo() async throws -> CustomerInfo {
+    func purchaserInfo() throws -> CustomerInfo {
         fatalError()
     }
 
@@ -191,7 +191,7 @@ public extension Purchases {
     @available(watchOS, introduced: 6.2, unavailable, renamed: "purchase(package:)")
     @available(macOS, introduced: 10.15, unavailable, renamed: "purchase(package:)")
     @available(macCatalyst, introduced: 13.0, unavailable, renamed: "purchase(package:)")
-    func purchasePackage(_ package: Package) async throws -> PurchaseResultData {
+    func purchasePackage(_ package: Package) throws -> PurchaseResultData {
         fatalError()
     }
 
@@ -234,7 +234,7 @@ public extension Purchases {
     @available(macOS, introduced: 10.15, unavailable, renamed: "purchase(package:promotionalOffer:)")
     @available(macCatalyst, introduced: 13.0, unavailable, renamed: "purchase(package:promotionalOffer:)")
     func purchasePackage(_ package: Package,
-                         discount: SKPaymentDiscount) async throws -> PurchaseResultData {
+                         discount: SKPaymentDiscount) throws -> PurchaseResultData {
         fatalError()
     }
 
@@ -276,7 +276,7 @@ public extension Purchases {
     @available(watchOS, introduced: 6.2, unavailable, renamed: "purchase(product:)")
     @available(macOS, introduced: 10.15, unavailable, renamed: "purchase(product:)")
     @available(macCatalyst, introduced: 13.0, unavailable, renamed: "purchase(product:)")
-    func purchaseProduct(_ product: SKProduct) async throws {
+    func purchaseProduct(_ product: SKProduct) throws {
         fatalError()
     }
 
@@ -321,7 +321,7 @@ public extension Purchases {
     @available(watchOS, introduced: 6.2, unavailable, renamed: "purchase(product:promotionalOffer:)")
     @available(macOS, introduced: 10.15, unavailable, renamed: "purchase(product:promotionalOffer:)")
     @available(macCatalyst, introduced: 13.0, unavailable, renamed: "purchase(product:promotionalOffer:)")
-    func purchaseProduct(_ product: SKProduct, discount: SKPaymentDiscount) async throws {
+    func purchaseProduct(_ product: SKProduct, discount: SKPaymentDiscount) throws {
         fatalError()
     }
 
@@ -330,7 +330,7 @@ public extension Purchases {
     @available(watchOS, introduced: 6.2, unavailable, renamed: "purchase(package:promotionalOffer:)")
     @available(macOS, introduced: 10.15, unavailable, renamed: "purchase(package:promotionalOffer:)")
     @available(macCatalyst, introduced: 13.0, unavailable, renamed: "purchase(package:promotionalOffer:)")
-    func purchase(package: Package, discount: StoreProductDiscount) async throws -> PurchaseResultData {
+    func purchase(package: Package, discount: StoreProductDiscount) throws -> PurchaseResultData {
         fatalError()
     }
 
@@ -348,7 +348,7 @@ public extension Purchases {
     @available(watchOS, introduced: 6.2, unavailable, renamed: "purchase(package:promotionalOffer:)")
     @available(macOS, introduced: 10.15, unavailable, renamed: "purchase(package:promotionalOffer:)")
     @available(macCatalyst, introduced: 13.0, unavailable, renamed: "purchase(package:promotionalOffer:)")
-    func purchase(product: StoreProduct, discount: StoreProductDiscount) async throws -> PurchaseResultData {
+    func purchase(product: StoreProduct, discount: StoreProductDiscount) throws -> PurchaseResultData {
         fatalError()
     }
 
@@ -466,7 +466,7 @@ public extension Purchases {
     @available(macCatalyst, introduced: 13.0, unavailable,
                message: "Check eligibility for a discount using getPromotionalOffer:")
     func paymentDiscount(for discount: SKProductDiscount,
-                         product: SKProduct) async throws -> SKPaymentDiscount {
+                         product: SKProduct) throws -> SKPaymentDiscount {
         fatalError()
     }
 
@@ -524,6 +524,166 @@ public extension Purchases {
     @objc(resetWithCompletionBlock:)
     func reset(completion: ((CustomerInfo?, Error?) -> Void)?) {
         fatalError()
+    }
+
+    /**
+     * Configures an instance of the Purchases SDK with a custom `UserDefaults`.
+     *
+     * Use this constructor if you want to
+     * sync status across a shared container, such as between a host app and an extension. The instance of the
+     * Purchases SDK will be set as a singleton.
+     * You should access the singleton instance using ``Purchases/shared``
+     *
+     * - Parameter apiKey: The API Key generated for your app from https://app.revenuecat.com/
+     *
+     * - Parameter appUserID: The unique app user id for this user. This user id will allow users to share their
+     * purchases and subscriptions across devices. Pass `nil` or an empty string if you want ``Purchases``
+     * to generate this for you.
+     *
+     * - Parameter observerMode: Set this to `true` if you have your own IAP implementation and want to use only
+     * RevenueCat's backend. Default is `false`.
+     *
+     * - Returns: An instantiated ``Purchases`` object that has been set as a singleton.
+     *
+     * - Warning: This assumes your IAP implementation uses StoreKit 1.
+     * - Warning: If you're using observer mode with StoreKit 2, configure the SDK with `configure(withAPIKey:appUserID:observerMode:storeKitVersion:)` passing in `.storeKit2` as the `storeKitVersion` and ensure that you call ``Purchases/recordPurchase(_:)`` after making a purchase.
+     */
+    @available(iOS, obsoleted: 1,
+               message: "Explicitly setting the StoreKit version is now required when setting purchasesAreCompletedBy.",
+               renamed: "configure(withAPIKey:appUserID:purchasesAreCompletedBy:storeKitVersion:)")
+    @available(tvOS, obsoleted: 1,
+               message: "Explicitly setting the StoreKit version is now required when setting purchasesAreCompletedBy.",
+               renamed: "configure(withAPIKey:appUserID:purchasesAreCompletedBy:storeKitVersion:)")
+    @available(watchOS, obsoleted: 1,
+               message: "Explicitly setting the StoreKit version is now required when setting purchasesAreCompletedBy.",
+               renamed: "configure(withAPIKey:appUserID:purchasesAreCompletedBy:storeKitVersion:)")
+    @available(macOS, obsoleted: 1,
+               message: "Explicitly setting the StoreKit version is now required when setting purchasesAreCompletedBy.",
+               renamed: "configure(withAPIKey:appUserID:purchasesAreCompletedBy:storeKitVersion:)")
+    @objc(configureWithAPIKey:appUserID:observerMode:)
+    @_disfavoredOverload
+    @discardableResult static func configure(withAPIKey apiKey: String,
+                                             appUserID: String?,
+                                             observerMode: Bool) -> Purchases {
+        fatalError()
+    }
+
+    @available(iOS, obsoleted: 1,
+               message: "Explicitly setting the StoreKit version is now required when setting purchasesAreCompletedBy.",
+               renamed: "configure(withAPIKey:appUserID:purchasesAreCompletedBy:storeKitVersion:)")
+    @available(tvOS, obsoleted: 1,
+               message: "Explicitly setting the StoreKit version is now required when setting purchasesAreCompletedBy.",
+               renamed: "configure(withAPIKey:appUserID:purchasesAreCompletedBy:storeKitVersion:)")
+    @available(watchOS, obsoleted: 1,
+               message: "Explicitly setting the StoreKit version is now required when setting purchasesAreCompletedBy.",
+               renamed: "configure(withAPIKey:appUserID:purchasesAreCompletedBy:storeKitVersion:)")
+    @available(macOS, obsoleted: 1,
+               message: "Explicitly setting the StoreKit version is now required when setting purchasesAreCompletedBy.",
+               renamed: "configure(withAPIKey:appUserID:purchasesAreCompletedBy:storeKitVersion:)")
+    @discardableResult static func configure(withAPIKey apiKey: String,
+                                             appUserID: StaticString,
+                                             observerMode: Bool) -> Purchases {
+        fatalError()
+    }
+
+    @available(iOS, obsoleted: 1,
+               message: """
+Explicitly setting the StoreKit version is now required when setting
+purchasesAreCompletedBy. Please use the Configuration.Builder class to configure the SDK with
+custom UserDefaults.
+""",
+               renamed: "configure(withAPIKey:appUserID:purchasesAreCompletedBy:storeKitVersion:)")
+    @available(tvOS, obsoleted: 1,
+               message: """
+Explicitly setting the StoreKit version is now required when setting
+purchasesAreCompletedBy. Please use the Configuration.Builder class to configure the SDK with
+custom UserDefaults.
+""",
+               renamed: "configure(withAPIKey:appUserID:purchasesAreCompletedBy:storeKitVersion:)")
+    @available(watchOS, obsoleted: 1,
+               message: """
+Explicitly setting the StoreKit version is now required when setting
+purchasesAreCompletedBy. Please use the Configuration.Builder class to configure the SDK with
+custom UserDefaults.
+""",
+               renamed: "configure(withAPIKey:appUserID:purchasesAreCompletedBy:storeKitVersion:)")
+    @available(macOS, obsoleted: 1,
+               message: """
+Explicitly setting the StoreKit version is now required when setting
+purchasesAreCompletedBy. Please use the Configuration.Builder class to configure the SDK with
+custom UserDefaults.
+""",
+               renamed: "configure(withAPIKey:appUserID:purchasesAreCompletedBy:storeKitVersion:)")
+    @objc(configureWithAPIKey:appUserID:observerMode:userDefaults:)
+    @discardableResult static func configure(withAPIKey apiKey: String,
+                                             appUserID: String?,
+                                             observerMode: Bool,
+                                             userDefaults: UserDefaults?) -> Purchases {
+        fatalError()
+
+    }
+
+    @available(iOS, obsoleted: 1, renamed: "configure(with:)")
+    @available(tvOS, obsoleted: 1, renamed: "configure(with:)")
+    @available(watchOS, obsoleted: 1, renamed: "configure(with:)")
+    @available(macOS, obsoleted: 1, renamed: "configure(with:)")
+    @available(macCatalyst, obsoleted: 1, renamed: "configure(with:)")
+    @objc(configureWithAPIKey:appUserID:observerMode:userDefaults:useStoreKit2IfAvailable:)
+    @discardableResult static func configure(withAPIKey apiKey: String,
+                                             appUserID: String?,
+                                             observerMode: Bool,
+                                             userDefaults: UserDefaults?,
+                                             useStoreKit2IfAvailable: Bool) -> Purchases {
+        fatalError()
+    }
+
+    @available(iOS, obsoleted: 1, renamed: "configure(with:)")
+    @available(tvOS, obsoleted: 1, renamed: "configure(with:)")
+    @available(watchOS, obsoleted: 1, renamed: "configure(with:)")
+    @available(macOS, obsoleted: 1, renamed: "configure(with:)")
+    @available(macCatalyst, obsoleted: 1, renamed: "configure(with:)")
+    @objc(configureWithAPIKey:appUserID:observerMode:userDefaults:useStoreKit2IfAvailable:dangerousSettings:)
+    // swiftlint:disable:next function_parameter_count
+    @discardableResult static func configure(withAPIKey apiKey: String,
+                                             appUserID: String?,
+                                             observerMode: Bool,
+                                             userDefaults: UserDefaults?,
+                                             useStoreKit2IfAvailable: Bool,
+                                             dangerousSettings: DangerousSettings?) -> Purchases {
+        fatalError()
+    }
+
+    /**
+     * Enable automatic collection of Apple Search Ads attribution. Defaults to `false`.
+     */
+    @available(iOS, obsoleted: 1,
+               message: """
+    Use Purchases.shared.attribution.enableAdServicesAttributionTokenCollection() instead.
+    AdClient doesn't work after February 7, 2023  so this boolean doesn't have any effect.
+    """,
+               renamed: "Purchases.shared.attribution.enableAdServicesAttributionTokenCollection()")
+    @available(tvOS, obsoleted: 1,
+               message: """
+    Use Purchases.shared.attribution.enableAdServicesAttributionTokenCollection() instead.
+    AdClient doesn't work after February 7, 2023  so this boolean doesn't have any effect.
+    """,
+               renamed: "Purchases.shared.attribution.enableAdServicesAttributionTokenCollection()")
+    @available(watchOS, obsoleted: 1,
+               message: """
+    Use Purchases.shared.attribution.enableAdServicesAttributionTokenCollection() instead.
+    AdClient doesn't work after February 7, 2023  so this boolean doesn't have any effect.
+    """,
+               renamed: "Purchases.shared.attribution.enableAdServicesAttributionTokenCollection()")
+    @available(macOS, obsoleted: 1,
+               message: """
+    Use Purchases.shared.attribution.enableAdServicesAttributionTokenCollection() instead.
+    AdClient doesn't work after February 7, 2023  so this boolean doesn't have any effect.
+    """,
+               renamed: "Purchases.shared.attribution.enableAdServicesAttributionTokenCollection()")
+    @objc static var automaticAppleSearchAdsAttributionCollection: Bool {
+        get { fatalError() }
+        // swiftlint:disable:next unused_setter_value
+        set { fatalError() }
     }
 
 }
@@ -723,5 +883,18 @@ public extension Purchases {
     @available(macOS, obsoleted: 1, message: "Remove `Purchases.`")
     @available(macCatalyst, obsoleted: 1, message: "Remove `Purchases.`")
     enum PeriodType {}
+}
 
+public extension Configuration.Builder {
+    @available(iOS, obsoleted: 1, renamed: "with(purchasesAreCompletedBy:storeKitVersion:)",
+               message: "Observer Mode is now named PurchasesAreCompletedBy.")
+    @available(tvOS, obsoleted: 1, renamed: "with(purchasesAreCompletedBy:storeKitVersion:)",
+               message: "Observer Mode is now named PurchasesAreCompletedBy.")
+    @available(watchOS, obsoleted: 1, renamed: "with(purchasesAreCompletedBy:storeKitVersion:)",
+               message: "Observer Mode is now named PurchasesAreCompletedBy.")
+    @available(macOS, obsoleted: 1, renamed: "with(purchasesAreCompletedBy:storeKitVersion:)",
+               message: "Observer Mode is now named PurchasesAreCompletedBy.")
+    @objc func with(observerMode: Bool) -> Configuration.Builder {
+        fatalError()
+    }
 }

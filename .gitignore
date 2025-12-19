@@ -28,3 +28,5 @@ diff.tmp
 .scannerwork/
 sonar-project.properties
 
+/web-version/node_modules
+/web-version/dist

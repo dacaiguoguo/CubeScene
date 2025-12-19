@@ -13,16 +13,16 @@
 
 import Foundation
 
-// swiftlint:disable nesting
-
 struct OfferingsResponse {
 
     struct Offering {
 
+        // swiftlint:disable:next nesting
         struct Package {
 
             let identifier: String
             let platformProductIdentifier: String
+            let webCheckoutUrl: URL?
 
         }
 
@@ -33,11 +33,27 @@ struct OfferingsResponse {
         var paywall: PaywallData?
         @DefaultDecodable.EmptyDictionary
         var metadata: [String: AnyDecodable]
+        var paywallComponents: PaywallComponentsData?
+        var draftPaywallComponents: PaywallComponentsData?
+        let webCheckoutUrl: URL?
+    }
 
+    struct Placements {
+        let fallbackOfferingId: String?
+        @DefaultDecodable.EmptyDictionary
+        var offeringIdsByPlacement: [String: String?]
+    }
+
+    struct Targeting {
+        let revision: Int
+        let ruleId: String
     }
 
     let currentOfferingId: String?
     let offerings: [Offering]
+    let placements: Placements?
+    let targeting: Targeting?
+    let uiConfig: UIConfig?
 
 }
 
@@ -52,10 +68,21 @@ extension OfferingsResponse {
         )
     }
 
+    var hasAnyWebCheckoutUrl: Bool {
+        return self.offerings
+            .lazy
+            .contains { $0.webCheckoutUrl != nil }
+    }
+
+    var packages: [Offering.Package] {
+        return self.offerings.flatMap { $0.packages }
+    }
 }
 
 extension OfferingsResponse.Offering.Package: Codable, Equatable {}
 extension OfferingsResponse.Offering: Codable, Equatable {}
+extension OfferingsResponse.Placements: Codable, Equatable {}
+extension OfferingsResponse.Targeting: Codable, Equatable {}
 extension OfferingsResponse: Codable, Equatable {}
 
 extension OfferingsResponse: HTTPResponseBody {}

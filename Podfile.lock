@@ -1,10 +1,10 @@
 PODS:
-  - Mixpanel-swift (4.2.0):
-    - Mixpanel-swift/Complete (= 4.2.0)
-  - Mixpanel-swift/Complete (4.2.0)
-  - RevenueCat (4.36.3)
-  - RevenueCatUI (4.36.3):
-    - RevenueCat (= 4.36.3)
+  - Mixpanel-swift (5.1.3):
+    - Mixpanel-swift/Complete (= 5.1.3)
+  - Mixpanel-swift/Complete (5.1.3)
+  - RevenueCat (5.51.0)
+  - RevenueCatUI (5.51.0):
+    - RevenueCat (= 5.51.0)
 
 DEPENDENCIES:
   - Mixpanel-swift
@@ -18,10 +18,10 @@ SPEC REPOS:
     - RevenueCatUI
 
 SPEC CHECKSUMS:
-  Mixpanel-swift: e5dd85295923e6a875acf17ccbab8d2ecb10ea65
-  RevenueCat: 7be0d7bde9efb2fc1ebd1888522c55bb4f9feb18
-  RevenueCatUI: 42dc70fb9527d63b753d73298d7b53e816070b1a
+  Mixpanel-swift: 630484a1b61cb90820aa34492798d542d9f1d0f1
+  RevenueCat: 953aafaf05ba897bfb945237de02f452d3c24a07
+  RevenueCatUI: c34a49f43d5533aad24f544c351e313e9b6810c7
 
 PODFILE CHECKSUM: 3b1e3d3c220d0643611d9cdd460b9abf64b47582
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.16.2

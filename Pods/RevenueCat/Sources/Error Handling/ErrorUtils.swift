@@ -355,34 +355,15 @@ enum ErrorUtils {
             )
         }
 
-        if #available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *) {
-            switch error {
-            case let purchasesError as PurchasesError:
-                return purchasesError
-            // This line crashes on iOS 12.x only (see https://github.com/RevenueCat/purchases-ios/pull/1982).
-            case let convertible as PurchasesErrorConvertible:
-                return convertible.asPurchasesError
-            case let error as PublicError where error.domain == ErrorCode.errorDomain:
-                return handlePublicError(error)
-            default:
-                return createUnknownError()
-            }
-        } else {
-            switch error {
-            case let purchasesError as PurchasesError:
-                return purchasesError
-            // `as PurchasesErrorConvertible` crashes on iOS 12.x, so these explicit casts are a workaround.
-            // We can't guarantee that these are exhaustive, but at least this covers the most common cases,
-            // and the `default` below ensures that we don't crash for the rest.
-            case let backendError as BackendError:
-                return backendError.asPurchasesError
-            case let networkError as NetworkError:
-                return networkError.asPurchasesError
-            case let error as PublicError where error.domain == ErrorCode.errorDomain:
-                return handlePublicError(error)
-            default:
-                return createUnknownError()
-            }
+        switch error {
+        case let purchasesError as PurchasesError:
+            return purchasesError
+        case let convertible as PurchasesErrorConvertible:
+            return convertible.asPurchasesError
+        case let error as PublicError where error.domain == ErrorCode.errorDomain:
+            return handlePublicError(error)
+        default:
+            return createUnknownError()
         }
     }
 
@@ -409,10 +390,12 @@ enum ErrorUtils {
      * - [`StoreKitError.notAvailableInStorefront`](https://rev.cat/storekit-error-not-available-in-storefront)
      */
     static func productNotAvailableForPurchaseError(
+        withMessage message: String? = nil,
         error: Error? = nil,
         fileName: String = #fileID, functionName: String = #function, line: UInt = #line
     ) -> PurchasesError {
         return ErrorUtils.error(with: .productNotAvailableForPurchaseError,
+                                message: message,
                                 underlyingError: error)
     }
 
@@ -442,11 +425,14 @@ enum ErrorUtils {
      * Constructs an Error with the ``ErrorCode/purchaseInvalidError`` code.
      */
     static func purchaseInvalidError(
+        message: String? = nil,
         error: Error? = nil,
         fileName: String = #fileID, functionName: String = #function, line: UInt = #line
     ) -> PurchasesError {
         return ErrorUtils.error(with: .purchaseInvalidError,
-                                underlyingError: error)
+                                message: message,
+                                underlyingError: error,
+                                fileName: fileName, functionName: functionName, line: line)
     }
 
     /**
@@ -561,6 +547,49 @@ enum ErrorUtils {
     ) -> PurchasesError {
         return ErrorUtils.error(with: .featureNotAvailableInCustomEntitlementsComputationMode,
                                 fileName: fileName, functionName: functionName, line: line)
+    }
+
+    /**
+     * Constructs an Error with the ``ErrorCode/featureNotSupportedWithStoreKit1`` code.
+     *
+     * - Note: This error is used  when trying to use a feature that isn't supported
+     * by StoreKit 1 when the SDK is running in StoreKit 1 mode.
+     */
+    static func featureNotSupportedWithStoreKit1Error(
+        fileName: String = #fileID, functionName: String = #function, line: UInt = #line
+    ) -> PurchasesError {
+        return ErrorUtils.error(with: .featureNotSupportedWithStoreKit1,
+                                fileName: fileName, functionName: functionName, line: line)
+    }
+
+    /**
+     * Constructs an Error with the ``ErrorCode/unsupportedError`` code.
+     *
+     * - Note: This error is used when trying to use a feature that isn't supported
+     * by StoreKit 1 when the SDK is running in StoreKit 1 mode.
+     */
+    static func unsupportedInUIPreviewModeError(
+        fileName: String = #fileID, functionName: String = #function, line: UInt = #line
+    ) -> PurchasesError {
+        return ErrorUtils.error(with: .unsupportedError,
+                                message: "Operation not supported in UI preview mode",
+                                fileName: fileName,
+                                functionName: functionName,
+                                line: line)
+    }
+
+    /**
+     * Constructs an Error with the ``ErrorCode/testStoreSimulatedPurchaseError`` code.
+     *
+     * - Note: This error is only used when simulating the failure of a purchase in the Test Store.
+     */
+    static func testStoreSimulatedPurchaseError(
+        fileName: String = #fileID, functionName: String = #function, line: UInt = #line
+    ) -> PurchasesError {
+        return ErrorUtils.error(with: .testStoreSimulatedPurchaseError,
+                                fileName: fileName,
+                                functionName: functionName,
+                                line: line)
     }
 
 }
@@ -684,7 +713,11 @@ private extension ErrorUtils {
                 .invalidPromotionalOfferError,
                 .offlineConnectionError,
                 .featureNotAvailableInCustomEntitlementsComputationMode,
-                .signatureVerificationFailed:
+                .signatureVerificationFailed,
+                .featureNotSupportedWithStoreKit1,
+                .invalidWebPurchaseToken,
+                .purchaseBelongsToOtherUser,
+                .expiredWebPurchaseToken:
                 Logger.error(
                     localizedDescription,
                     fileName: fileName,
@@ -710,6 +743,12 @@ private extension ErrorUtils {
                     functionName: functionName,
                     line: line
                 )
+
+        case .testStoreSimulatedPurchaseError:
+            Logger.simulatedStoreError(localizedDescription,
+                                       fileName: fileName,
+                                       functionName: functionName,
+                                       line: line)
 
         @unknown default:
             Logger.error(

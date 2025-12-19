@@ -156,9 +156,12 @@ extension StoreTransaction {
         return (self.transaction as? SK2StoreTransaction)?.underlyingSK2Transaction
     }
 
+    internal var simulatedStoreTransaction: SimulatedStoreTransaction? {
+        return self.transaction as? SimulatedStoreTransaction
+    }
+
 }
 
-@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
 extension StoreTransactionType {
 
     /// - Returns: the `Storefront` associated to this transaction, or `Storefront.currentStorefront` if not available.
