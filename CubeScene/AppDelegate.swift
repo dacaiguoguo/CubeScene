@@ -111,14 +111,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         // 移除 List 默认的分隔线（如果你想要的话）
         UITableView.appearance().separatorStyle = .none
         // Replace with your Project Token
-        if Purchases.shared.isAtSandbox {
-            // 初始化 Mixpanel
-            Mixpanel.initialize(token: "519f100127827f64d9df5052b8dc0e92", trackAutomaticEvents: true)
-            print("Purchases.shared.isAtSandbox true")
-        } else {
-            print("Purchases.shared.isAtSandbox false")
-            Mixpanel.initialize(token: "0db8c0bbc4140bee54384c6d148e9270", trackAutomaticEvents: true)
-        }
+        print("Purchases.shared.isAtSandbox false")
+        Mixpanel.initialize(token: "0db8c0bbc4140bee54384c6d148e9270", trackAutomaticEvents: true)
  
         
         Mixpanel.mainInstance().track(event: "Signed Up", properties: [
