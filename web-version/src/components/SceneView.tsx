@@ -1,7 +1,17 @@
 import React from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
-import { InstancedMesh, Matrix4, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial } from 'three'
+import * as ReactThreeFiber from '@react-three/fiber'
+import { useFrame, useThree, extend } from '@react-three/fiber'
+import { InstancedMesh, Matrix4, Color, EdgesGeometry, LineSegments, LineBasicMaterial } from 'three'
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry'
 import { Product } from '../lib/types'
+
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    roundedBoxGeometry: ReactThreeFiber.Object3DNode<RoundedBoxGeometry, typeof RoundedBoxGeometry>
+  }
+}
+
+extend({ RoundedBoxGeometry })
 
 interface SceneViewProps {
   product: Product
@@ -135,7 +145,7 @@ export default function SceneView({ product, showType, showColor }: SceneViewPro
   return (
     <group>
       <instancedMesh key={instanceCount} ref={instancedMeshRef} args={[undefined, undefined, instanceCount]}>
-        <boxGeometry args={[0.95, 0.95, 0.95]} /> {/* 稍微缩小以显示边缘效果 */}
+        <roundedBoxGeometry args={[1, 1, 1, 6, 0.1]} /> {/* 宽度,高度,深度,分段数,圆角半径 */}
         <meshStandardMaterial 
           emissive="#972e2eff"
           emissiveIntensity={0}
@@ -144,7 +154,7 @@ export default function SceneView({ product, showType, showColor }: SceneViewPro
         />
       </instancedMesh>
       <lineSegments>
-        <edgesGeometry args={[new BoxGeometry(1, 1, 1)]} />
+        <edgesGeometry args={[new RoundedBoxGeometry(1, 1, 1, 6, 0.1)]} />
         <lineBasicMaterial color={0xffffff} linewidth={2} />
       </lineSegments>
     </group>
