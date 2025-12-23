@@ -1,5 +1,5 @@
 import React from 'react'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { InstancedMesh, Matrix4, Color } from 'three'
 import { Product } from '../lib/types'
 
@@ -12,15 +12,10 @@ interface SceneViewProps {
 export default function SceneView({ product, showType, showColor }: SceneViewProps) {
   const instancedMeshRef = React.useRef<InstancedMesh>(null)
   const colorArray = React.useMemo(() => [
-    new Color(0x5B5B5B), // 0: gray
-    new Color(0xC25C1D), // 1: orange
-    new Color(0x2788E7), // 2: blue
-    new Color(0xFA2E34), // 3: red
-    new Color(0xFB5BC2), // 4: pink
-    new Color(0xFCC633), // 5: yellow
-    new Color(0x178E20), // 6: green
-    new Color(0x000000)  // 7: black
-  ], [])
+    new Color(`rgb(${showColor.join(',')})`),
+    new Color('hotpink'),
+    new Color('#178E20') // Green
+  ], [showColor])
 
   const instanceCount = React.useMemo(() => {
     let count = 0
@@ -33,17 +28,19 @@ export default function SceneView({ product, showType, showColor }: SceneViewPro
     })
     return count
   }, [product.matrix])
-  
+
   // Initialize instances
   React.useEffect(() => {
     if (!instancedMeshRef.current) return
-    
+
     const mesh = instancedMeshRef.current
     const matrix = product.matrix
-    
+
     // Set visible count (buffer allocation is handled by the constructor count)
-    mesh.count = instanceCount
-    
+    const capacity = mesh.instanceMatrix?.count ?? 0
+    const drawCount = Math.min(instanceCount, capacity)
+    mesh.count = drawCount
+
     // Compute bounding box for centering
     let minX = Infinity
     let minY = Infinity
@@ -77,58 +74,69 @@ export default function SceneView({ product, showType, showColor }: SceneViewPro
     matrix.forEach((layer, z) => {
       layer.forEach((row, y) => {
         row.forEach((value, x) => {
-          if (value >= 0) {
+          if (value >= 0 && i < drawCount) {
             matrix4.makeTranslation(x - centerX, -(y - centerY), z - centerZ)
             mesh.setMatrixAt(i, matrix4)
-            
+
             // Set initial color
-            const colorIndex = value % colorArray.length
-            mesh.setColorAt(i, colorArray[colorIndex])
+            mesh.setColorAt(i, new Color('hotpink').clone().multiplyScalar(1.5))
             i++
           }
         })
       })
     })
-    
+
     mesh.instanceMatrix.needsUpdate = true
-    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true
-  }, [product.matrix, colorArray, instanceCount])
-  
+    if (mesh.instanceColor) {
+      mesh.instanceColor.needsUpdate = true
+    }
+  }, [product.matrix, instanceCount, showType])
+
+  const scene = useThree(state => state.scene)
+  React.useEffect(() => {
+    console.log('[DEBUG] Three.js Scene Objects:', scene.children)
+    scene.traverse(obj => {
+      console.log(`[DEBUG] ${obj.type}:`,
+        obj.name || 'unnamed',
+        'visible:', obj.visible,
+        'material:', 'material' in obj ? (obj.material as any)?.constructor?.name || 'UnknownMaterial' : 'N/A'
+      )
+    })
+  }, [scene])
+
   // Update materials based on showType
   useFrame(() => {
     if (!instancedMeshRef.current || showType !== 'colorFul') return
-    
+
     const mesh = instancedMeshRef.current
     const matrix = product.matrix
+    const capacity = mesh.instanceMatrix?.count ?? 0
+    const drawCount = Math.min(mesh.count ?? 0, capacity)
     let i = 0
-    
+
     matrix.forEach((layer, z) => {
       layer.forEach((row, y) => {
         row.forEach((value, x) => {
-          if (value >= 0) {
-            const visible = showColor.includes(value)
-            const colorIndex = value % colorArray.length
-            const color = visible ? colorArray[colorIndex] : new Color(0x000000)
-            
-            mesh.setColorAt(i, color)
+          if (value >= 0 && i < drawCount) {
+            mesh.setColorAt(i, new Color('hotpink').clone().multiplyScalar(1.5))
             i++
           }
         })
       })
     })
-    
+
     if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true
   })
-  
+
   return (
     <instancedMesh key={instanceCount} ref={instancedMeshRef} args={[undefined, undefined, instanceCount]}>
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial 
-        color="white" 
-        vertexColors
-        wireframe={showType === 'singleColor'}
-        transparent={showType === 'colorFul'}
-        opacity={showType === 'colorFul' ? 0.8 : 1.0}
+      <meshStandardMaterial
+        color='#178E20' // 基础颜色 - 绿色
+        emissive="#972e2eff" // 自发光颜色 - 暗红色
+        emissiveIntensity={0} // 自发光强度 - 0表示关闭
+        metalness={0.8} // 金属质感 - 0.8高金属度
+        roughness={0.2} // 表面粗糙度 - 0.2较光滑
       />
     </instancedMesh>
   )
