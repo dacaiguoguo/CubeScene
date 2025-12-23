@@ -1,6 +1,6 @@
 import React from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import { InstancedMesh, Matrix4, Color } from 'three'
+import { InstancedMesh, Matrix4, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial } from 'three'
 import { Product } from '../lib/types'
 
 interface SceneViewProps {
@@ -12,10 +12,14 @@ interface SceneViewProps {
 export default function SceneView({ product, showType, showColor }: SceneViewProps) {
   const instancedMeshRef = React.useRef<InstancedMesh>(null)
   const colorArray = React.useMemo(() => [
-    new Color(`rgb(${showColor.join(',')})`),
-    new Color('hotpink'),
-    new Color('#178E20') // Green
-  ], [showColor])
+    new Color('#FF0000'), // 红色
+    new Color('#00FF00'), // 绿色
+    new Color('#0000FF'), // 蓝色
+    new Color('#FFFF00'), // 黄色
+    new Color('#FF00FF'), // 品红
+    new Color('#00FFFF'), // 青色
+    new Color('#FFA500')  // 橙色
+  ], [])
 
   const instanceCount = React.useMemo(() => {
     let count = 0
@@ -79,7 +83,7 @@ export default function SceneView({ product, showType, showColor }: SceneViewPro
             mesh.setMatrixAt(i, matrix4)
 
             // Set initial color
-            mesh.setColorAt(i, new Color('hotpink').clone().multiplyScalar(1.5))
+            mesh.setColorAt(i, colorArray[value % 7].clone().multiplyScalar(1.5))
             i++
           }
         })
@@ -118,7 +122,7 @@ export default function SceneView({ product, showType, showColor }: SceneViewPro
       layer.forEach((row, y) => {
         row.forEach((value, x) => {
           if (value >= 0 && i < drawCount) {
-            mesh.setColorAt(i, new Color('hotpink').clone().multiplyScalar(1.5))
+            mesh.setColorAt(i, colorArray[value % 7].clone().multiplyScalar(1.5))
             i++
           }
         })
@@ -129,15 +133,20 @@ export default function SceneView({ product, showType, showColor }: SceneViewPro
   })
 
   return (
-    <instancedMesh key={instanceCount} ref={instancedMeshRef} args={[undefined, undefined, instanceCount]}>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial
-        color='#178E20' // 基础颜色 - 绿色
-        emissive="#972e2eff" // 自发光颜色 - 暗红色
-        emissiveIntensity={0} // 自发光强度 - 0表示关闭
-        metalness={0.8} // 金属质感 - 0.8高金属度
-        roughness={0.2} // 表面粗糙度 - 0.2较光滑
-      />
-    </instancedMesh>
+    <group>
+      <instancedMesh key={instanceCount} ref={instancedMeshRef} args={[undefined, undefined, instanceCount]}>
+        <boxGeometry args={[0.95, 0.95, 0.95]} /> {/* 稍微缩小以显示边缘效果 */}
+        <meshStandardMaterial 
+          emissive="#972e2eff"
+          emissiveIntensity={0}
+          metalness={0.8}
+          roughness={0.2}
+        />
+      </instancedMesh>
+      <lineSegments>
+        <edgesGeometry args={[new BoxGeometry(1, 1, 1)]} />
+        <lineBasicMaterial color={0xffffff} linewidth={2} />
+      </lineSegments>
+    </group>
   )
 }
