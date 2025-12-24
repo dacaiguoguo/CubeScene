@@ -63,7 +63,8 @@ export function parseSomaTextToProducts(text: string): Product[] {
     .filter((b) => b.length > 0)
     .map((b) => {
       const lines = b.split('\n').map((l) => l.trim())
-      const nameLine = lines[0]?.replace(/^\/+/, '').replace(/^-+/, '').trim() ?? 'Unnamed'
+      const rawName = lines[0]?.replace(/^\/+/, '').replace(/^-+/, '').trim() ?? 'Unnamed'
+      const nameLine = rawName.startsWith('SOMA') ? rawName : `SOMA-${rawName}`
 
       const matrixLines = lines.filter((l) => l.startsWith('/')).map((l) => l.replace(/^\/+/, ''))
       const matrix = parseMatrixLines(matrixLines)
