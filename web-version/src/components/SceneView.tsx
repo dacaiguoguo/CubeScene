@@ -153,10 +153,6 @@ export default function SceneView({ product, showType, showColor }: SceneViewPro
           roughness={0.2}
         />
       </instancedMesh>
-      <lineSegments>
-        <edgesGeometry args={[new RoundedBoxGeometry(1, 1, 1, 6, 0.1)]} />
-        <lineBasicMaterial color={0xffffff} linewidth={2} />
-      </lineSegments>
     </group>
   )
 }
