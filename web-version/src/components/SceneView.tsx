@@ -144,13 +144,20 @@ export default function SceneView({ product, showType, showColor }: SceneViewPro
 
   return (
     <group>
+      {/* 基础照明 */}
+      <directionalLight position={[0, -1, 0]} intensity={0.5} /> {/* 下 */}
+      <directionalLight position={[0, 1, 0]} intensity={0.3} />  {/* 上 */}
+      <directionalLight position={[-1, 0, 0]} intensity={0.4} /> {/* 左 */}
+      <directionalLight position={[1, 0, 0]} intensity={0.4} />  {/* 右 */}
+      <directionalLight position={[0, 0, 1]} intensity={0.4} />  {/* 前 */}
+      <directionalLight position={[0, 0, -1]} intensity={0.4} /> {/* 后 */}
       <instancedMesh key={instanceCount} ref={instancedMeshRef} args={[undefined, undefined, instanceCount]}>
         <roundedBoxGeometry args={[1, 1, 1, 6, 0.1]} /> {/* 宽度,高度,深度,分段数,圆角半径 */}
         <meshStandardMaterial 
           emissive="#972e2eff"
-          emissiveIntensity={0}
+          emissiveIntensity={0.3}
           metalness={0.8}
-          roughness={0.2}
+          roughness={0.8}
         />
       </instancedMesh>
     </group>
