@@ -137,32 +137,9 @@ struct InputView: View {
                     .frame(height: 400)
                     .border(.gray)
 
-                Button("确定输入", action: {
-                    // 在这里执行编辑完成的操作
-                    // 比如保存文本、关闭键盘等等
-
-                    // 结束编辑状态
-                    isEditing = false
-                    let input:[Product]
-                    if message.hasPrefix("/SOMA") {
-                        input = produceData2(stringContent: message)
-                    } else {
-                        input = produceData2(stringContent: "/SOMA-test\n\(message)")
-                    }
-                    if input.count > 0 {
-                        ditem = input.first!
-                        debugStr = "new input\(input)"
-                    } else {
-                        debugStr = "old input\(input)"
-                    }
-                    counter += 1
-                })
-                .padding()
-                .disabled(!isEditing)
-
 
             }
-            .navigationBarItems(trailing:completeStatus())
+            .navigationBarItems(leading: completeStatusInput(), trailing: completeStatus())
             .navigationTitle("自定义代码")
             .navigationBarTitleDisplayMode(.inline)
         }
@@ -173,6 +150,30 @@ struct InputView: View {
             // 当按钮被点击时，isPresented 的值就会被设置为 true
             self.isPresented = false
         }
+    }
+
+    func completeStatusInput() -> some View {
+        Button("Done") {
+            // 在这里执行编辑完成的操作
+            // 比如保存文本、关闭键盘等等
+
+            // 结束编辑状态
+            isEditing = false
+            let input:[Product]
+            if message.hasPrefix("/SOMA") {
+                input = produceData2(stringContent: message)
+            } else {
+                input = produceData2(stringContent: "/SOMA-test\n\(message)")
+            }
+            if input.count > 0 {
+                ditem = input.first!
+                debugStr = "new input\(input)"
+            } else {
+                debugStr = "old input\(input)"
+            }
+            counter += 1
+        }
+        .disabled(!isEditing)
     }
 }
 
